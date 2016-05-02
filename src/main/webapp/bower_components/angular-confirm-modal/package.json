@@ -1,0 +1,41 @@
+{
+  "name": "angular-confirm",
+  "version": "1.2.3",
+  "description": "Angular Confirm Modal",
+  "main": "angular-confirm.min.js",
+  "scripts": {
+    "test": "gulp test-unit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Schlogen/angular-confirm.git"
+  },
+  "keywords": [
+    "angular",
+    "confirm",
+    "angular-ui",
+    "$modal"
+  ],
+  "author": "James Kleeh",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/Schlogen/angular-confirm/issues"
+  },
+  "homepage": "https://github.com/Schlogen/angular-confirm",
+  "devDependencies": {
+    "angular": "1.4.7",
+    "angular-ui-bootstrap": "0.14.3",
+    "angular-mocks": "^1.4.7",
+    "gulp": "3.9.0",
+    "gulp-bump": "^1.0.0",
+    "gulp-git": "^1.6.0",
+    "gulp-header": "^1.7.1",
+    "gulp-ng-annotate": "^1.1.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^1.4.2",
+    "jasmine-core": "^2.3.4",
+    "karma": "0.13.19",
+    "karma-chrome-launcher": "^0.2.2",
+    "karma-jasmine": "^0.3.6"
+  }
+}

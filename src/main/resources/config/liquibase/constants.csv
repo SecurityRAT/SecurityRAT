@@ -1,0 +1,9 @@
+id;name;value;description
+1;customRequirementName;CUS-;This is the short name representation for the custom requirements. 	
+2;filenamePrefix;SSDLC;This property will be used as prefix for the exported yaml file. 	
+3;ticketDescription;New development of a Secure SDLC Artifact.;This represents the default description value when exporting a requirement set. 	
+4;reportJIRAQueue; ;This property gives the queue where tickets should be opened whenever suggestions to the requirements are sent. 	
+5;reportJIRAHost; ;The Jira host address for tracking the feedbacks to the requirements.
+6;reportJIRAIssueType; ;This is a jira issue type. It will be used to create ticket whenever a suggestion is given to a requirement. 	
+7;summaryForSuggestion;Feedback for a SSDLC requirement.;This represents the title of the created ticket whenever a suggestion is given to a requirement. 	
+8;ticketComment;A new version of the Secure SDLC Artifact §artifact_name§ has been exported.You can view and import it into the Secure SDLC Tool with the following link:§import_link§ This link corresponds to the attachment with the following name:§filename§;This will be added as comment when exporting a requirement set into a JIRA ticket.The placeholders §artifact_name§, §import_link§, §filename§ represent respectively the system artifact name, the import link and the filename of the attached file.

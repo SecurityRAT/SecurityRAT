@@ -1,0 +1,79 @@
+{
+    "relationships": [
+        {
+            "relationshipId": 1,
+            "relationshipName": "optColumnContent",
+            "otherEntityName": "optColumnContent",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "requirementSkeleton"
+        },
+        {
+            "relationshipId": 2,
+            "relationshipName": "alternativeInstance",
+            "otherEntityName": "alternativeInstance",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "requirementSkeleton"
+        },
+        {
+            "relationshipId": 3,
+            "relationshipName": "reqCategory",
+            "otherEntityName": "reqCategory",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "name"
+        },
+        {
+            "relationshipId": 4,
+            "relationshipName": "tagInstance",
+            "otherEntityName": "tagInstance",
+            "relationshipType": "many-to-many",
+            "otherEntityField": "name",
+            "ownerSide": true
+        },
+        {
+            "relationshipId": 5,
+            "relationshipName": "collectionInstance",
+            "otherEntityName": "collectionInstance",
+            "relationshipType": "many-to-many",
+            "otherEntityField": "name",
+            "ownerSide": true
+        },
+        {
+            "relationshipId": 6,
+            "relationshipName": "projectType",
+            "otherEntityName": "projectType",
+            "relationshipType": "many-to-many",
+            "otherEntityField": "name",
+            "ownerSide": true
+        }
+    ],
+    "fields": [
+        {
+            "fieldId": 1,
+            "fieldName": "universalId",
+            "fieldType": "String"
+        },
+        {
+            "fieldId": 2,
+            "fieldName": "shortName",
+            "fieldType": "String"
+        },
+        {
+            "fieldId": 3,
+            "fieldName": "description",
+            "fieldType": "String"
+        },
+        {
+            "fieldId": 4,
+            "fieldName": "showOrder",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldId": 5,
+            "fieldName": "active",
+            "fieldType": "Boolean"
+        }
+    ],
+    "changelogDate": "20150902174059",
+    "dto": "no",
+    "pagination": "no"
+}

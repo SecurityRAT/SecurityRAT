@@ -1,0 +1,49 @@
+{
+    "relationships": [
+        {
+            "relationshipId": 1,
+            "relationshipName": "statusColumnValue",
+            "otherEntityName": "statusColumnValue",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "statusColumn"
+        },
+        {
+            "relationshipId": 2,
+            "relationshipName": "projectType",
+            "otherEntityName": "projectType",
+            "relationshipType": "many-to-many",
+            "ownerSide": false,
+            "otherEntityRelationshipName": "statusColumn"
+        }
+    ],
+    "fields": [
+        {
+            "fieldId": 1,
+            "fieldName": "name",
+            "fieldType": "String"
+        },
+        {
+            "fieldId": 2,
+            "fieldName": "description",
+            "fieldType": "String"
+        },
+        {
+            "fieldId": 3,
+            "fieldName": "isEnum",
+            "fieldType": "Boolean"
+        },
+        {
+            "fieldId": 4,
+            "fieldName": "showOrder",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldId": 5,
+            "fieldName": "active",
+            "fieldType": "Boolean"
+        }
+    ],
+    "changelogDate": "20150902171515",
+    "dto": "no",
+    "pagination": "no"
+}

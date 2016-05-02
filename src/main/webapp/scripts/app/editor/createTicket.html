@@ -1,0 +1,72 @@
+<div data-ng-init="initcreateTicket()" data-ng-cloak>
+	<div class="modal-header">
+		<button type="button" class="close" data-ng-click="cancel()" aria-hidden="true">×</button>
+        <h3 class="modal-title">Create ticket for each requirement</h3>
+    </div>
+    <div class="modal-body">
+    <uib-alert  class="text-center col-sm-10" data-ng-if="exportProperty.fail" type="alert alert-danger">{{exportProperty.failed}}</uib-alert>
+    	<div class="row form-group">
+			<div class="text-center col-sm-11">		
+				<div class="input-group">
+					<span class="input-group-addon required-field">URL:</span>
+					<input type="text" placeholder="e.g. https://www.example-jira.com/browse/DUMBQ" data-ng-model="jiraUrl.url" class="form-control"/>
+				</div>
+			</div>
+			<div data-ng-if="exportProperty.showSpinner"class="text-center col-sm-1" >
+				<span id="UsSpinner" spinner-on="exportProperty.showSpinner" us-spinner="{radius:5, width:3, length:3, lines:9}"uib-popover="Authentication running..." popover-placement="top" popover-trigger="mouseenter" 
+				popover-append-to-body></span>
+			</div>
+		</div>
+		<div class="row col-sm-12">
+			<p>Please enter a queue.<br/>
+			</p>
+		</div>
+		<div>&nbsp;</div>
+		<div class="row" data-ng-if="checks.isNotProject">
+			<div class="form-group">
+				<label for="ProjectKey" class="col-sm-2 control-label">Project:</label>
+				<div class="input-group col-sm-9">
+					<input type="text" class="col-sm-2" data-ng-model="filterProject" placeholder="search Project"/>
+					<select id="ProjectKey" data-ng-model="fields.project.key" class="form-control">
+						<option data-ng-repeat="project in jiraAlternatives.projects | orderBy: 'name' | filter: filterProject" data-ng-if="project.name != ''" value="{{project.key}}">{{project.name}}</option>
+						<option data-ng-repeat="project in jiraAlternatives.projects | orderBy: 'name' | filter: filterProject" data-ng-if="project.name == ''" value="{{project.key}}">{{project.key}}</option>
+					</select>
+				</div>
+			</div>
+		</div>
+		<div>&nbsp;</div>
+		<form class="form-horizontal" role="form" data-ng-if="checks.isQueue">
+			<ng-include src="'scripts/app/editor/mandatoryFieldsTemplate.html'"></ng-include>
+			<div class="form-group" data-ng-init="initLabels()">
+				<label for="IssueType" class="col-sm-2 control-label">Labels:</label>
+				<div class="col-sm-9">
+					<div class="input-group">
+						<input type="text" data-ng-model="label.labelValue" class="form-control"></input>
+						<span class="input-group-btn">
+							<button id="addLabel" class="btn btn-default text-center" data-ng-click="addLabel(label.labelValue)"  uib-tooltip="Add label"
+							tooltip-placement="right" tooltip-append-to-body><span class="glyphicon glyphicon-plus"></span></button>
+						</span>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-9">
+					<ul class="items">
+						<li class="item-row" data-ng-repeat="label in fields.labels" title="{{label}}">
+							<button class="value-item" type="button" tabindex="-1"><span><span class="value-text">{{label}}</span></span></button><em class="item-delete" data-ng-click="removeLabel(label)"></em>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</form>
+		<div>&nbsp;</div>
+	</div>
+	<div class="modal-footer btn-group-sm">
+		<div class="col-sm-offset-2 col-sm-5">
+		    <button class="btn btn-primary form-control" data-ng-click="confirm()" data-ng-disabled="jiraUrl.url == null"><strong>Create tickets</strong></button>
+		</div>
+		<div class="col-sm-5">
+		    <button class="btn btn-default form-control" data-ng-click="cancel()"><strong>Cancel</strong></button>
+	    </div>
+	</div>
+</div>

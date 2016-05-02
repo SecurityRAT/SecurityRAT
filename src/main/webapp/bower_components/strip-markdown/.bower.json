@@ -1,0 +1,47 @@
+{
+  "name": "strip-markdown",
+  "main": "strip-markdown.js",
+  "description": "Remove markdown formatting",
+  "license": "MIT",
+  "keywords": [
+    "text",
+    "markdown",
+    "plain",
+    "text"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wooorm/strip-markdown.git"
+  },
+  "authors": [
+    "Titus Wormer <tituswormer@gmail.com>"
+  ],
+  "ignore": [
+    ".*",
+    "*.log",
+    "*.md",
+    "*.sh",
+    "build/",
+    "components/",
+    "coverage/",
+    "node_modules/",
+    "benchmark.js",
+    "build.js",
+    "example.js",
+    "index.js",
+    "test.js",
+    "component.json",
+    "package.json"
+  ],
+  "homepage": "https://github.com/wooorm/strip-markdown",
+  "version": "0.3.1",
+  "_release": "0.3.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.3.1",
+    "commit": "77cc294226fe09ada6cee761a01b5d6839ba54a5"
+  },
+  "_source": "git://github.com/wooorm/strip-markdown.git",
+  "_target": "~0.3.1",
+  "_originalSource": "strip-markdown"
+}

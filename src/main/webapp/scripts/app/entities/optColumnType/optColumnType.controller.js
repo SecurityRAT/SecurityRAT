@@ -1,0 +1,47 @@
+'use strict';
+
+angular.module('sdlctoolApp')
+    .controller('OptColumnTypeController', function ($scope, OptColumnType, OptColumnTypeSearch) {
+        $scope.optColumnTypes = [];
+        $scope.loadAll = function() {
+            OptColumnType.query(function(result) {
+               $scope.optColumnTypes = result;
+            });
+        };
+        $scope.loadAll();
+
+        $scope.delete = function (id) {
+            OptColumnType.get({id: id}, function(result) {
+                $scope.optColumnType = result;
+                $('#deleteOptColumnTypeConfirmation').appendTo("body").modal('show');
+            });
+        };
+
+        $scope.confirmDelete = function (id) {
+            OptColumnType.delete({id: id},
+                function () {
+                    $scope.loadAll();
+                    $('#deleteOptColumnTypeConfirmation').modal('hide');
+                    $scope.clear();
+                });
+        };
+
+        $scope.search = function () {
+            OptColumnTypeSearch.query({query: $scope.searchQuery}, function(result) {
+                $scope.optColumnTypes = result;
+            }, function(response) {
+                if(response.status === 404) {
+                    $scope.loadAll();
+                }
+            });
+        };
+
+        $scope.refresh = function () {
+            $scope.loadAll();
+            $scope.clear();
+        };
+
+        $scope.clear = function () {
+            $scope.optColumnType = {name: null, description: null, id: null};
+        };
+    });

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>XRegExp Performance Tests</title>
+    <style>
+        body {
+            font-family: Calibri, Verdana, Sans-serif;
+            padding: 30px;
+            margin: 0;
+        }
+        applet {
+            position: absolute;
+            left: -9999px;
+        }
+    </style>
+</head>
+<body>
+    <div id="log"></div>
+
+    <script>
+        // Load latest XRegExp script unless known old version provided in query param
+        (function() {
+            var match = /[?&]version=([^&]+)/.exec(location.search);
+            var version = match ? match[1] : null;
+            var knownVersion = {
+                '2.0.0': true,
+                '1.5.1': true
+            };
+
+            if (version === null || version === 'latest') {
+                document.write('<script src="../../xregexp-all.js"><\/script>');
+            } else if (knownVersion[version]) {
+                document.write('<script src="versions/xregexp-all-v'+version+'.js"><\/script>');
+            } else {
+                document.getElementById('log').innerHTML = 'Unrecognized version provided in query';
+            }
+        }());
+    </script>
+
+    <script src="../vendor/benchmark.js/benchmark.js"></script>
+    <script src="perf.js"></script>
+
+    <script>
+        // Load an applet for higher-precision timing if needed and not manually disabled.
+        // Adapted from Lo-Dash <http://lodash.com/> performance tests.
+        (function() {
+            if (/[?&]nojava=true(?:&|$)/.test(location.search)) {
+                return;
+            }
+            var perf = window.performance,
+                begin = new Date,
+                measured;
+            // Check whether the applet is needed
+            while (!(measured = new Date - begin)) {
+                // No-op
+            }
+            if (measured !== 1 && !(perf && (perf.now || perf.webkitNow))) {
+                document.write('<applet code="nano" archive="../vendor/benchmark.js/nano.jar"></applet>');
+            }
+        }());
+
+        // Global run function provided by perf script
+        onload = run;
+    </script>
+</body>
+</html>

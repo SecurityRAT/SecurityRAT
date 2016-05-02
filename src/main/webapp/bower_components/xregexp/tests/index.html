@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>XRegExp Specs</title>
+
+    <!-- Jasmine -->
+    <link rel="stylesheet" href="vendor/jasmine/jasmine.css">
+    <script src="vendor/jasmine/jasmine.js"></script>
+    <script src="vendor/jasmine/jasmine-html.js"></script>
+    <script src="vendor/jasmine/boot.js"></script>
+
+    <!-- XRegExp -->
+    <script src="../src/xregexp.js"></script>
+    <script src="../src/addons/build.js"></script>
+    <script src="../src/addons/matchrecursive.js"></script>
+    <script src="../src/addons/unicode-base.js"></script>
+    <script src="../src/addons/unicode-blocks.js"></script>
+    <script src="../src/addons/unicode-categories.js"></script>
+    <script src="../src/addons/unicode-properties.js"></script>
+    <script src="../src/addons/unicode-scripts.js"></script>
+
+    <!-- Helpers -->
+    <script src="helpers/h.js"></script>
+    <script src="helpers/h-matchers.js"></script>
+    <script src="helpers/h-unicode.js"></script>
+
+    <!-- Specs -->
+    <script src="spec/s-xregexp.js"></script>
+    <script src="spec/s-xregexp-methods.js"></script>
+    <script src="spec/s-xregexp-natives.js"></script>
+    <script src="spec/s-addons-build.js"></script>
+    <script src="spec/s-addons-matchrecursive.js"></script>
+    <script src="spec/s-addons-unicode.js"></script>
+
+    <style>
+        #header {
+            font-family: Monaco, "Lucida Console", monospace;
+            font-size: 11px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <p id="header">Note: A variety of syntax extensions are added by the specs on this page, so this isn't an ideal place to test XRegExp via the console.</p>
+</body>
+</html>

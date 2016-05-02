@@ -1,0 +1,25 @@
+{
+  "author": "AngularUI Team",
+  "name": "angular-ui-indeterminate",
+  "homepage": "https://github.com/angular-ui/ui-indeterminate",
+  "main": "./dist/indeterminate.js",
+  "license": "MIT",
+  "dependencies": {
+    "angular": ">= 1.0.5"
+  },
+  "devDependencies": {
+    "angular-mocks": ">=1.0.5",
+    "jquery": ">=1.6"
+  },
+  "version": "1.0.0",
+  "_release": "1.0.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.0.0",
+    "commit": "ed79fb1d01c31a99b8726162febb8f8659b3943c"
+  },
+  "_source": "git://github.com/angular-ui/ui-indeterminate.git",
+  "_target": "^1.0.0",
+  "_originalSource": "angular-ui-indeterminate",
+  "_direct": true
+}

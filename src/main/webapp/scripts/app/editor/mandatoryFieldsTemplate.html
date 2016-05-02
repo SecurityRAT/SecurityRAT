@@ -1,0 +1,42 @@
+<div class="form-group">
+	<label for="IssueType" class="col-sm-2 control-label">Issue Type:</label>
+	<div class="col-sm-9">
+		<select id="IssueType" data-ng-model="fields.issuetype.name" data-ng-options="issueType.name as issueType.name for issueType in jiraAlternatives.issueTypes" class="form-control">
+		</select>
+	</div>
+</div>
+<div data-ng-repeat="field in jiraAlternatives.mandatoryFields">
+	<div  data-ng-if="field.type != 'array' && field.type != ''" class="form-group">
+		<label for="{{field.name}}" class="col-sm-2 control-label">{{field.name}}:</label>
+		<div class="col-sm-9">
+			<span data-ng-if="field.type == 'string'">
+				<input type="text" id="{{field.name}}" data-ng-model="fields[field.key]" class="form-control"/>
+			</span>
+			<span data-ng-if="field.type == 'date'">
+				<input id="{{field.name}}" type="text" class="form-control" is-open="dueDate.opened"
+					close-text="Close" uib-datepicker-popup="dd-MM-yyyy" data-ng-model="fields.duedate" />
+				<span class="input-group-btn">
+					<button type="button" id ="{{field.name}}" class="btn btn-default" data-ng-click="calDueDate($event)">
+						<i class="glyphicon glyphicon-calendar"></i>
+					</button>
+				</span>
+			</span>
+			<span data-ng-if="field.type == 'priority'">
+				<select id="{{field.name}}" data-ng-model="fields.priority.id" data-ng-options="value.id as value.name for value in field.values" class="form-control">
+				</select>
+			</span>
+			<span data-ng-if="field.type == 'timetracking'">
+				<input type="number" id="{{field.name}}" data-ng-model="fields.timetracking.originalEstimate" placeholder="due time in minutes" class="form-control"/>
+			</span>
+		</div>
+	</div>
+	 <div  data-ng-if="field.type == 'array' && field.values.length > 0" class="form-group">
+		<label for="{{field.name}}" class="col-sm-2 control-label required-field">{{field.name}}:</label>
+		<div class="col-sm-9">
+			<span>
+				<select data-ng-if="field.itemType != 'issuelinks'" id="{{field.name}}" data-ng-model="fields[field.key][0].id" data-ng-options="value.id as value.name for value in field.values" class="form-control" >
+				</select>
+			</span>
+		</div>
+	</div>
+</div>
