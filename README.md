@@ -27,8 +27,10 @@
 
   
 # How to run in dev mode
+- In the project directory, fire `npm install`.
 - fire `mvn spring-boot:run`. This will automatically create the database structure if it doesnt exist yet.
 - log in to your mysql server and in the `JHI_USER` table rename the 'admin' user login to your CAS username (in order to get full rights for your user). 
+- Open a new terminal and move to the project directory.Then run `grunt serve`.
 - go to http://localhost:9000. You should be verified by your previously setup CAS server and can start using the application.
 - The constants (under Administration -> constants) must be edited accordingly.
 
