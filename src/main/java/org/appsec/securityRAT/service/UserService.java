@@ -148,19 +148,25 @@ public class UserService {
         }
         return currentUser;
     }
-
+    
     public User getUserFromCASToken() {
     	ClientAuthenticationToken token = (ClientAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
     	UserProfile userProfile = token.getUserProfile();
     	CommonProfile commonProfile = (CommonProfile) userProfile;
     	CasProfile casProfile = (CasProfile) commonProfile;
     	User currentUser = new User();
-    	currentUser.setLogin(casProfile.getAttribute("username").toString());
-    	currentUser.setEmail(casProfile.getAttribute("email").toString());
-    	currentUser.setFirstName(casProfile.getAttribute("firstName").toString());
-    	currentUser.setLastName(casProfile.getAttribute("lastName").toString());
+    	String username = "";
+    	if(casProfile.getUsername() != null && !casProfile.getUsername().isEmpty())
+    		username = casProfile.getUsername();
+    	else if(casProfile.getId() != null && !casProfile.getId().isEmpty())
+    		username = casProfile.getId();
+    	currentUser.setLogin(username);
+    	currentUser.setEmail(casProfile.getAttribute("email") != null ? casProfile.getAttribute("email").toString() : "");
+    	currentUser.setFirstName(casProfile.getAttribute("firstName") !=  null ? casProfile.getAttribute("firstName").toString() : "");
+    	currentUser.setLastName(casProfile.getAttribute("lastName") !=  null ? casProfile.getAttribute("lastName").toString() : "");
     	currentUser.setActivated(true);
-    	currentUser.setId(Long.parseLong(casProfile.getAttribute("personId").toString()));
+    	// id automatically generated.
+    	//currentUser.setId(Long.parseLong(casProfile.getAttribute("personId").toString())); 
     	currentUser.setAuthorities(getAllAuthoritiesForUser(currentUser.getLogin()));
     	return currentUser;
     }
