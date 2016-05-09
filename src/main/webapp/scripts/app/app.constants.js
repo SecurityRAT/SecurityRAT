@@ -4,6 +4,6 @@ angular.module('sdlctoolApp')
 
 .constant('ENV', 'dev')
 
-.constant('VERSION', '0.9.3')
+.constant('VERSION', '1.0.1')
 
 ;
