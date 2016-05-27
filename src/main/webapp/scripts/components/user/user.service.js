@@ -2,7 +2,7 @@
 
 angular.module('sdlctoolApp')
     .factory('User', function ($resource) {
-        return $resource('api/users/:login', {}, {
+        return $resource('admin-api/users/:login', {}, {
                 'query': {method: 'GET', isArray: true},
                 'get': {
                     method: 'GET',
@@ -10,6 +10,7 @@ angular.module('sdlctoolApp')
                         data = angular.fromJson(data);
                         return data;
                     }
-                }
+                },
+                'update': {method:'PUT'}
             });
         });

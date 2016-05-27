@@ -18,7 +18,7 @@ public class AngularJSForwardController {
 
     @RequestMapping(value = {"/audits*","/configuration*","/docs*","/apphealth*","/logs*","/appmetrics*",
                              "/error*","/accessdenied*", "/requirements","/collection*/**","/tag*/**","req*/**",
-                             "opt*/**","status*/**","alternative*/**","projectTypes*/**", "/import*","/export*", "/config*/**"},
+                             "opt*/**","status*/**","alternative*/**","projectTypes*/**", "/import*","/export*", "/config*/**", "/user*/**", "/authorities*"},
                               method = RequestMethod.GET)
     public void pageForward(HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
         forward(httpRequest, httpResponse);

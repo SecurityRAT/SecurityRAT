@@ -1,9 +1,10 @@
 package org.appsec.securityRAT.repository;
 
 import org.appsec.securityRAT.domain.User;
-
 import org.joda.time.DateTime;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +23,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findOneByEmail(String email);
 
     Optional<User> findOneByLogin(String login);
+    
+    Optional<User> findOneById(Long id);
+    
+    @Query("select distinct user from User user left join fetch user.authorities where user.login <> :login ")
+    List<User> findAllRolesOfUsers(@Param("login") String login);
+    
+    @Query("select distinct user from User user left join fetch user.authorities where user.id = :id ")
+    Optional<User> findAllRolesOfUser(@Param("id") Long id);
 
     @Override
     void delete(User t);

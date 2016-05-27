@@ -34,6 +34,7 @@ module.exports = function (config) {
             'main/webapp/bower_components/json3/lib/json3.js',
             'main/webapp/bower_components/ng-file-upload/ng-file-upload.js',
             'main/webapp/bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js',
+            'main/webapp/bower_components/angular-confirm-modal/angular-confirm.js',
             'main/webapp/bower_components/marked/lib/marked.js',
             'main/webapp/bower_components/angular-marked/dist/angular-marked.js',
             'main/webapp/bower_components/highlightjs/highlight.pack.js',

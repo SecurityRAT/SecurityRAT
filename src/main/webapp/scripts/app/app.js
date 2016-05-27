@@ -17,7 +17,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
     'ui.indeterminate'
     ])
 
-    .run(function ($rootScope, $location, $window, $http, $state,  Auth, Principal, ENV, VERSION) {
+    .run(function ($rootScope, $location, $window, $http, $state,  Auth, Principal, ENV, VERSION, Account) {
         $rootScope.ENV = ENV;
         $rootScope.VERSION = VERSION;
         $rootScope.$on('$stateChangeStart', function (event, toState, toStateParams) {
@@ -29,16 +29,33 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
             }
             
         });
+        $rootScope.$on('$stateChangeStart',  function(event, toState, toParams, fromState, fromParams) {
+            
+            var hasRole = false;
+            Account.get(function(result) {
+            	 for(var i = 0; i < result.data.roles.length; i++) {
+                 	if(toState.data.roles.indexOf(result.data.roles[i]) > -1) {
+                 		hasRole = true;
+                 		break;
+                 	}
+                 }
+                 if(!hasRole) {
+                 	event.preventDefault();
+                 	if(fromState.abstract )
+                 		$state.go('editor');
+                 	else
+                 		$state.go(fromState.url);
+                 } 
+            })
+        });
 
         $rootScope.$on('$stateChangeSuccess',  function(event, toState, toParams, fromState, fromParams) {
-            var titleKey = 'Secure SDLC' ;
-
+        	var titleKey = 'Secure SDLC' ;
             $rootScope.previousStateName = fromState.name;
             $rootScope.previousStateParams = fromParams;
-
             // Set the page title key to the one configured in state or use default one
             if (toState.data.pageTitle) {
-                titleKey = toState.data.pageTitle;
+            	titleKey = toState.data.pageTitle;
             }
             $window.document.title = titleKey;
         });

@@ -7,7 +7,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/"><span><img alt="" height="30" width="30" src="/assets/static/favicon.png" style="filter: grayscale(100%)">Secure SDLC Tool</span> <span class="navbar-version">v{{VERSION}}</span></a>
+            <a class="navbar-brand" href="/"><span><img alt="" height="30" width="30" src="/assets/static/favicon.png" style="filter: grayscale(100%)">SecurityRAT</span> <span class="navbar-version">v{{VERSION}}</span></a>
         </div>
         <div class="collapse navbar-collapse" id="navbar-collapse" data-ng-switch="isAuthenticated()">
             <ul class="nav navbar-nav nav-pills navbar-right">
@@ -112,6 +112,8 @@
                     <ul class="dropdown-menu">
                     	<li ui-sref-active="active"><a ui-sref="configConstant"><span class="glyphicon glyphicon-blackboard"></span>
                             &#xA0;<span>Constants</span></a></li>
+                        <li ui-sref-active="active"><a ui-sref="userManagement"><span class="glyphicon glyphicon-user"></span>
+                            &#xA0;<span>User Management</span></a></li>
                         <li ui-sref-active="active"><a ui-sref="metrics"><span class="glyphicon glyphicon-dashboard"></span>
                             &#xA0;<span>Metrics</span></a></li>
                         <li ui-sref-active="active"><a ui-sref="health"><span class="glyphicon glyphicon-heart"></span>

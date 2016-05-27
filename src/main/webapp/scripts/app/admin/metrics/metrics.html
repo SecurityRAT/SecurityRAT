@@ -1,12 +1,12 @@
 <div>
 
-<h2>Application Metrics</h2>
+<h2 class="page-header">Application Metrics</h2>
 <p>
-    <button type="button" class="btn btn-primary" ng-click="refresh()"><span class="glyphicon glyphicon-refresh"></span>&nbsp;<span>Refresh</span></button>
+    <button type="button" class="btn btn-primary" data-ng-click="refresh()"><span class="glyphicon glyphicon-refresh"></span>&nbsp;<span>Refresh</span></button>
 </p>
 
 <h3>JVM Metrics</h3>
-<div class="row" ng-hide="updatingMetrics">
+<div class="row" data-ng-hide="updatingMetrics">
     <div class="col-md-4">
         <b>Memory</b>
         <p><span>Total Memory</span> ({{metrics.gauges['jvm.memory.total.used'].value / 1000000 | number:0}}M / {{metrics.gauges['jvm.memory.total.max'].value / 1000000 | number:0}}M)</p>
@@ -157,7 +157,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="(k, v) in servicesStats">
+        <tr data-ng-repeat="(k, v) in servicesStats">
             <td>{{k}}</td>
             <td class="text-right">{{v.count}}</td>
             <td class="text-right">{{v.mean * 1000 | number:0}}</td>
@@ -186,7 +186,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="(k, v) in cachesStats" ng-once>
+        <tr data-ng-repeat="(k, v) in cachesStats" data-ng-once>
             <td>{{v.name}}</td>
             <td class="text-right">{{metrics.gauges[k + '.objects'].value}}</td>
             <td class="text-right">{{metrics.gauges[k + '.hits'].value}}</td>
@@ -198,8 +198,8 @@
     </table>
 </div>
 
-<h3 ng-show="metrics.gauges['HikariPool-0.pool.TotalConnections'].value > 0">DataSource statistics (time in millisecond)</h3>
-<div class="table-responsive" ng-show="metrics.gauges['HikariPool-0.pool.TotalConnections'].value > 0">
+<h3 data-ng-show="metrics.gauges['HikariPool-0.pool.TotalConnections'].value > 0">DataSource statistics (time in millisecond)</h3>
+<div class="table-responsive" data-ng-show="metrics.gauges['HikariPool-0.pool.TotalConnections'].value > 0">
     <table class="table table-striped">
         <thead>
             <tr>

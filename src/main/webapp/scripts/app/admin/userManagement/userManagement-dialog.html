@@ -1,0 +1,63 @@
+
+<form name="editForm" role="form" novalidate data-ng-submit="save()">
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                data-ng-click="clear()">&times;</button>
+        <h4 class="modal-title" id="myUserManagementLabel">Add or Edit a User</h4> <!-- Create or edit a Constant -->
+    </div>
+    <div class="modal-body">
+        <jh-alert-error></jh-alert-error>
+        <div class="form-group">
+            <label for="id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                    data-ng-model="user.id" readonly>
+        </div>
+
+        <div class="form-group">
+        	<div id="falsePattern" class="alert alert-danger fade in" data-ng-if="editForm.username.$error.pattern">
+			        <strong>Username can only have lowercase character and/or digits e.g john.</strong>
+			</div> 
+        	<!-- <uib-alert data-ng-if="!form.fieldLogin.$valid" type="danger" dismiss-on-timeout="2000" close="close()">username can only have lowercase character and/or digits e.g john.</uib-alert> -->
+            <label for="field_login">Username</label>
+            <input type="text" class="form-control" name="username" id="fieldLogin" pattern="[a-z0-9]*"
+                    data-ng-model="user.login" required>
+
+        </div>
+        <div class="form-group">
+            <label for="field_firstName">Firstname</label>
+            <input type="text" class="form-control" name="firstName" id="field_firstName"
+                    data-ng-model="user.firstName" maxlength="50" title="Maximum length of 50 characters"
+                    required>
+
+        </div>
+        <div class="form-group">
+            <label for="field_lastName">Lastname</label>
+            <input type="text" name="description" id="field_lastName"
+                    data-ng-model="user.lastName" class="form-control" maxlength="50" required></input>
+
+        </div>
+		<div class="form-group">
+		<div id="falsePattern" class="alert alert-danger fade in" data-ng-if="editForm.email.$error.pattern">
+			        <strong>Please enter a valid email. e.g john@yahoo.com</strong>
+			</div> 
+            <label for="field_email">Email</label>
+            <input type="email" name="email" id="field_email"
+                    data-ng-model="user.email" class="form-control" maxlength="100" required></input>
+
+        </div>
+        <div class="form-group">
+            <label for="field_optColumn">Roles</label>
+            <select class="form-control" id="field_optColumn" multiple name="roles" data-ng-model="user.authorities" 
+            data-ng-options="authority as authority.name for authority in authorities track by authority.name"></select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" data-ng-click="clear()">
+            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span>
+        </button>
+        <button type="submit" data-ng-disabled="editForm.$invalid" class="btn btn-primary">
+            <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Save</span>
+        </button>
+    </div>
+</form>
