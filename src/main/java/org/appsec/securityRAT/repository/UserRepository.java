@@ -26,8 +26,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     
     Optional<User> findOneById(Long id);
     
-    @Query("select distinct user from User user left join fetch user.authorities where user.login <> :login ")
-    List<User> findAllRolesOfUsers(@Param("login") String login);
+    @Query("select distinct user from User user left join fetch user.authorities")
+    List<User> findAllRolesOfUsers();
     
     @Query("select distinct user from User user left join fetch user.authorities where user.id = :id ")
     Optional<User> findAllRolesOfUser(@Param("id") Long id);

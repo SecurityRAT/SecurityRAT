@@ -75,10 +75,7 @@ public class UserResource {
     @Timed
     public List<User> getUsersWithAuthority() {
         log.debug("REST request to get all Users with their authorities");
-        return Optional.ofNullable(userService.getUserFromCASToken())
-        		.map(user -> {
-        			return userRepository.findAllRolesOfUsers(user.getLogin());
-        		}).get();
+        return userRepository.findAllRolesOfUsers();
     }
     
     /**
