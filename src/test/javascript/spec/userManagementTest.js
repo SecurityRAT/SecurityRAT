@@ -7,7 +7,7 @@ describe('Protractor Security RAT general testsuite', function() {
 		
 	});
 	
-	it('Administering new User', function() {
+	it('Administering User', function() {
 		admin.click();
 		element(by.partialLinkText('User Management')).click();
 		expect(element.all(by.repeater(userRepeater)).count()).toBeGreaterThan(3);
@@ -19,7 +19,7 @@ describe('Protractor Security RAT general testsuite', function() {
 			count++;
 			element(by.partialButtonText('Add a new User')).click();
 			browser.sleep(2000);
-			expect(element(by.partialButtonText('Save')).isDisabled()).toBe(true);
+			expect(element(by.partialButtonText('Save')).isEnabled()).toBe(false);
 			element(by.id('fieldLogin')).clear().then(function(){
 				element(by.id('fieldLogin')).sendKeys("Test user.<script>alert(1)</script>").then(function() {
 					expect(element(by.id('falsePattern')).isPresent()).toBe(true);
@@ -37,9 +37,9 @@ describe('Protractor Security RAT general testsuite', function() {
 			element(by.id('field_email')).clear().then(function(){
 				element(by.id('field_email')).sendKeys("testuser@testuser");
 			});
-			expect(element(by.partialButtonText('Save')).isDisabled()).toBe(false);
+			expect(element(by.partialButtonText('Save')).isEnabled()).toBe(true);
 			var roles = element.all(by.options('authority as authority.name for authority in authorities track by authority.name'));
-			expect(roles.count()).toGreaterThan(0);
+			expect(roles.count()).toBeGreaterThan(0);
 			roles.get(0).click();
 			roles.get(1).click();
 			element(by.partialButtonText('Save')).click();
@@ -70,7 +70,7 @@ describe('Protractor Security RAT general testsuite', function() {
 					.done(function() {
 						alert('csrf test unsuccessful')
 					})
-		}
+		});
 	})
 	
 });
