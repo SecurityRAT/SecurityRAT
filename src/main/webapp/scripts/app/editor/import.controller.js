@@ -152,6 +152,7 @@ angular.module('sdlctoolApp')
 		  }
 
 	  }
+	  // adds the authenticator moddal to the promise
 	  $scope.authenticationrunningModal = function(promise) {
 		  angular.extend(promise, {runningModalPromise : function() {
 			  var modalInstance = $uibModal.open({
@@ -482,7 +483,7 @@ angular.module('sdlctoolApp')
 								 error.errorException.opened.$$state.value = false;
 								 error.errorException.opened.$$state.status = 1;
 			                	}
-							 SDLCToolExceptionService.showWarning('Issue call failed', "The issue " + jiraLink + " linked to your requirement setd does not exist.", SDLCToolExceptionService.DANGER);
+							 SDLCToolExceptionService.showWarning('Issue call failed', "The issue " + jiraLink + " linked to your requirement set does not exist.", SDLCToolExceptionService.DANGER);
 						 }
 					 });
 				 }else {

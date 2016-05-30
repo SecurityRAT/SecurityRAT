@@ -381,6 +381,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
     					}
         			}
 	    			apiFactory.getJIRAInfo(apiCall).then(function(response) {
+	    				console.log(response)
 	    				if(response.length === 0){
 	    					myFunction();
 	    				} else {
