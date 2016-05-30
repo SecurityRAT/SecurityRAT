@@ -475,6 +475,11 @@ angular.module('sdlctoolApp')
 							 authenticatorService.checkAuthentication(urlCall, authenticatorProperty, $scope.importProperty, $scope[$scope.apiUrl.ticketKey[0]]).then(function(data) {
 								 $scope.updateLinkStatus(data, jiraStatus, requirement, category, values, statusColumnsValues);
 //								 if($scope.promise.runningModalPromise !== undefined) {$scope.promise.runningModalPromise.close();}
+							  }, function(error) {
+								  if(error.status === 403) 
+									  SDLCToolExceptionService.showWarning('Issue call failed', "You do not have the permission to view the ticket "+ jiraLink, SDLCToolExceptionService.DANGER);
+								  else if(error.status === 500)
+									  SDLCToolExceptionService.showWarning('Internal Server Error', 'The server encountered an unexpected condition which prevented it from fulfilling the request.', SDLCToolExceptionService.DANGER);
 							  });
 						 } else if (error.status === 403) {
 							 SDLCToolExceptionService.showWarning('Issue call failed', "You do not have the permission to view the ticket "+ jiraLink, SDLCToolExceptionService.DANGER);

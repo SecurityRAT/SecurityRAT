@@ -390,11 +390,17 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
 	    					self.cancelPromises(promise);
 	    				}
 	    			}, function(exception){
-	    				if(angular.isDefined(exception.errorException) && exception.errorException.opened.$$state.status === 0) {
-							exception.errorException.opened.$$state.value = false;
-							exception.errorException.opened.$$state.status = 1;
-	                	}
-	    				myFunction();
+	    				if(exception.status === 401) {
+		    				if(angular.isDefined(exception.errorException) && exception.errorException.opened.$$state.status === 0) {
+								exception.errorException.opened.$$state.value = false;
+								exception.errorException.opened.$$state.status = 1;
+		                	}
+		    				myFunction();
+	    				}else {
+	    					property.showSpinner = false;
+	    					promise.derefer.reject(exception);
+	    					self.cancelPromises(promise);
+	    				}
 	    			});
 	    			return promise.derefer.promise;
 	    		}
