@@ -15,16 +15,27 @@
   - [Bower](http://bower.io/)
   - [Grunt](http://gruntjs.com/)
   - [CAS](https://en.wikipedia.org/wiki/Central_Authentication_Service) server is needed for handling authentication. If you don't use one, you can e.g.:
-    - use this simple demo as a starting point: https://github.com/leleuj/cas-overlay-demo
-    - build your own CAS server according to instructions at http://jasig.github.io/cas
-    - use one of the ready-made docker containers from https://hub.docker.com
+    - use this simple demo as a starting point: https://github.com/apereo/cas-overlay-template
+    - build your own CAS server according to instructions at http://apereo.github.io/cas
+    - use one of the ready-made docker containers from https://hub.docker.com (e.g. apereo/cas:v4.2.2)
   - [MySQL Database](https://www.mysql.com/)
 
 # Before starting the application:
 - checkout this project
 - log into your mysql server and create an empty database for this application
 - edit the database and CAS server configuration in the file `src/main/resources/config/application-dev.yml` according to the examples
-
+- enable TLS for spring boot if you don't use a separate web server:
+   - e.g. generate a self-signed certificate in the root directory of SecurityRAT: `keytool -genkey -alias tomcat -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore keystore.p12 -validity 3650`
+   - add the following lines into `application-dev.yml`:
+    ```
+    server:
+      ssl:
+        key-store: keystore.p12
+        key-store-password: mypassword
+        keyStoreType: PKCS12
+        keyAlias: tomcat
+    ```
+   - in the same file, set the CAS callback url to https:// instead of http://
   
 # How to run in dev mode
 - In the project directory, fire `npm install`.
