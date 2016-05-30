@@ -1,5 +1,10 @@
 server:
     port: 9000
+    ssl:
+        key-store: keystore.p12
+        key-store-password: One4all.
+        keyStoreType: PKCS12
+        keyAlias: tomcat
 
 liquibase:
     context: dev
@@ -12,8 +17,8 @@ spring:
         url: jdbc:mysql://localhost:3306/securityrat?useUnicode=true&characterEncoding=utf8  #edit according to the DB server and DB name
         databaseName:
         serverName:
-        username: securityrat #change to your db user
-        password: mypassword #change to your db password
+        username: root #change to your db user
+        password: One4all. #change to your db password
         cachePrepStmts: true
         prepStmtCacheSize: 250
         prepStmtCacheSqlLimit: 2048
@@ -66,4 +71,4 @@ cache:
 
 cas:
     casLoginUrl: http://localhost:8080/cas #Change to the URL your CAS server listens on
-    callbackUrl: http://localhost:9000/callback #Change to the correct URL of SecurityRAT
+    callbackUrl: https://localhost:9000/callback #Change to the correct URL (https) of SecurityRAT
