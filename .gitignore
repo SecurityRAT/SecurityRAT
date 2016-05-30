@@ -127,3 +127,8 @@ Desktop.ini
 # DEV Config File
 ######################
 #/src/main/resources/config/application-dev.yml
+
+######################
+# test config file
+######################
+src/test/javascript/spec/confToRun.js 
