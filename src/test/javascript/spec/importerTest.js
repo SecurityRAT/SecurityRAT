@@ -1,4 +1,4 @@
-describe('Protractor Secure SDLC Tool importer testsuite', function() {
+describe('Protractor Security RAT importer testsuite', function() {
 	var importArtifact = element(by.id('importArtifact'));
 	var defineArtifact = element(by.id('defineArtifact'));
 	var path = require('path');
@@ -17,7 +17,7 @@ describe('Protractor Secure SDLC Tool importer testsuite', function() {
 		});
 	}
 	it('imports by clicking on the link with parameter file and export them again', function() {
-		browser.get(browser.params.impTestAttachmentUrl + "685956").then(function() {}, function(){
+		browser.get(browser.params.impTestAttachmentUrl + attachmentUrls[0]).then(function() {}, function(){
 			browser.switchTo().alert().accept();
 		})
 		browser.sleep(10000);
@@ -53,7 +53,7 @@ describe('Protractor Secure SDLC Tool importer testsuite', function() {
 		browser.get(browser.params.testHost);
 		browser.sleep(5000);
 		importArtifact.click();
-		element(by.model("jiraLink.url")).sendKeys(browser.params.jiraQueue + '-446');
+		element(by.model("jiraLink.url")).sendKeys(browser.params.jiraQueue + issueNumbers[1]);
 		element(by.buttonText("Import")).click();
 		browser.sleep(5000);
 		var list = element.all(by.options('attachment.downloadUrl as attachment.label for attachment in attachmentProperties.attachments'));
@@ -140,43 +140,43 @@ describe('Protractor Secure SDLC Tool importer testsuite', function() {
 		expect(element(by.binding('failMessage')).getText()).toBe('The entered URL is invalid. Please provide a valid URL');
 	});
 	
-	it('Import with old URL structure', function() {
-		browser.get(browser.params.impTestAttachmentUrl + "685629").then(function() {}, function(){
-			browser.switchTo().alert().accept();
-		});
-		browser.sleep(5000);
-		(element(by.buttonText('Close'))).click();
-		browser.sleep(3000);
-		element(by.buttonText('Updates available')).isPresent().then(function(v){ 
-		    element(by.buttonText('Updates available')).click();
-		    browser.wait(function() {
-				return element(by.buttonText('Close')).isPresent();
-			});
-		    browser.sleep(3000);
-		    element(by.buttonText('Close')).click();
-		    browser.sleep(3000);
-		    expect(element(by.buttonText('Updates available')).isEnabled()).toBe(false);
-		    expect(element(by.buttonText(SaveButton)).isEnabled()).toBe(false);
-		    expect(element.all(by.id("feedbackIcon")).count()).toBe(0);
-		    var acceptList = element.all(by.id('acceptReq'));
-		    
-		    var x = 0;
-		    acceptList.each(function(element, index) {
-		    	if(x <= 20)
-		    		element.click();
-		    	x++;
-		    });
-		    browser.sleep(3000);
-		    var removeList = element.all(by.id('removeReq'));
-		    removeList.each(function(element, index) {
-		    		element.click();
-		    });
-		    browser.sleep(10000);
-		});
-	});
+//	it('Import with old URL structure', function() {
+//		browser.get(browser.params.impTestAttachmentUrl + "685629").then(function() {}, function(){
+//			browser.switchTo().alert().accept();
+//		});
+//		browser.sleep(5000);
+//		(element(by.buttonText('Close'))).click();
+//		browser.sleep(3000);
+//		element(by.buttonText('Updates available')).isPresent().then(function(v){ 
+//		    element(by.buttonText('Updates available')).click();
+//		    browser.wait(function() {
+//				return element(by.buttonText('Close')).isPresent();
+//			});
+//		    browser.sleep(3000);
+//		    element(by.buttonText('Close')).click();
+//		    browser.sleep(3000);
+//		    expect(element(by.buttonText('Updates available')).isEnabled()).toBe(false);
+//		    expect(element(by.buttonText(SaveButton)).isEnabled()).toBe(false);
+//		    expect(element.all(by.id("feedbackIcon")).count()).toBe(0);
+//		    var acceptList = element.all(by.id('acceptReq'));
+//		    
+//		    var x = 0;
+//		    acceptList.each(function(element, index) {
+//		    	if(x <= 20)
+//		    		element.click();
+//		    	x++;
+//		    });
+//		    browser.sleep(3000);
+//		    var removeList = element.all(by.id('removeReq'));
+//		    removeList.each(function(element, index) {
+//		    		element.click();
+//		    });
+//		    browser.sleep(10000);
+//		});
+//	});
 	
 	it('Import with deleted attachment', function() {
-		browser.get(browser.params.impTestAttachmentUrl + '686023').then(function() {}, function(){
+		browser.get(browser.params.impTestAttachmentUrl + attachmentUrls[1]).then(function() {}, function(){
 			browser.switchTo().alert().accept();
 		});
 		browser.sleep(10000);
@@ -195,7 +195,7 @@ describe('Protractor Secure SDLC Tool importer testsuite', function() {
 		browser.get(browser.params.testHost);
 		browser.sleep(5000);
 		importArtifact.click();
-		element(by.model("jiraLink.url")).sendKeys(browser.params.jiraQueue + '-446');
+		element(by.model("jiraLink.url")).sendKeys(browser.params.jiraQueue + issueNumbers[1]);
 		element(by.buttonText("Import")).click();
 		browser.sleep(1000);
 		element(by.binding('jira.url')).click();
@@ -212,7 +212,7 @@ describe('Protractor Secure SDLC Tool importer testsuite', function() {
 		element(by.binding('jira.url')).click();
 		browser.sleep(15000);
 		var list = element.all(by.options('attachment.downloadUrl as attachment.label for attachment in attachmentProperties.attachments'));
-		expect(list.count()).toBeGreaterThan(3);
+		expect(list.count()).toBeGreaterThan(1);
 		element(by.buttonText("Import")).click();
 		browser.sleep(5000);
 		element(by.buttonText("Close")).click();
@@ -220,7 +220,7 @@ describe('Protractor Secure SDLC Tool importer testsuite', function() {
 	
 	it('imports by clicking on the link without being authenticated', function() {
 		deleteCookie();
-		browser.get(browser.params.impTestAttachmentUrl + "685956").then(function() {}, function(){
+		browser.get(browser.params.impTestAttachmentUrl + attachmentUrls[0]).then(function() {}, function(){
 			browser.switchTo().alert().accept();
 		})
 		browser.sleep(1000);
@@ -230,7 +230,7 @@ describe('Protractor Secure SDLC Tool importer testsuite', function() {
 			browser.switchTo().window(handles[0]).then();
 		});
 		browser.sleep(65000);
-		browser.get(browser.params.impTestAttachmentUrl + "685956").then(function() {}, function(){
+		browser.get(browser.params.impTestAttachmentUrl + attachmentUrls[0]).then(function() {}, function(){
 			browser.switchTo().alert().accept();
 		})
 		browser.sleep(1000);
@@ -239,7 +239,7 @@ describe('Protractor Secure SDLC Tool importer testsuite', function() {
 		element(by.buttonText("Close")).click();
 	});
 	it('imports from file with ', function() {
-		browser.get(browser.params.impTestAttachmentUrl + '686160').then(function() {}, function(){
+		browser.get(browser.params.impTestAttachmentUrl + attachmentUrls[2]).then(function() {}, function(){
 			browser.switchTo().alert().accept();
 		})
 		browser.sleep(5000);
@@ -249,7 +249,7 @@ describe('Protractor Secure SDLC Tool importer testsuite', function() {
 			browser.switchTo().window(handles[0]).then();
 		});
 		browser.sleep(65000);
-		browser.get(browser.params.impTestAttachmentUrl + '686160').then(function() {}, function(){
+		browser.get(browser.params.impTestAttachmentUrl + attachmentUrls[2]).then(function() {}, function(){
 			browser.switchTo().alert().accept();
 		})
 		browser.sleep(5000);

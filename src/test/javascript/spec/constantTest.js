@@ -1,4 +1,4 @@
-describe('Protractor Secure SDLC Tool general testsuite', function() {
+describe('Protractor Security RAT general testsuite', function() {
 	var admin = element(by.partialLinkText('Administration'));
 	var constantRepeater = "constant in constants";
 	
@@ -46,7 +46,6 @@ describe('Protractor Secure SDLC Tool general testsuite', function() {
 //	    		var constants = [];
 //	    		var ajax = new XMLHttpRequest();
 //	        	ajax.open("PUT","admin-api/configConstants",true);
-//	        	ajax.setRequestHeader("Accept","application/json, text/plain, */*");
 //	        	ajax.onreadystatechange = function(){
 //	        			if(this.readyState == 4){
 //	        				if(this.status == 200){
@@ -57,8 +56,7 @@ describe('Protractor Secure SDLC Tool general testsuite', function() {
 //	        		}
 //	          
 //	          ajax.withCredentials = true;
-//	ajax.setRequestHeader('Content-Type', 'application/json;charset=utf-8');
-//	ajax.setRequestHeader('X-CSRF-TOKEN', 'a3d958ad-edc7-4127-aab3-7fc33dbcaa1f');
+//	ajax.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded;');
 //	ajax.send(formData);
 	
 	

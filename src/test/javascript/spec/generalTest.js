@@ -1,4 +1,4 @@
-describe('Protractor Secure SDLC Tool general testsuite', function() {
+describe('Protractor Security RAT general testsuite', function() {
 	var defineArtifact = element(by.id('defineArtifact'));
 	
 	beforeAll(function() {

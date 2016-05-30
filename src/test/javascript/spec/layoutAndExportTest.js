@@ -1,5 +1,5 @@
 // spec.js
-describe('Protractor Secure SDLC Tool Testsuite', function() {
+describe('Protractor Security RAT Testsuite', function() {
 	var defineArtifact = element(by.id('defineArtifact'));
 	var importArtifact = element(by.id('importArtifact'));
 	var restoreSession = element(by.id('restoreSession'));
@@ -408,7 +408,7 @@ describe('Protractor Secure SDLC Tool Testsuite', function() {
 		browser.sleep(2000);
 		(element(by.buttonText(SaveButton))).click();
 		element(by.model('jiraUrl.url')).clear().then(function(){
-			element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraQueue + "-500");
+			element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraQueue + issueNumbers[0]);
 		});
 		
 		(element(by.buttonText(exportButton))).click();

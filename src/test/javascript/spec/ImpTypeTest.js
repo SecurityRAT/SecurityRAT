@@ -1,4 +1,4 @@
-describe('Protractor Secure SDLC Tool general testsuite', function() {
+describe('Protractor Security RAT general testsuite', function() {
 	var entities = element(by.partialLinkText('Entities'));
 	var confirmDelete = element(by.css('button[ng-disabled="deleteForm.$invalid"]'));
 	var projectTypeRepeater = "projectType in projectTypes | orderBy:'showOrder'";
