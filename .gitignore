@@ -131,4 +131,7 @@ Desktop.ini
 ######################
 # test config file
 ######################
-src/test/javascript/spec/confToRun.js 
+src/test/javascript/spec/confToRun.js
+
+#keystore file
+keystore.p12 
