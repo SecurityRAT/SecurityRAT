@@ -20,7 +20,7 @@ angular.module('sdlctoolApp')
 		
 		$scope.init = function() {
 			$scope.manFilterObject = {};
-			$scope.pattern = new RegExp('(https:\/\/){1}'+ // protocol
+			$scope.pattern = new RegExp('(^(http|https):\/\/){1}'+ // protocol
 				    '(([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}'+ // domain name
 				    '(\:\d+)?(\/[-a-z\d%_.~+]*)*' // port and path
 				    ,'i');

@@ -72,7 +72,7 @@ angular.module('sdlctoolApp')
 				  SDLCToolExceptionService.showWarning('Import unsuccessful', "Invalid url in query parameter file. Please enter a valid JIRA ticket with an attachment.", SDLCToolExceptionService.DANGER);
 			  }
 		  }
-		  $scope.pattern = new RegExp('(https:\/\/){1}'+ // protocol
+		  $scope.pattern = new RegExp('(^(http|https):\/\/){1}'+ // protocol
 			    '(([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}'+ // domain name
 			    '(\:\d+)?(\/[-a-z\d%_.~+]*)*' // port and path
 			    ,'i');
