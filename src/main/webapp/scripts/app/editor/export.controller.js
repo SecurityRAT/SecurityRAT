@@ -106,7 +106,7 @@ angular.module('sdlctoolApp')
 				if(angular.equals(list[i], "")) {
 					list.splice(i, 1);
 				}
-				if(list[i].indexOf("https:") > -1) {
+				else if((list[i].indexOf("https:") > -1) || (list[i].indexOf("http:") > -1)) {
 					angular.extend($scope.apiUrl, {http: list[i]});
 				}
 				else if(list[i].indexOf(".") > -1) {
@@ -492,6 +492,7 @@ angular.module('sdlctoolApp')
 			$scope.exportProperty.fail = false;
 			$scope.checks.isTicket = false;
 			var fieldNotfulfilled = false;
+			//console.log($scope.jiraUrl);
 			if (($scope.selection.jira || $scope.selection.createTickets) && ($scope.jiraUrl.url == undefined)) {
 				$scope.exportProperty.fail = true;
 		    	$scope.exportProperty.failed = "Please specify the Jira URL";
@@ -507,7 +508,9 @@ angular.module('sdlctoolApp')
 						message: 'You are not authenticated, please click on the following link to authenticate yourself. You will have one minute after a click on the link.'
 				}
 				var urlSplit = $scope.jiraUrl.url.split("/");
+				//console.log($scope.apiUrl);
 				$scope.buildUrlObject(urlSplit);
+				//console.log($scope.apiUrl);
 				$scope.promise.derefer = $q.defer();
 				authenticatorService.checkAuthentication($scope.buildUrlCall("issueType"), authenticatorProperty, $scope.exportProperty, $scope.promise).then(function(data) {
 					if($scope.checks.isTicket && $scope.selection.jira) {
