@@ -20,6 +20,10 @@ angular.module('sdlctoolApp')
 		
 		$scope.init = function() {
 			$scope.manFilterObject = {};
+			$scope.urlpattern = {
+				http: new RegExp('((http|https):){1}'),
+				host: new RegExp('(([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}(\:\d+)?')
+			}
 			$scope.pattern = new RegExp('(^(http|https):\/\/){1}'+ // protocol
 				    '(([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}'+ // domain name
 				    '(\:\d+)?(\/[-a-z\d%_.~+]*)*' // port and path
@@ -102,14 +106,19 @@ angular.module('sdlctoolApp')
 		$scope.buildUrlObject = function(list) {
 			$scope.apiUrl = {};
 			$scope.apiUrl.ticketKey = [];
+			var hostSet = false;
 			for(var i = 0; i < list.length; i++) {
 				if(angular.equals(list[i], "")) {
 					list.splice(i, 1);
+					i--;
 				}
-				else if((list[i].indexOf("https:") > -1) || (list[i].indexOf("http:") > -1)) {
+				else if($scope.urlpattern.http.test(list[i])) {
+				//else if((list[i].indexOf("https:") > -1) || (list[i].indexOf("http:") > -1)) {
 					angular.extend($scope.apiUrl, {http: list[i]});
 				}
-				else if(list[i].indexOf(".") > -1) {
+				else if($scope.urlpattern.host.test(list[i]) && !hostSet) {
+				//else if(list[i].indexOf(".") > -1) 
+					hostSet = true;
 					angular.extend($scope.apiUrl, {host: list[i]});
 				} else if(list[i].indexOf("-") > -1) {
 					$scope.apiUrl.ticketKey.push(list[i]); 

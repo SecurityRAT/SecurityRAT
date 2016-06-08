@@ -28,21 +28,27 @@ angular.module('sdlctoolApp')
 	  $scope.promise = {};
 	  $scope.importProperty = {};
 	  $scope.attachmentProperties = {}
-
-
+	  $scope.urlpattern = {
+                                http: new RegExp('((http|https):){1}'),
+                                host: new RegExp('(([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}(\:\d+)?')
+           }
 
 	//builds the URL object
 	$scope.buildUrlObject = function(list) {
 		$scope.apiUrl = {};
-		$scope.apiUrl.ticketKey = []
+		$scope.apiUrl.ticketKey = [];
+		var hostSet = false;
 		for(var i = 0; i < list.length; i++) {
 			if(angular.equals(list[i], "")) {
 				list.splice(i, 1);
 			}
-			if(list[i].indexOf("https:") > -1) {
+			if($scope.urlpattern.http.test(list[i])) {
+		//	if(list[i].indexOf("https:") > -1) {
 				angular.extend($scope.apiUrl, {http: list[i]});
 			}
-			else if(list[i].indexOf(".") > -1) {
+			else if($scope.urlpattern.host.test(list[i]) && !hostSet) {
+		//	else if(list[i].indexOf(".") > -1) {
+				hostSet = true;
 				angular.extend($scope.apiUrl, {host: list[i]});
 			} else if(list[i].indexOf("-") > -1) {
 				$scope.apiUrl.ticketKey.push(list[i]);
