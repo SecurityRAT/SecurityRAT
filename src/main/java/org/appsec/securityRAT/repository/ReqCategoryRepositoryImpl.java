@@ -60,7 +60,7 @@ public class ReqCategoryRepositoryImpl implements ReqCategoryRepositoryCustom{
 		//get relevant columns for given projectTypes
 		List<OptColumn> relevantOptColumns = new ArrayList<OptColumn>();
 		for (ProjectType projectType : projectTypes) {
-			Set<OptColumn>optColumnsForProjectType = optColumnRepository.getActiveRelevantOptcolumnsForProjectType(projectType.getId());
+			Set<OptColumn> optColumnsForProjectType = optColumnRepository.getActiveRelevantOptcolumnsForProjectType(projectType.getId());
 			for (OptColumn optColumnForProjectType : optColumnsForProjectType) {
 				if (!relevantOptColumns.contains(optColumnForProjectType))
 					relevantOptColumns.add(optColumnForProjectType);
@@ -75,15 +75,13 @@ public class ReqCategoryRepositoryImpl implements ReqCategoryRepositoryCustom{
 				receivedCollectionCategories.add(collectionCategory);
 			}
 		}
-
-
 		for (ReqCategory activeCategory : activeCategories) {
 			Set<RequirementSkeleton> skeletonsToAdd = new HashSet<RequirementSkeleton>();
 			Set<RequirementSkeleton> skeletonsForCategory = requirementSkeletonRepository.findActiveReqsForCategoryAndProjectTypes(activeCategory, projectTypes);
 			for (RequirementSkeleton skeleton: skeletonsForCategory) {
 				Set<CollectionInstance> allCollectionsForSkeleton = collectionInstanceRepository.findActiveCollectionsForSkeleton(skeleton);
 				boolean skeletonInAllCollectionCategories = true;
-				for (CollectionCategory receivedCollectionCategory : receivedCollectionCategories) {
+				for (CollectionCategory receivedCollectionCategory : receivedCollectionCategories) { 
 					boolean skeletonAtLeastInOneCollection = false;
 					for (CollectionInstance collectionInstance : allCollectionsForSkeleton) {
 						if (receivedCollectionCategory.getCollectionInstances().contains(collectionInstance)) {
@@ -93,6 +91,7 @@ public class ReqCategoryRepositoryImpl implements ReqCategoryRepositoryCustom{
 					}
 					if (!skeletonAtLeastInOneCollection) skeletonInAllCollectionCategories = false;
 				}
+				
 				if (skeletonInAllCollectionCategories) {
 					skeleton.setTagInstances(tagInstanceRepository.getTagInstancesForSkeleton(skeleton));
 					skeleton.setOptColumnContents(optColumnContentRepository.findOptColumnsForSkeletonAndProjectTypes(skeleton, projectTypes));
