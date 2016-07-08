@@ -2,7 +2,7 @@ server:
     port: 9000
     ssl:
         key-store: keystore.p12
-        key-store-password:
+        key-store-password: mypassword
         keyStoreType: PKCS12
         keyAlias: tomcat
 
@@ -70,5 +70,5 @@ cache:
         maxBytesLocalHeap: 16M
 
 cas:
-    casLoginUrl: http://localhost:8080/cas #Change to the URL your CAS server listens on
+    casLoginUrl: https://localhost:8443/cas #Change to the URL your CAS server listens on
     callbackUrl: https://localhost:9000/callback #Change to the correct URL (https) of SecurityRAT

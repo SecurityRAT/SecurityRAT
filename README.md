@@ -35,14 +35,12 @@
         keyStoreType: PKCS12
         keyAlias: tomcat
     ```
-   - in the same file, set the CAS callback url to https:// instead of http://
+- add the CAS server certificate to the truststore of SecurityRAT. By default, that would be the cacerts file. For a tutorial how to do it, look e.g. here: http://stackoverflow.com/questions/11617210/how-to-properly-import-a-selfsigned-certificate-into-java-keystore-that-is-avail
   
 # How to run in dev mode
-- In the project directory, fire `npm install`.
 - fire `mvn spring-boot:run`. This will automatically create the database structure if it doesnt exist yet.
-- log in to your mysql server and in the `JHI_USER` table rename the 'admin' user login to your CAS username (in order to get full rights for your user). 
-- Open a new terminal and move to the project directory.Then run `grunt serve`.
-- go to http://localhost:9000. You should be verified by your previously setup CAS server and can start using the application.
+- log in to your mysql server and in the `JHI_USER` table rename the `admin` user login to your CAS username (in order to get full rights for your user). 
+- go to https://localhost:9000. You should be verified by your previously setup CAS server and can start using the application.
 - The constants (under Administration -> constants) must be edited accordingly.
 
 # How to run in prod mode
