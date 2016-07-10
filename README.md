@@ -23,7 +23,15 @@
 # Before starting the application:
 - checkout this project
 - log into your mysql server and create an empty database for this application
-- edit the database and CAS server configuration in the file `src/main/resources/config/application-dev.yml` according to the examples
+- edit the database and CAS server configuration in the file `src/main/resources/config/application-[dev|prod].yml` according to the examples
+    ```
+    databaseName: $YourDatabase
+    username: $DBUserName
+    password: $DBUserPassword
+    cas:
+    casLoginUrl: http(s)://localhost:8443/cas #Change to the URL your CAS server listens on
+    callbackUrl: https://localhost:9000/callback #Change to the correct URL (https) of SecurityRAT
+    ```
 - enable TLS for spring boot if you don't use a separate web server:
    - e.g. generate a self-signed certificate in the root directory of SecurityRAT: `keytool -genkey -alias tomcat -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore keystore.p12 -validity 3650`
    - add the following lines into `application-dev.yml`:
@@ -31,13 +39,14 @@
     server:
       ssl:
         key-store: keystore.p12
-        key-store-password: mypassword
+        key-store-password: $MyPassword
         keyStoreType: PKCS12
         keyAlias: tomcat
     ```
 - add the CAS server certificate to the truststore of SecurityRAT. By default, that would be the cacerts file. For a tutorial how to do it, look e.g. here: http://stackoverflow.com/questions/11617210/how-to-properly-import-a-selfsigned-certificate-into-java-keystore-that-is-avail
   
 # How to run in dev mode
+- if you are going to run SecurityRAT and the CAS server on the same machine at least 6GB of RAM are recommended.
 - fire `mvn spring-boot:run`. This will automatically create the database structure if it doesnt exist yet.
 - log in to your mysql server and in the `JHI_USER` table rename the `admin` user login to your CAS username (in order to get full rights for your user). 
 - go to https://localhost:9000. You should be verified by your previously setup CAS server and can start using the application.
