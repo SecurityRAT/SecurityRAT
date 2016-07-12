@@ -7,7 +7,7 @@ angular.module('sdlctoolApp')
                 parent: 'entity',
                 url: '/collectionCategorys',
                 data: {
-                    roles: ['ROLE_USER'],
+                    roles: ['ROLE_USER', 'ROLE_ADMIN'],
                     pageTitle: 'CollectionCategorys'
                 },
                 views: {
@@ -23,7 +23,7 @@ angular.module('sdlctoolApp')
                 parent: 'entity',
                 url: '/collectionCategory/{id}',
                 data: {
-                    roles: ['ROLE_USER'],
+                    roles: ['ROLE_USER', 'ROLE_ADMIN'],
                     pageTitle: 'CollectionCategory'
                 },
                 views: {
@@ -42,7 +42,7 @@ angular.module('sdlctoolApp')
                 parent: 'collectionCategory',
                 url: '/new',
                 data: {
-                    roles: ['ROLE_USER'],
+                    roles: ['ROLE_USER', 'ROLE_ADMIN'],
                 },
                 onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 	$uibModal.open({
@@ -65,7 +65,7 @@ angular.module('sdlctoolApp')
                 parent: 'collectionCategory',
                 url: '/{id}/edit',
                 data: {
-                    roles: ['ROLE_USER'],
+                    roles: ['ROLE_USER', 'ROLE_ADMIN'],
                 },
                 onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 	$uibModal.open({
@@ -88,7 +88,7 @@ angular.module('sdlctoolApp')
 	            parent: 'collectionCategory',
 	            url: '/edit',
 	            data: {
-	                roles: ['ROLE_USER'],
+	                roles: ['ROLE_USER', 'ROLE_ADMIN'],
 	            },
 	            onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
 	            	$uibModal.open({

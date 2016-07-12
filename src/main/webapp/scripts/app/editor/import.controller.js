@@ -28,10 +28,10 @@ angular.module('sdlctoolApp')
 	  $scope.promise = {};
 	  $scope.importProperty = {};
 	  $scope.attachmentProperties = {}
-	  $scope.urlpattern = {
-                                http: new RegExp('((http|https):){1}'),
-                                host: new RegExp('(([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}(\:\d+)?')
-           }
+//	  $scope.urlpattern = {
+//                                http: new RegExp('((http|https):){1}'),
+//                                host: new RegExp('(([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}(\:\d{2,5})?')
+//           }
 
 	//builds the URL object
 	$scope.buildUrlObject = function(list) {
@@ -42,11 +42,11 @@ angular.module('sdlctoolApp')
 			if(angular.equals(list[i], "")) {
 				list.splice(i, 1);
 			}
-			if($scope.urlpattern.http.test(list[i])) {
+			if(urlpattern.http.test(list[i])) {
 		//	if(list[i].indexOf("https:") > -1) {
 				angular.extend($scope.apiUrl, {http: list[i]});
 			}
-			else if($scope.urlpattern.host.test(list[i]) && !hostSet) {
+			else if(urlpattern.host.test(list[i]) && !hostSet) {
 		//	else if(list[i].indexOf(".") > -1) {
 				hostSet = true;
 				angular.extend($scope.apiUrl, {host: list[i]});
@@ -78,10 +78,10 @@ angular.module('sdlctoolApp')
 				  SDLCToolExceptionService.showWarning('Import unsuccessful', "Invalid url in query parameter file. Please enter a valid JIRA ticket with an attachment.", SDLCToolExceptionService.DANGER);
 			  }
 		  }
-		  $scope.pattern = new RegExp('(^(http|https):\/\/){1}'+ // protocol
-			    '(([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}'+ // domain name
-			    '(\:\d+)?(\/[-a-z\d%_.~+]*)*' // port and path
-			    ,'i');
+//		  $scope.pattern = new RegExp('(^(http|https):\/\/){1}'+ // protocol
+//			    '(([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}'+ // domain name
+//			    '(\:\d{2,5})?(\/[-a-z\d%_.~+]*)*' // port and path
+//			    ,'i');
 		  var url = sharedProperties.getProperty();
 		  angular.extend($scope.attachmentProperties, {attachments: [], hasAttachments: false, selectedAttachment: ""});
 		  angular.extend($scope.jiraLink, {url: "", backupUrl: ""});
@@ -113,7 +113,7 @@ angular.module('sdlctoolApp')
 								  } else {
 									  fileUrl = decodeURIComponent($location.search().file);
 								  }
-								  if($scope.pattern.test(fileUrl)) {
+								  if(re_weburl.test(fileUrl)) {
 									  
 									  apiFactory.getJIRAInfo(fileUrl).then(
 											  function(attachment) {
@@ -195,7 +195,7 @@ angular.module('sdlctoolApp')
 			  $scope.uploadFail = true;
 		      $scope.failMessage = "Please specify the Jira URL";
 		  } else {
-			  if($scope.pattern.test($scope.jiraLink.url.trim())) {
+			  if(re_weburl.test($scope.jiraLink.url.trim())) {
 				  var urlSplit = $scope.jiraLink.url.split("/");
 				  $scope.buildUrlObject(urlSplit);
 				  var apiCall = $scope.apiUrl.http + "//" + $scope.apiUrl.host + appConfig.jiraApiIssueType;

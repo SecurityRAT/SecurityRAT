@@ -4,7 +4,7 @@ angular.module('sdlctoolApp')
 		$scope.jiraUrl = {};
 		$scope.checks = {};
 		$scope.extension = {};
-		$scope.pattern = {}
+//		$scope.pattern = {}
 		$scope.fields = {};
 		$scope.apiUrl = {};
 		$scope.jiraAlternatives = {};
@@ -20,14 +20,14 @@ angular.module('sdlctoolApp')
 		
 		$scope.init = function() {
 			$scope.manFilterObject = {};
-			$scope.urlpattern = {
-				http: new RegExp('((http|https):){1}'),
-				host: new RegExp('(([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}(\:\d+)?')
-			}
-			$scope.pattern = new RegExp('(^(http|https):\/\/){1}'+ // protocol
-				    '(([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}'+ // domain name
-				    '(\:\d+)?(\/[-a-z\d%_.~+]*)*' // port and path
-				    ,'i');
+//			$scope.urlpattern = {
+//				http: new RegExp('((http|https):){1}'),
+//				host: new RegExp('(([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}(\:\d{2,5})?')
+//			}
+//			$scope.pattern = new RegExp('(^(http|https):\/\/){1}'+ // protocol
+//				    '(([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}'+ // domain name
+//				    '(\:\d{2,5})?(\/[-a-z\d%_.~+]*)*' // port and path
+//				    ,'i');
 			$scope.extension = 'yaml';
 			$scope.exported = sharedProperties.getProperty();
 			$scope.jiraAlternatives.issueTypes = [];
@@ -112,11 +112,11 @@ angular.module('sdlctoolApp')
 					list.splice(i, 1);
 					i--;
 				}
-				else if($scope.urlpattern.http.test(list[i])) {
+				else if(urlpattern.http.test(list[i])) {
 				//else if((list[i].indexOf("https:") > -1) || (list[i].indexOf("http:") > -1)) {
 					angular.extend($scope.apiUrl, {http: list[i]});
 				}
-				else if($scope.urlpattern.host.test(list[i]) && !hostSet) {
+				else if(urlpattern.host.test(list[i]) && !hostSet) {
 				//else if(list[i].indexOf(".") > -1) 
 					hostSet = true;
 					angular.extend($scope.apiUrl, {host: list[i]});
@@ -506,7 +506,7 @@ angular.module('sdlctoolApp')
 				$scope.exportProperty.fail = true;
 		    	$scope.exportProperty.failed = "Please specify the Jira URL";
 		    	$scope.checks.isQueue = false;
-			} else if (($scope.selection.jira || $scope.selection.createTickets) && !$scope.pattern.test($scope.jiraUrl.url)) {
+			} else if (($scope.selection.jira || $scope.selection.createTickets) && !re_weburl.test($scope.jiraUrl.url)) {
 				$scope.exportProperty.fail = true;
 		    	$scope.exportProperty.failed = "Invalid Url. Please specify URL like https://www.example-jira.com/browse/DUMBQ";
 		    	$scope.checks.isQueue = false;
