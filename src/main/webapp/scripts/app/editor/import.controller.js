@@ -25,7 +25,6 @@ angular.module('sdlctoolApp')
 	  $scope.apiUrl = {};
 	  $scope.isTicket = false;
 	  $scope.name = '';
-	  $scope.promise = {};
 	  $scope.importProperty = {};
 	  $scope.attachmentProperties = {}
 //	  $scope.urlpattern = {

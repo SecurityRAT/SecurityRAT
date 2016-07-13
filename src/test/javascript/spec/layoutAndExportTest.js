@@ -310,7 +310,7 @@ describe('Protractor Security RAT Testsuite', function() {
 		
 		//wrong project
 		element(by.model('jiraUrl.url')).clear().then(function(){
-			element(by.model('jiraUrl.url')).sendKeys(jiraHost + "SSDi");
+			element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraHost + "SSDi");
 		});
 		
 		(element(by.buttonText(exportButton))).click();

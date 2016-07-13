@@ -17,7 +17,7 @@ describe('Protractor Security RAT importer testsuite', function() {
 		});
 	}
 	it('imports by clicking on the link with parameter file and export them again', function() {
-		browser.get(browser.params.impTestAttachmentUrl + attachmentUrls[0]).then(function() {}, function(){
+		browser.get(browser.params.impTestAttachmentUrl + browser.params.attachmentUrls[0]).then(function() {}, function(){
 			browser.switchTo().alert().accept();
 		})
 		browser.sleep(10000);
@@ -53,7 +53,7 @@ describe('Protractor Security RAT importer testsuite', function() {
 		browser.get(browser.params.testHost);
 		browser.sleep(5000);
 		importArtifact.click();
-		element(by.model("jiraLink.url")).sendKeys(browser.params.jiraQueue + issueNumbers[1]);
+		element(by.model("jiraLink.url")).sendKeys(browser.params.jiraQueue + '-' + browser.params.issueNumbers[1]);
 		element(by.buttonText("Import")).click();
 		browser.sleep(5000);
 		var list = element.all(by.options('attachment.downloadUrl as attachment.label for attachment in attachmentProperties.attachments'));
@@ -176,7 +176,7 @@ describe('Protractor Security RAT importer testsuite', function() {
 //	});
 	
 	it('Import with deleted attachment', function() {
-		browser.get(browser.params.impTestAttachmentUrl + attachmentUrls[1]).then(function() {}, function(){
+		browser.get(browser.params.impTestAttachmentUrl + browser.params.attachmentUrls[1]).then(function() {}, function(){
 			browser.switchTo().alert().accept();
 		});
 		browser.sleep(10000);
@@ -195,7 +195,7 @@ describe('Protractor Security RAT importer testsuite', function() {
 		browser.get(browser.params.testHost);
 		browser.sleep(5000);
 		importArtifact.click();
-		element(by.model("jiraLink.url")).sendKeys(browser.params.jiraQueue + issueNumbers[1]);
+		element(by.model("jiraLink.url")).sendKeys(browser.params.jiraQueue + '-' + browser.params.issueNumbers[1]);
 		element(by.buttonText("Import")).click();
 		browser.sleep(1000);
 		element(by.binding('jira.url')).click();
@@ -220,7 +220,7 @@ describe('Protractor Security RAT importer testsuite', function() {
 	
 	it('imports by clicking on the link without being authenticated', function() {
 		deleteCookie();
-		browser.get(browser.params.impTestAttachmentUrl + attachmentUrls[0]).then(function() {}, function(){
+		browser.get(browser.params.impTestAttachmentUrl + browser.params.attachmentUrls[0]).then(function() {}, function(){
 			browser.switchTo().alert().accept();
 		})
 		browser.sleep(1000);
@@ -230,7 +230,7 @@ describe('Protractor Security RAT importer testsuite', function() {
 			browser.switchTo().window(handles[0]).then();
 		});
 		browser.sleep(65000);
-		browser.get(browser.params.impTestAttachmentUrl + attachmentUrls[0]).then(function() {}, function(){
+		browser.get(browser.params.impTestAttachmentUrl + browser.params.attachmentUrls[0]).then(function() {}, function(){
 			browser.switchTo().alert().accept();
 		})
 		browser.sleep(1000);
@@ -239,7 +239,7 @@ describe('Protractor Security RAT importer testsuite', function() {
 		element(by.buttonText("Close")).click();
 	});
 	it('imports from file with ', function() {
-		browser.get(browser.params.impTestAttachmentUrl + attachmentUrls[2]).then(function() {}, function(){
+		browser.get(browser.params.impTestAttachmentUrl + browser.params.attachmentUrls[2]).then(function() {}, function(){
 			browser.switchTo().alert().accept();
 		})
 		browser.sleep(5000);
@@ -249,7 +249,7 @@ describe('Protractor Security RAT importer testsuite', function() {
 			browser.switchTo().window(handles[0]).then();
 		});
 		browser.sleep(65000);
-		browser.get(browser.params.impTestAttachmentUrl + attachmentUrls[2]).then(function() {}, function(){
+		browser.get(browser.params.impTestAttachmentUrl + browser.params.attachmentUrls[2]).then(function() {}, function(){
 			browser.switchTo().alert().accept();
 		})
 		browser.sleep(5000);

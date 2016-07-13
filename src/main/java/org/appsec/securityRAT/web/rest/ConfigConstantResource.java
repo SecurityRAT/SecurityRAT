@@ -31,6 +31,7 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
  */
 @RestController
 @RequestMapping("/admin-api")
+@RolesAllowed(value=AuthoritiesConstants.ADMIN)
 public class ConfigConstantResource {
 
     private final Logger log = LoggerFactory.getLogger(ConfigConstantResource.class);
@@ -66,6 +67,7 @@ public class ConfigConstantResource {
     @RequestMapping(value = "/configConstants",
         method = RequestMethod.PUT,
         produces = MediaType.APPLICATION_JSON_VALUE)
+    @RolesAllowed(value=AuthoritiesConstants.ADMIN)
     @Timed
     public ResponseEntity<ConfigConstant> update(@RequestBody ConfigConstant configConstant) throws URISyntaxException {
         log.debug("REST request to update configConstant : {}", configConstantRepository.findOne(configConstant.getId()));

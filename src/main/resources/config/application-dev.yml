@@ -2,7 +2,7 @@ server:
     port: 9000
     ssl:
         key-store: keystore.p12
-        key-store-password: $MyPassword
+        key-store-password: myPassword
         keyStoreType: PKCS12
         keyAlias: tomcat
 
@@ -17,8 +17,8 @@ spring:
         url: jdbc:mysql://localhost:3306/securityrat?useUnicode=true&characterEncoding=utf8  #edit according to the DB server and DB name
         databaseName:
         serverName:
-        username: $DBUserName #change to your db user
-        password: $DBUserPassword #change to your db password
+        username: root #change to your db user
+        password: root. #change to your db password
         cachePrepStmts: true
         prepStmtCacheSize: 250
         prepStmtCacheSqlLimit: 2048
