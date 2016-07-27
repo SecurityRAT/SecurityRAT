@@ -216,15 +216,6 @@ Alternative set background color
     color: white;
     background-color: red;
 }
-
-.hipster {
-    display: inline-block;
-    width: 347px;
-    height: 497px;
-    background: url("../images/hipster.png") no-repeat center top;
-    background-size: contain;
-}
-
 .pad {
     padding: 10px;
 }

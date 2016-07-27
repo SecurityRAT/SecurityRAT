@@ -39,10 +39,12 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                  		break;
                  	}
                  }
-                 if(!hasRole) {
+            	 console.log(fromState);
+                 if(!hasRole && toState.url.indexOf("logout") === -1 && toState.url.indexOf("login") === -1) {
                  	event.preventDefault();
-                 	if(fromState.abstract )
+                 	if(fromState.abstract ) {
                  		$state.go('editor');
+                 }
                  	else
                  		$state.go(fromState.url);
                  } 
@@ -63,8 +65,9 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
         $rootScope.back = function() {
             // If previous state is 'activate' or do not exist go to 'home'
             if ($rootScope.previousStateName === 'activate' || $state.get($rootScope.previousStateName) === null) {
-                $state.go('home');
+                $state.go('editor');
             } else {
+            	console.log($rootScope.previousStateName);
                 $state.go($rootScope.previousStateName, $rootScope.previousStateParams);
             }
         };

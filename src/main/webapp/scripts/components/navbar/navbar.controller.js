@@ -5,7 +5,6 @@ angular.module('sdlctoolApp')
         $scope.isAuthenticated = Principal.isAuthenticated;
         $scope.$state = $state;
         $scope.inProduction = ENV === 'prod';
-
         $scope.logout = function () {
             Auth.logout();
             $state.go('home');

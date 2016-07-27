@@ -11,7 +11,7 @@ angular.module('sdlctoolApp')
                 },
                 views: {
                     'content@': {
-                        templateUrl: 'scripts/app/main/main.html',
+                        templateUrl: 'scripts/app/account/logout/logout.html',
                         controller: 'LogoutController'
                     }
                 }

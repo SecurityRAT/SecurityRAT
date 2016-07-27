@@ -8,6 +8,9 @@ endpoints.jolokia.enabled: false
 # security configuration (this key should be unique for your application, and kept secret)
 jhipster.security.rememberme.key: c271d2839bfc8084e87cdbc4ef2982f431ad078e
 
+authentication:
+    type: FORM # possible values are CAS or FORM
+    
 async:
     corePoolSize: 2
     maxPoolSize: 50
@@ -25,9 +28,9 @@ mail:
 
 
 swagger:
-    title: sdlctool API
-    description: sdlctool applications and beyond!
-    version: 0.0.1
+    title: SecurityRAT
+    description: SecurityRAT applications and beyond!
+    version: 1.0.2
     termsOfServiceUrl: http://jhipster.github.io/
     contact:
     license: Apache 2.0
