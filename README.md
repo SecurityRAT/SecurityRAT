@@ -7,6 +7,11 @@
 - create JIRA tickets for particular requirements in a batch mode in developer queues
 - import the main JIRA ticket into the tool anytime in order to see progress of the particular tickets
 
+# Quick and easy start
+- if you want to play around with the SecurityRAT tool, you can pull the our docker image [securityrat/all_in_one](https://hub.docker.com/r/securityrat/all_in_one/).
+- ofcourse for that you will need to install [docker](https://docs.docker.com/engine/installation/) on your system.
+- **important: this setup is not suitable for a production environment!**
+
 # Prerequisities:
 - As this project is originally based on [JHipster](http://jhipster.github.io/), lot of prerequisities are common with this project. The following are necessary:
   - [JAVA 8 (JDK)](http://www.oracle.com/technetwork/java/javase/overview/java8-2100321.html)
@@ -20,22 +25,20 @@
     - use one of the ready-made docker containers from https://hub.docker.com (e.g. apereo/cas:v4.2.2)
   - [MySQL Database](https://www.mysql.com/)
 
-# Before starting the application:
+# Before starting the application :
 - checkout this project
 - log into your mysql server and create an empty database for this application
-- edit the database and CAS server configuration in the file `src/main/resources/config/application-[dev|prod].yml` according to the examples
+- edit the database in the file `src/main/resources/config/application-[dev|prod].yml` according to the examples
 
     ```
     databaseName: $YourDatabase
     username: $DBUserName
     password: $DBUserPassword
-    cas:
-        casLoginUrl: http(s)://localhost:8443/cas #Change to the URL your CAS server listens on
-        callbackUrl: https://localhost:9000/callback #Change to the correct URL (https) of SecurityRAT
     ```
 - enable TLS for spring boot if you don't use a separate web server:
    - e.g. generate a self-signed certificate in the root directory of SecurityRAT: `keytool -genkey -alias tomcat -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore keystore.p12 -validity 3650`
    - add the following lines into `application-dev.yml`:
+   
     ```
     server:
       ssl:
@@ -44,13 +47,39 @@
         keyStoreType: PKCS12
         keyAlias: tomcat
     ```
+
+# Using CAS authentication
+- edit the CAS server configuration in the file `src/main/resources/config/application-[dev|prod].yml` according to the examples
+
+	```
+	cas:
+        casLoginUrl: http(s)://localhost:8443/cas #Change to the URL your CAS server listens on
+        callbackUrl: https://localhost:9000/callback #Change to the correct URL (https) of SecurityRAT
+    ```
 - add the CAS server certificate to the truststore of SecurityRAT. By default, that would be the cacerts file. For a tutorial how to do it, look e.g. here: http://stackoverflow.com/questions/11617210/how-to-properly-import-a-selfsigned-certificate-into-java-keystore-that-is-avail
+
+# Using FORM authentication
+- edit the authentication type and the Mail server configurarion in the file `src/main/resources/config/application.yml`.
+	```
+	authentication:
+		type: FORM
+	
+	mail:
+   		host: localhost # mail server
+    	port: 25
+    	username:	#might be needed depending on your mail server
+    	password:	#might be needed depending on your mail server
+    	protocol: smtp
+    	tls: false
+    	auth: false
+    	from: securityRAT@localhost # from email address
+	```
   
 # How to run in dev mode
 - if you are going to run SecurityRAT and the CAS server on the same machine at least 6GB of RAM are recommended.
 - fire `mvn spring-boot:run`. This will automatically create the database structure if it doesnt exist yet.
-- log in to your mysql server and in the `JHI_USER` table rename the `admin` user login to your CAS username (in order to get full rights for your user). 
-- go to https://localhost:9000. You should be verified by your previously setup CAS server and can start using the application.
+- log in to your mysql server and in the `JHI_USER` table rename the `admin` user login to your CAS username **OR** log in with the credentials `admin` for the username and password (in order to get full rights for your user).
+- go to https://localhost:9000. You should be verified by your previously setup CAS server *OR* FORM login and can start using the application.
 - The constants (under Administration -> constants) must be edited accordingly.
 
 # How to run in prod mode
@@ -60,10 +89,11 @@
 - copy the file `target/securityRAT-${version}.war` file to your production server
 - in your target directory on the server, create a directory called `config` and copy the file `src/main/resources/config/application-prod.yml` there
 - switch to the target directory and fire `java -jar securityRAT-${version}.war --spring.profiles.active=prod`
-- log in to your mysql server and in the `JHI_USER` table rename the 'admin' user login to your CAS username (in order to get full rights for your user)
+- log in to your mysql server and in the `JHI_USER` table rename the 'admin' user login to your CAS username **OR** log in with the credentials `admin` for the username and password (in order to get full rights for your user).
 - it is recommended to use a web server (e.g. [Apache](https://httpd.apache.org/) as a proxy, with a proper TLS configuration set etc.
 - go to the URL of your server. You should be verified by your previously setup CAS server and can start using the application.
 - The constants (under Administration -> constants) must be edited accordingly.
+- **it is important to change the `admin` password in `prod mode`.**
 
 # Next steps
 - Fill securityRAT with requirements. You can import your own requirements or import the requirements.sql file to get started quickly
