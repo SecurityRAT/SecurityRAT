@@ -14,7 +14,7 @@ exports.config = {
    params: {
 	   admin: {
 		   user: '#{admin username}', 
-		   admin: '#{admin password}'
+		   password: '#{admin password}'
 	   },// this is only relevant when you use FORM authentication.
 	   testHost:"https://securityrat.test.local", //FQDN of test instance of Security RAT
 	   jiraQueue : 'https://test-jira.local/browse/XYZ', //path to a JIRA Queue where test tickets can be opened
