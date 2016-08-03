@@ -4,6 +4,7 @@ describe('Protractor Security RAT general testsuite', function() {
 	beforeAll(function() {
 		browser.driver.executeScript(function(jiraQueue) {
 			  (function(a){
+				  // append a link to the jira queue to the DOM and clicks it. 
 				  document.body.appendChild(a);
 				  a.setAttribute('href', jiraQueue);
 				  a.setAttribute('target', 'blank');
@@ -12,7 +13,8 @@ describe('Protractor Security RAT general testsuite', function() {
 					  return e;
 			  }(document.createEvent('MouseEvents'))))}(document.createElement('a')));
 			}, browser.params.jiraQueue);
-		browser.sleep(15000);
+		// wait for the user to log into the jira queue.
+		browser.sleep(20000);
 	});
 	
 	beforeEach(function() {
@@ -20,7 +22,7 @@ describe('Protractor Security RAT general testsuite', function() {
 	});
 	
 	it('should have title Secure SDLC', function() {
-		browser.sleep(5000);
+		browser.sleep(15000);
 		expect(browser.getTitle()).toEqual('Secure SDLC');
 	});
 	

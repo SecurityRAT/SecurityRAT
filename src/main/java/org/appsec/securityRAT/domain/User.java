@@ -1,16 +1,21 @@
 package org.appsec.securityRAT.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.validator.constraints.Email;
-
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.data.elasticsearch.annotations.Document;
+
 import javax.persistence.*;
+
 import org.hibernate.annotations.Type;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -37,8 +42,9 @@ public class User extends AbstractAuditingEntity implements Serializable {
     private String login;
 
     @JsonIgnore
-//    @NotNull
-    @Size(min = 60, max = 60)
+    @NotNull
+    @Pattern(regexp = "^(?=[\\w\\p{Punct}]*[a-z])(?=[\\w\\p{Punct}]*[A-Z])(?=[\\w\\p{Punct}]*[\\d])(?=[\\w\\p{Punct}]*[\\p{Punct}])[\\w\\p{Punct}]+$")
+    @Size(min = 8, max = 60)
     @Column(length = 60)
     private String password;
 

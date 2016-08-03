@@ -17,3 +17,8 @@ angular.module('sdlctoolApp')
         return $resource('api/account/reset_password/finish', {}, {
         })
     });
+angular.module('sdlctoolApp')
+.factory('ConfirmPassword', function ($resource) {
+    return $resource('api/account/confirm_password', {}, {
+    })
+});

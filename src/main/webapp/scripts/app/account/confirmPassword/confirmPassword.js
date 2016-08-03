@@ -3,20 +3,19 @@
 angular.module('sdlctoolApp')
     .config(function ($stateProvider) {
         $stateProvider
-            .state('sessions', {
+            .state('confirmPassword', {
                 parent: 'account',
-                url: '/sessions',
+                url: '/confirmPassword',
                 data: {
-                    roles: [],
-                    pageTitle: 'Sessions'
+                    roles: [], 
+                    pageTitle: 'Confirm Password'
                 },
                 views: {
                     'content@': {
-                        templateUrl: 'scripts/app/account/sessions/sessions.html',
-                        controller: 'SessionsController'
+                        templateUrl: 'scripts/app/account/confirmPassword/confirmPassword.html',
+                        controller: 'ConfirmPasswordController'
                     }
                 },
-                
                 resolve: {
                     
                 }

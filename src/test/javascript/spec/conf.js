@@ -21,7 +21,7 @@ exports.config = {
 	                    '#{id3}'], // The attachment corresponding to this Id should have issues links.
 	   issueNumbers : ['#{issuenum1}', // JIRA issue number from "jiraQueue" containing an attachment added through by SecurityRAT
 	                   '#{issuenum2}' // JIRA issue number from "jiraQueue" containing more than one attachment added through SecurityRAT
-	                   ]                 
-  
+	                   ],
+       email: '#{registrationEmail}' // Email address to test for the registration.
    }
 }

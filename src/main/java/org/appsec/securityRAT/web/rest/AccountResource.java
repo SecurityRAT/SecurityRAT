@@ -27,6 +27,7 @@ import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -49,7 +50,18 @@ public class AccountResource {
 
     @Inject
     private MailService mailService;
-
+    
+    /**
+     * GET  /authenticationType -> get the type of authentication.
+     */
+    @RequestMapping(value = "/authenticationType",
+            method = RequestMethod.GET,
+            produces = MediaType.TEXT_PLAIN_VALUE)
+    @Timed
+    public ResponseEntity<String> getAuthenticationtype(HttpServletRequest request) {
+    	return new ResponseEntity<>(userService.getAuthenticationType(),HttpStatus.OK);
+    }
+    
     /**
      * POST  /register -> register the user.
      */
@@ -58,24 +70,24 @@ public class AccountResource {
             produces = MediaType.TEXT_PLAIN_VALUE)
     @Timed
     public ResponseEntity<?> registerAccount(@Valid @RequestBody UserDTO userDTO, HttpServletRequest request) {
-        return userRepository.findOneByLogin(userDTO.getLogin())
-            .map(user -> new ResponseEntity<>("login already in use", HttpStatus.BAD_REQUEST))
-            .orElseGet(() -> userRepository.findOneByEmail(userDTO.getEmail())
-                .map(user -> new ResponseEntity<>("e-mail address already in use", HttpStatus.BAD_REQUEST))
-                .orElseGet(() -> {
-                    User user = userService.createUserInformation(userDTO.getLogin(), userDTO.getPassword(),
-                    userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmail().toLowerCase(),
-                    userDTO.getLangKey());
-                    String baseUrl = request.getScheme() + // "http"
-                    "://" +                                // "://"
-                    request.getServerName() +              // "myhost"
-                    ":" +                                  // ":"
-                    request.getServerPort();               // "80"
-
-                    mailService.sendActivationEmail(user, baseUrl);
-                    return new ResponseEntity<>(HttpStatus.CREATED);
-                })
-        );
+	        return userRepository.findOneByLogin(userDTO.getLogin())
+	            .map(user -> new ResponseEntity<>("login already in use", HttpStatus.BAD_REQUEST))
+	            .orElseGet(() -> userRepository.findOneByEmail(userDTO.getEmail())
+	                .map(user -> new ResponseEntity<>("e-mail address already in use", HttpStatus.BAD_REQUEST))
+	                .orElseGet(() -> {
+	                    User user = userService.createUserInformation(userDTO.getLogin(), userDTO.getPassword(),
+	                    userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmail().toLowerCase(),
+	                    userDTO.getLangKey());
+	                    String baseUrl = request.getScheme() + // "http"
+	                    "://" +                                // "://"
+	                    request.getServerName() +              // "myhost"
+	                    ":" +                                  // ":"
+	                    request.getServerPort();               // "80"
+	
+	                    mailService.sendActivationEmail(user, baseUrl);
+	                    return new ResponseEntity<>(HttpStatus.CREATED);
+	                })
+	        );
     }
 
     /**
@@ -161,6 +173,20 @@ public class AccountResource {
         userService.changePassword(password);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+    
+    /**
+     * POST  /confirm_password -> confirm the user before changing sensitive data.
+     */
+    @RequestMapping(value = "/account/confirm_password",
+            method = RequestMethod.POST,
+            produces = MediaType.TEXT_PLAIN_VALUE)
+    @Timed
+    public ResponseEntity<?> confirmPassword(@RequestBody String password) {
+        if (!checkPasswordLength(password)) {
+            return new ResponseEntity<>("Incorrect password", HttpStatus.BAD_REQUEST);
+        }
+        return userService.confirmPassword(password) ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>("Password did not match",HttpStatus.UNAUTHORIZED); 
+    }
 
     /**
      * GET  /account/sessions -> get the current open sessions.
@@ -234,7 +260,8 @@ public class AccountResource {
     }
 
     private boolean checkPasswordLength(String password) {
-      return (!StringUtils.isEmpty(password) && password.length() >= UserDTO.PASSWORD_MIN_LENGTH && password.length() <= UserDTO.PASSWORD_MAX_LENGTH);
+      return (!StringUtils.isEmpty(password) && password.length() >= UserDTO.PASSWORD_MIN_LENGTH 
+    		  && password.length() <= UserDTO.PASSWORD_MAX_LENGTH) && password.matches(UserDTO.PASSWORD_REGEX);
     }
 
 }

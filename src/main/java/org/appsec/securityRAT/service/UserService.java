@@ -16,6 +16,7 @@ import org.pac4j.core.profile.UserProfile;
 import org.pac4j.springframework.security.authentication.ClientAuthenticationToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,6 +27,7 @@ import javax.inject.Inject;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -40,6 +42,9 @@ public class UserService {
 
     @Inject
     private PasswordEncoder passwordEncoder;
+    
+    @Inject
+    private Environment env;
 
     @Inject
     private UserRepository userRepository;
@@ -52,7 +57,12 @@ public class UserService {
 
     @Inject
     private AuthorityRepository authorityRepository;
-
+    
+    
+    public String getAuthenticationType() {
+    	return env.getProperty("authentication.type");
+    }
+    
     public Optional<User> activateRegistration(String key) {
         log.debug("Activating user for activation key {}", key);
         userRepository.findOneByActivationKey(key)
@@ -100,7 +110,7 @@ public class UserService {
                                       String langKey) {
 
         User newUser = new User();
-        Authority authority = authorityRepository.findOne("ROLE_USER");
+        Authority authority = authorityRepository.findOne("ROLE_FRONTEND_USER");
         Set<Authority> authorities = new HashSet<>();
         String encryptedPassword = passwordEncoder.encode(password);
         newUser.setLogin(login);
@@ -230,14 +240,20 @@ public class UserService {
      * This is scheduled to get fired everyday, at 01:00 (am).
      * </p>
      */
-//    @Scheduled(cron = "0 0 1 * * ?")
-//    public void removeNotActivatedUsers() {
-//        DateTime now = new DateTime();
-//        List<User> users = userRepository.findAllByActivatedIsFalseAndCreatedDateBefore(now.minusDays(3));
-//        for (User user : users) {
-//            log.debug("Deleting not activated user {}", user.getLogin());
-//            userRepository.delete(user);
-//            userSearchRepository.delete(user);
-//        }
-//    }
+    @Scheduled(cron = "0 0 1 * * ?")
+    public void removeNotActivatedUsers() {
+        DateTime now = new DateTime();
+        List<User> users = userRepository.findAllByActivatedIsFalseAndCreatedDateBefore(now.minusDays(3));
+        for (User user : users) {
+            log.debug("Deleting not activated user {}", user.getLogin());
+            userRepository.delete(user);
+            userSearchRepository.delete(user);
+        }
+    }
+
+	public boolean confirmPassword(String password) {
+		User u = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()).get();
+        log.debug("Confirm the identity of user {} in order to change sensitive data", u);
+        return passwordEncoder.matches(password, u.getPassword());
+	}
 }

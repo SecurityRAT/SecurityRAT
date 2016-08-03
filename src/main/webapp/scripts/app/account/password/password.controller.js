@@ -2,6 +2,10 @@
 
 angular.module('sdlctoolApp')
     .controller('PasswordController', function ($scope, Auth, Principal) {
+    	var allowedChars = "[A-Z\\da-z\\!\"\\#\\$\\%\\&\\'\\(\\)\\*\\.\\-\\,\\/\\:\\;\\<\\=\\>\\?\\@\\[\\]\\^\\_\\`\\{\\}\\|\\~\\+]";
+        var regexPassword = "^(?=" + allowedChars + "*[a-z])(?=" + allowedChars 
+		 + "*[A-Z])(?=" + allowedChars +"*\\d)(?=" + allowedChars +"*[\\!\"\\#\\$\\%\\&\\'\\(\\)\\*\\.\\-\\,\\/\\:\\;\\<\\=\\>\\?\\@\\[\\]\\^\\_\\`\\{\\}\\|\\~\\+])"+ allowedChars + "+$";
+        $scope.passwordPattern = new RegExp(regexPassword);
         Principal.identity().then(function(account) {
             $scope.account = account;
         });

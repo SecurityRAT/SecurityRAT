@@ -27,7 +27,24 @@ Developement Ribbon
     background-position: center center;
     background-repeat: no-repeat;
 }
-
+.wrongPassword {
+	border-width: 1px;
+	border-style: solid;
+	border-color: red;
+	background-image: url("../images/warning.png");
+    background-position: right 5px center;
+    background-repeat: no-repeat;
+}
+.wrongPassword:focus {
+	border-width: 1px;
+	border-style: solid;
+	border-color: red;
+}
+.wrongPasswordTooltip {
+	background-color: #f2dede;
+    border-color: #ebccd1;
+    color: #a94442;
+}
 /* ==========================================================================
 Version number in navbar
 ========================================================================== */

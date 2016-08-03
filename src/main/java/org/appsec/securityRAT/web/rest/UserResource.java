@@ -2,22 +2,16 @@ package org.appsec.securityRAT.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 
-import org.appsec.securityRAT.domain.TagCategory;
-import org.appsec.securityRAT.domain.TagInstance;
 import org.appsec.securityRAT.domain.User;
 import org.appsec.securityRAT.repository.UserRepository;
 import org.appsec.securityRAT.repository.search.UserSearchRepository;
-import org.appsec.securityRAT.security.AuthoritiesConstants;
 import org.appsec.securityRAT.service.UserService;
-import org.appsec.securityRAT.web.rest.dto.UserDTO;
-import org.appsec.securityRAT.web.rest.errors.ErrorDTO;
 import org.appsec.securityRAT.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,9 +22,7 @@ import javax.inject.Inject;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 

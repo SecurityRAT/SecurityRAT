@@ -5,7 +5,10 @@ angular.module('sdlctoolApp')
 
         $scope.keyMissing = $stateParams.key === undefined;
         $scope.doNotMatch = null;
-
+        var allowedChars = "[A-Z\\da-z\\!\"\\#\\$\\%\\&\\'\\(\\)\\*\\.\\-\\,\\/\\:\\;\\<\\=\\>\\?\\@\\[\\]\\^\\_\\`\\{\\}\\|\\~\\+]";
+        var regexPassword = "^(?=" + allowedChars + "*[a-z])(?=" + allowedChars 
+		 + "*[A-Z])(?=" + allowedChars +"*\\d)(?=" + allowedChars +"*[\\!\"\\#\\$\\%\\&\\'\\(\\)\\*\\.\\-\\,\\/\\:\\;\\<\\=\\>\\?\\@\\[\\]\\^\\_\\`\\{\\}\\|\\~\\+])"+ allowedChars + "+$";
+        $scope.passwordPattern = new RegExp(regexPassword);
         $scope.resetAccount = {};
         $timeout(function (){angular.element('[ng-model="resetAccount.password"]').focus();});
 

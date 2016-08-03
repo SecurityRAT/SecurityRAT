@@ -18,7 +18,7 @@ angular.module('sdlctoolApp')
                     mesureStrength: function (p) {
 
                         var _force = 0;
-                        var _regex = /[$-/:-?{-~!"^_`\[\]]/g; // "
+                        var _regex = /[#%$'()*+,.;<=>@|}/:-?{-~!"^_`\[\]]/g; // "
 
                         var _lowerLetters = /[a-z]+/.test(p);
                         var _upperLetters = /[A-Z]+/.test(p);
@@ -67,6 +67,7 @@ angular.module('sdlctoolApp')
                     }
                 };
                 scope.$watch(attr.passwordToCheck, function (password) {
+                	
                     if (password) {
                         var c = strength.getColor(strength.mesureStrength(password));
                         iElement.removeClass('ng-hide');
@@ -74,6 +75,8 @@ angular.module('sdlctoolApp')
                             .css({ 'background': '#DDD' })
                             .slice(0, c.idx)
                             .css({ 'background': c.col });
+                    } else {
+                    	iElement.find('ul').children('li').css('background-color', '#DDD');
                     }
                 });
             }

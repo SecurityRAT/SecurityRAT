@@ -9,8 +9,9 @@ import java.util.List;
 
 public class UserDTO {
 
-    public static final int PASSWORD_MIN_LENGTH = 5;
+    public static final int PASSWORD_MIN_LENGTH = 8;
     public static final int PASSWORD_MAX_LENGTH = 100;
+    public static final String PASSWORD_REGEX = "^(?=[\\w\\p{Punct}]*[a-z])(?=[\\w\\p{Punct}]*[A-Z])(?=[\\w\\p{Punct}]*[\\d])(?=[\\w\\p{Punct}]*[\\p{Punct}])[\\w\\p{Punct}]+$";
 
     @Pattern(regexp = "^[a-z0-9]*$")
     @NotNull
@@ -18,6 +19,7 @@ public class UserDTO {
     private String login;
 
     @NotNull
+    @Pattern(regexp = PASSWORD_REGEX)
     @Size(min = PASSWORD_MIN_LENGTH, max = PASSWORD_MAX_LENGTH)
     private String password;
 

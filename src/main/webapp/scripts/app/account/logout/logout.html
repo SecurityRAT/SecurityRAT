@@ -1,4 +1,4 @@
-<div ng-cloak>
+<div data-ng-cloak>
     <div class="row">
         <div class="col-md-4">
             <!-- <span class="hipster img-responsive img-rounded"></span> -->
@@ -9,8 +9,11 @@
 		        <p class="lead text-center">Logged out successful</p>
             </div>
 
-            <div ng-switch="isAuthenticated()">
-                <div class="alert alert-warning" ng-switch-when="false">
+            <div data-ng-switch="isAuthenticated()">
+            <div class="alert alert-warning" data-ng-switch-when="false">
+                     You have an account? <a ui-sref="login">Authenticate</a>
+                </div>
+                <div class="alert alert-warning" data-ng-switch-when="false">
                     You don't have an account yet? <a ui-sref="register">Register a new account</a>
                 </div>
             </div>

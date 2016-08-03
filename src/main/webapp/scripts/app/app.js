@@ -33,21 +33,24 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
             
             var hasRole = false;
             Account.get(function(result) {
-            	 for(var i = 0; i < result.data.roles.length; i++) {
-                 	if(toState.data.roles.indexOf(result.data.roles[i]) > -1) {
-                 		hasRole = true;
-                 		break;
-                 	}
-                 }
-            	 console.log(fromState);
-                 if(!hasRole && toState.url.indexOf("logout") === -1 && toState.url.indexOf("login") === -1) {
-                 	event.preventDefault();
-                 	if(fromState.abstract ) {
-                 		$state.go('editor');
-                 }
-                 	else
-                 		$state.go(fromState.url);
-                 } 
+//            	if(result.data.login !== "anonymousUser") {
+	            	 for(var i = 0; i < result.data.roles.length; i++) {
+	                 	if(toState.data.roles.indexOf(result.data.roles[i]) > -1) {
+	                 		hasRole = true;
+	                 		break;
+	                 	}
+	                 }
+	                 if(!hasRole && toState.parent.indexOf("account") === -1) {
+	                 	event.preventDefault();
+	                 	if(fromState.abstract ) {
+	                 		$state.go('editor');
+	                 	}
+	                 } 
+	                 if(!hasRole && toState.url.indexOf("login") !== -1){
+	                	 if(Principal.isAuthenticated) {
+	                		 $state.go('editor');
+	                	 }
+	                 }
             })
         });
 
@@ -62,13 +65,13 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
             $window.document.title = titleKey;
         });
 
-        $rootScope.back = function() {
+        $rootScope.back = function(confirmed) {
+        	var notValidState = ["activate", "logout", "finishReset", "requestReset"]
             // If previous state is 'activate' or do not exist go to 'home'
-            if ($rootScope.previousStateName === 'activate' || $state.get($rootScope.previousStateName) === null) {
+            if (notValidState.indexOf($rootScope.previousStateName) !== -1 || $state.get($rootScope.previousStateName) === null) {
                 $state.go('editor');
             } else {
-            	console.log($rootScope.previousStateName);
-                $state.go($rootScope.previousStateName, $rootScope.previousStateParams);
+            		$state.go($rootScope.previousStateName, $rootScope.previousStateParams);
             }
         };
     })

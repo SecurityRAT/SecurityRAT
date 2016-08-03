@@ -6,7 +6,7 @@ angular.module('sdlctoolApp')
         $scope.error = null;
         $scope.doNotMatch = null;
         $scope.errorUserExists = null;
-        var allowedChars = "[A-Z\\da-z\\!\"\\#\\$\\%\\&\\'\\(\\)\\*\\.\\-\\,\\/\\:\\;\\<\\=\\>\\?\\@\\[\\]\\^\\_\\`\\{\\}\\|\\~\\+]";
+        var allowedChars = "[\\w\\!\"\\#\\$\\%\\&\\'\\(\\)\\*\\.\\-\\,\\/\\:\\;\\<\\=\\>\\?\\@\\[\\]\\^\\`\\{\\}\\|\\~\\+]";
         var regexPassword = "^(?=" + allowedChars + "*[a-z])(?=" + allowedChars 
 		 + "*[A-Z])(?=" + allowedChars +"*\\d)(?=" + allowedChars +"*[\\!\"\\#\\$\\%\\&\\'\\(\\)\\*\\.\\-\\,\\/\\:\\;\\<\\=\\>\\?\\@\\[\\]\\^\\_\\`\\{\\}\\|\\~\\+])"+ allowedChars + "+$";
         $scope.passwordPattern = new RegExp(regexPassword);

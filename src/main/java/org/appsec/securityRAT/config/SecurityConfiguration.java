@@ -90,10 +90,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers("/swagger-ui/index.html").antMatchers("/test/**");
 	}
 	
-	/**
-	 * TODO: authorize requests to be enhanced according to the final design
-	 * before rollout
-	 */
 	@Override
 	protected void configure(final HttpSecurity http) throws Exception {
 		if(env.getProperty("authentication.type").equals("CAS")) {
@@ -110,22 +106,26 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.authenticationEntryPoint(casEntryPoint)
 			.and()
 				.authorizeRequests()
+				.antMatchers("/api/register").denyAll()
+				.antMatchers("/api/account/reset_password/init").denyAll()
+				.antMatchers("/api/account/reset_password/finish").denyAll()
+				.antMatchers("/api/activate").denyAll()
+				.antMatchers("/api/authenticate").denyAll()
+				.antMatchers("/api/authenticationType").permitAll()
 				.antMatchers(HttpMethod.GET, "/frontend-api/**").hasAuthority(AuthoritiesConstants.FRONTEND_USER)
 				.antMatchers(HttpMethod.GET, "/api/account**").hasAuthority(AuthoritiesConstants.FRONTEND_USER)
 				.antMatchers("/api/**").hasAnyAuthority(AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER)
 				.antMatchers(HttpMethod.GET, "/admin-api/configConstants").hasAnyAuthority(AuthoritiesConstants.ADMIN, AuthoritiesConstants.FRONTEND_USER, AuthoritiesConstants.USER)
 				.antMatchers("/admin-api/**").hasAnyAuthority(AuthoritiesConstants.ADMIN)
-				// .antMatchers(HttpMethod.POST,
-				// "/api/**").hasAuthority(AuthoritiesConstants.ADMIN)
-				// .antMatchers(HttpMethod.PUT,
-				// "/api/**").hasAuthority(AuthoritiesConstants.ADMIN)
-				// .antMatchers(HttpMethod.DELETE,
-				// "/api/**").hasAuthority(AuthoritiesConstants.ADMIN)
+//				.antMatchers(HttpMethod.POST,"/admin-api/configConstants").denyAll()
+//				.antMatchers(HttpMethod.DELETE,"/admin-api/configConstants").denyAll()
 				.antMatchers("/**").authenticated()
 			.and()
 				.addFilterBefore(clientFilter, AnonymousAuthenticationFilter.class).exceptionHandling()
 				.authenticationEntryPoint(casEntryPoint).and();
-		} else if(env.getProperty("authentication.type").equals("FORM")){
+		} 
+		//Security configuration for Form login. The difference is needed because no all ant Matchers are permitted in both form of Authentication. 
+		else if(env.getProperty("authentication.type").equals("FORM")){
 			http
 			.csrf()
 			.ignoringAntMatchers("/websocket/**")
@@ -158,19 +158,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers("/api/register").permitAll()
 				.antMatchers("/api/activate").permitAll()
 				.antMatchers("/api/authenticate").permitAll()
+				.antMatchers("/api/authenticationType").permitAll()
 				.antMatchers("/api/account/reset_password/init").permitAll()
 				.antMatchers("/api/account/reset_password/finish").permitAll()
+				.antMatchers("/api/account").authenticated()
+				.antMatchers("/api/account/**").authenticated()
 				.antMatchers(HttpMethod.GET, "/frontend-api/**").hasAuthority(AuthoritiesConstants.FRONTEND_USER)
 				.antMatchers("/api/**").hasAnyAuthority(AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER)
-				.antMatchers(HttpMethod.GET, "/admin-api/configConstants").hasAnyAuthority(AuthoritiesConstants.ADMIN, AuthoritiesConstants.FRONTEND_USER, AuthoritiesConstants.USER)
+				.antMatchers(HttpMethod.GET, "/admin-api/configConstants").permitAll()
 				.antMatchers("/admin-api/**").hasAnyAuthority(AuthoritiesConstants.ADMIN)
 	//			.antMatchers("/v2/api-docs/**").permitAll()
 				.antMatchers("/configuration/security").permitAll()
 				.antMatchers("/configuration/ui").permitAll()
 				.antMatchers("/swagger-ui/index.html").hasAuthority(AuthoritiesConstants.ADMIN)
 				.antMatchers("/protected/**").authenticated();
-//				.anyRequest().authenticated();
-	//			.antMatchers("/**").authenticated();
 		}
 	}
 
@@ -195,133 +196,3 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		return new SecurityEvaluationContextExtension();
 	}
 }
-
-//@Configuration
-//@EnableWebSecurity
-//@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
-//public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-//
-//	@Inject
-//	private Environment env;
-//
-//	@Inject
-//	private AjaxAuthenticationSuccessHandler ajaxAuthenticationSuccessHandler;
-//
-//	@Inject
-//	private AjaxAuthenticationFailureHandler ajaxAuthenticationFailureHandler;
-//
-//	@Inject
-//	private AjaxLogoutSuccessHandler ajaxLogoutSuccessHandler;
-//
-//	@Inject
-//	private Http401UnauthorizedEntryPoint authenticationEntryPoint;
-//
-//	@Inject
-//	private UserDetailsService userDetailsService;
-//
-//	@Inject
-//	private RememberMeServices rememberMeServices;
-//
-//	@Bean
-//	public PasswordEncoder passwordEncoder() {
-//		return new BCryptPasswordEncoder();
-//	}
-//
-//	@Inject
-//	public void configureGlobal(AuthenticationManagerBuilder auth)
-//			throws Exception {
-//		auth.userDetailsService(userDetailsService).passwordEncoder(
-//				passwordEncoder());
-//	}
-//
-//	@Override
-//	public void configure(WebSecurity web) throws Exception {
-//		web.ignoring().antMatchers("/scripts/**/*.{js,html}")
-//				.antMatchers("/bower_components/**").antMatchers("/i18n/**")
-//				.antMatchers("/assets/**")
-//				.antMatchers("/swagger-ui/index.html").antMatchers("/test/**");
-//	}
-//
-//	@Override
-//	protected void configure(HttpSecurity http) throws Exception {
-//		http
-//			.csrf()
-//			.ignoringAntMatchers("/websocket/**")
-//		.and()
-//			.addFilterAfter(new CsrfCookieGeneratorFilter(),CsrfFilter.class)
-//				.exceptionHandling()
-//				.authenticationEntryPoint(authenticationEntryPoint)
-//		.and()
-//			.rememberMe()
-//			.rememberMeServices(rememberMeServices)
-//			.rememberMeParameter("remember-me")
-//			.key(env.getProperty("jhipster.security.rememberme.key"))
-//		.and()
-//			.formLogin()
-//			.loginProcessingUrl("/api/authentication")
-//			.successHandler(ajaxAuthenticationSuccessHandler)
-//			.failureHandler(ajaxAuthenticationFailureHandler)
-//			.usernameParameter("j_username")
-//			.passwordParameter("j_password")
-//			.permitAll()
-//		.and()
-//			.logout()
-//			.logoutUrl("/api/logout")
-//			.logoutSuccessHandler(ajaxLogoutSuccessHandler)
-//			.deleteCookies("JSESSIONID")
-//			.permitAll()
-//		.and()
-//			.headers()
-//			.frameOptions()
-//			.disable()
-//		.and()
-//			.authorizeRequests()
-//			.antMatchers(HttpMethod.GET, "/api/**")
-//			.permitAll()
-//			// TODO: To be removed once CAS works!
-//			.antMatchers("/api/register").permitAll()
-//			.antMatchers("/api/activate").permitAll()
-//			.antMatchers("/api/authenticate").permitAll()
-//			.antMatchers("/api/account/reset_password/init").permitAll()
-//			.antMatchers("/api/account/reset_password/finish").permitAll()
-//			.antMatchers("/api/logs/**")
-//			.hasAuthority(AuthoritiesConstants.ADMIN)
-//			.antMatchers("/api/audits/**")
-//			.hasAuthority(AuthoritiesConstants.ADMIN)
-//			.antMatchers("/api/**").authenticated()
-//			.antMatchers("/metrics/**")
-//			.hasAuthority(AuthoritiesConstants.ADMIN)
-//			.antMatchers("/health/**")
-//			.hasAuthority(AuthoritiesConstants.ADMIN)
-//			.antMatchers("/trace/**")
-//			.hasAuthority(AuthoritiesConstants.ADMIN)
-//			.antMatchers("/dump/**")
-//			.hasAuthority(AuthoritiesConstants.ADMIN)
-//			.antMatchers("/shutdown/**")
-//			.hasAuthority(AuthoritiesConstants.ADMIN)
-//			.antMatchers("/beans/**")
-//			.hasAuthority(AuthoritiesConstants.ADMIN)
-//			.antMatchers("/configprops/**")
-//			.hasAuthority(AuthoritiesConstants.ADMIN)
-//			.antMatchers("/info/**")
-//			.hasAuthority(AuthoritiesConstants.ADMIN)
-//			.antMatchers("/autoconfig/**")
-//			.hasAuthority(AuthoritiesConstants.ADMIN)
-//			.antMatchers("/env/**")
-//			.hasAuthority(AuthoritiesConstants.ADMIN)
-//			.antMatchers("/trace/**")
-//			.hasAuthority(AuthoritiesConstants.ADMIN)
-//			.antMatchers("/v2/api-docs/**").permitAll()
-//			.antMatchers("/configuration/security").permitAll()
-//			.antMatchers("/configuration/ui").permitAll()
-//			.antMatchers("/swagger-ui/index.html")
-//			.hasAuthority(AuthoritiesConstants.ADMIN)
-//			.antMatchers("/protected/**").authenticated();
-//
-//	}
-//
-//	@Bean
-//	public SecurityEvaluationContextExtension securityEvaluationContextExtension() {
-//		return new SecurityEvaluationContextExtension();
-//	}
-//}

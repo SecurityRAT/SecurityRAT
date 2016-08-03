@@ -3,28 +3,65 @@
         <div class="col-md-8 col-md-offset-2">
             <h1>Registration</h1>
 
-            <div class="alert alert-success" data-ng-show="success">
+            <div class="alert alert-success" data-ng-show="success" id="SuccessReg">
                 <strong>Registration saved!</strong> Please check your email for confirmation.
             </div>
 
-            <div class="alert alert-danger" data-ng-show="error">
+            <div class="alert alert-danger" data-ng-show="error" id="FailReg">
                 <strong>Registration failed!</strong> Please try again later.
             </div>
 
-            <div class="alert alert-danger" data-ng-show="errorUserExists">
+            <div class="alert alert-danger" data-ng-show="errorUserExists" id="userExist">
                 <strong>Login name already registered!</strong> Please choose another one.
             </div>
 
-            <div class="alert alert-danger" data-ng-show="errorEmailExists">
+            <div class="alert alert-danger" data-ng-show="errorEmailExists" id="wrongEmail">
                 <strong>E-mail is already in use!</strong> Please choose another one.
             </div>
 
-            <div class="alert alert-danger" data-ng-show="doNotMatch">
+            <div class="alert alert-danger" data-ng-show="doNotMatch" id="PassNotMatch">
                 The password and its confirmation do not match!
             </div>
 
             <form data-ng-show="!success" name="form" role="form" novalidate data-ng-submit="register()" show-validation>
-
+				<div class="form-group">
+                    <label for="firstName">First name</label>
+                    <input type="text" class="form-control" id="firstName" name="firstName" placeholder="Your first name"
+                           data-ng-model="registerAccount.firstName" data-ng-minlength=1 data-ng-maxlength=50 required>
+                    <div data-ng-show="form.login.$dirty && form.login.$invalid">
+                        <p class="help-block"
+                               data-ng-show="form.login.$error.required">
+                            Your first name is required.
+                        </p>
+                        <p class="help-block"
+                               data-ng-show="form.login.$error.minlength">
+                            Your first name is required to be at least 1 character.
+                        </p>
+                        <p class="help-block"
+                               data-ng-show="form.login.$error.maxlength">
+                            Your first name cannot be longer than 30 characters.
+                        </p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="firstName">Last name</label>
+                    <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Your last name"
+                           data-ng-model="registerAccount.lastName" data-ng-minlength=1 data-ng-maxlength=50 required>
+                    <div data-ng-show="form.login.$dirty && form.login.$invalid">
+                        <p class="help-block"
+                               data-ng-show="form.login.$error.required">
+                            Your last name is required.
+                        </p>
+                        <p class="help-block"
+                               data-ng-show="form.login.$error.minlength">
+                            Your last name is required to be at least 1 character.
+                        </p>
+                        <p class="help-block"
+                               data-ng-show="form.login.$error.maxlength">
+                            Your last name cannot be longer than 50 characters.
+                        </p>
+                    </div>
+                </div>
                 <div class="form-group">
                     <label for="login">Login</label>
                     <input type="text" class="form-control" id="login" name="login" placeholder="Your login"
@@ -43,7 +80,7 @@
                             Your login cannot be longer than 50 characters.
                         </p>
                         <p class="help-block"
-                               data-ng-show="form.login.$error.pattern">
+                               data-ng-show="form.login.$error.pattern" id="patternLoginError">
                             Your login can only contain lower-case letters and digits.
                     </p>
                     </div>
@@ -58,7 +95,7 @@
                             Your e-mail is required.
                         </p>
                         <p class="help-block"
-                               data-ng-show="form.email.$error.email">
+                               data-ng-show="form.email.$error.email" id="emailError">
                             Your e-mail is invalid.
                         </p>
                         <p class="help-block"
@@ -81,7 +118,7 @@
                             Your password is required.
                         </p>
                         <p class="help-block"
-                               data-ng-show="form.password.$error.minlength">
+                               data-ng-show="form.password.$error.minlength" id="minlengthPass">
                             Your password is required to be at least 8 characters.
                         </p>
                         <p class="help-block"
@@ -89,7 +126,7 @@
                             Your password cannot be longer than 50 characters.
                         </p>
                         <span class="help-block"
-                               data-ng-show="form.password.$error.pattern">
+                               data-ng-show="form.password.$error.pattern" id="patternPassError">
                             <p>Your password should have:</p> 
                             <ul>
                             	<li>at least <b>one</b> capital letter</li>
@@ -142,9 +179,6 @@
                 <button type="submit" data-ng-disabled="form.$invalid" class="btn btn-primary">Register</button>
             </form>
             <p></p>
-            <div class="alert alert-warning">
-                If you want to <a ui-sref="login">authenticate</a>
-            </div>
         </div>
     </div>
 </div>

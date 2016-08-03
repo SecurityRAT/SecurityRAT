@@ -17,7 +17,13 @@ angular.module('sdlctoolApp')
                 });
             }).catch(function() {
                 $scope.success = null;
-                $scope.error = 'ERROR';
+                if (response.status === 400 && response.data === 'login already in use') {
+                    $scope.errorUserExists = 'ERROR';
+                } else if (response.status === 400 && response.data === 'e-mail address already in use') {
+                    $scope.errorEmailExists = 'ERROR';
+                } else {
+                    $scope.error = 'ERROR';
+                }
             });
         };
     });

@@ -50,6 +50,7 @@ angular.module('sdlctoolApp')
                 // check and see if we have retrieved the identity data from the server.
                 // if we have, reuse it by immediately resolving
                 if (angular.isDefined(_identity)) {
+                	
                     deferred.resolve(_identity);
 
                     return deferred.promise;

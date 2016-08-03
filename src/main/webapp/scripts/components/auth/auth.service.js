@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .factory('Auth', function Auth($rootScope, $state, $q, Principal, AuthServerProvider, Account, Register, Activate, Password, PasswordResetInit, PasswordResetFinish) {
+    .factory('Auth', function Auth($rootScope, $state, $q, Principal, AuthServerProvider, Account, Register, Activate, Password, PasswordResetInit, PasswordResetFinish, 
+    		ConfirmPassword) {
         return {
             login: function (credentials, callback) {
                 var cb = callback || angular.noop;
@@ -111,6 +112,15 @@ angular.module('sdlctoolApp')
                 var cb = callback || angular.noop;
 
                 return PasswordResetFinish.save(keyAndPassword, function () {
+                    return cb();
+                }, function (err) {
+                    return cb(err);
+                }).$promise;
+            },
+            confirmPassword: function(password, callback) {
+                var cb = callback || angular.noop;
+
+                return ConfirmPassword.save(password, function () {
                     return cb();
                 }, function (err) {
                     return cb(err);

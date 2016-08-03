@@ -25,7 +25,7 @@
         <!--[if lt IE 9]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-        <!-- <div id="ribbon" data-ng-show="{{ENV === 'dev'}}" class="development" data-ng-cloak="" ></div> -->
+        <div id="ribbon" data-ng-show="{{ENV === 'dev'}}" class="development" data-ng-cloak="" ></div>
         <div ui-view="navbar" data-ng-cloak=""></div>
         <div class="container" id="mainContent">
             <div ui-view="content"></div>
@@ -97,6 +97,7 @@
     <script src="scripts/components/auth/principal.service.js"></script>
     <script src="scripts/components/auth/authority.directive.js"></script>
     <script src="scripts/components/auth/services/account.service.js"></script>
+    <script src="scripts/components/auth/services/util.service.js"></script>
     <script src="scripts/components/auth/services/activate.service.js"></script>
     <script src="scripts/components/auth/services/password.service.js"></script>
     <script src="scripts/components/auth/services/register.service.js"></script>
@@ -134,6 +135,8 @@
     <script src="scripts/app/account/logout/logout.controller.js"></script>
     <script src="scripts/app/account/password/password.js"></script>
     <script src="scripts/app/account/password/password.controller.js"></script>
+    <script src="scripts/app/account/confirmPassword/confirmPassword.js"></script>
+    <script src="scripts/app/account/confirmPassword/confirmPassword.controller.js"></script>
     <script src="scripts/app/account/password/password.directive.js"></script>
     <script src="scripts/app/account/register/register.js"></script>
     <script src="scripts/app/account/register/register.controller.js"></script>

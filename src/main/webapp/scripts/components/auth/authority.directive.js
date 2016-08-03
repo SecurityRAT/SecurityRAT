@@ -16,13 +16,16 @@ angular.module('sdlctoolApp')
                         if (reset) {
                             setVisible();
                         }
-
-                        result = Principal.isInAnyRole(roles);
-                        if (result) {
-                            setVisible();
-                        } else {
-                            setHidden();
-                        }
+                        if(Principal.isAuthenticated()) {
+	                        Principal.identity().then(function(_id) {
+	                        	setHidden();
+	                        	for(var i = 0; i < roles.length; i++) {
+	                        		if(_id.roles && _id.roles.indexOf(roles[i]) >= 0) {
+	                        			setVisible();
+	                        		}
+	                        	}
+	                        })
+                        } else setHidden();
                     },
                     roles = attrs.hasAnyRole.replace(/\s+/g, '').split(',');
 
@@ -47,9 +50,8 @@ angular.module('sdlctoolApp')
                         if (reset) {
                             setVisible();
                         }
-
-                        Principal.isInRole(role)
-                            .then(function(result) {
+                        
+                        Principal.isInRole(role).then(function(result) {
                                 if (result) {
                                     setVisible();
                                 } else {
