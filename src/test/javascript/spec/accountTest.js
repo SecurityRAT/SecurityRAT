@@ -76,7 +76,9 @@ describe('Protractor Security RAT general testsuite', function() {
 		account.click();
 		
 	});
+	
 	it('Test for account settings', function() {
+		browser.sleep(3000);
 		account.click();
 		element(by.partialLinkText('Settings')).click();
 		browser.sleep(2000);
