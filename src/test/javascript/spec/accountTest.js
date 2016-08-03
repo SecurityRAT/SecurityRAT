@@ -3,20 +3,6 @@ describe('Protractor Security RAT general testsuite', function() {
 	var login = "testuser";
 	var password = "=Test2day";
 	var changedPassword = "=Test2morrow";
-//	var userRepeater = "user in usersWithAuthorities  | orderBy :['firstname', 'lastname']";
-	var testConfirm = function() {
-		account.click();
-		element(by.partialLinkText('Settings')).click();
-		browser.sleep(2000);
-		expect(element(by.partialButtonText('Confirm')).isPresent()).toBe(true);
-		element(by.id('password')).sendKeys('Testpassword');
-		browser.sleep(2000);
-		expect(element(by.className('wrongPassword')).isPresent()).toBe(true);
-		element(by.id('password')).clear().then(function(){
-			element(by.id('password')).sendKeys(password);
-		});
-		element(by.partialButtonText('Confirm')).click();
-	}
 	
 	beforeEach(function() {
 		browser.get(browser.params.testHost);
@@ -91,15 +77,36 @@ describe('Protractor Security RAT general testsuite', function() {
 		
 	});
 	it('Test for account settings', function() {
-		testConfirm();
+		account.click();
+		element(by.partialLinkText('Settings')).click();
+		browser.sleep(2000);
+		expect(element(by.partialButtonText('Confirm')).isPresent()).toBe(true);
+		element(by.id('password')).sendKeys('Testpassword');
+		browser.sleep(2000);
+		expect(element(by.className('wrongPassword')).isPresent()).toBe(true);
+		element(by.id('password')).clear().then(function(){
+			element(by.id('password')).sendKeys(password);
+		});
+		element(by.partialButtonText('Confirm')).click();
 		browser.sleep(3000);
 		element(by.id('lastName')).sendkeys(' modify');
 		element(by.buttonText('Save')).click();
 		browser.sleep(3000);
 		expect(element(by.id('lastName')).getText()).toEqual(',lastName:<script>alert(1)</script> modify')
 	});
+	
 	it('Test for password change', function() {
-		testConfirm();
+		account.click();
+		element(by.partialLinkText('Settings')).click();
+		browser.sleep(2000);
+		expect(element(by.partialButtonText('Confirm')).isPresent()).toBe(true);
+		element(by.id('password')).sendKeys('Testpassword');
+		browser.sleep(2000);
+		expect(element(by.className('wrongPassword')).isPresent()).toBe(true);
+		element(by.id('password')).clear().then(function(){
+			element(by.id('password')).sendKeys(password);
+		});
+		element(by.partialButtonText('Confirm')).click();
 		browser.sleep(3000);
 		element(by.id('password')).sendkeys(changedPassword);
 		element(by.id('confirmPassword')).sendkeys(changedPassword);
@@ -107,6 +114,7 @@ describe('Protractor Security RAT general testsuite', function() {
 		browser.sleep(3000);
 		expect(element(by.id('success')).getText()).toEqual('Password changed!');
 	});
+	
 	it('Test log out function', function() {
 		account.click();
 		element(by.partialLinkText('Log out')).click();
