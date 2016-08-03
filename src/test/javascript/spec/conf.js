@@ -23,5 +23,8 @@ exports.config = {
 	                   '#{issuenum2}' // JIRA issue number from "jiraQueue" containing more than one attachment added through SecurityRAT
 	                   ],
        email: '#{registrationEmail}' // Email address to test for the registration.
+   },
+   capabilities: {
+	    'browserName': 'chrome' // or 'firefox' for firefox please use version 36 or less because the selenium driver doesn't support later versions of firefox yet.
    }
 }
