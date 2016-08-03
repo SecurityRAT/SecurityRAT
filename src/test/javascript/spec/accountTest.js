@@ -115,7 +115,17 @@ describe('Protractor Security RAT account testsuite', function() {
 		browser.sleep(2000);
 		account.click();
 		expect(element(by.partialLinkText('Log out')).isPresent()).toBe(false);
-		
+		account.click();
+		element(by.partialLinkText('Authenticate')).click();
+		browser.sleep(2000);
+		element(by.id('username')).clear().then(function(){
+			element(by.id('username')).sendKeys(browser.params.admin.user);
+		});
+		element(by.id('password')).clear().then(function(){
+			element(by.id('password')).sendKeys(browser.params.admin.password);
+		});
+		element(by.partialButtonText('Authenticate')).click();
 	});
+	
 	
 });

@@ -9,7 +9,7 @@ endpoints.jolokia.enabled: false
 jhipster.security.rememberme.key: c271d2839bfc8084e87cdbc4ef2982f431ad078e
 
 authentication:
-    type: FORM # possible values are CAS or FORM
+    type: CAS # possible values are CAS or FORM
     
 async:
     corePoolSize: 2
@@ -17,20 +17,20 @@ async:
     queueCapacity: 10000
 
 mail:
-    host: localhost
+    host: localhost # mail server
     port: 25
     username:
     password:
     protocol: smtp
     tls: false
     auth: false
-    from: securityRAT@localhost
+    from: securityRAT@localhost # from email address
 
 
 swagger:
     title: SecurityRAT
     description: SecurityRAT applications and beyond!
-    version: 1.0.2
+    version: 1.1
     termsOfServiceUrl: http://jhipster.github.io/
     contact:
     license: Apache 2.0
