@@ -9,7 +9,7 @@
 
 # Quick and easy start
 - if you want to play around with the SecurityRAT tool, you can pull the our docker image [securityrat/all_in_one](https://hub.docker.com/r/securityrat/all_in_one/).
-- ofcourse for that you will need to install [docker](https://docs.docker.com/engine/installation/) on your system.
+- of course for that you will need to install [docker](https://docs.docker.com/engine/installation/) on your system.
 - **important: this setup is not suitable for a production environment!**
 
 # Prerequisities:

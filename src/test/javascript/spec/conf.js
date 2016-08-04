@@ -28,6 +28,9 @@ exports.config = {
 	   issueNumbers : ['#{issuenum1}', // JIRA issue number from "jiraQueue" containing an attachment added through by SecurityRAT
 	                   '#{issuenum2}' // JIRA issue number from "jiraQueue" containing more than one attachment added through SecurityRAT
 	                   ],
+	   issuetypes : ['#{issuetype1}', // issuetype with no mandatory fields other than project, summary name 
+	                 '#{issuetype2}' // an issue type with a mandatory fields other than project, summary name
+	                 ],
        email: '#{registrationEmail}' // Email address to test for the registration.
    },
    capabilities: {

@@ -12,9 +12,9 @@
 					<input type="text" placeholder="e.g. https://www.example-jira.com/browse/DUMBQ" data-ng-model="jiraUrl.url" class="form-control"/>
 				</div>
 			</div>
-			<div data-ng-if="exportProperty.showSpinner"class="text-center col-sm-1" >
-				<span id="UsSpinner" spinner-on="exportProperty.showSpinner" us-spinner="{radius:5, width:3, length:3, lines:9}"uib-popover="Authentication running..." popover-placement="top" popover-trigger="mouseenter" 
-				popover-append-to-body></span>
+			<div data-ng-if="exportProperty.showSpinner"class="text-center col-sm-1" uib-popover="Authentication running..." popover-placement="top" popover-trigger="mouseenter" 
+				popover-append-to-body>
+				<span id="UsSpinner" spinner-on="exportProperty.showSpinner" us-spinner="{radius:5, width:3, length:3, lines:9}"></span>
 			</div>
 		</div>
 		<div class="row col-sm-12">

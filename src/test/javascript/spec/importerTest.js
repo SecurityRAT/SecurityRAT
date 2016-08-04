@@ -41,7 +41,7 @@ describe('Protractor Security RAT importer testsuite', function() {
 		var list = element.all(by.options('attachment.downloadUrl as attachment.label for attachment in attachmentProperties.attachments'));
 		expect(list.count()).toBeGreaterThan(3);
 		
-		element(by.buttonText("Import")).click();
+		element(by.partialButtonText("Import")).click();
 		browser.sleep(10000);
 		element(by.buttonText('Close')).isPresent().then(function(v){ 
 		    expect(v).toBe(true);
@@ -190,6 +190,7 @@ describe('Protractor Security RAT importer testsuite', function() {
 		expect(element(by.css('div[marked]')).getText()).toBe('Invalid url in query parameter file. Please enter a valid JIRA ticket with an attachment.');
 	});
 	
+	// The first time you should not authenticate.
 	it('Imports by giving the ticket url without being authenticated', function() {
 		deleteCookie();
 		browser.get(browser.params.testHost);
@@ -238,6 +239,7 @@ describe('Protractor Security RAT importer testsuite', function() {
 		browser.sleep(20000);
 		element(by.buttonText("Close")).click();
 	});
+	
 	it('imports from file with ', function() {
 		browser.get(browser.params.impTestAttachmentUrl + browser.params.attachmentUrls[2]).then(function() {}, function(){
 			browser.switchTo().alert().accept();
