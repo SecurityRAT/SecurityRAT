@@ -29,7 +29,7 @@ spring:
             ddl-auto: none
             naming-strategy: org.hibernate.cfg.EJB3NamingStrategy
         properties:
-            hibernate.cache.use_second_level_cache: true
+            hibernate.cache.use_second_level_cache: false
             hibernate.cache.use_query_cache: false
             hibernate.generate_statistics: false
             hibernate.cache.region.factory_class: org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory
@@ -64,5 +64,5 @@ cache:
         maxBytesLocalHeap: 256M
 
 cas:
-    casLoginUrl: http://localhost:8080/cas #Change to the URL your CAS server listens on
+    casLoginUrl: https://localhost:8443/cas #Change to the URL your CAS server listens on
     callbackUrl: http://localhost:9000/callback #Change to the correct URL of SecurityRAT
