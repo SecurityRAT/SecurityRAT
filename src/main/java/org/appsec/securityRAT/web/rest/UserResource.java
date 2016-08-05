@@ -1,11 +1,17 @@
 package org.appsec.securityRAT.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
 
+import org.appsec.securityRAT.domain.Authority;
 import org.appsec.securityRAT.domain.User;
 import org.appsec.securityRAT.repository.UserRepository;
 import org.appsec.securityRAT.repository.search.UserSearchRepository;
+import org.appsec.securityRAT.security.SecurityUtils;
+import org.appsec.securityRAT.service.MailService;
 import org.appsec.securityRAT.service.UserService;
+import org.appsec.securityRAT.web.rest.dto.UserDTO;
 import org.appsec.securityRAT.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +25,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -45,6 +55,9 @@ public class UserResource {
     
     @Inject
     private UserService userService;
+    
+    @Inject
+    private MailService mailService;
 
     /**
      * GET  /users -> get all users.
@@ -59,7 +72,7 @@ public class UserResource {
     }
     
     /**
-     * GET  /users -> get all users.
+     * GET  /users -> get all users with their roles.
      */
     @RequestMapping(value = "/userAuthorities",
         method = RequestMethod.GET,
@@ -71,7 +84,7 @@ public class UserResource {
     }
     
     /**
-     * GET  /users/:login -> get the "login" user.
+     * GET  /users/:login -> get the user with his roles.
      */
     @RequestMapping(value = "/userAuthorities/{id}",
             method = RequestMethod.GET,
@@ -85,7 +98,7 @@ public class UserResource {
     }
     
     /**
-     * GET  /users/:login -> get the "login" user.
+     * GET  /users/:login -> get the user by login.
      */
     @RequestMapping(value = "/users/{login}",
             method = RequestMethod.GET,
@@ -97,29 +110,51 @@ public class UserResource {
                 .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
+    
     /**
-     * POST  /users/:login -> get the "login" user.
+     * POST  /users/ -> register a new user for authentication.
      * @throws URISyntaxException 
      */
     @RequestMapping(value = "/users",
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    ResponseEntity<User> create(@RequestBody User user) throws URISyntaxException {
-        log.debug("REST request to add User");
-        if (user.getId() != null) {
-            return ResponseEntity.badRequest().header("Failure", "A new user cannot already have an ID").body(null);
-        } 
-        if(userRepository.findOneByLogin(user.getLogin()).isPresent())
-        	return ResponseEntity.badRequest().header("Failure", "duplicate username").body(null);
-        if(userRepository.findOneByEmail(user.getEmail()).isPresent())
-        	return ResponseEntity.badRequest().header("Failure", "duplicate email addresses").body(null);
-        user.setActivated(true);
-        User result = userRepository.save(user);
-        userSearchRepository.save(result);
-        return ResponseEntity.created(new URI("/admin-api/userAuthorities/" + result.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert("user", result.getId().toString()))
-                .body(result);
+    ResponseEntity<User> create(@RequestBody User userdto, HttpServletRequest request) throws URISyntaxException {
+        
+        if(userRepository.findOneByLogin(userdto.getLogin()).isPresent())
+        	return ResponseEntity.badRequest().header("Failure", "username already use").body(null);
+        if(userRepository.findOneByEmail(userdto.getEmail()).isPresent())
+        	return ResponseEntity.badRequest().header("Failure", "Email address already used").body(null);
+        String generatedPassword = userService.generateUserPassword();
+        User user = userService.createUserInformation(userdto.getLogin(), generatedPassword, 
+        		userdto.getFirstName(), userdto.getLastName(), userdto.getEmail(), userdto.getLangKey(), userdto.getAuthorities());
+        if(userService.getAuthenticationType().equals("FORM")) {
+	        String baseUrl = request.getScheme() + // "http"
+	                "://" +                                // "://"
+	                request.getServerName() +              // "myhost"
+	                ":" +                                  // ":"
+	                request.getServerPort();               // "80"
+	        mailService.sendActivationEmail(user, baseUrl);
+	        String content = "";
+	        try {
+				content = Files.toString(new File("src/main/resources/templates/mail_password_user.txt"),	Charsets.UTF_8);
+			} catch (IOException e) {
+			}
+	        content = content.replaceAll("§USERNAME_LOGIN§", userdto.getLogin());
+	        content = content.replaceAll("§PASSWORD§", generatedPassword.substring(0, 4));
+	        mailService.sendEmail(userdto.getEmail(), "Password", content, false, false);
+	        try {
+				content = Files.toString(new File("src/main/resources/templates/mail_password_admin.txt"),	Charsets.UTF_8);
+			} catch (IOException e) {
+			}
+	        content = content.replaceAll("§ADMIN_LOGIN§", SecurityUtils.getCurrentLogin());
+	        content = content.replaceAll("§USERNAME_LOGIN§", userdto.getLogin());
+	        content = content.replaceAll("§PASSWORD§", generatedPassword.substring(4, 8));
+	        mailService.sendEmail(userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()).get().getEmail(), "Password", content, false, false);
+        }
+        return ResponseEntity.created(new URI("/admin-api/userAuthorities/" + user.getId()))
+                .headers(HeaderUtil.createEntityCreationAlert("user", user.getId().toString()))
+                .body(user);
     }
     
     /**
@@ -129,16 +164,19 @@ public class UserResource {
         method = RequestMethod.PUT,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<User> update(@RequestBody User user) throws URISyntaxException {
-    	log.debug("REST request to update User : {}", user.getId());
-        if (user.getId() == null) {
-            return create(user);
-        }
-        User result = userRepository.save(user);
-        userSearchRepository.save(user);
-        return ResponseEntity.ok()
-                .headers(HeaderUtil.createEntityUpdateAlert("user", user.getId().toString()))
-                .body(result);
+    public ResponseEntity<User> update(@RequestBody User user, HttpServletRequest request) throws URISyntaxException {
+    	User u = userRepository.findOneByLogin(user.getLogin()).get();
+    	if(u != null) {
+	    	log.debug("REST request to update User : {}", user.getId());
+	    	user.setPassword(u.getPassword());
+	        User result = userRepository.save(user);
+	        userSearchRepository.save(user);
+	        return ResponseEntity.ok()
+	                .headers(HeaderUtil.createEntityUpdateAlert("user", user.getId().toString()))
+	                .body(result);
+    	} else {
+    		return ResponseEntity.badRequest().header("Failure", "you cannot change the login").body(null);
+    	}
     }
     
     /**

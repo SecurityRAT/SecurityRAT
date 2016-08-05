@@ -2,10 +2,9 @@
 
 angular.module('sdlctoolApp')
     .controller('UserManagementController', function ($scope, UserManagement, Authorities, User) {
-    	
-    	
         $scope.authorities = [];
-        $scope.userSet = [];
+        $scope.userSet = {};
+        $scope.usersWithAuthorities = [];
         
         $scope.searchArrayByValue = function(search, object) {
         	var bool = false;
@@ -20,28 +19,35 @@ angular.module('sdlctoolApp')
         }
         
         $scope.loadAll = function(callback) {
-        	Authorities.query(function(result) {
-        		$scope.authorities = result;
+        	Authorities.query(function(authorities) {
+        		$scope.authorities = authorities;
+        		UserManagement.query(function(users) {
+                    $scope.usersWithAuthorities = users;
+                    angular.forEach(users, function(user) {
+                 	   $scope.userSet[user.login] = {};
+                 	   callback(user);
+            			})
+                    
+                 });
         	});
-        	UserManagement.query(function(result) {
-               $scope.usersWithAuthorities = result;
-               angular.forEach($scope.usersWithAuthorities, function(user) {
-            	   $scope.userSet[user.login] = {};
-       			})
-               callback();
-            });
-        	
         }
+        $scope.search = function () {
+            UserManagement.query({query: $scope.searchQuery}, function(result) {
+                $scope.userWithAuthorities = result;
+            }, function(response) {
+                if(response.status === 404) {
+                    $scope.loadAll();
+                }
+            });
+        };
         
-        function callback() {
+        function callback(user) {
         	angular.forEach($scope.authorities, function(authority) {
-        		angular.forEach($scope.usersWithAuthorities, function(user) {
-        			if($scope.searchArrayByValue(authority.name, user.authorities)) {
-        				$scope.userSet[user.login][authority.name] = true;
-           			} else {
-           				$scope.userSet[user.login][authority.name] = false;
-           			}
-        		})
+    			if($scope.searchArrayByValue(authority.name, user.authorities)) {
+    				$scope.userSet[user.login][authority.name] = true;
+       			} else {
+       				$scope.userSet[user.login][authority.name] = false;
+       			}
         	});
         }
         $scope.loadAll(callback);

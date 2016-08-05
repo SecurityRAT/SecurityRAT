@@ -20,27 +20,27 @@
 			</div> 
         	<!-- <uib-alert data-ng-if="!form.fieldLogin.$valid" type="danger" dismiss-on-timeout="2000" close="close()">username can only have lowercase character and/or digits e.g john.</uib-alert> -->
             <label for="field_login">Username</label>
-            <input type="text" class="form-control" name="username" id="fieldLogin" pattern="[a-z0-9]*"
-                    data-ng-model="user.login" required>
+            <input type="text" class="form-control" name="username" id="fieldLogin" data-ng-pattern="usernamePattern"
+                    data-ng-model="user.login" data-ng-readonly="user.id" required>
 
         </div>
         <div class="form-group">
-            <label for="field_firstName">Firstname</label>
+            <label for="field_firstName">First name</label>
             <input type="text" class="form-control" name="firstName" id="field_firstName"
-                    data-ng-model="user.firstName" maxlength="50" title="Maximum length of 50 characters"
+                    data-ng-model="user.firstName" data-ng-maxlength="50" title="Maximum length of 50 characters"
                     required>
 
         </div>
         <div class="form-group">
-            <label for="field_lastName">Lastname</label>
+            <label for="field_lastName">Last name</label>
             <input type="text" name="description" id="field_lastName"
-                    data-ng-model="user.lastName" class="form-control" maxlength="50" required></input>
+                    data-ng-model="user.lastName" class="form-control" data-ng-maxlength="50" required></input>
 
         </div>
 		<div class="form-group">
             <label for="field_email">Email</label>
             <input type="email" name="email" id="field_email"
-                    data-ng-model="user.email" class="form-control" maxlength="100" required></input>
+                    data-ng-model="user.email" class="form-control" data-ng-maxlength="100" required></input>
 
         </div>
         <div class="form-group">

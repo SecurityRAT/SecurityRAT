@@ -1,5 +1,9 @@
 package org.appsec.securityRAT.service.util;
 
+import java.security.SecureRandom;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
 import org.apache.commons.lang.RandomStringUtils;
 
 /**
@@ -8,6 +12,7 @@ import org.apache.commons.lang.RandomStringUtils;
 public final class RandomUtil {
 
     private static final int DEF_COUNT = 20;
+//    private static final SecureRandom rand = new SecureRandom();
 
     private RandomUtil() {
     }
@@ -27,6 +32,11 @@ public final class RandomUtil {
      * @return the generated activation key
      */
     public static String generateActivationKey() {
+//    	String result = "";
+//    	for (Integer elem : rand.ints(DEF_COUNT).boxed().collect(Collectors.toList())) {
+//			result += elem.toString();
+//		};
+//		return result;
         return RandomStringUtils.randomNumeric(DEF_COUNT);
     }
 
@@ -36,6 +46,7 @@ public final class RandomUtil {
     * @return the generated reset key
     */
    public static String generateResetKey() {
+//	   return rand.ints(DEF_COUNT).toString();
        return RandomStringUtils.randomNumeric(DEF_COUNT);
    }
 }

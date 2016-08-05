@@ -10,6 +10,7 @@ import org.appsec.securityRAT.security.SecurityUtils;
 import org.appsec.securityRAT.service.util.RandomUtil;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.opensaml.ws.wssecurity.impl.PasswordUnmarshaller;
 import org.pac4j.cas.profile.CasProfile;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.UserProfile;
@@ -24,12 +25,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import javax.mail.PasswordAuthentication;
 
+import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 
 /**
  * Service class for managing users.
@@ -107,7 +112,7 @@ public class UserService {
     }
 
     public User createUserInformation(String login, String password, String firstName, String lastName, String email,
-                                      String langKey) {
+                                      String langKey, Set<Authority> roles) {
 
         User newUser = new User();
         Authority authority = authorityRepository.findOne("ROLE_FRONTEND_USER");
@@ -120,11 +125,22 @@ public class UserService {
         newUser.setLastName(lastName);
         newUser.setEmail(email);
         newUser.setLangKey(langKey);
-        // new user is not active
-        newUser.setActivated(false);
-        // new user gets registration key
-        newUser.setActivationKey(RandomUtil.generateActivationKey());
-        authorities.add(authority);
+        if(getAuthenticationType().equals("CAS")) {
+        	// new user is not active
+            newUser.setActivated(true);
+            // new user gets registration key
+            newUser.setActivationKey(null);
+        } else {
+        	// new user is not active
+            newUser.setActivated(false);
+         // new user gets registration key
+            newUser.setActivationKey(RandomUtil.generateActivationKey());
+        }
+        if(roles != null)
+        	authorities.addAll(roles);
+        else {
+        	authorities.add(authority);
+        }
         newUser.setAuthorities(authorities);
         userRepository.save(newUser);
         userSearchRepository.save(newUser);
@@ -255,5 +271,29 @@ public class UserService {
 		User u = userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()).get();
         log.debug("Confirm the identity of user {} in order to change sensitive data", u);
         return passwordEncoder.matches(password, u.getPassword());
+	}
+	
+	public String generateUserPassword() {
+		String lowercase = "qwertzuiopasdfghjklyxcvbnm";
+		String uppercase = "QWERTZUIOPASDFGHJKLYXCVBNM";
+		String numbers = "0123456789";
+		String symbols = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
+		String[] allowed = {lowercase, uppercase, numbers, symbols};
+		String result = "";
+		int maxLength = 8;
+		SecureRandom rand = new SecureRandom();
+		
+		for(int i = 1; i <= maxLength; i++) {
+			if(i == 1) result += uppercase.charAt(rand.nextInt(uppercase.length()));
+			else if(i == 3) result += lowercase.charAt(rand.nextInt(lowercase.length()));
+			else if(i == 6) result += numbers.charAt(rand.nextInt(numbers.length()));
+			else if(i == 9) result += symbols.charAt(rand.nextInt(symbols.length()));
+			else {
+				String choosedSet = allowed[rand.nextInt(allowed.length)];
+				result += choosedSet.charAt(rand.nextInt(choosedSet.length()));
+			}
+		}
+		
+		return result;
 	}
 }

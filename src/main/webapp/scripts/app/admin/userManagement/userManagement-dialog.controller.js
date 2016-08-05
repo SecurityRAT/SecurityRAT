@@ -3,7 +3,7 @@
 angular.module('sdlctoolApp').controller('UserManagementDialogController',
     ['$scope', '$stateParams', '$uibModalInstance', 'entity', 'UserManagement', 'Authorities', 'User', 'AlertService',
         function($scope, $stateParams, $uibModalInstance, entity, UserManagement, Authorities, User, AlertService) {
-
+    	$scope.usernamePattern = new RegExp("[a-z0-9]*");
         $scope.user = entity;
         Authorities.query(function(result) {
         	$scope.authorities = result;
@@ -25,9 +25,12 @@ angular.module('sdlctoolApp').controller('UserManagementDialogController',
             if ($scope.user.id != null) {
             	User.update($scope.user, onSaveFinished);
             } else {
+            	$scope.user.password = "Dummy=2pass";
+            	$scope.user.langKey = 'en';
             	User.save($scope.user, onSaveFinished, function(error) {
+            		console.log(error);
             		if(error.status == 400) {
-            			AlertService.error('duplicate username or email adresse', ['email', 'username'])
+            			AlertService.error('Username or email already in use', ['email', 'username'])
             		}
             	});
             }

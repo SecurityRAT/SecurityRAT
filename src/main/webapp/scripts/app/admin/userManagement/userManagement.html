@@ -8,7 +8,7 @@
                 <button class="btn btn-primary" ui-sref="configConstant.new">
                     <span class="glyphicon glyphicon-flash"></span> <span>Create a new constant</span>
                 </button>
-            </div>
+            </div>-->
             <div class="col-md-offset-4 col-md-8">
                 <form name="searchForm" class="form-inline">
                     <div class="form-group">
@@ -18,7 +18,6 @@
                     </button>
                 </form>
             </div>
-        </div> -->
         <div class="pull-right">
             <form name="addForm" class="form-inline">
                 <button type="submit" ui-sref="userManagement.new" class="btn btn-primary btn-md">
@@ -66,6 +65,7 @@
                     <th>Firstname</th>
                     <th>Lastname</th>
                     <th>Email</th>
+                    <th>Activated</th>
                     <th class="text-center" data-ng-repeat="authority in authorities  | orderBy: 'name'">{{authority.name}}</th>
                 </tr>
             </thead>
@@ -74,7 +74,11 @@
                     <!--<td><a ui-sref="optColumnType.detail({id:optColumnType.id})">{{optColumnType.id}}</a></td>-->
                     <td class="col-sm-3">{{user.firstName}}</td>
                     <td class="col-sm-3">{{user.lastName}}</td>
-                    <td class="col-sm-4">{{user.email}}</td>
+                    <td class="col-sm-3">{{user.email}}</td>
+                    <td class=" col-sm-1 text-center">
+                    	<span data-ng-if="user.activated" class="glyphicon glyphicon-ok ng-style:{'color':'green'};"></span>
+                    	<span data-ng-if="!user.activated" class="glyphicon glyphicon-remove ng-style:{'color':'red'};"></span>
+                    </td>
                     <td class="text-center" data-ng-repeat="authority in authorities  | orderBy: 'name'">
                     	<span data-ng-if="userSet[user.login][authority.name]" class="glyphicon glyphicon-ok ng-style:{'color':'green'};"></span>
                     	<span data-ng-if="!userSet[user.login][authority.name]" class="glyphicon glyphicon-remove ng-style:{'color':'red'};"></span>
