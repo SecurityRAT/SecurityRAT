@@ -4,14 +4,11 @@ import com.codahale.metrics.annotation.Timed;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 
-import org.appsec.securityRAT.domain.Authority;
 import org.appsec.securityRAT.domain.User;
 import org.appsec.securityRAT.repository.UserRepository;
 import org.appsec.securityRAT.repository.search.UserSearchRepository;
-import org.appsec.securityRAT.security.SecurityUtils;
 import org.appsec.securityRAT.service.MailService;
 import org.appsec.securityRAT.service.UserService;
-import org.appsec.securityRAT.web.rest.dto.UserDTO;
 import org.appsec.securityRAT.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -141,16 +138,8 @@ public class UserResource {
 			} catch (IOException e) {
 			}
 	        content = content.replaceAll("§USERNAME_LOGIN§", userdto.getLogin());
-	        content = content.replaceAll("§PASSWORD§", generatedPassword.substring(0, 4));
+	        content = content.replaceAll("§PASSWORD§", generatedPassword);
 	        mailService.sendEmail(userdto.getEmail(), "Password", content, false, false);
-	        try {
-				content = Files.toString(new File("src/main/resources/templates/mail_password_admin.txt"),	Charsets.UTF_8);
-			} catch (IOException e) {
-			}
-	        content = content.replaceAll("§ADMIN_LOGIN§", SecurityUtils.getCurrentLogin());
-	        content = content.replaceAll("§USERNAME_LOGIN§", userdto.getLogin());
-	        content = content.replaceAll("§PASSWORD§", generatedPassword.substring(4, 8));
-	        mailService.sendEmail(userRepository.findOneByLogin(SecurityUtils.getCurrentLogin()).get().getEmail(), "Password", content, false, false);
         }
         return ResponseEntity.created(new URI("/admin-api/userAuthorities/" + user.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert("user", user.getId().toString()))
@@ -180,7 +169,7 @@ public class UserResource {
     }
     
     /**
-     * DELETE  /users/:id -> delete the "id" tagCategory.
+     * DELETE  /users/:id -> delete the "id" user.
      */
     @RequestMapping(value = "/users/{id}",
             method = RequestMethod.DELETE,

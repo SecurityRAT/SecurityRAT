@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('UserManagementController', function ($scope, UserManagement, Authorities, User) {
+    .controller('UserManagementController', function ($scope, UserManagement, Authorities, User, UserManagementSearch) {
         $scope.authorities = [];
         $scope.userSet = {};
         $scope.usersWithAuthorities = [];
@@ -18,6 +18,16 @@ angular.module('sdlctoolApp')
         	return bool;
         }
         
+        function callback(user) {
+        	angular.forEach($scope.authorities, function(authority) {
+    			if($scope.searchArrayByValue(authority.name, user.authorities)) {
+    				$scope.userSet[user.login][authority.name] = true;
+       			} else {
+       				$scope.userSet[user.login][authority.name] = false;
+       			}
+        	});
+        }
+        
         $scope.loadAll = function(callback) {
         	Authorities.query(function(authorities) {
         		$scope.authorities = authorities;
@@ -32,24 +42,16 @@ angular.module('sdlctoolApp')
         	});
         }
         $scope.search = function () {
-            UserManagement.query({query: $scope.searchQuery}, function(result) {
-                $scope.userWithAuthorities = result;
+        	UserManagementSearch.query({query: $scope.searchQuery}, function(result) {
+        		console.log(result);
+                $scope.usersWithAuthorities = result;
             }, function(response) {
                 if(response.status === 404) {
-                    $scope.loadAll();
+                    $scope.loadAll(callback);
                 }
             });
         };
         
-        function callback(user) {
-        	angular.forEach($scope.authorities, function(authority) {
-    			if($scope.searchArrayByValue(authority.name, user.authorities)) {
-    				$scope.userSet[user.login][authority.name] = true;
-       			} else {
-       				$scope.userSet[user.login][authority.name] = false;
-       			}
-        	});
-        }
         $scope.loadAll(callback);
         $scope.delete = function (user) {
         	$scope.user = user;
