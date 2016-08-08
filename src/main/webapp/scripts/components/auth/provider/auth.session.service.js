@@ -22,7 +22,7 @@ angular.module('sdlctoolApp')
                     // to get a new csrf token call the api                    
                     $http.get('api/account');
                     if($rootScope.ANTHENTICATIONTYPE) {
-                    	location = encodeURIComponent($rootScope.CASLOGOUTURL);
+                    	location.href = $rootScope.CASLOGOUTURL;
                     }
 
                     
