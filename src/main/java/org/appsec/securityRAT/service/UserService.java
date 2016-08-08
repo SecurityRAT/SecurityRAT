@@ -8,6 +8,7 @@ import org.appsec.securityRAT.repository.UserRepository;
 import org.appsec.securityRAT.repository.search.UserSearchRepository;
 import org.appsec.securityRAT.security.SecurityUtils;
 import org.appsec.securityRAT.service.util.RandomUtil;
+import org.appsec.securityRAT.web.rest.dto.ExtraInfoDTO;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.opensaml.ws.wssecurity.impl.PasswordUnmarshaller;
@@ -66,6 +67,9 @@ public class UserService {
     
     public String getAuthenticationType() {
     	return env.getProperty("authentication.type");
+    }
+    public boolean getRegistrationType() {
+    	return env.getProperty("authentication.registration", Boolean.class);
     }
     
     public Optional<User> activateRegistration(String key) {
@@ -295,5 +299,9 @@ public class UserService {
 		}
 		
 		return result;
+	}
+	public ExtraInfoDTO getExtraInfo() {
+		// TODO Auto-generated method stub
+		return new ExtraInfoDTO(getAuthenticationType(), getRegistrationType(), env.getProperty("cas.casLogoutUrl"));
 	}
 }

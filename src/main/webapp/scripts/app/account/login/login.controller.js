@@ -6,6 +6,7 @@ angular.module('sdlctoolApp')
         $scope.errors = {};
         $scope.rememberMe = true;
         $timeout(function (){angular.element('[ng-model="username"]').focus();});
+        $scope.cannotRegister = !$rootScope.REGISTRATIONTYPE;
         $scope.login = function (event) {
             event.preventDefault();
             Auth.login({

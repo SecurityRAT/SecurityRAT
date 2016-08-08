@@ -275,8 +275,8 @@ angular.module('sdlctoolApp')
 		$scope.buildAttachmentsArray = function(attachments) {
 			var attachmentArray = [];
 			angular.forEach(attachments, function(attachment) {
-//				attachment.mimeType === 'application/x-yaml' && 
-				if((attachment.size <= 5000000)) {
+//				
+				if((attachment.mimeType === 'application/x-yaml' && attachment.size <= 5000000)) {
 					var date = $filter('date')((new Date(attachment.created)).getTime(), 'medium');
 					var names = attachment.filename.split("_");
 					var name = names[(names).indexOf(appConfig.filenamePrefix) + 1];

@@ -708,7 +708,8 @@ angular.module('sdlctoolApp')
 			});
 		}
 		
-		// remove space from string
+		// remove space from string 
+		// this method should be later on defined in a central file		
 		$scope.removeSpace = function(str) {
 			var strTemp = str.split(" ");
 			str = "";

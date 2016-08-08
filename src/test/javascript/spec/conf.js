@@ -20,8 +20,9 @@ exports.config = {
 	   jiraQueue : 'https://test-jira.local/browse/XYZ', //path to a JIRA Queue where test tickets can be opened
 	   jiraHost : 'https://test-jira.local/browse/', //path to test JIRA
 	   impTestAttachmentUrl : 'https://securityrat.test.local/?file=https%3A%2F%2Ftest-jira.local%2Frest%2Fapi%2F2%2Fattachment%2F',
-	   impTestUrl2: 'https://securityrat.test.local/?ticket=https://test-jira.local/browse/XYZ-123',
-	   impTestFileUrl: 'https://securityrat.test.local/?file=https:%2F%2Ftest-jira.local%2Fsecure%2Fattachment%2F685933%2FSSDLC_sfgsfgsfg_17-2-2016_134738.yml', // copy the link address to an attached file in a JIRA ticker
+	   impTestUrl2: 'https://securityrat.test.local/?ticket=https://test-jira.local/browse/XYZ-123', // the specied ticket in the "ticket" parameter should preferably have different attachment types. For e.g .yml, .xlsx. 
+	   				// This is to test whether the
+	   impTestFileUrl: 'https://securityrat.test.local/?file=https:%2F%2Ftest-jira.local%2Fsecure%2Fattachment%2F685933%2FSSDLC_sfgsfgsfg_17-2-2016_134738.yml', // copy the link address to an attached file in a JIRA ticket
 	   attachmentUrls: ['#{id1}', //Any attachment id. See file query parameter of exported attachments in JIRA Queue
 	                    '#{id2}', //The file attachment corresponding to this "id" muss be deleted in JIRA Tickets.
 	                    '#{id3}'], // The attachment corresponding to this Id should have issues links.

@@ -1320,6 +1320,18 @@ angular.module('sdlctoolApp')
 			  $scope.updatesAvailable = false;
 		  }
 	  }
+	  // this method should be later on defined in a central file
+	  $scope.removeSpace = function(str) {
+			var strTemp = str.split(" ");
+			str = "";
+			for(var i = 0; i < strTemp.length; i++) {
+				if(i > 0) {
+					str += "_";
+				}
+				str += strTemp[i];
+			}
+			return str;
+		}
 	  
 	  $scope.exportExcel = function() {
 		  $scope.withselectedDropdown.isopen = false;
@@ -1358,7 +1370,7 @@ angular.module('sdlctoolApp')
 		  var wbopts = { bookType:'xlsx', bookSST:false, type:'binary' };
 		  var wbout = XLSX.write(wb,wbopts);
 		  saveAs(new Blob([s2ab(wbout)], {type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet ;charset=utf-8"})
-		  , appConfig.filenamePrefix + "_" + $scope.systemSettings.name + "_" + $scope.getCurrentDate() + ".xlsx");
+		  , appConfig.filenamePrefix + "_" + $scope.removeSpace($scope.systemSettings.name) + "_" + $scope.getCurrentDate() + ".xlsx");
 	  }
 		function s2ab(s) {
 			  var buf = new ArrayBuffer(s.length);

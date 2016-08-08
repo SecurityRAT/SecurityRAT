@@ -20,6 +20,25 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
     .run(function ($rootScope, $location, $window, $http, $state,  Auth, Principal, ENV, VERSION, Account) {
         $rootScope.ENV = ENV;
         $rootScope.VERSION = VERSION;
+        $rootScope.ANTHENTICATIONTYPE = "";
+        $rootScope.REGISTRATIONTYPE = "";
+        $http.get('api/authentication').then(function(result){
+        	$rootScope.ANTHENTICATIONTYPE = result.data.type === "CAS" ? true : false;
+        	$rootScope.REGISTRATIONTYPE = result.data.registration;
+        	if(result.data.type === "CAS") $rootScope.CASLOGOUTURL = result.data.casLogout;
+        });
+        var account;
+        
+        $rootScope.back = function() {
+        	var notValidState = ["activate", "logout", "finishReset", "requestReset"]
+            // If previous state is 'activate' or do not exist go to 'home'
+            if (notValidState.indexOf($rootScope.previousStateName) !== -1 || $state.get($rootScope.previousStateName) === null) {
+                $state.go('editor');
+            } else {
+            		$state.go($rootScope.previousStateName, $rootScope.previousStateParams);
+            }
+        };
+        
         $rootScope.$on('$stateChangeStart', function (event, toState, toStateParams) {
             $rootScope.toState = toState;
             $rootScope.toStateParams = toStateParams;
@@ -30,28 +49,31 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
             
         });
         $rootScope.$on('$stateChangeStart',  function(event, toState, toParams, fromState, fromParams) {
-            
+        	if(!account) {
+	            Account.get(function(result) {
+	            	account = result;
+	            })
+        	}
             var hasRole = false;
-            Account.get(function(result) {
-//            	if(result.data.login !== "anonymousUser") {
-	            	 for(var i = 0; i < result.data.roles.length; i++) {
-	                 	if(toState.data.roles.indexOf(result.data.roles[i]) > -1) {
-	                 		hasRole = true;
-	                 		break;
-	                 	}
-	                 }
-	                 if(!hasRole && toState.parent.indexOf("account") === -1) {
-	                 	event.preventDefault();
-	                 	if(fromState.abstract ) {
-	                 		$state.go('editor');
-	                 	}
-	                 } 
-	                 if(!hasRole && toState.url.indexOf("login") !== -1){
-	                	 if(Principal.isAuthenticated) {
-	                		 $state.go('editor');
-	                	 }
-	                 }
-            })
+        	if(account && account.data.login !== "anonymousUser") {
+            	 for(var i = 0; i < account.data.roles.length; i++) {
+                 	if(toState.data.roles.indexOf(account.data.roles[i]) > -1) {
+                 		hasRole = true;
+                 		break;
+                 	}
+                 }
+                 if(!hasRole && toState.parent.indexOf("account") === -1) {
+                 	event.preventDefault();
+                 	if(fromState.abstract ) {
+                 		$state.go('editor');
+                 	}
+                 } 
+                 if(!hasRole && toState.url.indexOf("login") !== -1){
+                	 if(Principal.isAuthenticated) {
+                		 $state.go('editor');
+                	 }
+                 }
+        	}
         });
 
         $rootScope.$on('$stateChangeSuccess',  function(event, toState, toParams, fromState, fromParams) {
@@ -65,15 +87,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
             $window.document.title = titleKey;
         });
 
-        $rootScope.back = function(confirmed) {
-        	var notValidState = ["activate", "logout", "finishReset", "requestReset"]
-            // If previous state is 'activate' or do not exist go to 'home'
-            if (notValidState.indexOf($rootScope.previousStateName) !== -1 || $state.get($rootScope.previousStateName) === null) {
-                $state.go('editor');
-            } else {
-            		$state.go($rootScope.previousStateName, $rootScope.previousStateParams);
-            }
-        };
+       
     })
     
     .config(function ($stateProvider, $urlRouterProvider, $httpProvider,$locationProvider,  httpRequestInterceptorCacheBusterProvider,

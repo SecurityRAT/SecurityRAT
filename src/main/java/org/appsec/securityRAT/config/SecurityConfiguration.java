@@ -6,10 +6,13 @@ import org.appsec.securityRAT.security.AjaxAuthenticationFailureHandler;
 import org.appsec.securityRAT.security.AjaxAuthenticationSuccessHandler;
 import org.appsec.securityRAT.security.AjaxLogoutSuccessHandler;
 import org.appsec.securityRAT.security.AuthoritiesConstants;
+import org.appsec.securityRAT.security.CasLogoutSuccessHandler;
 import org.appsec.securityRAT.security.Http401UnauthorizedEntryPoint;
 //import org.appsec.securityRAT.security.;
 import org.appsec.securityRAT.web.filter.CsrfCookieGeneratorFilter;
+import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.pac4j.cas.client.CasClient;
+import org.pac4j.cas.logout.CasSingleSignOutHandler;
 import org.pac4j.core.client.Clients;
 import org.pac4j.springframework.security.authentication.ClientAuthenticationProvider;
 import org.pac4j.springframework.security.authentication.ClientAuthenticationToken;
@@ -31,6 +34,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.authentication.RememberMeServices;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -57,7 +61,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
 	@Inject
 	private Environment env;
-
+	
 	@Inject
 	private AjaxAuthenticationSuccessHandler ajaxAuthenticationSuccessHandler;
 
@@ -66,7 +70,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Inject
 	private AjaxLogoutSuccessHandler ajaxLogoutSuccessHandler;
-
+	
 	@Inject
 	private Http401UnauthorizedEntryPoint authenticationEntryPoint;
 
@@ -82,7 +86,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	}
 	
 	@Override
-	@ConditionalOnExpression("environment.getProperty('authentication.type').equals('FORM')")
+	@ConditionalOnExpression("#{environment.getProperty('authentication.type').equals('FORM')}")
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring().antMatchers("/scripts/**/*.{js,html}")
 				.antMatchers("/bower_components/**").antMatchers("/i18n/**")
@@ -92,18 +96,25 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(final HttpSecurity http) throws Exception {
+		final boolean registration = env.getProperty("authentication.registration", Boolean.class);
 		if(env.getProperty("authentication.type").equals("CAS")) {
-			final ClientAuthenticationFilter clientFilter = new ClientAuthenticationFilter(
-					"/callback");
+			final ClientAuthenticationFilter clientFilter = new ClientAuthenticationFilter("/callback");
 			clientFilter.setClients(clients);
 			clientFilter.setAuthenticationManager(authenticationManager());
 			final ClientAuthenticationEntryPoint casEntryPoint = new ClientAuthenticationEntryPoint();
 			casEntryPoint.setClient(casClient);
+			
 			http
 				.csrf()
 			.and()
 				.addFilterAfter(new CsrfCookieGeneratorFilter(),CsrfFilter.class).exceptionHandling()
 				.authenticationEntryPoint(casEntryPoint)
+			.and()
+				.logout()
+				.logoutUrl("/api/logout")
+				.logoutSuccessHandler(ajaxLogoutSuccessHandler)
+				.deleteCookies("JSESSIONID")
+				.permitAll()
 			.and()
 				.authorizeRequests()
 				.antMatchers("/api/register").denyAll()
@@ -111,7 +122,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers("/api/account/reset_password/finish").denyAll()
 				.antMatchers("/api/activate").denyAll()
 				.antMatchers("/api/authenticate").denyAll()
-				.antMatchers("/api/authenticationType").permitAll()
+				.antMatchers("/api/authentication").permitAll()
 				.antMatchers(HttpMethod.GET, "/frontend-api/**").hasAnyAuthority(AuthoritiesConstants.FRONTEND_USER, AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER)
 				.antMatchers(HttpMethod.GET, "/api/account").hasAuthority(AuthoritiesConstants.FRONTEND_USER)
 				.antMatchers("/api/**").hasAnyAuthority(AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER)
@@ -152,13 +163,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.logoutUrl("/api/logout")
 				.logoutSuccessHandler(ajaxLogoutSuccessHandler)
 				.deleteCookies("JSESSIONID")
-				.permitAll()
-			.and()
+				.permitAll();
+			if(registration)
+				http.authorizeRequests().antMatchers("/api/register").permitAll(); 
+			else
+				http.authorizeRequests().antMatchers("/api/register").denyAll();
+			http
 				.authorizeRequests()
 				.antMatchers("/api/register").permitAll()
 				.antMatchers("/api/activate").permitAll()
 				.antMatchers("/api/authenticate").permitAll()
-				.antMatchers("/api/authenticationType").permitAll()
+				.antMatchers("/api/authentication").permitAll()
 				.antMatchers("/api/account/reset_password/init").permitAll()
 				.antMatchers("/api/account/reset_password/finish").permitAll()
 				.antMatchers("/api/account").authenticated()
@@ -191,7 +206,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	}
 
 	@Bean
-	@ConditionalOnExpression("environment.getProperty('authentication.type').equals('FORM')")
+	@ConditionalOnExpression("#{environment.getProperty('authentication.type').equals('FORM')}")
 	public SecurityEvaluationContextExtension securityEvaluationContextExtension() {
 		return new SecurityEvaluationContextExtension();
 	}

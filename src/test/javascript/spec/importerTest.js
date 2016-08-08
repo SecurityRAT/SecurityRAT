@@ -39,8 +39,9 @@ describe('Protractor Security RAT importer testsuite', function() {
 		})
 		browser.sleep(5000);
 		var list = element.all(by.options('attachment.downloadUrl as attachment.label for attachment in attachmentProperties.attachments'));
-		expect(list.count()).toBeGreaterThan(3);
-		
+		expect(list.count()).toBeGreaterThan(1);
+		// gives time to see whether attachments other than .yml were considered.
+		browser.sleep(6000);
 		element(by.partialButtonText("Import")).click();
 		browser.sleep(10000);
 		element(by.buttonText('Close')).isPresent().then(function(v){ 
