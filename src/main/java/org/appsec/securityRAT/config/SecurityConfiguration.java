@@ -6,7 +6,6 @@ import org.appsec.securityRAT.security.AjaxAuthenticationFailureHandler;
 import org.appsec.securityRAT.security.AjaxAuthenticationSuccessHandler;
 import org.appsec.securityRAT.security.AjaxLogoutSuccessHandler;
 import org.appsec.securityRAT.security.AuthoritiesConstants;
-import org.appsec.securityRAT.security.CasLogoutSuccessHandler;
 import org.appsec.securityRAT.security.Http401UnauthorizedEntryPoint;
 //import org.appsec.securityRAT.security.;
 import org.appsec.securityRAT.web.filter.CsrfCookieGeneratorFilter;
