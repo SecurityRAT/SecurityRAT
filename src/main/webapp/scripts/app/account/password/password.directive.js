@@ -34,7 +34,7 @@ angular.module('sdlctoolApp')
                         _force += _passedMatches * 10;
 
                         // penality (short password)
-                        _force = (p.length <= 6) ? Math.min(_force, 10) : _force;
+                        _force = (p.length <= 8) ? Math.min(_force, 35) : _force;
 
                         // penality (poor variety of characters)
                         _force = (_passedMatches === 1) ? Math.min(_force, 10) : _force;
@@ -53,10 +53,10 @@ angular.module('sdlctoolApp')
                         else if (s <= 20) {
                             idx = 1;
                         }
-                        else if (s <= 30) {
+                        else if (s <= 35) {
                             idx = 2;
                         }
-                        else if (s <= 40) {
+                        else if (s <= 60) {
                             idx = 3;
                         }
                         else {

@@ -5,7 +5,7 @@ exports.config = {
   directConnect: true,
   specs: ['generalTest.js', 'layoutAndExportTest.js', 'importerTest.js', 'restoreTest.js', 'tagTest.js'
           ,'requirementTest.js', 'optColumnTest.js', 'statColumnTest.js', 'alternativeTest.js', 'ImpTypeTest.js',
-          'collectionTest.js', 'constantTest.js', 'userManagementTest.js'],// add 'accountTest.js' add the beginning of this array if you use FORM authentication 
+          'collectionTest.js', 'constantTest.js', 'userManagementTest.js', 'logoutTest.js'],// add 'accountTest.js' add the beginning of this array if you use FORM authentication 
   allScriptsTimeout: 100000,
   jasmineNodeOpts: {defaultTimeoutInterval: 500000},
   onPrepare: function() {

@@ -38,7 +38,7 @@ describe('Protractor Security RAT Testsuite', function() {
 		browser.get(browser.params.testHost);
 		defineArtifact.click();
 		var artifactName = element(by.model('starterForm.name'));
-		artifactName.sendKeys("some artifact");
+		artifactName.sendKeys("-+.:()[],!#$%'*=?`{}~;@&some artifact");
 
 		element.all(by.buttonText('Select')).last().click();
 		(element(by.linkText('Internal'))).click();
