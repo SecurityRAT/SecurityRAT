@@ -27,6 +27,8 @@ angular.module('sdlctoolApp')
 
                     
                     return response;
+                }).error(function(response) {
+                	if(response.status === 302 && $rootScope.ANTHENTICATIONTYPE) location.href = $rootScope.CASLOGOUTURL;
                 });
             },
             getToken: function () {

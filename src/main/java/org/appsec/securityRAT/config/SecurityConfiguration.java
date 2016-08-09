@@ -6,12 +6,11 @@ import org.appsec.securityRAT.security.AjaxAuthenticationFailureHandler;
 import org.appsec.securityRAT.security.AjaxAuthenticationSuccessHandler;
 import org.appsec.securityRAT.security.AjaxLogoutSuccessHandler;
 import org.appsec.securityRAT.security.AuthoritiesConstants;
+import org.appsec.securityRAT.security.CasLogoutSuccessHandler;
 import org.appsec.securityRAT.security.Http401UnauthorizedEntryPoint;
 //import org.appsec.securityRAT.security.;
 import org.appsec.securityRAT.web.filter.CsrfCookieGeneratorFilter;
-import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.pac4j.cas.client.CasClient;
-import org.pac4j.cas.logout.CasSingleSignOutHandler;
 import org.pac4j.core.client.Clients;
 import org.pac4j.springframework.security.authentication.ClientAuthenticationProvider;
 import org.pac4j.springframework.security.authentication.ClientAuthenticationToken;
@@ -33,7 +32,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.authentication.RememberMeServices;
-import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -102,6 +100,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 			clientFilter.setAuthenticationManager(authenticationManager());
 			final ClientAuthenticationEntryPoint casEntryPoint = new ClientAuthenticationEntryPoint();
 			casEntryPoint.setClient(casClient);
+			CasLogoutSuccessHandler casLogoutSuccessHandler = new CasLogoutSuccessHandler();
+			casLogoutSuccessHandler.setCasLogoutUrl(env.getProperty("cas.casLogoutUrl"));
 			
 			http
 				.csrf()
@@ -111,7 +111,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 			.and()
 				.logout()
 				.logoutUrl("/api/logout")
-				.logoutSuccessHandler(ajaxLogoutSuccessHandler)
+				.logoutSuccessHandler(casLogoutSuccessHandler)
 				.deleteCookies("JSESSIONID")
 				.permitAll()
 			.and()
