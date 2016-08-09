@@ -770,7 +770,7 @@ angular.module('sdlctoolApp')
 				});
 			}
 			angular.extend(yamlExport, {
-				name: $scope.exported.name,
+				name: $scope.exported.name.replace("#", ""),
 				projectType: [{projectTypeId: projectTypeIdValue, projectTypeName: projectTypeNameValue}],
 				collections: $scope.exported.collections,
 				generatedOn: $scope.exported.generatedOn,
