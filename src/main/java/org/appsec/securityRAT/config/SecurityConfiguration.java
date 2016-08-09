@@ -6,7 +6,6 @@ import org.appsec.securityRAT.security.AjaxAuthenticationFailureHandler;
 import org.appsec.securityRAT.security.AjaxAuthenticationSuccessHandler;
 import org.appsec.securityRAT.security.AjaxLogoutSuccessHandler;
 import org.appsec.securityRAT.security.AuthoritiesConstants;
-import org.appsec.securityRAT.security.CasLogoutSuccessHandler;
 import org.appsec.securityRAT.security.Http401UnauthorizedEntryPoint;
 //import org.appsec.securityRAT.security.;
 import org.appsec.securityRAT.web.filter.CsrfCookieGeneratorFilter;
@@ -100,8 +99,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 			clientFilter.setAuthenticationManager(authenticationManager());
 			final ClientAuthenticationEntryPoint casEntryPoint = new ClientAuthenticationEntryPoint();
 			casEntryPoint.setClient(casClient);
-			CasLogoutSuccessHandler casLogoutSuccessHandler = new CasLogoutSuccessHandler();
-			casLogoutSuccessHandler.setCasLogoutUrl(env.getProperty("cas.casLogoutUrl"));
 			
 			http
 				.csrf()
@@ -111,7 +108,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 			.and()
 				.logout()
 				.logoutUrl("/api/logout")
-				.logoutSuccessHandler(casLogoutSuccessHandler)
+				.logoutSuccessHandler(ajaxLogoutSuccessHandler)
 				.deleteCookies("JSESSIONID")
 				.permitAll()
 			.and()
