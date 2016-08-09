@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .factory('AuthServerProvider', function loginService($http, localStorageService, $window, $rootScope, $location) {
+    .factory('AuthServerProvider', function loginService($http, localStorageService, $window, $location) {
         return {
             login: function(credentials) {
                 var data = 'j_username=' + encodeURIComponent(credentials.username) +
@@ -19,11 +19,12 @@ angular.module('sdlctoolApp')
                 // logout from the server
                 $http.post('api/logout').success(function (response) {
                     localStorageService.clearAll();
-                    // to get a new csrf token call the api                    
+                    $http.get('api/authentication').success(function(result) {
+                    	if(result.type === "CAS")
+                    		location.href = result.casLogout;
+                    });
+                 // to get a new csrf token call the api 
                     $http.get('api/account');
-                    if($rootScope.ANTHENTICATIONTYPE) {
-                    	location.href = $rootScope.CASLOGOUTURL;
-                    }
                     return response;
                 });
             },
