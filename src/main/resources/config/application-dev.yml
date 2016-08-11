@@ -71,5 +71,5 @@ cache:
 
 cas:
     casLoginUrl: https://localhost:8443/cas #Change to the URL your CAS server listens on
-    casLogoutUrl: https://localhost:8443/cas/logout # Change to your CAS server logout URL
+	casLogoutUrl: https://localhost:8443/cas/logout # Change to your CAS server logout URL
     callbackUrl: https://localhost:9000/callback #Change to the correct URL (https) of SecurityRAT
