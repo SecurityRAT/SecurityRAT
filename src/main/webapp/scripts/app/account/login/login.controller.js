@@ -2,7 +2,7 @@
 
 angular.module('sdlctoolApp')
     .controller('LoginController', function ($rootScope, $scope, $state, $timeout, Auth, $stateParams) {
-        $scope.user = {};
+    	$scope.user = {};
         $scope.errors = {};
         $scope.rememberMe = true;
         $timeout(function (){angular.element('[ng-model="username"]').focus();});

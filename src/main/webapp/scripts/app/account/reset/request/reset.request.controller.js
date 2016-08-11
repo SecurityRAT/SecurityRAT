@@ -1,8 +1,7 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('RequestResetController', function ($rootScope, $scope, $state, $timeout, Auth) {
-
+    .controller('RequestResetController', function ($scope, $state, $timeout, Auth) {
         $scope.success = null;
         $scope.error = null;
         $scope.errorEmailNotExists = null;

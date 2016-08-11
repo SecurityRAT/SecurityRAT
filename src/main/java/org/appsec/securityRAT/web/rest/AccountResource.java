@@ -54,7 +54,7 @@ public class AccountResource {
     /**
      * GET  /authenticationType -> get the type of authentication.
      */
-    @RequestMapping(value = "/authentication",
+    @RequestMapping(value = "/authentication_config",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
@@ -62,17 +62,6 @@ public class AccountResource {
     	
     	return new ResponseEntity<>(userService.getExtraInfo(),HttpStatus.OK);
     }
-//    /**
-//     * GET  /authenticationType -> get the type of registration.
-//     */
-//    @RequestMapping(value = "/authentication/registration",
-//            method = RequestMethod.GET,
-//            produces = MediaType.TEXT_PLAIN_VALUE)
-//    @Timed
-//    public ResponseEntity<String> getRegistrationtype(HttpServletRequest request) {
-//    	
-//    	return userService.getRegistrationType() ? new ResponseEntity<>("supported",HttpStatus.OK) : new ResponseEntity<>("not supported",HttpStatus.OK);
-//    }
     
     /**
      * POST  /register -> register the user.
@@ -194,9 +183,9 @@ public class AccountResource {
             produces = MediaType.TEXT_PLAIN_VALUE)
     @Timed
     public ResponseEntity<?> confirmPassword(@RequestBody String password) {
-        if (!checkPasswordLength(password)) {
-            return new ResponseEntity<>("Incorrect password", HttpStatus.BAD_REQUEST);
-        }
+//        if (!checkPasswordLength(password)) {
+//            return new ResponseEntity<>("Incorrect password", HttpStatus.BAD_REQUEST);
+//        }
         return userService.confirmPassword(password) ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>("Password did not match",HttpStatus.UNAUTHORIZED); 
     }
 

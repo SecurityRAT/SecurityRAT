@@ -20,11 +20,9 @@ angular.module('sdlctoolApp')
                     }
                 },
                 // redirect to confirm password to confirm the user before change his password.
-                onEnter: function(Auth, $timeout, $rootScope, $state, $stateParams){
+                onEnter: function($state, $stateParams){
                 		if(!$stateParams.confirmed) {
-		                	$timeout(function(){
-		                		$state.go('confirmPassword');
-		                	});
+	                		$state.go('confirmPassword');
                 		}
                 },
                 resolve: {

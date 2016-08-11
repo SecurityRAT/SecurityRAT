@@ -9,7 +9,7 @@ angular.module('sdlctoolApp')
                         element.removeClass('hidden');
                     },
                     setHidden = function () {
-                        element.addClass('hidden');
+                		element.addClass('hidden');
                     },
                     defineVisibility = function (reset) {
                         var result;

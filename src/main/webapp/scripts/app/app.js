@@ -20,9 +20,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
     .run(function ($rootScope, $location, $window, $http, $state,  Auth, Principal, ENV, VERSION, Account) {
         $rootScope.ENV = ENV;
         $rootScope.VERSION = VERSION;
-        $rootScope.ANTHENTICATIONTYPE = "";
-        $rootScope.REGISTRATIONTYPE = "";
-        $http.get('api/authentication').then(function(result){
+        $http.get('api/authentication_config').then(function(result){
         	$rootScope.ANTHENTICATIONTYPE = result.data.type === "CAS" ? true : false;
         	$rootScope.REGISTRATIONTYPE = result.data.registration;
         	if(result.data.type === "CAS") $rootScope.CASLOGOUTURL = result.data.casLogout;
@@ -31,7 +29,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
         
         $rootScope.back = function() {
         	var notValidState = ["activate", "logout", "finishReset", "requestReset"]
-            // If previous state is 'activate' or do not exist go to 'home'
+            // If previous state is 'activate' or do not exist go to 'editor'
             if (notValidState.indexOf($rootScope.previousStateName) !== -1 || $state.get($rootScope.previousStateName) === null) {
                 $state.go('editor');
             } else {
@@ -49,7 +47,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
             
         });
         $rootScope.$on('$stateChangeStart',  function(event, toState, toParams, fromState, fromParams) {
-        	if(!account) {
+        	if(angular.isUndefined(account)) {
 	            Account.get(function(result) {
 	            	account = result;
 	            })
@@ -84,6 +82,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
             if (toState.data.pageTitle) {
             	titleKey = toState.data.pageTitle;
             }
+            if(toState.name === 'logout')account = undefined;
             $window.document.title = titleKey;
         });
 
