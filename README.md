@@ -54,6 +54,7 @@
 	```
 	cas:
         casLoginUrl: http(s)://localhost:8443/cas #Change to the URL your CAS server listens on
+		casLogoutUrl: https://localhost:8443/cas/logout # Change to your CAS server logout URL
         callbackUrl: https://localhost:9000/callback #Change to the correct URL (https) of SecurityRAT
     ```
 - add the CAS server certificate to the truststore of SecurityRAT. By default, that would be the cacerts file. For a tutorial how to do it, look e.g. here: http://stackoverflow.com/questions/11617210/how-to-properly-import-a-selfsigned-certificate-into-java-keystore-that-is-avail
