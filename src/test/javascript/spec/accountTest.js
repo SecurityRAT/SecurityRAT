@@ -25,47 +25,49 @@ describe('Protractor Security RAT account testsuite', function() {
 	});
 	
 	it('Test the registration', function() {
-		account.click();
-		element(by.partialLinkText('Register')).click();
-		expect(element(by.partialButtonText('Register')).isEnabled()).toBe(false);
-		element(by.id('firstName')).sendKeys(',firstName:<script>alert(1)</script>');
-		element(by.id('lastName')).sendKeys(',lastName:<script>alert(1)</script>');
-		element(by.id('login')).sendKeys(',test:<script>alert(1)</script>');
-		expect(element(by.id('patternLoginError')).getText()).toEqual('Your login can only contain lower-case letters and digits.');
-		element(by.id('login')).clear().then(function(){
-			element(by.id('login')).sendKeys("system");
-		});
-		element(by.id('email')).sendKeys(browser.params.email);
-		element(by.id('password')).sendKeys('=Test');
-		expect(element(by.id('patternPassError')).isPresent()).toBe(true);
-		expect(element(by.id('minlengthPass')).isPresent()).toBe(true);
-		element(by.id('password')).sendKeys('2day');
-		element(by.id('confirmPassword')).sendKeys('=2somePass');
-		element(by.partialButtonText('Register')).click();
-		browser.sleep(3000);
-		expect(element(by.id('PassNotMatch')).isPresent()).toBe(true);
-		element(by.id('password')).clear().then(function(){
-			element(by.id('password')).sendKeys(password);
-		});
-		element(by.id('confirmPassword')).clear().then(function(){
-			element(by.id('confirmPassword')).sendKeys(password);
-		});
-		element(by.partialButtonText('Register')).click();
-		expect(element(by.id('userExist')).isPresent()).toBe(true);
-		element(by.id('login')).clear().then(function(){
-			element(by.id('login')).sendKeys(login);
-		});
-		element(by.id('password')).clear().then(function(){
-			element(by.id('password')).sendKeys(password);
-		});
-		element(by.id('confirmPassword')).clear().then(function(){
-			element(by.id('confirmPassword')).sendKeys(password);
-		});
-		element(by.partialButtonText('Register')).click();
-		browser.sleep(2000);
-		expect(element(by.id('successReg')).isPresent()).toBe(true);
-		// waits for the user to check his email to activate his account.
-		browser.sleep(25000);
+		if(browser.params.registration) {
+			account.click();
+			element(by.partialLinkText('Register')).click();
+			expect(element(by.partialButtonText('Register')).isEnabled()).toBe(false);
+			element(by.id('firstName')).sendKeys(',firstName:<script>alert(1)</script>');
+			element(by.id('lastName')).sendKeys(',lastName:<script>alert(1)</script>');
+			element(by.id('login')).sendKeys(',test:<script>alert(1)</script>');
+			expect(element(by.id('patternLoginError')).getText()).toEqual('Your login can only contain lower-case letters and digits.');
+			element(by.id('login')).clear().then(function(){
+				element(by.id('login')).sendKeys("system");
+			});
+			element(by.id('email')).sendKeys(browser.params.email);
+			element(by.id('password')).sendKeys('=Test');
+			expect(element(by.id('patternPassError')).isPresent()).toBe(true);
+			expect(element(by.id('minlengthPass')).isPresent()).toBe(true);
+			element(by.id('password')).sendKeys('2day');
+			element(by.id('confirmPassword')).sendKeys('=2somePass');
+			element(by.partialButtonText('Register')).click();
+			browser.sleep(3000);
+			expect(element(by.id('PassNotMatch')).isPresent()).toBe(true);
+			element(by.id('password')).clear().then(function(){
+				element(by.id('password')).sendKeys(password);
+			});
+			element(by.id('confirmPassword')).clear().then(function(){
+				element(by.id('confirmPassword')).sendKeys(password);
+			});
+			element(by.partialButtonText('Register')).click();
+			expect(element(by.id('userExist')).isPresent()).toBe(true);
+			element(by.id('login')).clear().then(function(){
+				element(by.id('login')).sendKeys(login);
+			});
+			element(by.id('password')).clear().then(function(){
+				element(by.id('password')).sendKeys(password);
+			});
+			element(by.id('confirmPassword')).clear().then(function(){
+				element(by.id('confirmPassword')).sendKeys(password);
+			});
+			element(by.partialButtonText('Register')).click();
+			browser.sleep(2000);
+			expect(element(by.id('successReg')).isPresent()).toBe(true);
+			// waits for the user to check his email to activate his account.
+			browser.sleep(25000);
+		}
 		
 	});
 	it('Test for login', function() {

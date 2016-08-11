@@ -6,7 +6,7 @@ angular.module('sdlctoolApp')
                 url: '/requirements',
                 cache: false,
                 data: {
-                    roles: ['ROLE_FRONTEND_USER']
+                    roles: []
                 },
                 views: {
                     'content@': {

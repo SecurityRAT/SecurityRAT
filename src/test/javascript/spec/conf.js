@@ -16,6 +16,7 @@ exports.config = {
 		   user: '#{admin username}', 
 		   password: '#{admin password}'
 	   },// this is only relevant when you use FORM authentication.
+	   registration: true, // if registration is allowed
 	   testHost:"https://securityrat.test.local", //FQDN of test instance of Security RAT
 	   jiraQueue : 'https://test-jira.local/browse/XYZ', //path to a JIRA Queue where test tickets can be opened
 	   jiraHost : 'https://test-jira.local/browse/', //path to test JIRA

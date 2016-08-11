@@ -62,15 +62,10 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                  }
                  if(!hasRole && toState.parent.indexOf("account") === -1) {
                  	event.preventDefault();
-                 	if(fromState.abstract ) {
+                 	if(fromState.abstract || (toState.url.indexOf("login") !== -1 && Principal.isAuthenticated())) {
                  		$state.go('editor');
                  	}
                  } 
-                 if(!hasRole && toState.url.indexOf("login") !== -1){
-                	 if(Principal.isAuthenticated) {
-                		 $state.go('editor');
-                	 }
-                 }
         	}
         });
 
