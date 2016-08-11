@@ -5,7 +5,7 @@ exports.config = {
   directConnect: true,
   specs: ['generalTest.js', 'layoutAndExportTest.js', 'importerTest.js', 'restoreTest.js', 'tagTest.js'
           ,'requirementTest.js', 'optColumnTest.js', 'statColumnTest.js', 'alternativeTest.js', 'ImpTypeTest.js',
-          'collectionTest.js', 'constantTest.js', 'userManagementTest.js', 'logoutTest.js'],// add 'accountTest.js' add the beginning of this array if you use FORM authentication 
+          'collectionTest.js', 'constantTest.js', 'userManagementTest.js', 'logoutTest.js'],// add 'accountTest.js' add the beginning of this array if you use FORM authentication and registration is true
   allScriptsTimeout: 100000,
   jasmineNodeOpts: {defaultTimeoutInterval: 500000},
   onPrepare: function() {
@@ -16,7 +16,6 @@ exports.config = {
 		   user: '#{admin username}', 
 		   password: '#{admin password}'
 	   },// this is only relevant when you use FORM authentication.
-	   registration: true, // if registration is allowed
 	   testHost:"https://securityrat.test.local", //FQDN of test instance of Security RAT
 	   jiraQueue : 'https://test-jira.local/browse/XYZ', //path to a JIRA Queue where test tickets can be opened
 	   jiraHost : 'https://test-jira.local/browse/', //path to test JIRA
