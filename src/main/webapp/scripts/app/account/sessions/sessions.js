@@ -7,7 +7,7 @@ angular.module('sdlctoolApp')
                 parent: 'account',
                 url: '/sessions',
                 data: {
-                    roles: [],
+                    roles: ['ROLE_FRONTEND_USER', 'ROLE_USER', 'ROLE_ADMIN'],
                     pageTitle: 'Sessions'
                 },
                 views: {

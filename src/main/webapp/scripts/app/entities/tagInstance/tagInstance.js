@@ -7,7 +7,7 @@ angular.module('sdlctoolApp')
                 parent: 'entity',
                 url: '/tagInstances',
                 data: {
-                    roles: ['ROLE_USER', 'ROLE_ADMIN'],
+                    roles: ['ROLE_USER'],
                     pageTitle: 'TagInstances'
                 },
                 views: {
@@ -23,7 +23,7 @@ angular.module('sdlctoolApp')
                 parent: 'entity',
                 url: '/tagInstance/{id}',
                 data: {
-                    roles: ['ROLE_USER', 'ROLE_ADMIN'],
+                    roles: ['ROLE_USER'],
                     pageTitle: 'TagInstance'
                 },
                 views: {
@@ -42,7 +42,7 @@ angular.module('sdlctoolApp')
                 parent: 'tagInstance',
                 url: '/new',
                 data: {
-                    roles: ['ROLE_USER', 'ROLE_ADMIN'],
+                    roles: ['ROLE_USER'],
                 },
                 onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 	$uibModal.open({
@@ -65,7 +65,7 @@ angular.module('sdlctoolApp')
                 parent: 'tagInstance',
                 url: '/{id}/edit',
                 data: {
-                    roles: ['ROLE_USER', 'ROLE_ADMIN'],
+                    roles: ['ROLE_USER'],
                 },
                 onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 	$uibModal.open({
@@ -88,7 +88,7 @@ angular.module('sdlctoolApp')
                 parent: 'tagInstance',
                 url: '/edit',
                 data: {
-                    roles: ['ROLE_USER', 'ROLE_ADMIN'],
+                    roles: ['ROLE_USER'],
                 },
                 onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 	$uibModal.open({

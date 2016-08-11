@@ -708,7 +708,8 @@ angular.module('sdlctoolApp')
 			});
 		}
 		
-		// remove space from string
+		// remove space from string 
+		// this method should be later on defined in a central file		
 		$scope.removeSpace = function(str) {
 			var strTemp = str.split(" ");
 			str = "";
@@ -769,7 +770,7 @@ angular.module('sdlctoolApp')
 				});
 			}
 			angular.extend(yamlExport, {
-				name: $scope.exported.name,
+				name: $scope.exported.name.replace("#", ""),
 				projectType: [{projectTypeId: projectTypeIdValue, projectTypeName: projectTypeNameValue}],
 				collections: $scope.exported.collections,
 				generatedOn: $scope.exported.generatedOn,

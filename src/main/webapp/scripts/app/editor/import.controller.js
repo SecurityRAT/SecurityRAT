@@ -162,7 +162,7 @@ angular.module('sdlctoolApp')
 		  angular.extend(promise, {runningModalPromise : function() {
 			  var modalInstance = $uibModal.open({
 					template : '<div class="modal-body"><div id="UsSpinner1" class=" text-center col-sm-1" id="UsSpinner" spinner-on="true" us-spinner=' +
-						'"{radius:6, width:4, length:6, lines:9}"></div><br/><h4 class="text-center">Authentication running...</h4></div>',
+						'"{radius:6, width:4, length:6, lines:9}"></div><br/><h4 class="text-center"> JIRA Authentication running...</h4></div>',
 					controller : function(){},
 					size: 'sm',
 					backdrop: false
@@ -275,8 +275,8 @@ angular.module('sdlctoolApp')
 		$scope.buildAttachmentsArray = function(attachments) {
 			var attachmentArray = [];
 			angular.forEach(attachments, function(attachment) {
-//				attachment.mimeType === 'application/x-yaml' && 
-				if((attachment.size <= 5000000)) {
+//				
+				if((attachment.mimeType === 'application/x-yaml' && attachment.size <= 5000000)) {
 					var date = $filter('date')((new Date(attachment.created)).getTime(), 'medium');
 					var names = attachment.filename.split("_");
 					var name = names[(names).indexOf(appConfig.filenamePrefix) + 1];

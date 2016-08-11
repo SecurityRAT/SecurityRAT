@@ -57,7 +57,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
 	@Inject
 	private Environment env;
-
+	
 	@Inject
 	private AjaxAuthenticationSuccessHandler ajaxAuthenticationSuccessHandler;
 
@@ -66,7 +66,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Inject
 	private AjaxLogoutSuccessHandler ajaxLogoutSuccessHandler;
-
+	
 	@Inject
 	private Http401UnauthorizedEntryPoint authenticationEntryPoint;
 
@@ -82,7 +82,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	}
 	
 	@Override
-	@ConditionalOnExpression("environment.getProperty('authentication.type').equals('FORM')")
+	@ConditionalOnExpression("#{environment.getProperty('authentication.type').equals('FORM')}")
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring().antMatchers("/scripts/**/*.{js,html}")
 				.antMatchers("/bower_components/**").antMatchers("/i18n/**")
@@ -92,18 +92,25 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(final HttpSecurity http) throws Exception {
+		final boolean registration = env.getProperty("authentication.registration", Boolean.class);
 		if(env.getProperty("authentication.type").equals("CAS")) {
-			final ClientAuthenticationFilter clientFilter = new ClientAuthenticationFilter(
-					"/callback");
+			final ClientAuthenticationFilter clientFilter = new ClientAuthenticationFilter("/callback");
 			clientFilter.setClients(clients);
 			clientFilter.setAuthenticationManager(authenticationManager());
 			final ClientAuthenticationEntryPoint casEntryPoint = new ClientAuthenticationEntryPoint();
 			casEntryPoint.setClient(casClient);
+			
 			http
 				.csrf()
 			.and()
 				.addFilterAfter(new CsrfCookieGeneratorFilter(),CsrfFilter.class).exceptionHandling()
 				.authenticationEntryPoint(casEntryPoint)
+			.and()
+				.logout()
+				.logoutUrl("/api/logout")
+				.logoutSuccessHandler(ajaxLogoutSuccessHandler)
+				.deleteCookies("JSESSIONID")
+				.permitAll()
 			.and()
 				.authorizeRequests()
 				.antMatchers("/api/register").denyAll()
@@ -111,7 +118,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers("/api/account/reset_password/finish").denyAll()
 				.antMatchers("/api/activate").denyAll()
 				.antMatchers("/api/authenticate").denyAll()
-				.antMatchers("/api/authenticationType").permitAll()
+				.antMatchers("/api/authentication_config").permitAll()
 				.antMatchers(HttpMethod.GET, "/frontend-api/**").hasAnyAuthority(AuthoritiesConstants.FRONTEND_USER, AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER)
 				.antMatchers(HttpMethod.GET, "/api/account").hasAuthority(AuthoritiesConstants.FRONTEND_USER)
 				.antMatchers("/api/**").hasAnyAuthority(AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER)
@@ -152,13 +159,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.logoutUrl("/api/logout")
 				.logoutSuccessHandler(ajaxLogoutSuccessHandler)
 				.deleteCookies("JSESSIONID")
-				.permitAll()
-			.and()
+				.permitAll();
+			if(registration)
+				http.authorizeRequests().antMatchers("/api/register").permitAll(); 
+			else
+				http.authorizeRequests().antMatchers("/api/register").denyAll();
+			http
 				.authorizeRequests()
 				.antMatchers("/api/register").permitAll()
 				.antMatchers("/api/activate").permitAll()
 				.antMatchers("/api/authenticate").permitAll()
-				.antMatchers("/api/authenticationType").permitAll()
+				.antMatchers("/api/authentication_config").permitAll()
 				.antMatchers("/api/account/reset_password/init").permitAll()
 				.antMatchers("/api/account/reset_password/finish").permitAll()
 				.antMatchers("/api/account").authenticated()
@@ -191,7 +202,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	}
 
 	@Bean
-	@ConditionalOnExpression("environment.getProperty('authentication.type').equals('FORM')")
+	@ConditionalOnExpression("#{environment.getProperty('authentication.type').equals('FORM')}")
 	public SecurityEvaluationContextExtension securityEvaluationContextExtension() {
 		return new SecurityEvaluationContextExtension();
 	}

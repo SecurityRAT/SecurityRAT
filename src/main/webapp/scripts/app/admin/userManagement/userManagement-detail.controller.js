@@ -12,16 +12,19 @@ angular.module('sdlctoolApp')
         };
         Authorities.query(function(result) {
         	$scope.authorities = result;
-            angular.forEach($scope.authorities, function(authority) {
+            angular.forEach(result, function(authority) {
             	if($scope.user.authorities.length > 0) {
+            		$scope.userSet[authority.name] = "No";
 	            	angular.forEach($scope.user.authorities, function(role) {
-	            		$scope.userSet[authority.name] = angular.equals(authority, role) ? "Yes" : "No";
+	            		if(angular.equals(authority.name, role.name))
+	            			$scope.userSet[authority.name] = "Yes";
 	            	})
             	} else
             		$scope.userSet[authority.name] = "No";
             })
         	
         })
+        
         
         $rootScope.$on('sdlctoolApp:userManagementUpdate', function(event, result) {
             $scope.user = result;

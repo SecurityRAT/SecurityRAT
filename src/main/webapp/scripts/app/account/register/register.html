@@ -27,18 +27,14 @@
 				<div class="form-group">
                     <label for="firstName">First name</label>
                     <input type="text" class="form-control" id="firstName" name="firstName" placeholder="Your first name"
-                           data-ng-model="registerAccount.firstName" data-ng-minlength=1 data-ng-maxlength=50 required>
-                    <div data-ng-show="form.login.$dirty && form.login.$invalid">
+                           data-ng-model="registerAccount.firstName" data-ng-maxlength=50 required>
+                    <div data-ng-show="form.firstName.$dirty && form.firstName.$invalid">
                         <p class="help-block"
-                               data-ng-show="form.login.$error.required">
+                               data-ng-show="form.firstName.$error.required">
                             Your first name is required.
                         </p>
                         <p class="help-block"
-                               data-ng-show="form.login.$error.minlength">
-                            Your first name is required to be at least 1 character.
-                        </p>
-                        <p class="help-block"
-                               data-ng-show="form.login.$error.maxlength">
+                               data-ng-show="form.firstName.$error.maxlength">
                             Your first name cannot be longer than 30 characters.
                         </p>
                     </div>
@@ -46,18 +42,14 @@
                 <div class="form-group">
                     <label for="firstName">Last name</label>
                     <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Your last name"
-                           data-ng-model="registerAccount.lastName" data-ng-minlength=1 data-ng-maxlength=50 required>
-                    <div data-ng-show="form.login.$dirty && form.login.$invalid">
+                           data-ng-model="registerAccount.lastName" data-ng-maxlength=50 required>
+                    <div data-ng-show="form.lastName.$dirty && form.lastName.$invalid">
                         <p class="help-block"
-                               data-ng-show="form.login.$error.required">
+                               data-ng-show="form.lastName.$error.required">
                             Your last name is required.
                         </p>
                         <p class="help-block"
-                               data-ng-show="form.login.$error.minlength">
-                            Your last name is required to be at least 1 character.
-                        </p>
-                        <p class="help-block"
-                               data-ng-show="form.login.$error.maxlength">
+                               data-ng-show="form.lastName.$error.maxlength">
                             Your last name cannot be longer than 50 characters.
                         </p>
                     </div>
@@ -65,15 +57,11 @@
                 <div class="form-group">
                     <label for="login">Login</label>
                     <input type="text" class="form-control" id="login" name="login" placeholder="Your login"
-                           data-ng-model="registerAccount.login" data-ng-minlength=1 data-ng-maxlength=50 data-ng-pattern="/^[a-z0-9]*$/" required>
+                           data-ng-model="registerAccount.login" data-ng-maxlength=50 data-ng-pattern="/^[a-z0-9]*$/" required>
                     <div data-ng-show="form.login.$dirty && form.login.$invalid">
                         <p class="help-block"
                                data-ng-show="form.login.$error.required">
                             Your login is required.
-                        </p>
-                        <p class="help-block"
-                               data-ng-show="form.login.$error.minlength">
-                            Your login is required to be at least 1 character.
                         </p>
                         <p class="help-block"
                                data-ng-show="form.login.$error.maxlength">

@@ -10,6 +10,7 @@ import org.appsec.securityRAT.repository.UserRepository;
 import org.appsec.securityRAT.security.SecurityUtils;
 import org.appsec.securityRAT.service.MailService;
 import org.appsec.securityRAT.service.UserService;
+import org.appsec.securityRAT.web.rest.dto.ExtraInfoDTO;
 import org.appsec.securityRAT.web.rest.dto.KeyAndPasswordDTO;
 import org.appsec.securityRAT.web.rest.dto.UserDTO;
 import org.apache.commons.lang.StringUtils;
@@ -27,7 +28,6 @@ import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.*;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -54,12 +54,13 @@ public class AccountResource {
     /**
      * GET  /authenticationType -> get the type of authentication.
      */
-    @RequestMapping(value = "/authenticationType",
+    @RequestMapping(value = "/authentication_config",
             method = RequestMethod.GET,
-            produces = MediaType.TEXT_PLAIN_VALUE)
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<String> getAuthenticationtype(HttpServletRequest request) {
-    	return new ResponseEntity<>(userService.getAuthenticationType(),HttpStatus.OK);
+    public ResponseEntity<ExtraInfoDTO> getAuthenticationtype(HttpServletRequest request) {
+    	
+    	return new ResponseEntity<>(userService.getExtraInfo(),HttpStatus.OK);
     }
     
     /**
@@ -77,7 +78,7 @@ public class AccountResource {
 	                .orElseGet(() -> {
 	                    User user = userService.createUserInformation(userDTO.getLogin(), userDTO.getPassword(),
 	                    userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmail().toLowerCase(),
-	                    userDTO.getLangKey());
+	                    userDTO.getLangKey(), null);
 	                    String baseUrl = request.getScheme() + // "http"
 	                    "://" +                                // "://"
 	                    request.getServerName() +              // "myhost"
@@ -182,9 +183,9 @@ public class AccountResource {
             produces = MediaType.TEXT_PLAIN_VALUE)
     @Timed
     public ResponseEntity<?> confirmPassword(@RequestBody String password) {
-        if (!checkPasswordLength(password)) {
-            return new ResponseEntity<>("Incorrect password", HttpStatus.BAD_REQUEST);
-        }
+//        if (!checkPasswordLength(password)) {
+//            return new ResponseEntity<>("Incorrect password", HttpStatus.BAD_REQUEST);
+//        }
         return userService.confirmPassword(password) ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>("Password did not match",HttpStatus.UNAUTHORIZED); 
     }
 

@@ -48,7 +48,10 @@ angular.module('sdlctoolApp')
                                 // now, send them to the signin state so they can log in
                                 $state.go('login');
                             }
+                        } else if($rootScope.toState.name === 'login' && isAuthenticated) {
+                        	$state.go('editor');
                         }
+                        	
                     });
             },
             createAccount: function (account, callback) {

@@ -7,7 +7,7 @@ angular.module('sdlctoolApp')
                 parent: 'entity',
                 url: '/optColumnTypes',
                 data: {
-                    roles: ['ROLE_USER', 'ROLE_ADMIN'],
+                    roles: ['ROLE_USER'],
                     pageTitle: 'OptColumnTypes'
                 },
                 views: {
@@ -23,7 +23,7 @@ angular.module('sdlctoolApp')
                 parent: 'entity',
                 url: '/optColumnType/{id}',
                 data: {
-                    roles: ['ROLE_USER', 'ROLE_ADMIN'],
+                    roles: ['ROLE_USER'],
                     pageTitle: 'OptColumnType'
                 },
                 views: {
@@ -42,7 +42,7 @@ angular.module('sdlctoolApp')
                 parent: 'optColumnType',
                 url: '/new',
                 data: {
-                    roles: ['ROLE_USER', 'ROLE_ADMIN'],
+                    roles: ['ROLE_USER'],
                 },
                 onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 	$uibModal.open({
@@ -65,7 +65,7 @@ angular.module('sdlctoolApp')
                 parent: 'optColumnType',
                 url: '/{id}/edit',
                 data: {
-                    roles: ['ROLE_USER', 'ROLE_ADMIN'],
+                    roles: ['ROLE_USER'],
                 },
                 onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 	$uibModal.open({

@@ -29,7 +29,7 @@
             <div class="alert alert-warning">
                 <a ui-sref="requestReset">Did you forget your password?</a>
             </div>
-            <div class="alert alert-warning">
+            <div class="alert alert-warning" data-ng-class="{hidden: !REGISTRATIONTYPE}">
                 You don't have an account yet? <a ui-sref="register">Register a new account</a>
             </div>
         </div>
