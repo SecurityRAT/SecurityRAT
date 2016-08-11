@@ -25,7 +25,6 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
         	$rootScope.REGISTRATIONTYPE = result.data.registration;
         	if(result.data.type === "CAS") $rootScope.CASLOGOUTURL = result.data.casLogout;
         });
-        var account;
         
         $rootScope.back = function() {
         	var notValidState = ["activate", "logout", "finishReset", "requestReset"]
@@ -40,44 +39,21 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
         $rootScope.$on('$stateChangeStart', function (event, toState, toStateParams) {
             $rootScope.toState = toState;
             $rootScope.toStateParams = toStateParams;
-
+            
             if (Principal.isIdentityResolved()) {
                 Auth.authorize();
             }
             
         });
-        $rootScope.$on('$stateChangeStart',  function(event, toState, toParams, fromState, fromParams) {
-        	if(angular.isUndefined(account)) {
-	            Account.get(function(result) {
-	            	account = result;
-	            })
-        	}
-            var hasRole = false;
-        	if(account && account.data.login !== "anonymousUser") {
-            	 for(var i = 0; i < account.data.roles.length; i++) {
-                 	if(toState.data.roles.indexOf(account.data.roles[i]) > -1) {
-                 		hasRole = true;
-                 		break;
-                 	}
-                 }
-                 if(!hasRole && toState.parent.indexOf("account") === -1) {
-                 	event.preventDefault();
-                 	if(fromState.abstract || (toState.url.indexOf("login") !== -1 && Principal.isAuthenticated())) {
-                 		$state.go('editor');
-                 	}
-                 } 
-        	}
-        });
 
         $rootScope.$on('$stateChangeSuccess',  function(event, toState, toParams, fromState, fromParams) {
-        	var titleKey = 'Secure SDLC' ;
+        	var titleKey = 'SecurityRAT' ;
             $rootScope.previousStateName = fromState.name;
             $rootScope.previousStateParams = fromParams;
             // Set the page title key to the one configured in state or use default one
             if (toState.data.pageTitle) {
             	titleKey = toState.data.pageTitle;
             }
-            if(toState.name === 'logout')account = undefined;
             $window.document.title = titleKey;
         });
 
