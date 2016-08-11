@@ -50,7 +50,7 @@ angular.module('sdlctoolApp')
                             }
                         } else if($rootScope.toState.name === 'login' && isAuthenticated) {
                         	$state.go('editor');
-                        } else if (!isAuthenticated && $rootScope.toState.name !== 'login' & $rootScope.toState.name !== 'register')
+                        } else if (!isAuthenticated && $rootScope.toState.name !== 'login' && $rootScope.toState.name !== 'register')
                         	$state.go('login');
                     });
             },
