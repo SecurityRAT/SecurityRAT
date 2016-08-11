@@ -17,6 +17,7 @@ describe('Protractor Security RAT importer testsuite', function() {
 		});
 	}
 	it('imports by clicking on the link with parameter file and export them again', function() {
+		browser.sleep(3000)
 		browser.get(browser.params.impTestAttachmentUrl + browser.params.attachmentUrls[0]).then(function() {}, function(){
 			browser.switchTo().alert().accept();
 		})
@@ -34,6 +35,7 @@ describe('Protractor Security RAT importer testsuite', function() {
 	});
 	
 	it('imports by clicking on the link with parameter ticket and export them again', function() {
+		browser.sleep(3000)
 		browser.get(browser.params.impTestUrl2).then(function() {}, function(){
 			browser.switchTo().alert().accept();
 		})

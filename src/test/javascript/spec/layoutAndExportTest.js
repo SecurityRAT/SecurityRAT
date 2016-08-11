@@ -399,7 +399,6 @@ describe('Protractor Security RAT Testsuite', function() {
 		element(by.model('jiraUrl.url')).clear().then(function(){
 			element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraQueue + browser.params.issueNumbers[0]);
 		});
-		
 		(element(by.buttonText(exportButton))).click();
 		browser.sleep(3000);
 		element(by.buttonText("OK")).click();

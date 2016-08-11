@@ -7,7 +7,7 @@ angular.module('sdlctoolApp')
                 parent: 'site',
                 url: '/starter',
                 data: {
-                    roles: []
+                    roles: ['ROLE_FRONTEND_USER', 'ROLE_USER', 'ROLE_ADMIN']
                 },
                 views: {
                     'content@': {

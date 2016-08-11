@@ -20,13 +20,13 @@ describe('Protractor Security RAT general testsuite', function() {
 			element(by.partialButtonText('Add a new User')).click();
 			browser.sleep(2000);
 			expect(element(by.partialButtonText('Save')).isEnabled()).toBe(false);
-			element(by.id('field_login')).clear().then(function(){
-				element(by.id('field_login')).sendKeys("Test user.<script>alert(1)</script>").then(function() {
+			element(by.id('username')).clear().then(function(){
+				element(by.id('username')).sendKeys("Test user.<script>alert(1)</script>").then(function() {
 					expect(element(by.id('falsePattern')).isPresent()).toBe(true);
 				});
 			});
-			element(by.id('field_login')).clear().then(function(){
-				element(by.id('fieldLogin')).sendKeys("testusername")
+			element(by.id('username')).clear().then(function(){
+				element(by.id('username')).sendKeys("testusername")
 			});
 			element(by.id('field_firstName')).clear().then(function(){
 				element(by.id('field_firstName')).sendKeys("zzzzz user.<script>alert(1)</script>");

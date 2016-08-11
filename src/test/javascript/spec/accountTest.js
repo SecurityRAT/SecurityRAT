@@ -69,64 +69,64 @@ describe('Protractor Security RAT account testsuite', function() {
 			// waits for the user to check his email to activate his account.
 			browser.sleep(25000);
 	});
-//	it('Test for login', function() {
-//		element(by.id('username')).sendKeys(login);
-//		element(by.id('password')).sendKeys('=Testdefer');
-//		element(by.partialButtonText('Authenticate')).click();
-//		expect(element(by.id('loginError')).getText()).toBe('Authentication failed! Please check your credentials and try again.');
-//		element(by.id('username')).clear().then(function(){
-//			element(by.id('username')).sendKeys(login);
-//		});
-//		element(by.id('password')).clear().then(function(){
-//			element(by.id('password')).sendKeys(password);
-//		});
-//		element(by.partialButtonText('Authenticate')).click();
-//		browser.sleep(3000);
-//		expect(element(by.partialLinkText('Define a new artifact')).isPresent()).toBe(true);
-//		account.click();
-//		browser.sleep(2000);
-//		expect(element(by.partialLinkText('Settings')).isPresent()).toBe(true);
-//		expect(element(by.partialLinkText('Password')).isPresent()).toBe(true);
-//		expect(element(by.partialLinkText('Sessions')).isPresent()).toBe(true);
-//		expect(element(by.partialLinkText('Log out')).isPresent()).toBe(true);
-//		account.click();
-//		
-//	});
-//	
-//	it('Test for account settings', function() {
-//		confirmPassword('Settings');
-//		element(by.model('settingsAccount.lastName')).sendKeys(' modify');
-//		element(by.buttonText('Save')).click();
-//		browser.sleep(3000);
-//		expect(element(by.className('alert-success')).getText()).toEqual('Settings saved!');
-//	});
-//	
-//	it('Test for password change', function() {
-//		confirmPassword('Password');
-//		element(by.id('password')).sendKeys(changedPassword);
-//		element(by.id('confirmPassword')).sendKeys(changedPassword);
-//		element(by.buttonText('Save')).click();
-//		browser.sleep(3000);
-//		expect(element(by.id('success')).getText()).toEqual('Password changed!');
-//	});
-//	
-//	it('Test log out function', function() {
-//		account.click();
-//		element(by.partialLinkText('Log out')).click();
-//		browser.sleep(2000);
-//		account.click();
-//		expect(element(by.partialLinkText('Log out')).isPresent()).toBe(false);
-//		account.click();
-//		element(by.partialLinkText('Authenticate')).click();
-//		browser.sleep(2000);
-//		element(by.id('username')).clear().then(function(){
-//			element(by.id('username')).sendKeys(browser.params.admin.user);
-//		});
-//		element(by.id('password')).clear().then(function(){
-//			element(by.id('password')).sendKeys(browser.params.admin.password);
-//		});
-//		element(by.partialButtonText('Authenticate')).click();
-//	});
-//	
+	it('Test for login', function() {
+		element(by.id('username')).sendKeys(login);
+		element(by.id('password')).sendKeys('=Testdefer');
+		element(by.partialButtonText('Authenticate')).click();
+		expect(element(by.id('loginError')).getText()).toBe('Authentication failed! Please check your credentials and try again.');
+		element(by.id('username')).clear().then(function(){
+			element(by.id('username')).sendKeys(login);
+		});
+		element(by.id('password')).clear().then(function(){
+			element(by.id('password')).sendKeys(password);
+		});
+		element(by.partialButtonText('Authenticate')).click();
+		browser.sleep(3000);
+		expect(element(by.partialLinkText('Define a new artifact')).isPresent()).toBe(true);
+		account.click();
+		browser.sleep(2000);
+		expect(element(by.partialLinkText('Settings')).isPresent()).toBe(true);
+		expect(element(by.partialLinkText('Password')).isPresent()).toBe(true);
+		expect(element(by.partialLinkText('Sessions')).isPresent()).toBe(true);
+		expect(element(by.partialLinkText('Log out')).isPresent()).toBe(true);
+		account.click();
+		
+	});
+	
+	it('Test for account settings', function() {
+		confirmPassword('Settings');
+		element(by.model('settingsAccount.lastName')).sendKeys(' modify');
+		element(by.buttonText('Save')).click();
+		browser.sleep(3000);
+		expect(element(by.className('alert-success')).getText()).toEqual('Settings saved!');
+	});
+	
+	it('Test for password change', function() {
+		confirmPassword('Password');
+		element(by.id('password')).sendKeys(changedPassword);
+		element(by.id('confirmPassword')).sendKeys(changedPassword);
+		element(by.buttonText('Save')).click();
+		browser.sleep(3000);
+		expect(element(by.id('success')).getText()).toEqual('Password changed!');
+	});
+	
+	it('Test log out function', function() {
+		account.click();
+		element(by.partialLinkText('Log out')).click();
+		browser.sleep(2000);
+		account.click();
+		expect(element(by.partialLinkText('Log out')).isPresent()).toBe(false);
+		account.click();
+		element(by.partialLinkText('Authenticate')).click();
+		browser.sleep(2000);
+		element(by.id('username')).clear().then(function(){
+			element(by.id('username')).sendKeys(browser.params.admin.user);
+		});
+		element(by.id('password')).clear().then(function(){
+			element(by.id('password')).sendKeys(browser.params.admin.password);
+		});
+		element(by.partialButtonText('Authenticate')).click();
+	});
+	
 	
 });

@@ -20,8 +20,10 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
     .run(function ($rootScope, $location, $window, $http, $state,  Auth, Principal, ENV, VERSION, Account) {
         $rootScope.ENV = ENV;
         $rootScope.VERSION = VERSION;
+        $rootScope.AUTHENTICATIONTYPE = "";
+        $rootScope.REGISTRATIONTYPE = "";
         $http.get('api/authentication_config').then(function(result){
-        	$rootScope.ANTHENTICATIONTYPE = result.data.type === "CAS" ? true : false;
+        	$rootScope.AUTHENTICATIONTYPE = result.data.type === "CAS" ? true : false;
         	$rootScope.REGISTRATIONTYPE = result.data.registration;
         	if(result.data.type === "CAS") $rootScope.CASLOGOUTURL = result.data.casLogout;
         });

@@ -23,7 +23,7 @@ describe('Protractor Security RAT general testsuite', function() {
 	
 	it('should have title Secure SDLC', function() {
 		browser.sleep(15000);
-		expect(browser.getTitle()).toEqual('Secure SDLC');
+		expect(browser.getTitle()).toEqual('SecurityRAT');
 	});
 	
 	it('should have an error due to / in artifact name and generate button is disabled', function() {

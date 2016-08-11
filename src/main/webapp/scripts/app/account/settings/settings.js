@@ -7,7 +7,7 @@ angular.module('sdlctoolApp')
                 parent: 'account',
                 url: '/settings',
                 data: {
-                    roles: [],
+                    roles: ['ROLE_FRONTEND_USER', 'ROLE_USER', 'ROLE_ADMIN'],
                     pageTitle: 'Settings'
                 },
                 params: {
@@ -20,9 +20,12 @@ angular.module('sdlctoolApp')
                     }
                 },
                 // redirect to confirm password to confirm the user before he changes his data.                
-                onEnter: function($state, $stateParams){
+                onEnter: function($state, $stateParams, $timeout){
             		if(!$stateParams.confirmed) {
-                		$state.go('confirmPassword');
+            			//timeout helps to complete previous current state before going to state confirm password.
+            			$timeout(function(){
+	                		$state.go('confirmPassword');
+	                	});
             		}
                 },
                 resolve: {

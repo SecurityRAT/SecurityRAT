@@ -3,7 +3,7 @@
 angular.module('sdlctoolApp').controller('UserManagementDialogController',
     ['$scope', '$stateParams', '$uibModalInstance', 'entity', 'UserManagement', 'Authorities', 'User', 'AlertService',
         function($scope, $stateParams, $uibModalInstance, entity, UserManagement, Authorities, User, AlertService) {
-    	$scope.usernamePattern = new RegExp("[a-z0-9]*");
+    	$scope.usernamePattern = new RegExp("^[a-z0-9]*$");
         $scope.user = entity;
         Authorities.query(function(result) {
         	$scope.authorities = result;
