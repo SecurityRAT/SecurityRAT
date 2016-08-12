@@ -55,32 +55,15 @@ Version number in navbar
 /* ==========================================================================
 JIRA Custom fields
 ========================================================================== */
-.customfields {
-    position:relative;
-    min-height: 100px;
-    background-color: #ffffff;
-    min-width: 200px;
-    border-radius: 1px;
+.dropdown-menu>.customFields {
+	clear: both;
+    color: #333;
+    display: block;
+    font-weight: normal;
+    line-height: 1.42857;
+    padding: 3px 20px;
+    white-space: nowrap;
 }
-.customfields>.fields {
-    top:0;
-    left:100%;
-    margin-top:-6px;
-    margin-left:-1px;
-    -webkit-border-radius:0 6px 6px 6px;
-    -moz-border-radius:0 6px 6px 6px;
-    border-radius:0 6px 6px 6px;
-}
-/* .customfields.pull-left {
-    float:none;
-} */
-/* .customfields>.fields {
-    left:-100%;
-    margin-left:10px;
-    -webkit-border-radius:6px 0 6px 6px;
-    -moz-border-radius:6px 0 6px 6px;
-    border-radius:6px 0 6px 6px;
-} */
 /* ==========================================================================
 Browser Upgrade Prompt
 ========================================================================== */
