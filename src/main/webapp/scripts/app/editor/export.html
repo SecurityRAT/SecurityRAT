@@ -29,12 +29,16 @@
 	                   	</button>
 	                   	<ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-fields">
 	         				<li data-ng-repeat="field in jiraAlternatives.mandatoryFields | filter : {configurable : true}" >
-	         					<span class="pull-left" data-ng-if="$odd"><input type="checkbox" data-ng-checked="field.mandatory">
-	         					{{field.name}}
-	         					</span>
-	         					<span class="pull-right" data-ng-if="$odd"><input type="checkbox" data-ng-checked="field.mandatory">
-	         					{{field.name}}
-	         					</span>
+	         					<a href="">
+		         					<span class="pull-left" data-ng-if="$odd"><input type="checkbox" data-ng-checked="field.mandatory">
+		         					{{field.name}}
+		         					</span>
+	         					</a>
+	         					<a href="">
+		         					<span class="pull-right" data-ng-if="$odd"><input type="checkbox" data-ng-checked="field.mandatory">
+		         					{{field.name}}
+		         					</span>
+	         					</a>
 	         				</li>
 	         			</ul>
 					</div>
