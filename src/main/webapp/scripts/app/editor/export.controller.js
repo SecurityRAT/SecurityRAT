@@ -298,12 +298,12 @@ angular.module('sdlctoolApp')
 						var itemType = "";
 						var  sync = $q.defer();
 //							if(value.required) {
-//								if((fatalFields.indexOf(key) !== -1)
-//										//allows custom fields from type string since this is an easy structure.
-//										|| ((key.indexOf("customfield") !== -1) && !angular.equals(value.schema.type, "string")) 
-//										|| ((key.indexOf("customfield") !== -1) && angular.equals(value.schema.type, "string") && (value.allowedValues !== undefined))) {
-//									SDLCToolExceptionService.showWarning('Ticket creation failed', 'Cannot create ticket because <strong>' + encodeURIComponent(key) +'</strong> field is required. Please create ticket(s) manually.', SDLCToolExceptionService.DANGER);
-//								} else {
+								if((fatalFields.indexOf(key) !== -1)
+										//allows custom fields from type string since this is an easy structure.
+										|| ((key.indexOf("customfield") !== -1) && !angular.equals(value.schema.type, "string")) 
+										|| ((key.indexOf("customfield") !== -1) && angular.equals(value.schema.type, "string") && (value.allowedValues !== undefined))) {
+									SDLCToolExceptionService.showWarning('Ticket creation failed', 'Cannot create ticket because <strong>' + encodeURIComponent(key) +'</strong> field is required. Please create ticket(s) manually.', SDLCToolExceptionService.DANGER);
+								} else {
 									if((excludedFields.indexOf(key) === -1)) {
 										//console.log(key);
 										if(angular.equals(value.schema.type, "string") || angular.equals(value.schema.type, "date") || angular.equals(value.schema.type, "timetracking")) {
@@ -332,7 +332,8 @@ angular.module('sdlctoolApp')
 												configurable : !value.required,
 												mandatory : false
 											});
-											$scope.jiraAlternatives.mandatoryFields.mandatory = true
+											if(value.required)
+												$scope.jiraAlternatives.mandatoryFields.mandatory = true
 //											helperService.unique($scope.jiraAlternatives.mandatoryFields, key);
 											//console.log($scope.jiraAlternatives.mandatoryFields);
 										});

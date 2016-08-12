@@ -55,7 +55,7 @@ Version number in navbar
 /* ==========================================================================
 JIRA Custom fields
 ========================================================================== */
-.dropdown-menu>.customFields {
+.dropdown-menu > li > span {
 	clear: both;
     color: #333;
     display: block;
