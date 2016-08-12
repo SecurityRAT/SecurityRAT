@@ -13,7 +13,7 @@
 	        	Export to JIRA <i class="pull-right glyphicon" data-ng-class="{'glyphicon-chevron-down':selection.jira, 'glyphicon-chevron-right': !selection.jira}"></i>
 	      		</uib-accordion-heading>
 	      		<div class="row form-group">
-					<div class="text-center col-sm-10">		
+					<div class="text-center col-sm-9">		
 						<div class="input-group">
 							<span class="input-group-addon required-field">URL:</span>
 							<input type="text" placeholder="e.g. https://www.example-jira.com/browse/DUMBQ-20" data-ng-model="jiraUrl.url" class="form-control"/>
@@ -23,12 +23,25 @@
 						<span id="UsSpinner" spinner-on="exportProperty.showSpinner" us-spinner="{radius:5, width:3, length:3, lines:9}"uib-popover="JIRA Authentication running..." popover-placement="top" popover-trigger="mouseenter" 
 						popover-append-to-body></span>
 					</div>
+					<div class="pull-right" data-ng-if="(jiraAlternatives.mandatoryFields | filter : {configurable : true}).length > 0">
+						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-ng-click="toggleDropdown('tag', $event)">
+	                   				<span class="glyphicon glyphicon-wrench"></span> Configure fields <span class="caret">
+	                   	</button>
+	                   	<ul class="dropdown-menu" role="menu">
+	         				<li data-ng-repeat="fields in jiraAlternatives.mandatoryFields | filter : {configurable : true}" data-ng-class="{pull-left:$odd, pull-right:$even}">
+	         					<input type="checkbox" data-ng-checked="fields.mandatory">
+	         					{{field.name}}
+	         				</li>
+	         			</ul>
+					</div>
 				</div>
 				<div class="row col-sm-12">
+					<div class="pull-left">
 					<p>Please enter a ticket or a queue.<br/>
 					<b>Queue:</b> a ticket will be created and a new version of the Artifact will be attached.<br/>
 					<b>Ticket:</b> a new version of the Artifact will be attached to the ticket.
 					</p>
+					</div>
 				</div>
 	      		<div class="row" data-ng-show="checks.isNotProject">
 					<!-- <div role="alert"><uib-alert  type="alert alert-{{alertType}}"><span class="text-center">{{exportProperty.failed}}</span></uib-alert></div> -->

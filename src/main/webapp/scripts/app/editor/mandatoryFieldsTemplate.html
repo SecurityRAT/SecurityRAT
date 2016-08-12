@@ -5,7 +5,7 @@
 		</select>
 	</div>
 </div>
-<div data-ng-repeat="field in jiraAlternatives.mandatoryFields">
+<div data-ng-repeat="field in jiraAlternatives.mandatoryFields | filter : {mandatory : true}">
 	<div  data-ng-if="field.type != 'array' && field.type != ''" class="form-group">
 		<label for="{{field.name}}" class="col-sm-2 control-label">{{field.name}}:</label>
 		<div class="col-sm-9">

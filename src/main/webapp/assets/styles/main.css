@@ -52,7 +52,35 @@ Version number in navbar
     font-size: 10px;
     color: #ccc
 }
-
+/* ==========================================================================
+JIRA Custom fields
+========================================================================== */
+.customfields {
+    position:relative;
+    min-height: 100px;
+    background-color: #ffffff;
+    min-width: 200px;
+    border-radius: 1px;
+}
+.customfields>.fields {
+    top:0;
+    left:100%;
+    margin-top:-6px;
+    margin-left:-1px;
+    -webkit-border-radius:0 6px 6px 6px;
+    -moz-border-radius:0 6px 6px 6px;
+    border-radius:0 6px 6px 6px;
+}
+/* .customfields.pull-left {
+    float:none;
+} */
+/* .customfields>.fields {
+    left:-100%;
+    margin-left:10px;
+    -webkit-border-radius:6px 0 6px 6px;
+    -moz-border-radius:6px 0 6px 6px;
+    border-radius:6px 0 6px 6px;
+} */
 /* ==========================================================================
 Browser Upgrade Prompt
 ========================================================================== */

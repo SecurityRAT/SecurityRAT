@@ -17,17 +17,10 @@ angular.module('sdlctoolApp')
 		$scope.backupUrl = "";
 		$scope.label = {};
 		$scope.ticketKeys = [];
+		$scope.customFields = false;
 		
 		$scope.init = function() {
 			$scope.manFilterObject = {};
-//			$scope.urlpattern = {
-//				http: new RegExp('((http|https):){1}'),
-//				host: new RegExp('(([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}(\:\d{2,5})?')
-//			}
-//			$scope.pattern = new RegExp('(^(http|https):\/\/){1}'+ // protocol
-//				    '(([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}'+ // domain name
-//				    '(\:\d{2,5})?(\/[-a-z\d%_.~+]*)*' // port and path
-//				    ,'i');
 			$scope.extension = 'yaml';
 			$scope.exported = sharedProperties.getProperty();
 			$scope.jiraAlternatives.issueTypes = [];
@@ -41,6 +34,10 @@ angular.module('sdlctoolApp')
 			if ($scope.exported.ticket.url !== undefined && !$scope.selection.createTickets) {
 				$scope.jiraUrl.url = $scope.exported.ticket.url;
 			}
+		}
+		
+		$scope.toggleCustomfields = function() {
+			$scope.customFields = !$scope.customFields;
 		}
 		//initial method for the create ticket use case.
 		$scope.initcreateTicket = function()  {
@@ -301,17 +298,17 @@ angular.module('sdlctoolApp')
 			apiFactory.getJIRAInfo(url).then(function(response) {
 				angular.forEach(response.projects, function(project) {
 					angular.forEach(project.issuetypes[0].fields, function(value, key) {
-//						console.log(response);
+						console.log(response);
 						var values = [];
 						var itemType = "";
-						var  sync= $q.defer();
-							if(value.required) {
-								if((fatalFields.indexOf(key) !== -1)
-										//allows custom fields from type string since this is an easy structure.
-										|| ((key.indexOf("customfield") !== -1) && !angular.equals(value.schema.type, "string")) 
-										|| ((key.indexOf("customfield") !== -1) && angular.equals(value.schema.type, "string") && (value.allowedValues !== undefined))) {
-									SDLCToolExceptionService.showWarning('Ticket creation failed', 'Cannot create ticket because <strong>' + encodeURIComponent(key) +'</strong> field is required. Please create ticket(s) manually.', SDLCToolExceptionService.DANGER);
-								} else {
+						var  sync = $q.defer();
+//							if(value.required) {
+//								if((fatalFields.indexOf(key) !== -1)
+//										//allows custom fields from type string since this is an easy structure.
+//										|| ((key.indexOf("customfield") !== -1) && !angular.equals(value.schema.type, "string")) 
+//										|| ((key.indexOf("customfield") !== -1) && angular.equals(value.schema.type, "string") && (value.allowedValues !== undefined))) {
+//									SDLCToolExceptionService.showWarning('Ticket creation failed', 'Cannot create ticket because <strong>' + encodeURIComponent(key) +'</strong> field is required. Please create ticket(s) manually.', SDLCToolExceptionService.DANGER);
+//								} else {
 									if((excludedFields.indexOf(key) === -1)) {
 										//console.log(key);
 										if(angular.equals(value.schema.type, "string") || angular.equals(value.schema.type, "date") || angular.equals(value.schema.type, "timetracking")) {
@@ -336,20 +333,23 @@ angular.module('sdlctoolApp')
 												name: value.name,
 												type: value.schema.type,
 												itemType: itemType,
-												values : values
+												values : values,
+												configurable : !value.required,
+												mandatory : false
 											});
+											$scope.jiraAlternatives.mandatoryFields.mandatory = true
 //											helperService.unique($scope.jiraAlternatives.mandatoryFields, key);
 											//console.log($scope.jiraAlternatives.mandatoryFields);
 										});
 									}
-								}
-							}
+//								}
+//							}
 						});
 				})
 			});
 			
 		}
-		// watch the issue type field and get accordingly the mandatory fields.
+		// watch the issue type field and gets the mandatory fields depending on he issue type selected.
 		$scope.$watch('fields.issuetype.name', function(newVal, oldVal, scope) {
 			$scope.manFilterObject.projectKey = $scope.apiUrl.projectKey;
 			$scope.manFilterObject.issuetypeName = newVal;
