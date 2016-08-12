@@ -65,9 +65,9 @@ JIRA Custom fields
     white-space: nowrap;
 }
 .newspaper {
-    -webkit-columns: 100px 3; /* Chrome, Safari, Opera */
-    -moz-columns: 100px 3; /* Firefox */
-    columns: 100px 3;
+    -webkit-columns: 2; /* Chrome, Safari, Opera */
+    -moz-columns: 2; /* Firefox */
+    columns: 2;
 }
 /* ==========================================================================
 Browser Upgrade Prompt
