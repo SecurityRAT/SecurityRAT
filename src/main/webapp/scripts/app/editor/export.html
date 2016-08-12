@@ -29,8 +29,9 @@
 	                   	</button>
 	                   	<ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-fields">
 	         				<li data-ng-repeat="field in jiraAlternatives.mandatoryFields | filter : {configurable : true}" >
-	         					<input type="checkbox" data-ng-checked="field.mandatory">
+	         					<a href="#" data-ng-click="!field.mandatory"><input type="checkbox" data-ng-checked="field.mandatory">
 	         					{{field.name}}
+	         					</a>
 	         				</li>
 	         			</ul>
 					</div>
