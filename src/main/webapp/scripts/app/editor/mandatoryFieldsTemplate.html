@@ -39,4 +39,18 @@
 			</span>
 		</div>
 	</div>
+	 <div  data-ng-if="field.type == 'array' && field.values.length == 0" class="form-group">
+		<label for="{{field.name}}" class="col-sm-2 control-label required-field">{{field.name}}:</label>
+		<div class="col-sm-9">
+			<span>
+			<textarea rows="5" placeholder="comma seperated value"></textarea>
+			</span>
+		</div>
+	</div>
+	<div  data-ng-if="field.type == 'number'" class="form-group">
+		<label for="{{field.name}}" class="col-sm-2 control-label required-field">{{field.name}}:</label>
+		<div class="col-sm-9">
+				<input type="number" id="{{field.name}}" data-ng-model="fields[field.key]" class="form-control"/>
+		</div>
+	</div>
 </div>
