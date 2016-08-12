@@ -302,22 +302,35 @@ angular.module('sdlctoolApp')
 //									SDLCToolExceptionService.showWarning('Ticket creation failed', 'Cannot create ticket because <strong>' + encodeURIComponent(key) +'</strong> field is required. Please create ticket(s) manually.', SDLCToolExceptionService.DANGER);
 //								} else {
 									if((excludedFields.indexOf(key) === -1)) {
-										//console.log(key);
-										if(angular.equals(value.schema.type, "string") || angular.equals(value.schema.type, "date") || angular.equals(value.schema.type, "timetracking")) {
-											sync.resolve(true);
-										}else{
-											if(angular.isDefined(value.allowedValues)) {
-												if(value.allowedValues.length > 0) {
-													if(angular.equals(value.schema.type, "array")) {
-														// this ensures the post data structure to create a ticket is respected.
-														$scope.fields[key] = [];
-													}
-													values = value.allowedValues;
-													itemType = value.schema.items;
-													sync.resolve(true);
-												}
-											} 
+//										if(angular.equals(value.schema.type, "string") || angular.equals(value.schema.type, "date") || angular.equals(value.schema.type, "timetracking")) {
+//											sync.resolve(true);
+//										}else{
+//											if(angular.isDefined(value.allowedValues)) {
+//												if(value.allowedValues.length > 0) {
+////													if(angular.equals(value.schema.type, "array")) {
+////														// this ensures the post data structure to create a ticket is respected.
+////														$scope.fields[key] = [];
+////													}
+//													values = value.allowedValues;
+//													itemType = value.schema.items;
+//												}
+//											}
+//											
+//										}
+										if(angular.isDefined(value.allowedValues)) {
+											if(value.allowedValues.length > 0) {
+//												if(angular.equals(value.schema.type, "array")) {
+//													// this ensures the post data structure to create a ticket is respected.
+//													$scope.fields[key] = [];
+//												}
+												values = value.allowedValues;
+												itemType = value.schema.items;
+											}
 										}
+										if(angular.equals(value.schema.type, "array")) {
+											$scope.fields[key] = [];
+										}
+										sync.resolve(true);
 										//sync makes sure the array is updated when the datas are available.
 										sync.promise.then(function() {
 											$scope.jiraAlternatives.mandatoryFields.push({
