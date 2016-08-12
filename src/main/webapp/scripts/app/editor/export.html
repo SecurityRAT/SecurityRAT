@@ -23,13 +23,13 @@
 						<span id="UsSpinner" spinner-on="exportProperty.showSpinner" us-spinner="{radius:5, width:3, length:3, lines:9}"uib-popover="JIRA Authentication running..." popover-placement="top" popover-trigger="mouseenter" 
 						popover-append-to-body></span>
 					</div>
-					<div class="col-sm-offset-1 dropdown" data-ng-if="(jiraAlternatives.mandatoryFields | filter : {configurable : true}).length > 0">
-						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="dropdown-fields">
+					<div class="col-sm-offset-1" uib-dropdown data-ng-if="(jiraAlternatives.mandatoryFields | filter : {configurable : true}).length > 0" auto-close="disabled">
+						<button type="button" class="btn btn-default" uib-dropdown-toggle id="dropdown-fields">
 	                   				<span class="glyphicon glyphicon-wrench"></span> Configure fields <span class="caret">
 	                   	</button>
-	                   	<ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-fields">
-	         				<li data-ng-repeat="field in jiraAlternatives.mandatoryFields | filter : {configurable : true}" >
-	         					<a href="#" data-ng-click="!field.mandatory"><input type="checkbox" data-ng-checked="field.mandatory">
+	                   	<ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu" aria-labelledby="dropdown-fields">
+	         				<li role="menuitem" data-ng-repeat="field in jiraAlternatives.mandatoryFields | filter : {configurable : true}" >
+	         					<a href="#" data-ng-click="field.mandatory = !field.mandatory"><input type="checkbox" data-ng-checked="field.mandatory">
 	         					{{field.name}}
 	         					</a>
 	         				</li>
