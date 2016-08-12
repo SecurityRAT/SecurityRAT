@@ -338,7 +338,7 @@ angular.module('sdlctoolApp')
 											//console.log($scope.jiraAlternatives.mandatoryFields);
 										});
 									}
-//								}
+								}
 //							}
 						});
 				})
