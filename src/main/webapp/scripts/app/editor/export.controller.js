@@ -17,7 +17,6 @@ angular.module('sdlctoolApp')
 		$scope.backupUrl = "";
 		$scope.label = {};
 		$scope.ticketKeys = [];
-		$scope.customFields = false;
 		
 		$scope.init = function() {
 			$scope.manFilterObject = {};
@@ -34,10 +33,6 @@ angular.module('sdlctoolApp')
 			if ($scope.exported.ticket.url !== undefined && !$scope.selection.createTickets) {
 				$scope.jiraUrl.url = $scope.exported.ticket.url;
 			}
-		}
-		
-		$scope.toggleCustomfields = function() {
-			$scope.customFields = !$scope.customFields;
 		}
 		//initial method for the create ticket use case.
 		$scope.initcreateTicket = function()  {
@@ -296,9 +291,9 @@ angular.module('sdlctoolApp')
 			url += "&expand=projects.issuetypes.fields";
 			
 			apiFactory.getJIRAInfo(url).then(function(response) {
+				console.log(response.projects);
 				angular.forEach(response.projects, function(project) {
 					angular.forEach(project.issuetypes[0].fields, function(value, key) {
-						console.log(response);
 						var values = [];
 						var itemType = "";
 						var  sync = $q.defer();

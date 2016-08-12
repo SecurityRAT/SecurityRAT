@@ -24,13 +24,17 @@
 						popover-append-to-body></span>
 					</div>
 					<div class="pull-right" data-ng-if="(jiraAlternatives.mandatoryFields | filter : {configurable : true}).length > 0">
-						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-ng-click="toggleDropdown('tag', $event)">
+						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 	                   				<span class="glyphicon glyphicon-wrench"></span> Configure fields <span class="caret">
 	                   	</button>
 	                   	<ul class="dropdown-menu" role="menu">
-	         				<li data-ng-repeat="fields in jiraAlternatives.mandatoryFields | filter : {configurable : true}" data-ng-class="{pull-left:$odd, pull-right:$even}">
-	         					<input type="checkbox" data-ng-checked="fields.mandatory">
+	         				<li data-ng-repeat="field in jiraAlternatives.mandatoryFields | filter : {configurable : true}" >
+	         					<span class="pull-left" data-ng-if="$odd"><input type="checkbox" data-ng-checked="field.mandatory">
 	         					{{field.name}}
+	         					</span>
+	         					<span class="pull-right" data-ng-if="$odd"><input type="checkbox" data-ng-checked="field.mandatory">
+	         					{{field.name}}
+	         					</span>
 	         				</li>
 	         			</ul>
 					</div>
