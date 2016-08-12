@@ -27,17 +27,12 @@
 						<button type="button" class="btn btn-default" uib-dropdown-toggle id="dropdown-fields">
 	                   				<span class="glyphicon glyphicon-wrench"></span> Configure fields <span class="caret">
 	                   	</button>
-	                   	<ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu" aria-labelledby="dropdown-fields">
-	                   		<span data-ng-repeat="field in jiraAlternatives.mandatoryFields | filter : {configurable : true}">
-	         				<li role="menuitem" class="pull-left" data-ng-if="$odd">
+	                   	<ul class="dropdown-menu dropdown-menu-right newspaper" uib-dropdown-menu role="menu" aria-labelledby="dropdown-fields">
+	         				<li role="menuitem" data-ng-repeat="field in jiraAlternatives.mandatoryFields | filter : {configurable : true}" >
 	         					<span class="customFields"><input type="checkbox" data-ng-model="field.mandatory">
 	         					{{field.name}}
 	         					</span>
 	         				</li>
-	         				<span data-ng-if="$even"><input type="checkbox" data-ng-model="field.mandatory">
-	         					{{field.name}}
-	         					</span>
-	         				</span>
 	         			</ul>
 					</div>
 				</div>

@@ -64,6 +64,11 @@ JIRA Custom fields
     padding: 3px 20px;
     white-space: nowrap;
 }
+.newspaper {
+    -webkit-columns: 100px 3; /* Chrome, Safari, Opera */
+    -moz-columns: 100px 3; /* Firefox */
+    columns: 100px 3;
+}
 /* ==========================================================================
 Browser Upgrade Prompt
 ========================================================================== */
