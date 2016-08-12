@@ -298,9 +298,9 @@ angular.module('sdlctoolApp')
 						var itemType = "";
 						var  sync = $q.defer();
 //							if(value.required) {
-								if(fatalFields.indexOf(key) !== -1) {
-									SDLCToolExceptionService.showWarning('Ticket creation failed', 'Cannot create ticket because <strong>' + encodeURIComponent(key) +'</strong> field is required. Please create ticket(s) manually.', SDLCToolExceptionService.DANGER);
-								} else {
+								if(fatalFields.indexOf(key) === -1) {
+//									SDLCToolExceptionService.showWarning('Ticket creation failed', 'Cannot create ticket because <strong>' + encodeURIComponent(key) +'</strong> field is required. Please create ticket(s) manually.', SDLCToolExceptionService.DANGER);
+//								} else {
 									if((excludedFields.indexOf(key) === -1)) {
 										//console.log(key);
 										if(angular.equals(value.schema.type, "string") || angular.equals(value.schema.type, "date") || angular.equals(value.schema.type, "timetracking")) {
