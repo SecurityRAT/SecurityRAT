@@ -23,11 +23,11 @@
 						<span id="UsSpinner" spinner-on="exportProperty.showSpinner" us-spinner="{radius:5, width:3, length:3, lines:9}"uib-popover="JIRA Authentication running..." popover-placement="top" popover-trigger="mouseenter" 
 						popover-append-to-body></span>
 					</div>
-					<div class="col-sm-offset-1" uib-dropdown auto-close="disabled" data-ng-if="(jiraAlternatives.mandatoryFields | filter : {configurable : true}).length > 0">
+					<div class="col-sm-offset-1" uib-dropdown auto-close="disabled" data-ng-if="(jiraAlternatives.mandatoryFields | filter : {configurable : true}).length > 0" dropdown-append-to-body>
 						<button type="button" class="btn btn-default" uib-dropdown-toggle id="dropdown-fields">
 	                   				<span class="glyphicon glyphicon-wrench"></span> Configure fields <span class="caret">
 	                   	</button>
-	                   	<ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu" aria-labelledby="dropdown-fields">
+	                   	<ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="dropdown-fields">
 	         				<li role="menuitem" data-ng-repeat="field in jiraAlternatives.mandatoryFields | filter : {configurable : true}" >
 	         					<span class="customFields"><input type="checkbox" data-ng-model="field.mandatory">
 	         					{{field.name}}
