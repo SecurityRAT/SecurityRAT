@@ -332,12 +332,13 @@ angular.module('sdlctoolApp')
 											if(value.required)
 												$scope.jiraAlternatives.mandatoryFields.mandatory = true
 //											helperService.unique($scope.jiraAlternatives.mandatoryFields, key);
-											//console.log($scope.jiraAlternatives.mandatoryFields);
+											
 										});
 									}
 								}
 //							}
 						});
+					console.log($scope.jiraAlternatives.mandatoryFields);
 				})
 			});
 			
