@@ -33,8 +33,12 @@
 			</span>
 		</div>
 		<div class="col-sm-9" data-ng-if="field.values">
-			<span>
-				<select data-ng-if="field.itemType != 'issuelinks'" id="{{field.name}}" data-ng-model="fields[field.key][0].id" data-ng-options="value.id as value.name for value in field.values" class="form-control" >
+			<span data-ng-if="field.values[0].value">
+				<select data-ng-if="field.itemType != 'issuelinks'" id="{{field.name}}" data-ng-model="fields[field.key].id" data-ng-options="value.id as value.value for value in field.values" class="form-control" >
+				</select>
+			</span>
+			<span data-ng-if="field.values[0].name">
+				<select data-ng-if="field.itemType != 'issuelinks'" id="{{field.name}}" data-ng-model="fields[field.key].id" data-ng-options="value.id as value.name for value in field.values" class="form-control" >
 				</select>
 			</span>
 		</div>
@@ -42,7 +46,11 @@
 	 <div  data-ng-if="field.type == 'array' && field.values" class="form-group">
 		<label for="{{field.name}}" class="col-sm-2 control-label required-field">{{field.name}}:</label>
 		<div class="col-sm-9">
-			<span>
+			<span data-ng-if="field.values[0].value">
+				<select data-ng-if="field.itemType != 'issuelinks'" id="{{field.name}}" data-ng-model="fields[field.key][0].id" data-ng-options="value.id as value.value for value in field.values" class="form-control" >
+				</select>
+			</span>
+			<span data-ng-if="field.values[0].name">
 				<select data-ng-if="field.itemType != 'issuelinks'" id="{{field.name}}" data-ng-model="fields[field.key][0].id" data-ng-options="value.id as value.name for value in field.values" class="form-control" >
 				</select>
 			</span>
