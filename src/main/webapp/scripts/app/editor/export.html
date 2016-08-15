@@ -27,7 +27,7 @@
 						<button type="button" class="btn btn-default" uib-dropdown-toggle id="dropdown-fields">
 	                   				<span class="glyphicon glyphicon-wrench"></span> Configure fields <span class="caret">
 	                   	</button>
-	                   	<ul class="dropdown-menu dropdown-menu-right newspaper" uib-dropdown-menu role="menu" aria-labelledby="dropdown-fields">
+	                   	<ul class="dropdown-menu dropdown-menu-right newspaper" uib-dropdown-menu role="menu" aria-labelledby="dropdown-fields" data-ng-style="maxHeight">
 	         				<li role="menuitem" data-ng-repeat="field in jiraAlternatives.mandatoryFields | filter : {configurable : true}" >
 	         					<span class="customFields"><input type="checkbox" data-ng-model="field.mandatory">
 	         					{{field.name}}
@@ -65,7 +65,7 @@
 					<div class="form-group">
 						<label for="SummaryName" class="col-sm-2 control-label">Summary:</label>
 							<div class="col-sm-9">
-								<input id="SummaryName" type="text" class="form-control" data-ng-model="fields.summary" aria-label="SummaryName"></input>
+								<input id="SummaryName" type="text" class="form-control required-field" data-ng-model="fields.summary" aria-label="SummaryName" required></input>
 							</div>
 					</div>
 					<div class="form-group">

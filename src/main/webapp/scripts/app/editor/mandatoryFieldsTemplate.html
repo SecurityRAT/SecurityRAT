@@ -1,7 +1,7 @@
 <div class="form-group">
 	<label for="IssueType" class="col-sm-2 control-label">Issue Type:</label>
 	<div class="col-sm-9">
-		<select id="IssueType" data-ng-model="fields.issuetype.name" data-ng-options="issueType.name as issueType.name for issueType in jiraAlternatives.issueTypes" class="form-control">
+		<select id="IssueType" data-ng-model="fields.issuetype.name" data-ng-options="issueType.name as issueType.name for issueType in jiraAlternatives.issueTypes" class="form-control required-field">
 		</select>
 	</div>
 </div>
@@ -28,6 +28,9 @@
 			<span data-ng-if="field.type == 'timetracking'">
 				<input type="number" id="{{field.name}}" data-ng-model="fields.timetracking.originalEstimate" placeholder="due time in minutes" class="form-control"/>
 			</span>
+			<span data-ng-if="field.type == 'number'">
+				<input type="number" id="{{field.name}}" data-ng-model="fields[field.key]" class="form-control"/>
+			</span>
 		</div>
 	</div>
 	 <div  data-ng-if="field.type == 'array' && field.values.length > 0" class="form-group">
@@ -40,17 +43,11 @@
 		</div>
 	</div>
 	 <div  data-ng-if="field.type == 'array' && field.values.length == 0" class="form-group">
-		<label for="{{field.name}}" class="col-sm-2 control-label required-field">{{field.name}}:</label>
+		<label for="{{field.name}}" class="col-sm-2 control-label">{{field.name}}:</label>
 		<div class="col-sm-9">
 			<span>
-			<textarea rows="5" placeholder="comma seperated value"></textarea>
+			<textarea class="form-control" rows="5" placeholder="comma seperated value"></textarea>
 			</span>
-		</div>
-	</div>
-	<div  data-ng-if="field.type == 'number'" class="form-group">
-		<label for="{{field.name}}" class="col-sm-2 control-label required-field">{{field.name}}:</label>
-		<div class="col-sm-9">
-				<input type="number" id="{{field.name}}" data-ng-model="fields[field.key]" class="form-control"/>
 		</div>
 	</div>
 </div>

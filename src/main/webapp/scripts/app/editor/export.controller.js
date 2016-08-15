@@ -1,6 +1,6 @@
 angular.module('sdlctoolApp')
 	.controller('ExportController', function ($scope, apiFactory, sharedProperties, $uibModalStack, $uibModalInstance, $timeout, 
-			appConfig, authenticatorService, $uibModal, $interval, $q, SDLCToolExceptionService, $filter, $confirm) {
+			appConfig, authenticatorService, $uibModal, $interval, $q, SDLCToolExceptionService, $filter, $confirm, $window) {
 		$scope.jiraUrl = {};
 		$scope.checks = {};
 		$scope.extension = {};
@@ -270,7 +270,8 @@ angular.module('sdlctoolApp')
 		}
 		// get the mandory fields
 		$scope.getMandatoryFields = function(filterObject, excludedFields, fatalFields) {
-			$scope.jiraAlternatives.mandatoryFields = [];
+			var fieldLength = 0;
+			if(angular.isUndefined($scope.jiraAlternatives.mandatoryFields))$scope.jiraAlternatives.mandatoryFields = [];
 			if($scope.jiraAlternatives.mandatoryFields.length === 0) {
 				var requiredFields = ['summary', 'issuetype', 'project'];
 				for(var i = 0; i < requiredFields.length; i++) {
@@ -282,7 +283,7 @@ angular.module('sdlctoolApp')
 						values : []
 					});
 				}
-			}
+			} else fieldLength = $scope.jiraAlternatives.mandatoryFields.length 
 			// builds the url call.
 			var url = $scope.buildUrlCall("ticket") + "/createmeta?projectKeys=" + filterObject.projectKey;
 			if(angular.isDefined(filterObject.issuetypeName)) {
@@ -294,63 +295,66 @@ angular.module('sdlctoolApp')
 				console.log(response.projects);
 				angular.forEach(response.projects, function(project) {
 					angular.forEach(project.issuetypes[0].fields, function(value, key) {
-						var values = [];
-						var itemType = "";
-						var  sync = $q.defer();
-//							if(value.required) {
-								if(fatalFields.indexOf(key) === -1) {
-//									SDLCToolExceptionService.showWarning('Ticket creation failed', 'Cannot create ticket because <strong>' + encodeURIComponent(key) +'</strong> field is required. Please create ticket(s) manually.', SDLCToolExceptionService.DANGER);
-//								} else {
-									if((excludedFields.indexOf(key) === -1)) {
-//										if(angular.equals(value.schema.type, "string") || angular.equals(value.schema.type, "date") || angular.equals(value.schema.type, "timetracking")) {
-//											sync.resolve(true);
-//										}else{
-//											if(angular.isDefined(value.allowedValues)) {
-//												if(value.allowedValues.length > 0) {
-////													if(angular.equals(value.schema.type, "array")) {
-////														// this ensures the post data structure to create a ticket is respected.
-////														$scope.fields[key] = [];
-////													}
-//													values = value.allowedValues;
-//													itemType = value.schema.items;
-//												}
-//											}
-//											
-//										}
-										if(angular.isDefined(value.allowedValues)) {
-											if(value.allowedValues.length > 0) {
-//												if(angular.equals(value.schema.type, "array")) {
-//													// this ensures the post data structure to create a ticket is respected.
-//													$scope.fields[key] = [];
-//												}
-												values = value.allowedValues;
-												itemType = value.schema.items;
+						if(fieldLength == 0) {
+							var values = [];
+							var itemType = "";
+							var  sync = $q.defer();
+	//							if(value.required) {
+									if(fatalFields.indexOf(key) === -1) {
+	//									SDLCToolExceptionService.showWarning('Ticket creation failed', 'Cannot create ticket because <strong>' + encodeURIComponent(key) +'</strong> field is required. Please create ticket(s) manually.', SDLCToolExceptionService.DANGER);
+	//								} else {
+										if((excludedFields.indexOf(key) === -1)) {
+	//										if(angular.equals(value.schema.type, "string") || angular.equals(value.schema.type, "date") || angular.equals(value.schema.type, "timetracking")) {
+	//											sync.resolve(true);
+	//										}else{
+	//											if(angular.isDefined(value.allowedValues)) {
+	//												if(value.allowedValues.length > 0) {
+	////													if(angular.equals(value.schema.type, "array")) {
+	////														// this ensures the post data structure to create a ticket is respected.
+	////														$scope.fields[key] = [];
+	////													}
+	//													values = value.allowedValues;
+	//													itemType = value.schema.items;
+	//												}
+	//											}
+	//											
+	//										}
+											if(angular.isDefined(value.allowedValues)) {
+												if(value.allowedValues.length > 0) {
+													values = value.allowedValues;
+													itemType = value.schema.items;
+												}
+												
 											}
+											if(angular.equals(value.schema.type, "array")) {
+												$scope.fields[key] = [];
+											}
+											sync.resolve(true);
 											
+												//sync makes sure the array is updated when the datas are available.
+												sync.promise.then(function() {
+													$scope.jiraAlternatives.mandatoryFields.push({
+														key: key,
+														name: value.name,
+														type: value.schema.type,
+														itemType: itemType,
+														values : values,
+														configurable : !value.required,
+														mandatory : value.required
+													});
+	//											helperService.unique($scope.jiraAlternatives.mandatoryFields, key);
+												});
 										}
-										if(angular.equals(value.schema.type, "array")) {
-											$scope.fields[key] = [];
-										}
-										sync.resolve(true);
-										
-										//sync makes sure the array is updated when the datas are available.
-										sync.promise.then(function() {
-											$scope.jiraAlternatives.mandatoryFields.push({
-												key: key,
-												name: value.name,
-												type: value.schema.type,
-												itemType: itemType,
-												values : values,
-												configurable : !value.required,
-												mandatory : false
-											});
-											if(value.required)
-												$scope.jiraAlternatives.mandatoryFields.mandatory = true
-//											helperService.unique($scope.jiraAlternatives.mandatoryFields, key);
-											
-										});
 									}
+						} else {
+							for(var i = 0; i < $scope.jiraAlternatives.mandatoryFields.length; i++) {
+								if($scope.jiraAlternatives.mandatoryFields[i].key === key) {
+									$scope.jiraAlternatives.mandatoryFields[i].configurable = !value.required;
+									$scope.jiraAlternatives.mandatoryFields[i].mandatory = value.required;
+									break;
 								}
+							}
+						}
 //							}
 						});
 					console.log($scope.jiraAlternatives.mandatoryFields);
@@ -379,6 +383,13 @@ angular.module('sdlctoolApp')
 			}
 			
 		})
+		var configureButton = document.getElementById("")
+		$scope.$watch('$window.innerHeight', function(newVal) {
+			
+			$scope.maxHeight = {
+				max-height: (newVal -($("#dropdown-fields").offset() + $("#dropdown-fields").height())) + "px" 
+			}
+		});
 		
 		$scope.$watch('fields.project.key', function(newVal, oldVal, scope) {
 			if($scope.apiUrl.http !== undefined && newVal !== undefined) {
@@ -396,7 +407,11 @@ angular.module('sdlctoolApp')
 			if(angular.isDefined(fieldObject.timetracking)) {
 				fieldObject.timetracking.remainingEstimate = $scope.fields.timetracking.originalEstimate; 
 			}
-			
+			for(var i = 0; i < $scope.jiraAlternatives.mandatoryFields.length; i++) {
+				if(!$scope.jiraAlternatives.mandatoryFields[i].mandatory) {
+					delete fieldObject[$scope.jiraAlternatives.mandatoryFields[i].key];
+				}
+			}
 			var postData = {};
 			angular.extend(postData, {fields: fieldObject});
 			apiFactory.postExport($scope.buildUrlCall("ticket"), postData, {'X-Atlassian-Token': 'nocheck', 'Content-Type': 'application/json'})
