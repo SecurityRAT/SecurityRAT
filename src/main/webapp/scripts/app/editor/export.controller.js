@@ -326,12 +326,12 @@ angular.module('sdlctoolApp')
 												values = value.allowedValues;
 												itemType = value.schema.items;
 											}
-											sync.resolve(true);
+											
 										}
-										if(angular.equals(value.schema.type, "array") && (value.operations.length > 1)) {
+										if(angular.equals(value.schema.type, "array")) {
 											$scope.fields[key] = [];
-											sync.resolve(true);
 										}
+										sync.resolve(true);
 										
 										//sync makes sure the array is updated when the datas are available.
 										sync.promise.then(function() {
