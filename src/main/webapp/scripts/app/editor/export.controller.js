@@ -347,7 +347,7 @@ angular.module('sdlctoolApp')
 							for(var i = 0; i < $scope.jiraAlternatives.mandatoryFields.length; i++) {
 								if($scope.jiraAlternatives.mandatoryFields[i].key === key) {
 									$scope.jiraAlternatives.mandatoryFields[i].configurable = !value.required;
-									$scope.jiraAlternatives.mandatoryFields[i].mandatory = value.required;
+									if(!$scope.jiraAlternatives.mandatoryFields[i].mandatory)$scope.jiraAlternatives.mandatoryFields[i].mandatory = value.required;
 									break;
 								}
 							}
@@ -382,12 +382,9 @@ angular.module('sdlctoolApp')
 		})
 		// Determines the height to use for the dropdown list of custom fields
 		$scope.getHeight = function() {
-			console.log("geklickt");
 			var height = $(window).height() - ($("#dropdown-fields").offset() + $("#dropdown-fields").height());
-			
-			$scope.maxHeight = {
-				"max-height" : height.toString() + "px"
-			}
+			console.log(height.toString() + "px");
+			return height.toString() + "px"
 		}
 		
 		$scope.$watch('fields.project.key', function(newVal, oldVal, scope) {
