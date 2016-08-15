@@ -281,7 +281,10 @@ angular.module('sdlctoolApp')
 						name: requiredFields[i],
 						type: "",
 						itemType: "",
-						values : []
+						values : undefined,
+						mandatory: true,
+						configurable: false,
+						autoCompleteUrl: ""
 					});
 				}
 			}
@@ -322,7 +325,7 @@ angular.module('sdlctoolApp')
 	//										}
 											if(angular.isDefined(value.allowedValues)) {
 												if(value.allowedValues.length > 0)allowedValues = value.allowedValues;
-												else sync.reject(true); // slice out field no values in allowedValues property.
+												else sync.reject(false); // slice out field no values in allowedValues property.
 												if(angular.equals(value.schema.type, "array")) {
 													$scope.fields[key] = [];
 												}
