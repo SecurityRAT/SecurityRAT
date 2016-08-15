@@ -291,16 +291,12 @@ angular.module('sdlctoolApp')
 				url += "&issuetypeNames=" + filterObject.issuetypeName;
 			}
 			url += "&expand=projects.issuetypes.fields";
-			apiFactory.getJIRAInfo($scope.buildUrlCall("field")).then(function(response) {
-				console.log("fields");
-				console.log(response);
-			});
 			apiFactory.getJIRAInfo(url).then(function(response) {
 				console.log(response.projects);
 				angular.forEach(response.projects, function(project) {
 					angular.forEach(project.issuetypes[0].fields, function(value, key) {
 						if(fieldLength == 0) {
-							var values = [];
+							var values = undefined;
 							var itemType = "";
 							var  sync = $q.defer();
 	//							if(value.required) {
@@ -324,22 +320,20 @@ angular.module('sdlctoolApp')
 	//											
 	//										}
 											if(angular.isDefined(value.allowedValues)) {
-												if(value.allowedValues.length > 0) {
-													values = value.allowedValues;
-												}
+												values = value.allowedValues;
 												if(angular.equals(value.schema.type, "array")) {
 													$scope.fields[key] = [];
 												}
 											}
 											
 											sync.resolve(true);
-											
 											//sync makes sure the array is updated when the datas are available.
 											sync.promise.then(function() {
 												$scope.jiraAlternatives.mandatoryFields.push({
 													key: key,
 													name: value.name,
 													type: value.schema.type,
+													autoCompleteUrl: angular.isDefined(value.autoCompleteUrl) ? value.autoCompleteUrl : "",
 													itemType: angular.isDefined(value.schema.items) ? value.schema.items: "",
 													values : values,
 													configurable : !value.required,
@@ -617,7 +611,7 @@ angular.module('sdlctoolApp')
 										 SDLCToolExceptionService.showWarning('Ticket creation failed', 'The field <strong>' + $scope.jiraAlternatives.mandatoryFields[i].name + '</strong> has no value. Please fill this out.', SDLCToolExceptionService.DANGER);
 										 break;
 									 }
-									 if($scope.jiraAlternatives.mandatoryFields[i].type === "array" && typeof $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] === "string") {
+									 if($scope.jiraAlternatives.mandatoryFields[i].type === "array" && $scope.jiraAlternatives.mandatoryFields[i].itemType === "string") {
 										 var tempValue = $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key];
 										 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = [];
 										 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = tempValue.split(',');
