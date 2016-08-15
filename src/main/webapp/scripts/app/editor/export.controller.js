@@ -381,12 +381,13 @@ angular.module('sdlctoolApp')
 			}
 			
 		})
-		$scope.$watch('$window.innerHeight', function(newVal) {
-			var height = (newVal -($("#dropdown-fields").offset() + $("#dropdown-fields").height())) + "px" ;
+		// Determines the height to use for the dropdown list of custom fields
+		$scope.getHeight = {
+			var height = ($(window).height() -($("#dropdown-fields").offset() + $("#dropdown-fields").height())) + "px" ;
 			$scope.maxHeight = {
 				"max-height" : height
 			}
-		});
+		}
 		
 		$scope.$watch('fields.project.key', function(newVal, oldVal, scope) {
 			if($scope.apiUrl.http !== undefined && newVal !== undefined) {
