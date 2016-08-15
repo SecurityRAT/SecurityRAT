@@ -300,6 +300,8 @@ angular.module('sdlctoolApp')
 							var itemType = "";
 							var  sync = $q.defer();
 	//							if(value.required) {
+							// !(angular.equals(value.schema.type, "array") && value.operations.length == 1 && value.operations.indexOf("set") !== -1) remove status fields like Inprogress
+							// 
 									if((fatalFields.indexOf(key) === -1) && (excludedFields.indexOf(key) === -1)
 											&& !(angular.equals(value.schema.type, "array") && value.operations.length == 1 && value.operations.indexOf("set") !== -1)) {
 	//									SDLCToolExceptionService.showWarning('Ticket creation failed', 'Cannot create ticket because <strong>' + encodeURIComponent(key) +'</strong> field is required. Please create ticket(s) manually.', SDLCToolExceptionService.DANGER);
@@ -320,7 +322,8 @@ angular.module('sdlctoolApp')
 	//											
 	//										}
 											if(angular.isDefined(value.allowedValues)) {
-												values = value.allowedValues;
+												if(value.allowedValues > 0)values = value.allowedValues;
+												else sync.reject(true); // slice out field no values in allowedValues property.
 												if(angular.equals(value.schema.type, "array")) {
 													$scope.fields[key] = [];
 												}
