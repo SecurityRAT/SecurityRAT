@@ -597,27 +597,26 @@ angular.module('sdlctoolApp')
 								if($scope.jiraAlternatives.issueTypes.length == 0) {
 									$scope.getIssueTypes($scope.fields.project.key);
 								}
-								for(var i = 0; i < $scope.jiraAlternatives.mandatoryFields.length && $scope.jiraAlternatives.mandatoryFields.length > 0; i++) {
-									if(!$scope.jiraAlternatives.mandatoryFields[i].mandatory) {
-										delete $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key];
-									}
-								}
 								//verifies that all mandatory fields have values.
 								 for(var i = 0; i < $scope.jiraAlternatives.mandatoryFields.length; i++) {
-									 if(angular.isUndefined($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key]) && $scope.jiraAlternatives.mandatoryFields[i].mandatory) {
-										fieldNotfulfilled = true;
-										SDLCToolExceptionService.showWarning('Ticket creation failed', 'The field <strong>' + $scope.jiraAlternatives.mandatoryFields[i].name + '</strong> has no value. Please fill this out.', SDLCToolExceptionService.DANGER);
-										break;
-									 } else if(angular.isDefined($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key]) 
-											 && $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key].length <= 0 && $scope.jiraAlternatives.mandatoryFields[i].mandatory) {
-										 fieldNotfulfilled = true;
-										 SDLCToolExceptionService.showWarning('Ticket creation failed', 'The field <strong>' + $scope.jiraAlternatives.mandatoryFields[i].name + '</strong> has no value. Please fill this out.', SDLCToolExceptionService.DANGER);
-										 break;
-									 }
-									 if($scope.jiraAlternatives.mandatoryFields[i].type === "array" && $scope.jiraAlternatives.mandatoryFields[i].itemType === "string") {
-										 var tempValue = $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key];
-										 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = [];
-										 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = tempValue.split(',');
+									 if(!$scope.jiraAlternatives.mandatoryFields[i].mandatory) {
+										delete $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key];
+									 } else {
+										 if(angular.isUndefined($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key])) {
+											fieldNotfulfilled = true;
+											SDLCToolExceptionService.showWarning('Ticket creation failed', 'The field <strong>' + $scope.jiraAlternatives.mandatoryFields[i].name + '</strong> has no value. Please fill this out.', SDLCToolExceptionService.DANGER);
+											break;
+										 } else if(angular.isDefined($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key]) 
+												 && $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key].length <= 0) {
+											 fieldNotfulfilled = true;
+											 SDLCToolExceptionService.showWarning('Ticket creation failed', 'The field <strong>' + $scope.jiraAlternatives.mandatoryFields[i].name + '</strong> has no value. Please fill this out.', SDLCToolExceptionService.DANGER);
+											 break;
+										 }
+										 if($scope.jiraAlternatives.mandatoryFields[i].type === "array" && $scope.jiraAlternatives.mandatoryFields[i].itemType === "string") {
+											 var tempValue = $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key];
+											 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = [];
+											 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = tempValue.split(',');
+										 }
 									 }
 								 }
 							}
