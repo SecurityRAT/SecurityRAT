@@ -295,8 +295,19 @@ angular.module('sdlctoolApp')
 				console.log(response.projects[0].issuetypes[0].fields);
 				angular.forEach(response.projects, function(project) {
 					angular.forEach(project.issuetypes[0].fields, function(value, key) {
-						if(fieldLength == 0) {
-							var values = undefined;
+						var containedInArray = false;
+						if(fieldLength > 0){
+							for(var i = 0; i < $scope.jiraAlternatives.mandatoryFields.length; i++) {
+								if($scope.jiraAlternatives.mandatoryFields[i].key === key) {
+									$scope.jiraAlternatives.mandatoryFields[i].configurable = !value.required;
+									if(!$scope.jiraAlternatives.mandatoryFields[i].mandatory)$scope.jiraAlternatives.mandatoryFields[i].mandatory = value.required;
+									containedInArray = true;
+									break;
+								}
+							}
+						}
+						if(!containedInArray) {
+							var allowedValues = undefined;
 							var itemType = "";
 							var  sync = $q.defer();
 	//							if(value.required) {
@@ -322,7 +333,7 @@ angular.module('sdlctoolApp')
 	//											
 	//										}
 											if(angular.isDefined(value.allowedValues)) {
-												if(value.allowedValues.length > 0)values = value.allowedValues;
+												if(value.allowedValues.length > 0)allowedValues = value.allowedValues;
 												else sync.reject(true); // slice out field no values in allowedValues property.
 												if(angular.equals(value.schema.type, "array")) {
 													$scope.fields[key] = [];
@@ -345,14 +356,6 @@ angular.module('sdlctoolApp')
 //											helperService.unique($scope.jiraAlternatives.mandatoryFields, key);
 											});
 									}
-						} else {
-							for(var i = 0; i < $scope.jiraAlternatives.mandatoryFields.length; i++) {
-								if($scope.jiraAlternatives.mandatoryFields[i].key === key) {
-									$scope.jiraAlternatives.mandatoryFields[i].configurable = !value.required;
-									if(!$scope.jiraAlternatives.mandatoryFields[i].mandatory)$scope.jiraAlternatives.mandatoryFields[i].mandatory = value.required;
-									break;
-								}
-							}
 						}
 //							}
 						});
@@ -361,6 +364,7 @@ angular.module('sdlctoolApp')
 			});
 			
 		}
+		
 		// watch the issue type field and gets the mandatory fields depending on he issue type selected.
 		$scope.$watch('fields.issuetype.name', function(newVal, oldVal, scope) {
 			$scope.manFilterObject.projectKey = $scope.apiUrl.projectKey;
