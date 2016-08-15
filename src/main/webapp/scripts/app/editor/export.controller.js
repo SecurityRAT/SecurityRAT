@@ -603,7 +603,7 @@ angular.module('sdlctoolApp')
 											 SDLCToolExceptionService.showWarning('Ticket creation failed', 'The field <strong>' + $scope.jiraAlternatives.mandatoryFields[i].name + '</strong> has no value. Please fill this out.', SDLCToolExceptionService.DANGER);
 											 break;
 										 }
-										 if($scope.jiraAlternatives.mandatoryFields[i].type === "array" && $scope.jiraAlternatives.mandatoryFields[i].itemType === "string") {
+										 if($scope.jiraAlternatives.mandatoryFields[i].type === "array" && $scope.jiraAlternatives.mandatoryFields[i].itemType === "string" && !$scope.jiraAlternatives.mandatoryFields[i].values) {
 											 var tempValue = $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key];
 											 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = [];
 											 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = tempValue.split(',');
