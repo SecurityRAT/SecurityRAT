@@ -398,16 +398,16 @@ angular.module('sdlctoolApp')
 		$scope.createTicket = function(fieldObject, withAttachment) {
 			var derefer = $q.defer();
 			var excludedFields = ['summary', 'issuetype', 'labels', 'reporter', 'project', 'description'];
-			
-			//Set the time time tracking parameter when this field is mandatory.
-			if(angular.isDefined(fieldObject.timetracking)) {
-				fieldObject.timetracking.remainingEstimate = $scope.fields.timetracking.originalEstimate; 
-			}
 			for(var i = 0; i < $scope.jiraAlternatives.mandatoryFields.length; i++) {
 				if(!$scope.jiraAlternatives.mandatoryFields[i].mandatory) {
 					delete fieldObject[$scope.jiraAlternatives.mandatoryFields[i].key];
 				}
 			}
+			//Set the time time tracking parameter when this field is mandatory.
+			if(angular.isDefined(fieldObject.timetracking)) {
+				fieldObject.timetracking.remainingEstimate = $scope.fields.timetracking.originalEstimate; 
+			}
+			
 			var postData = {};
 			angular.extend(postData, {fields: fieldObject});
 			apiFactory.postExport($scope.buildUrlCall("ticket"), postData, {'X-Atlassian-Token': 'nocheck', 'Content-Type': 'application/json'})
