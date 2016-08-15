@@ -382,7 +382,7 @@ angular.module('sdlctoolApp')
 		})
 		// Determines the height to use for the dropdown list of custom fields
 		$scope.getHeight = function() {
-			var height = $(window).height() - ($("#dropdown-fields").offset() + $("#dropdown-fields").height());
+			var height = $(window).height() - ($("#dropdown-fields").offset().top + $("#dropdown-fields").height());
 			console.log(height);
 			return height + "px"
 		}
@@ -601,7 +601,8 @@ angular.module('sdlctoolApp')
 										fieldNotfulfilled = true;
 										SDLCToolExceptionService.showWarning('Ticket creation failed', 'The field <strong>' + $scope.jiraAlternatives.mandatoryFields[i].key + '</strong> has no value. Please fill this out.', SDLCToolExceptionService.DANGER);
 										break;
-									 } else if($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key].length <= 0 && $scope.jiraAlternatives.mandatoryFields[i].mandatory) {
+									 } else if(angular.isDefined($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key]) 
+											 && $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key.length <= 0 && $scope.jiraAlternatives.mandatoryFields[i].mandatory) {
 										 fieldNotfulfilled = true;
 										 SDLCToolExceptionService.showWarning('Ticket creation failed', 'The field <strong>' + $scope.jiraAlternatives.mandatoryFields[i].key + '</strong> has no value. Please fill this out.', SDLCToolExceptionService.DANGER);
 										 break;
