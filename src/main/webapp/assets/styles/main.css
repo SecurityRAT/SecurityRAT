@@ -68,6 +68,7 @@ JIRA Custom fields
     -webkit-columns: 2; /* Chrome, Safari, Opera */
     -moz-columns: 2; /* Firefox */
     columns: 2;
+    overflow: scroll;
 }
 /* ==========================================================================
 Browser Upgrade Prompt

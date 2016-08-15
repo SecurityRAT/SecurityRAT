@@ -383,8 +383,8 @@ angular.module('sdlctoolApp')
 		// Determines the height to use for the dropdown list of custom fields
 		$scope.getHeight = function() {
 //			var height = $(window).height() - ( + $("#dropdown-fields").height());
-			console.log($("#dropdown-fields").offset().top);
-			return $("#dropdown-fields").offset().top + "px"
+			var height = $(window).height() - ($("#dropdown-fields").offset().top - $( window).scrollTop()) - $("#dropdown-fields").height();
+			$scope.maxHeight = height + "px";
 		}
 		
 		$scope.$watch('fields.project.key', function(newVal, oldVal, scope) {
@@ -595,16 +595,21 @@ angular.module('sdlctoolApp')
 								if($scope.jiraAlternatives.issueTypes.length == 0) {
 									$scope.getIssueTypes($scope.fields.project.key);
 								}
+								for(var i = 0; i < $scope.jiraAlternatives.mandatoryFields.length && $scope.jiraAlternatives.mandatoryFields.length > 0; i++) {
+									if(!$scope.jiraAlternatives.mandatoryFields[i].mandatory) {
+										delete $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key];
+									}
+								}
 								//verifies that all mandatory fields have values.
 								 for(var i = 0; i < $scope.jiraAlternatives.mandatoryFields.length; i++) {
 									 if(angular.isUndefined($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key]) && $scope.jiraAlternatives.mandatoryFields[i].mandatory) {
 										fieldNotfulfilled = true;
-										SDLCToolExceptionService.showWarning('Ticket creation failed', 'The field <strong>' + $scope.jiraAlternatives.mandatoryFields[i].key + '</strong> has no value. Please fill this out.', SDLCToolExceptionService.DANGER);
+										SDLCToolExceptionService.showWarning('Ticket creation failed', 'The field <strong>' + $scope.jiraAlternatives.mandatoryFields[i].name + '</strong> has no value. Please fill this out.', SDLCToolExceptionService.DANGER);
 										break;
 									 } else if(angular.isDefined($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key]) 
 											 && $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key].length <= 0 && $scope.jiraAlternatives.mandatoryFields[i].mandatory) {
 										 fieldNotfulfilled = true;
-										 SDLCToolExceptionService.showWarning('Ticket creation failed', 'The field <strong>' + $scope.jiraAlternatives.mandatoryFields[i].key + '</strong> has no value. Please fill this out.', SDLCToolExceptionService.DANGER);
+										 SDLCToolExceptionService.showWarning('Ticket creation failed', 'The field <strong>' + $scope.jiraAlternatives.mandatoryFields[i].name + '</strong> has no value. Please fill this out.', SDLCToolExceptionService.DANGER);
 										 break;
 									 }
 								 }

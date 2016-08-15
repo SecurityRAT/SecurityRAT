@@ -24,10 +24,10 @@
 						popover-append-to-body></span>
 					</div>
 					<div class="col-sm-offset-1" uib-dropdown auto-close="disabled" data-ng-if="(jiraAlternatives.mandatoryFields | filter : {configurable : true}).length > 0">
-						<button type="button" class="btn btn-default" uib-dropdown-toggle id="dropdown-fields" )>
+						<button type="button" class="btn btn-default" uib-dropdown-toggle id="dropdown-fields" data-ng-click="getHeight()">
 	                   				<span class="glyphicon glyphicon-wrench"></span> Configure fields <span class="caret">
 	                   	</button>
-	                   	<ul class="dropdown-menu dropdown-menu-right newspaper" uib-dropdown-menu role="menu" aria-labelledby="dropdown-fields" data-ng-style="{'max-height': getHeight(), overflow: scroll}">
+	                   	<ul class="dropdown-menu dropdown-menu-right newspaper" uib-dropdown-menu role="menu" aria-labelledby="dropdown-fields" data-ng-style="{'max-height':maxHeight}">
 	         				<li role="menuitem" data-ng-repeat="field in jiraAlternatives.mandatoryFields | filter : {configurable : true}" >
 	         					<span class="customFields"><input type="checkbox" data-ng-model="field.mandatory">
 	         					{{field.name}}
