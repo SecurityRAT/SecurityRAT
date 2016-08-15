@@ -294,7 +294,7 @@ angular.module('sdlctoolApp')
 			apiFactory.getJIRAInfo($scope.buildUrlCall("field")).then(function(response) {
 				console.log("fields");
 				console.log(response);
-			}
+			});
 			apiFactory.getJIRAInfo(url).then(function(response) {
 				console.log(response.projects);
 				angular.forEach(response.projects, function(project) {
