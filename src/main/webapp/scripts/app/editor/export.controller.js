@@ -382,9 +382,9 @@ angular.module('sdlctoolApp')
 			
 		})
 		$scope.$watch('$window.innerHeight', function(newVal) {
-			
+			var height = (newVal -($("#dropdown-fields").offset() + $("#dropdown-fields").height())) + "px" ;
 			$scope.maxHeight = {
-				max-height: (newVal -($("#dropdown-fields").offset() + $("#dropdown-fields").height())) + "px" 
+				"max-height" : height
 			}
 		});
 		
