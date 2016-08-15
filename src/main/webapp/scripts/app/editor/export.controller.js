@@ -349,7 +349,7 @@ angular.module('sdlctoolApp')
 													type: value.schema.type,
 													autoCompleteUrl: angular.isDefined(value.autoCompleteUrl) ? value.autoCompleteUrl : "",
 													itemType: angular.isDefined(value.schema.items) ? value.schema.items: "",
-													values : values,
+													values : allowedValues,
 													configurable : !value.required,
 													mandatory : value.required
 												});
