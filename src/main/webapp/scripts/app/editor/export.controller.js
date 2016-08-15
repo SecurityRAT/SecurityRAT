@@ -149,6 +149,8 @@ angular.module('sdlctoolApp')
 				return  $scope.apiUrl.http + "//" + $scope.apiUrl.host + appConfig.jiraRestApi + "/search";
 			} else if (angular.equals(selector, "issueLink")) {
 				return  $scope.apiUrl.http + "//" + $scope.apiUrl.host + appConfig.jiraRestApi + "/issueLink";
+			} else if (angular.equals(selector, "field")) {
+				return  $scope.apiUrl.http + "//" + $scope.apiUrl.host + appConfig.jiraRestApi + "/field";
 			}
 		}
 		
@@ -289,7 +291,10 @@ angular.module('sdlctoolApp')
 				url += "&issuetypeNames=" + filterObject.issuetypeName;
 			}
 			url += "&expand=projects.issuetypes.fields";
-			
+			apiFactory.getJIRAInfo($scope.buildUrlCall("field")).then(function(response) {
+				console.log("fields");
+				console.log(response);
+			}
 			apiFactory.getJIRAInfo(url).then(function(response) {
 				console.log(response.projects);
 				angular.forEach(response.projects, function(project) {
@@ -321,7 +326,6 @@ angular.module('sdlctoolApp')
 											if(angular.isDefined(value.allowedValues)) {
 												if(value.allowedValues.length > 0) {
 													values = value.allowedValues;
-													itemType = value.schema.items;
 												}
 												if(angular.equals(value.schema.type, "array")) {
 													$scope.fields[key] = [];
@@ -336,7 +340,7 @@ angular.module('sdlctoolApp')
 													key: key,
 													name: value.name,
 													type: value.schema.type,
-													itemType: itemType,
+													itemType: angular.isDefined(value.schema.items) ? value.schema.items: "",
 													values : values,
 													configurable : !value.required,
 													mandatory : value.required
