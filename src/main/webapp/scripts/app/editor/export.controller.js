@@ -292,7 +292,7 @@ angular.module('sdlctoolApp')
 			}
 			url += "&expand=projects.issuetypes.fields";
 			apiFactory.getJIRAInfo(url).then(function(response) {
-				console.log(response.project[0].issuetypes[0].fields);
+				console.log(response.projects[0].issuetypes[0].fields);
 				angular.forEach(response.projects, function(project) {
 					angular.forEach(project.issuetypes[0].fields, function(value, key) {
 						if(fieldLength == 0) {
