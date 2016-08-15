@@ -283,7 +283,7 @@ angular.module('sdlctoolApp')
 						values : []
 					});
 				}
-			} else fieldLength = $scope.jiraAlternatives.mandatoryFields.length 
+			} else {fieldLength = $scope.jiraAlternatives.mandatoryFields.length;} 
 			// builds the url call.
 			var url = $scope.buildUrlCall("ticket") + "/createmeta?projectKeys=" + filterObject.projectKey;
 			if(angular.isDefined(filterObject.issuetypeName)) {
@@ -300,10 +300,9 @@ angular.module('sdlctoolApp')
 							var itemType = "";
 							var  sync = $q.defer();
 	//							if(value.required) {
-									if(fatalFields.indexOf(key) === -1) {
+									if((fatalFields.indexOf(key) === -1) && (excludedFields.indexOf(key) === -1)) {
 	//									SDLCToolExceptionService.showWarning('Ticket creation failed', 'Cannot create ticket because <strong>' + encodeURIComponent(key) +'</strong> field is required. Please create ticket(s) manually.', SDLCToolExceptionService.DANGER);
 	//								} else {
-										if((excludedFields.indexOf(key) === -1)) {
 	//										if(angular.equals(value.schema.type, "string") || angular.equals(value.schema.type, "date") || angular.equals(value.schema.type, "timetracking")) {
 	//											sync.resolve(true);
 	//										}else{
@@ -331,20 +330,19 @@ angular.module('sdlctoolApp')
 											}
 											sync.resolve(true);
 											
-												//sync makes sure the array is updated when the datas are available.
-												sync.promise.then(function() {
-													$scope.jiraAlternatives.mandatoryFields.push({
-														key: key,
-														name: value.name,
-														type: value.schema.type,
-														itemType: itemType,
-														values : values,
-														configurable : !value.required,
-														mandatory : value.required
-													});
-	//											helperService.unique($scope.jiraAlternatives.mandatoryFields, key);
+											//sync makes sure the array is updated when the datas are available.
+											sync.promise.then(function() {
+												$scope.jiraAlternatives.mandatoryFields.push({
+													key: key,
+													name: value.name,
+													type: value.schema.type,
+													itemType: itemType,
+													values : values,
+													configurable : !value.required,
+													mandatory : value.required
 												});
-										}
+//											helperService.unique($scope.jiraAlternatives.mandatoryFields, key);
+											});
 									}
 						} else {
 							for(var i = 0; i < $scope.jiraAlternatives.mandatoryFields.length; i++) {
@@ -383,7 +381,6 @@ angular.module('sdlctoolApp')
 			}
 			
 		})
-		var configureButton = document.getElementById("")
 		$scope.$watch('$window.innerHeight', function(newVal) {
 			
 			$scope.maxHeight = {
