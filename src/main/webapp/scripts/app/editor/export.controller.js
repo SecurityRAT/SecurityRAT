@@ -382,9 +382,9 @@ angular.module('sdlctoolApp')
 		})
 		// Determines the height to use for the dropdown list of custom fields
 		$scope.getHeight = function() {
-			var height = $(window).height() - ($("#dropdown-fields").offset().top + $("#dropdown-fields").height());
+//			var height = $(window).height() - ( + $("#dropdown-fields").height());
 			console.log(height);
-			return height + "px"
+			return $("#dropdown-fields").offset().top + "px"
 		}
 		
 		$scope.$watch('fields.project.key', function(newVal, oldVal, scope) {
