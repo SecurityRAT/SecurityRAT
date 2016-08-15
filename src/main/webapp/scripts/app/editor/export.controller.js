@@ -272,7 +272,7 @@ angular.module('sdlctoolApp')
 		}
 		// get the mandory fields
 		$scope.getMandatoryFields = function(filterObject, excludedFields, fatalFields) {
-			var fieldLength = 0;
+			$scope.jiraAlternatives.mandatoryFields = [];
 			if($scope.jiraAlternatives.mandatoryFields.length === 0) {
 				var requiredFields = ['summary', 'issuetype', 'project'];
 				for(var i = 0; i < requiredFields.length; i++) {
@@ -284,7 +284,7 @@ angular.module('sdlctoolApp')
 						values : []
 					});
 				}
-			} else {fieldLength = $scope.jiraAlternatives.mandatoryFields.length;} 
+			}
 			// builds the url call.
 			var url = $scope.buildUrlCall("ticket") + "/createmeta?projectKeys=" + filterObject.projectKey;
 			if(angular.isDefined(filterObject.issuetypeName)) {
@@ -295,18 +295,6 @@ angular.module('sdlctoolApp')
 				console.log(response.projects[0].issuetypes[0].fields);
 				angular.forEach(response.projects, function(project) {
 					angular.forEach(project.issuetypes[0].fields, function(value, key) {
-						var containedInArray = false;
-						if(fieldLength > 0){
-							for(var i = 0; i < $scope.jiraAlternatives.mandatoryFields.length; i++) {
-								if($scope.jiraAlternatives.mandatoryFields[i].key === key) {
-									$scope.jiraAlternatives.mandatoryFields[i].configurable = !value.required;
-									if(!$scope.jiraAlternatives.mandatoryFields[i].mandatory)$scope.jiraAlternatives.mandatoryFields[i].mandatory = value.required;
-									containedInArray = true;
-									break;
-								}
-							}
-						}
-						if(!containedInArray) {
 							var allowedValues = undefined;
 							var itemType = "";
 							var  sync = $q.defer();
@@ -356,7 +344,6 @@ angular.module('sdlctoolApp')
 //											helperService.unique($scope.jiraAlternatives.mandatoryFields, key);
 											});
 									}
-						}
 //							}
 						});
 					console.log($scope.jiraAlternatives.mandatoryFields);
