@@ -292,7 +292,7 @@ angular.module('sdlctoolApp')
 			}
 			url += "&expand=projects.issuetypes.fields";
 			apiFactory.getJIRAInfo(url).then(function(response) {
-				console.log(response.projects);
+				console.log(response.projects.issuetypes[0].fields);
 				angular.forEach(response.projects, function(project) {
 					angular.forEach(project.issuetypes[0].fields, function(value, key) {
 						if(fieldLength == 0) {
@@ -303,7 +303,7 @@ angular.module('sdlctoolApp')
 							// !(angular.equals(value.schema.type, "array") && value.operations.length == 1 && value.operations.indexOf("set") !== -1) remove status fields like Inprogress
 							// 
 									if((fatalFields.indexOf(key) === -1) && (excludedFields.indexOf(key) === -1)
-											&& !(angular.equals(value.schema.type, "array") && value.operations.length == 1 && value.operations.indexOf("set") !== -1)) {
+											&& !(angular.equals(value.schema.type, "array") && (value.operations.length == 1) && value.operations.indexOf("set") !== -1)) {
 	//									SDLCToolExceptionService.showWarning('Ticket creation failed', 'Cannot create ticket because <strong>' + encodeURIComponent(key) +'</strong> field is required. Please create ticket(s) manually.', SDLCToolExceptionService.DANGER);
 	//								} else {
 	//										if(angular.equals(value.schema.type, "string") || angular.equals(value.schema.type, "date") || angular.equals(value.schema.type, "timetracking")) {
@@ -322,7 +322,7 @@ angular.module('sdlctoolApp')
 	//											
 	//										}
 											if(angular.isDefined(value.allowedValues)) {
-												if(value.allowedValues > 0)values = value.allowedValues;
+												if(value.allowedValues.length > 0)values = value.allowedValues;
 												else sync.reject(true); // slice out field no values in allowedValues property.
 												if(angular.equals(value.schema.type, "array")) {
 													$scope.fields[key] = [];
