@@ -271,7 +271,6 @@ angular.module('sdlctoolApp')
 		// get the mandory fields
 		$scope.getMandatoryFields = function(filterObject, excludedFields, fatalFields) {
 			var fieldLength = 0;
-			if(angular.isUndefined($scope.jiraAlternatives.mandatoryFields))$scope.jiraAlternatives.mandatoryFields = [];
 			if($scope.jiraAlternatives.mandatoryFields.length === 0) {
 				var requiredFields = ['summary', 'issuetype', 'project'];
 				for(var i = 0; i < requiredFields.length; i++) {
@@ -383,6 +382,7 @@ angular.module('sdlctoolApp')
 		})
 		// Determines the height to use for the dropdown list of custom fields
 		$scope.getHeight = function() {
+			console.log("geklickt");
 			var height = $(window).height() - ($("#dropdown-fields").offset() + $("#dropdown-fields").height());
 			
 			$scope.maxHeight = {
