@@ -71,6 +71,8 @@ angular.module('sdlctoolApp')
 		};
 			
 		$scope.calDueDate = function($event, key) {
+			if(angular.isUndefined($scope[key]))
+				$scope[key] = {};
 			$scope[key].opened = true;
 		};
 		
