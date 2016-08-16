@@ -70,7 +70,7 @@
 		<label for="{{field.name}}" class="col-sm-2 control-label">{{field.name}}:</label>
 		<div class="col-sm-9">
 			<span>
-				<textarea class="form-control" rows="5" placeholder="comma seperated value" data-ng-model="fields[field.key]" pattern="(\w+,)*\w+"></textarea>
+				<textarea class="form-control" rows="5" placeholder="comma seperated value" data-ng-model="fields[field.key]" pattern="(\w+,\s*)*\w*\s*"></textarea>
 			</span>
 		</div>
 	</div>

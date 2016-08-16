@@ -613,9 +613,11 @@ angular.module('sdlctoolApp')
 												 if($scope.jiraAlternatives.mandatoryFields[i].itemType === "string")$scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = tempValue;
 												 else if($scope.jiraAlternatives.mandatoryFields[i].itemType === "user") {
 													 for(var j = 0; j < tempValue.length; j++) {
-														 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key].push({
-															 name: tempValue[j]
-														 });
+														 if(tempValue.length > 0) {
+															 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key].push({
+																 name: tempValue[j]
+															 });
+														 }
 													 }
 												 }
 											 }
