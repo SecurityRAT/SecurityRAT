@@ -608,16 +608,12 @@ angular.module('sdlctoolApp')
 												 fieldNotfulfilled = true;
 												 $scope.exportProperty.failed = "Respect the pattern for field " + $scope.jiraAlternatives.mandatoryFields[i].name;
 											 } else {
-												 console.log($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key]);
-												 if($scope.jiraAlternatives.mandatoryFields[i].itemType === "string") {
-													 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = tempValue;
-												 }
+												 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = [];
+												 if($scope.jiraAlternatives.mandatoryFields[i].itemType === "string")$scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = tempValue;
 												 else if($scope.jiraAlternatives.mandatoryFields[i].itemType === "user") {
-													 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = [];
-													 for(var i = 0; i < tempValue.length; i++) {
-														 console.log($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key]);
+													 for(var j = 0; j < tempValue.length; j++) {
 														 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key].push({
-															 name: tempValue[i]
+															 name: tempValue[j]
 														 });
 													 }
 												 }
