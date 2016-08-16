@@ -17,6 +17,7 @@ angular.module('sdlctoolApp')
 		$scope.backupUrl = "";
 		$scope.label = {};
 		$scope.ticketKeys = [];
+		$scope.datePicker =  {};
 		
 		$scope.init = function() {
 			$scope.manFilterObject = {};
@@ -67,9 +68,7 @@ angular.module('sdlctoolApp')
 		}
 			
 		$scope.calDueDate = function($event, key) {
-			if(angular.isUndefined($scope[key]))
-				$scope[key] = {};
-			$scope[key].opened = true;
+			$scope.datePicker[key].opened = true;
 		};
 		
 		$scope.close = function() {
@@ -329,8 +328,8 @@ angular.module('sdlctoolApp')
 												}
 											}
 											if(dateType.indexOf(value.schema.type) !== -1) {
-												$scope[key] = {};
-												$scope[key].opened = false;
+												$scope.datePicker[key] = {};
+												$scope.datePicker[key].opened = false;
 											}
 											sync.resolve(true);
 											//sync makes sure the array is updated when the datas are available.
