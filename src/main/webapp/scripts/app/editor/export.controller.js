@@ -65,10 +65,6 @@ angular.module('sdlctoolApp')
 			$scope.fields.summary = appConfig.filenamePrefix + " " + $scope.exported.name;
 			$scope.fields.description = appConfig.ticketDescription;
 		}
-		
-		$scope.dueDate = {
-				opened : false
-		};
 			
 		$scope.calDueDate = function($event, key) {
 			if(angular.isUndefined($scope[key]))
@@ -295,8 +291,9 @@ angular.module('sdlctoolApp')
 				url += "&issuetypeNames=" + filterObject.issuetypeName;
 			}
 			url += "&expand=projects.issuetypes.fields";
+			var dateType = ["date", "datetime"]
 			apiFactory.getJIRAInfo(url).then(function(response) {
-				console.log(response.projects[0].issuetypes[0].fields);
+//				console.log(response.projects[0].issuetypes[0].fields);
 				angular.forEach(response.projects, function(project) {
 					angular.forEach(project.issuetypes[0].fields, function(value, key) {
 							var allowedValues = undefined;
@@ -331,7 +328,10 @@ angular.module('sdlctoolApp')
 													$scope.fields[key] = [];
 												}
 											}
-											
+											if(dateType.indexOf(value.schema.type) !== -1) {
+												$scope[key] = {};
+												$scope[key].opened = false;
+											}
 											sync.resolve(true);
 											//sync makes sure the array is updated when the datas are available.
 											sync.promise.then(function() {
