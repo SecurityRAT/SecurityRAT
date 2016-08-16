@@ -621,9 +621,6 @@ angular.module('sdlctoolApp')
 													 }
 												 }
 											 }
-										 } else if($scope.jiraAlternatives.mandatoryFields[i].type === 'datetime') {
-											 var x = new Date($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key]);
-											 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = x.toString();
 										 }
 									 }
 								 }
