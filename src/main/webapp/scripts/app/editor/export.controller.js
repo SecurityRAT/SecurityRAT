@@ -605,7 +605,6 @@ angular.module('sdlctoolApp')
 										 } else if($scope.jiraAlternatives.mandatoryFields[i].type === "array" && !$scope.jiraAlternatives.mandatoryFields[i].values) {
 											 // properly sets the data Structure for fields os schema type array in the scope.fields object.
 											 var tempValue = $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key].split(',');
-											 console.log(tempValue);
 											 if(tempValue.length === 0) {
 												 fieldNotfulfilled = true;
 												 $scope.exportProperty.failed = "Respect the pattern for field " + $scope.jiraAlternatives.mandatoryFields[i].name;
@@ -622,6 +621,8 @@ angular.module('sdlctoolApp')
 													 }
 												 }
 											 }
+										 } else if($scope.jiraAlternatives.mandatoryFields[i].type === 'datetime') {
+											 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = $filter('date')($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key], 'dd/MMM/yy hh:mm');
 										 }
 									 }
 								 }
