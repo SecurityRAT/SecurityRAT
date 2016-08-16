@@ -273,20 +273,20 @@ angular.module('sdlctoolApp')
 		// get the mandory fields
 		$scope.getMandatoryFields = function(filterObject, excludedFields, fatalFields) {
 			$scope.jiraAlternatives.mandatoryFields = [];
-			if($scope.jiraAlternatives.mandatoryFields.length === 0) {
-				var requiredFields = ['summary', 'issuetype', 'project'];
-				for(var i = 0; i < requiredFields.length; i++) {
-					$scope.jiraAlternatives.mandatoryFields.push({
-						key: requiredFields[i],
-						name: requiredFields[i],
-						type: "",
-						itemType: "",
-						values : undefined,
-						mandatory: true,
-						configurable: false,
-					});
-				}
-			}
+//			if($scope.jiraAlternatives.mandatoryFields.length === 0) {
+//				var requiredFields = ['summary', 'issuetype', 'project'];
+//				for(var i = 0; i < requiredFields.length; i++) {
+//					$scope.jiraAlternatives.mandatoryFields.push({
+//						key: requiredFields[i],
+//						name: requiredFields[i],
+//						type: "",
+//						itemType: "",
+//						values : undefined,
+//						mandatory: true,
+//						configurable: false,
+//					});
+//				}
+//			}
 			// builds the url call.
 			var url = $scope.buildUrlCall("ticket") + "/createmeta?projectKeys=" + filterObject.projectKey;
 			if(angular.isDefined(filterObject.issuetypeName)) {
@@ -604,9 +604,10 @@ angular.module('sdlctoolApp')
 											 console.log($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key]);
 											 // properly sets the data Structure for fields os schema type array in the scope.fields object.
 											 var tempValue = $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key].split(',');
+											 console.log(tempValue);
 											 if(tempValue.length === 0) {
 												 fieldNotfulfilled = true;
-												 $scope.exportProperty.failed = "Respect the pattern for field" + $scope.jiraAlternatives.mandatoryFields[i].name;
+												 $scope.exportProperty.failed = "Respect the pattern for field " + $scope.jiraAlternatives.mandatoryFields[i].name;
 											 } else {
 												 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = [];
 												 if($scope.jiraAlternatives.mandatoryFields[i].itemType === "string")$scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = tempValue;
