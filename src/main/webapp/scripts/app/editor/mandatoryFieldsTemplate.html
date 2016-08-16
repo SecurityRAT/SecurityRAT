@@ -56,17 +56,9 @@
 			</span>
 		</div>
 	</div>
-	<div  data-ng-if="field.type == 'array' && !field.values && field.autoCompleteUrl" class="form-group">
+	<div  data-ng-if="field.type == 'array' && !field.values" class="form-group">
 		<label for="{{field.name}}" class="col-sm-2 control-label">{{field.name}}:</label>
-		<div class="col-sm-9" data-ng-if="field.itemType== 'string'">
-			<span>
-				<textarea class="form-control" rows="5" placeholder="comma seperated value" data-ng-model="fields[field.key]" data-ng-pattern="/^((\w+,)*\w+)$/"></textarea>
-			</span>
-		</div>
-	</div>
-	<div  data-ng-if="field.type == 'array' && !field.values && !field.autoCompleteUrl" class="form-group">
-		<label for="{{field.name}}" class="col-sm-2 control-label">{{field.name}}:</label>
-		<div class="col-sm-9" data-ng-if="field.itemType== 'string'">
+		<div class="col-sm-9">
 			<span>
 				<textarea class="form-control" rows="5" placeholder="comma seperated value" data-ng-model="fields[field.key]" data-ng-pattern="/^((\w+,)*\w+)$/"></textarea>
 			</span>

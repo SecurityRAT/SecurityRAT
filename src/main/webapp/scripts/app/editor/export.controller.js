@@ -284,7 +284,6 @@ angular.module('sdlctoolApp')
 						values : undefined,
 						mandatory: true,
 						configurable: false,
-						autoCompleteUrl: ""
 					});
 				}
 			}
@@ -338,7 +337,6 @@ angular.module('sdlctoolApp')
 													key: key,
 													name: value.name,
 													type: value.schema.type,
-													autoCompleteUrl: angular.isDefined(value.autoCompleteUrl) ? value.autoCompleteUrl : "",
 													itemType: angular.isDefined(value.schema.items) ? value.schema.items: "",
 													values : allowedValues,
 													configurable : !value.required,
@@ -606,10 +604,18 @@ angular.module('sdlctoolApp')
 											 SDLCToolExceptionService.showWarning('Ticket creation failed', 'The field <strong>' + $scope.jiraAlternatives.mandatoryFields[i].name + '</strong> has no value. Please fill this out.', SDLCToolExceptionService.DANGER);
 											 break;
 										 }
-										 if($scope.jiraAlternatives.mandatoryFields[i].type === "array" && $scope.jiraAlternatives.mandatoryFields[i].itemType === "string" && !$scope.jiraAlternatives.mandatoryFields[i].values) {
-											 var tempValue = $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key];
+										 // properly sets the data Structure for fields os schema type array in the scope.fields object.
+										 if($scope.jiraAlternatives.mandatoryFields[i].type === "array" && !$scope.jiraAlternatives.mandatoryFields[i].values) {
+											 var tempValue = $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key].split(',');
 											 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = [];
-											 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = tempValue.split(',');
+											 if($scope.jiraAlternatives.mandatoryFields[i].itemType === "string")$scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = tempValue;
+											 else if($scope.jiraAlternatives.mandatoryFields[i].itemType === "user") {
+												 for(var i = 0; i < tempValue.length; i++) {
+													 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key].push({
+														 name: tempValue[i]
+													 });
+												 }
+											 }
 										 }
 									 }
 								 }
