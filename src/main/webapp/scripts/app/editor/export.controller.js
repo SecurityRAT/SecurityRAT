@@ -337,6 +337,7 @@ angular.module('sdlctoolApp')
 													key: key,
 													name: value.name,
 													type: value.schema.type,
+													schemaCustom: angular.isDefined(value.schema.custom) ? value.schema.custom : "",
 													itemType: angular.isDefined(value.schema.items) ? value.schema.items: "",
 													values : allowedValues,
 													configurable : !value.required,
