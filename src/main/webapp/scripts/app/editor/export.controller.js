@@ -601,7 +601,6 @@ angular.module('sdlctoolApp')
 											SDLCToolExceptionService.showWarning('Ticket creation failed', 'The field <strong>' + $scope.jiraAlternatives.mandatoryFields[i].name + '</strong> has no value. Please fill this out.', SDLCToolExceptionService.DANGER);
 											break;
 										 } else if($scope.jiraAlternatives.mandatoryFields[i].type === "array" && !$scope.jiraAlternatives.mandatoryFields[i].values) {
-											 console.log($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key]);
 											 // properly sets the data Structure for fields os schema type array in the scope.fields object.
 											 var tempValue = $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key].split(',');
 											 console.log(tempValue);
@@ -609,9 +608,12 @@ angular.module('sdlctoolApp')
 												 fieldNotfulfilled = true;
 												 $scope.exportProperty.failed = "Respect the pattern for field " + $scope.jiraAlternatives.mandatoryFields[i].name;
 											 } else {
-												 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = [];
-												 if($scope.jiraAlternatives.mandatoryFields[i].itemType === "string")$scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = tempValue;
+												 console.log($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key]);
+												 if($scope.jiraAlternatives.mandatoryFields[i].itemType === "string") {
+													 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = tempValue;
+												 }
 												 else if($scope.jiraAlternatives.mandatoryFields[i].itemType === "user") {
+													 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = [];
 													 for(var i = 0; i < tempValue.length; i++) {
 														 console.log($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key]);
 														 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key].push({
