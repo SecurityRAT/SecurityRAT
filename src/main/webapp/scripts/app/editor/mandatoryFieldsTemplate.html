@@ -82,7 +82,7 @@
 				<textarea class="form-control" id="{{field.name}}" name="{{field.name}}" rows="5" placeholder="comma seperated value" data-ng-model="fields[field.key]" data-ng-pattern="/^(\w+,\s*)*\w*$/"></textarea>
 			</span>
 			<div data-ng-show="form[field.name].$dirty && form[field.name].$invalid">
-				<p class="help-block" data-ng-show="form[field.name].$error.pattern">Please enter comma seperated strings</p>
+				<p class="help-block" data-ng-show="form[field.name].$error.pattern">Please enter comma seperated strings. E.g john, mary</p>
 				<BR>
 				<span class="help-block" data-ng-show="form[field.name].$error.pattern">
 					 Allowed standard characters:

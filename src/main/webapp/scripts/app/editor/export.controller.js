@@ -601,7 +601,7 @@ angular.module('sdlctoolApp')
 												 || (angular.isDefined($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key]) 
 														 && $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key].length <= 0)) {
 											fieldNotfulfilled = true;
-											SDLCToolExceptionService.showWarning('Ticket creation failed', 'The field <strong>' + $scope.jiraAlternatives.mandatoryFields[i].name + '</strong> has no value. Please fill this out.', SDLCToolExceptionService.DANGER);
+											SDLCToolExceptionService.showWarning('Ticket creation failed', 'The field <strong>' + $scope.jiraAlternatives.mandatoryFields[i].name + '</strong> has no value or wrong format. Please fill this out.', SDLCToolExceptionService.DANGER);
 											break;
 										 } else if($scope.jiraAlternatives.mandatoryFields[i].type === "array" && !$scope.jiraAlternatives.mandatoryFields[i].values) {
 											 // properly sets the data Structure for fields os schema type array in the scope.fields object.
@@ -611,12 +611,12 @@ angular.module('sdlctoolApp')
 												 $scope.exportProperty.failed = "Respect the pattern for field " + $scope.jiraAlternatives.mandatoryFields[i].name;
 											 } else {
 												 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = [];
-												 if($scope.jiraAlternatives.mandatoryFields[i].itemType === "string")$scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = tempValue;
-												 else if($scope.jiraAlternatives.mandatoryFields[i].itemType === "user") {
-													 for(var j = 0; j < tempValue.length; j++) {
-														 if(tempValue.length > 0) {
+												 for(var j = 0; j < tempValue.length; j++) {
+													 if(tempValue.length > 0) {
+														 if($scope.jiraAlternatives.mandatoryFields[i].itemType === "string")$scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = tempValue[j].trim();
+														 else if($scope.jiraAlternatives.mandatoryFields[i].itemType === "user") {
 															 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key].push({
-																 name: tempValue[j]
+																 name: tempValue[j].trim()
 															 });
 														 }
 													 }
