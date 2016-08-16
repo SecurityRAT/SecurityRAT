@@ -330,7 +330,7 @@ angular.module('sdlctoolApp')
 											if(dateType.indexOf(value.schema.type) !== -1) {
 												$scope.datePicker[key] = {};
 												$scope.datePicker[key].opened = false;
-												$scope.fields[key] = new Date(); 
+												$scope.fields[key] = new Date();
 											}
 											sync.resolve(true);
 											//sync makes sure the array is updated when the datas are available.
@@ -622,6 +622,9 @@ angular.module('sdlctoolApp')
 													 }
 												 }
 											 }
+										 } else if($scope.jiraAlternatives.mandatoryFields[i].type === 'datetime') {
+//											 var x = new Date($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key]);
+											 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = $filter('date')($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key], "yyyy-MM-dd'T'hh:mm:ss'.000'Z");
 										 }
 									 }
 								 }
