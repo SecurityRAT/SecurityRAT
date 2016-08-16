@@ -1,0 +1,9 @@
+<div>
+	<ul class="dropdown-menu dropdown-menu-right newspaper" role="menu" data-ng-style="{'max-height':maxHeight}">
+		<li role="menuitem" data-ng-repeat="field in jiraAlternatives.mandatoryFields | filter : {configurable : true}" >
+			<span class="customFields"><input type="checkbox" data-ng-model="field.mandatory">
+			{{field.name}}
+			</span>
+		</li>
+	</ul>
+</div>

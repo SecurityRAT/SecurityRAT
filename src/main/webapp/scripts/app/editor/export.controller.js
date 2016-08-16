@@ -267,90 +267,55 @@ angular.module('sdlctoolApp')
 					}
 				});
 		}
-		// get the mandory fields
+		/**
+		 * get the configurable and mandatory fields excluding excludedFields, fatalFields, array fields with now allowedValues and array fields with only the set operation.
+		 */
 		$scope.getMandatoryFields = function(filterObject, excludedFields, fatalFields) {
 			$scope.jiraAlternatives.mandatoryFields = [];
-//			if($scope.jiraAlternatives.mandatoryFields.length === 0) {
-//				var requiredFields = ['summary', 'issuetype', 'project'];
-//				for(var i = 0; i < requiredFields.length; i++) {
-//					$scope.jiraAlternatives.mandatoryFields.push({
-//						key: requiredFields[i],
-//						name: requiredFields[i],
-//						type: "",
-//						itemType: "",
-//						values : undefined,
-//						mandatory: true,
-//						configurable: false,
-//					});
-//				}
-//			}
 			// builds the url call.
 			var url = $scope.buildUrlCall("ticket") + "/createmeta?projectKeys=" + filterObject.projectKey;
 			if(angular.isDefined(filterObject.issuetypeName)) {
 				url += "&issuetypeNames=" + filterObject.issuetypeName;
 			}
 			url += "&expand=projects.issuetypes.fields";
-			var dateType = ["date", "datetime"]
+			var dateType = ["date", "datetime"] // jira date schemas.
 			apiFactory.getJIRAInfo(url).then(function(response) {
-//				console.log(response.projects[0].issuetypes[0].fields);
 				angular.forEach(response.projects, function(project) {
 					angular.forEach(project.issuetypes[0].fields, function(value, key) {
-							var allowedValues = undefined;
-							var itemType = "";
-							var  sync = $q.defer();
-	//							if(value.required) {
-							// !(angular.equals(value.schema.type, "array") && value.operations.length == 1 && value.operations.indexOf("set") !== -1) remove status fields like Inprogress
-							// 
-									if((fatalFields.indexOf(key) === -1) && (excludedFields.indexOf(key) === -1)
-											&& !(angular.equals(value.schema.type, "array") && (value.operations.length == 1) && value.operations.indexOf("set") !== -1)) {
-	//									SDLCToolExceptionService.showWarning('Ticket creation failed', 'Cannot create ticket because <strong>' + encodeURIComponent(key) +'</strong> field is required. Please create ticket(s) manually.', SDLCToolExceptionService.DANGER);
-	//								} else {
-	//										if(angular.equals(value.schema.type, "string") || angular.equals(value.schema.type, "date") || angular.equals(value.schema.type, "timetracking")) {
-	//											sync.resolve(true);
-	//										}else{
-	//											if(angular.isDefined(value.allowedValues)) {
-	//												if(value.allowedValues.length > 0) {
-	////													if(angular.equals(value.schema.type, "array")) {
-	////														// this ensures the post data structure to create a ticket is respected.
-	////														$scope.fields[key] = [];
-	////													}
-	//													values = value.allowedValues;
-	//													itemType = value.schema.items;
-	//												}
-	//											}
-	//											
-	//										}
-											if(angular.isDefined(value.allowedValues)) {
-												if(value.allowedValues.length > 0)allowedValues = value.allowedValues;
-												else sync.reject(false); // slice out field no values in allowedValues property.
-												if(angular.equals(value.schema.type, "array")) {
-													$scope.fields[key] = [];
-												}
-											}
-											if(dateType.indexOf(value.schema.type) !== -1) {
-												$scope.datePicker[key] = {};
-												$scope.datePicker[key].opened = false;
-												$scope.fields[key] = new Date();
-											}
-											sync.resolve(true);
-											//sync makes sure the array is updated when the datas are available.
-											sync.promise.then(function() {
-												$scope.jiraAlternatives.mandatoryFields.push({
-													key: key,
-													name: value.name,
-													type: value.schema.type,
-													schemaCustom: angular.isDefined(value.schema.custom) ? value.schema.custom : "",
-													itemType: angular.isDefined(value.schema.items) ? value.schema.items: "",
-													values : allowedValues,
-													configurable : !value.required,
-													mandatory : value.required
-												});
-//											helperService.unique($scope.jiraAlternatives.mandatoryFields, key);
-											});
+						var allowedValues = undefined;
+						var itemType = "";
+						var  sync = $q.defer();
+						if((fatalFields.indexOf(key) === -1) && (excludedFields.indexOf(key) === -1)
+							&& !(angular.equals(value.schema.type, "array") && (value.operations.length == 1) && value.operations.indexOf("set") !== -1)) {
+								if(angular.isDefined(value.allowedValues)) {
+									if(value.allowedValues.length > 0)allowedValues = value.allowedValues;
+									else sync.reject(false); // slice out field no values in allowedValues property.
+									if(angular.equals(value.schema.type, "array")) {
+										$scope.fields[key] = [];
 									}
-//							}
-						});
-					console.log($scope.jiraAlternatives.mandatoryFields);
+								}
+								// creates new Date object for fields of schema dateType
+								if(dateType.indexOf(value.schema.type) !== -1) {
+									$scope.datePicker[key] = {};
+									$scope.datePicker[key].opened = false;
+									$scope.fields[key] = new Date();
+								}
+								sync.resolve(true);
+								//sync makes sure the array is updated when the datas are available.
+								sync.promise.then(function() {
+									$scope.jiraAlternatives.mandatoryFields.push({
+										key: key,
+										name: value.name,
+										type: value.schema.type,
+										schemaCustom: angular.isDefined(value.schema.custom) ? value.schema.custom : "",
+										itemType: angular.isDefined(value.schema.items) ? value.schema.items: "",
+										values : allowedValues,
+										configurable : !value.required,
+										mandatory : value.required
+									});
+								});
+						}
+					});
 				})
 			});
 			
@@ -553,7 +518,6 @@ angular.module('sdlctoolApp')
 						$scope.alertType = "danger";
 						$scope.exportProperty.failed = "You have entered a invalid ticket. Please provide a valid ticket.";
 					}else {
-//						console.log($scope.fields);
 						var excludedFields = ['summary', 'issuetype', 'labels', 'reporter', 'project', 'description'];
 						var fatalFields = ['attachment', 'issuelinks'];
 						if(angular.isUndefined($scope.fields.summary) || angular.equals($scope.fields.summary, "")) {
@@ -601,7 +565,9 @@ angular.module('sdlctoolApp')
 												 || (angular.isDefined($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key]) 
 														 && $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key].length <= 0)) {
 											fieldNotfulfilled = true;
-											SDLCToolExceptionService.showWarning('Ticket creation failed', 'The field <strong>' + $scope.jiraAlternatives.mandatoryFields[i].name + '</strong> has no value or wrong format. Please fill this out.', SDLCToolExceptionService.DANGER);
+											SDLCToolExceptionService.showWarning('Ticket creation failed', 
+													'The field <strong>' + $scope.jiraAlternatives.mandatoryFields[i].name + '</strong> has no value or wrong format. Please fill this out.', 
+													SDLCToolExceptionService.DANGER);
 											break;
 										 } else if($scope.jiraAlternatives.mandatoryFields[i].type === "array" && !$scope.jiraAlternatives.mandatoryFields[i].values) {
 											 // properly sets the data Structure for fields os schema type array in the scope.fields object.
@@ -622,8 +588,8 @@ angular.module('sdlctoolApp')
 													 }
 												 }
 											 }
-										 } else if($scope.jiraAlternatives.mandatoryFields[i].type === 'datetime') {
-//											 var x = new Date($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key]);
+										 } else if($scope.jiraAlternatives.mandatoryFields[i].type === 'datetime') { 
+											 // creates the date format for the datetime type.
 											 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = $filter('date')($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key], "yyyy-MM-dd'T'hh:mm:ss'.000'Z");
 										 }
 									 }

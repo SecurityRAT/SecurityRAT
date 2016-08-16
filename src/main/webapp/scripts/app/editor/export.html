@@ -23,8 +23,13 @@
 						<span id="UsSpinner" spinner-on="exportProperty.showSpinner" us-spinner="{radius:5, width:3, length:3, lines:9}"uib-popover="JIRA Authentication running..." popover-placement="top" popover-trigger="mouseenter" 
 						popover-append-to-body></span>
 					</div>
-					<div class="col-sm-offset-1" uib-dropdown auto-close="disabled" data-ng-if="(jiraAlternatives.mandatoryFields | filter : {configurable : true}).length > 0">
-						<button type="button" class="btn btn-default" uib-dropdown-toggle id="dropdown-fields" data-ng-click="getHeight()">
+					<div class="col-sm-offset-1" data-ng-if="(jiraAlternatives.mandatoryFields | filter : {configurable : true}).length > 0">
+						<span uib-popover-template="scripts/app/editor/configureField.html" popover-title="Show custom fields" id="dropdown-fields">
+							<button type="button" class="btn btn-default" data-ng-click="getHeight()" >
+		                   				<span class="glyphicon glyphicon-wrench"></span> Configure fields <span class="caret">
+		                   	</button>
+	                   	</span>
+						<!-- <button type="button" class="btn btn-default" uib-dropdown-toggle id="dropdown-fields" data-ng-click="getHeight()">
 	                   				<span class="glyphicon glyphicon-wrench"></span> Configure fields <span class="caret">
 	                   	</button>
 	                   	<ul class="dropdown-menu dropdown-menu-right newspaper" uib-dropdown-menu role="menu" aria-labelledby="dropdown-fields" data-ng-style="{'max-height':maxHeight}">
@@ -33,7 +38,7 @@
 	         					{{field.name}}
 	         					</span>
 	         				</li>
-	         			</ul>
+	         			</ul> -->
 					</div>
 				</div>
 				<div class="row col-sm-12">
