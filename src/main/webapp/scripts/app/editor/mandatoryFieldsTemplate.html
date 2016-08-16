@@ -23,7 +23,7 @@
 			</span>
 			<span data-ng-if="field.type == 'datetime'">
 				<input id="{{field.name}}" type="text" class="form-control" is-open="datePicker[field.key].opened"
-					close-text="Close" uib-datepicker-popup="dd/MMM/yy hh:mm a" data-ng-model="fields[field.key]" />
+					close-text="Close" uib-datepicker-popup="dd/MMM/yy" data-ng-model="fields[field.key]" />
 				<span class="input-group-btn">
 					<button type="button" id ="{{field.name}}" class="btn btn-default" data-ng-click="calDueDate($event, field.key)">
 						<i class="glyphicon glyphicon-calendar"></i>

@@ -330,6 +330,7 @@ angular.module('sdlctoolApp')
 											if(dateType.indexOf(value.schema.type) !== -1) {
 												$scope.datePicker[key] = {};
 												$scope.datePicker[key].opened = false;
+												$scope.fields[key] = new Date(); 
 											}
 											sync.resolve(true);
 											//sync makes sure the array is updated when the datas are available.
