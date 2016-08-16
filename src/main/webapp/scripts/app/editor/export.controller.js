@@ -70,8 +70,8 @@ angular.module('sdlctoolApp')
 				opened : false
 		};
 			
-		$scope.calDueDate = function($event) {
-			$scope.dueDate.opened = true;
+		$scope.calDueDate = function($event, key) {
+			$scope[key].opened = true;
 		};
 		
 		$scope.close = function() {
