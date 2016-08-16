@@ -622,8 +622,8 @@ angular.module('sdlctoolApp')
 												 }
 											 }
 										 } else if($scope.jiraAlternatives.mandatoryFields[i].type === 'datetime') {
-//											 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = $filter('date')($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key], 'dd/MMM/yy hh:mm a');
-											 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = new Date($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key]);
+											 var x = new Date($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key]);
+											 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = $filter('date')($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key], 'dd/MMM/yy hh:mm a', x.getTimezoneOffset());
 										 }
 									 }
 								 }
