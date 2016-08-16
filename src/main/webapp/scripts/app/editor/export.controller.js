@@ -604,6 +604,7 @@ angular.module('sdlctoolApp')
 											 SDLCToolExceptionService.showWarning('Ticket creation failed', 'The field <strong>' + $scope.jiraAlternatives.mandatoryFields[i].name + '</strong> has no value. Please fill this out.', SDLCToolExceptionService.DANGER);
 											 break;
 										 }
+										 console.log($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key]);
 										 // properly sets the data Structure for fields os schema type array in the scope.fields object.
 										 if($scope.jiraAlternatives.mandatoryFields[i].type === "array" && !$scope.jiraAlternatives.mandatoryFields[i].values) {
 											 var tempValue = $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key].split(',');
