@@ -12,7 +12,7 @@
 			<span data-ng-if="field.type == 'string'">
 				<input type="text" id="{{field.name}}" data-ng-model="fields[field.key]" class="form-control"/>
 			</span>
-			<span data-ng-if="field.type == 'date'">
+			<span data-ng-if="field.type == 'date' || field.type == 'datetime'">
 				<input id="{{field.name}}" type="text" class="form-control" is-open="dueDate.opened"
 					close-text="Close" uib-datepicker-popup="dd-MM-yyyy" data-ng-model="fields.duedate" />
 				<span class="input-group-btn">
@@ -70,8 +70,16 @@
 		<label for="{{field.name}}" class="col-sm-2 control-label">{{field.name}}:</label>
 		<div class="col-sm-9">
 			<span>
-				<textarea class="form-control" rows="5" placeholder="comma seperated value" data-ng-model="fields[field.key]" pattern="(\w+,\s*)*\w*\s*"></textarea>
+				<textarea class="form-control" id="{{field.name}}" name="{{field.name}}" rows="5" placeholder="comma seperated value" data-ng-model="fields[field.key]" data-ng-pattern="/^(\w+,\s*)*\w*$/"></textarea>
 			</span>
+			<div data-ng-show="form[field.name].$dirty && form[field.name].$invalid">
+				<p class="help-block" data-ng-show="form[field.name].$error.pattern">Please enter comma seperated strings</p>
+				<BR>
+				<span class="help-block" data-ng-show="form[field.name].$error.pattern">
+					 Allowed standard characters:
+                     <ul><li><b>A-Z, a-z, 0-9</b></li></ul>
+				</span> 
+			</div>
 		</div>
 	</div>
 </div>
