@@ -25,7 +25,7 @@
 					</div>
 					<div class="col-sm-offset-1" uib-dropdown auto-close="disabled" data-ng-if="(jiraAlternatives.mandatoryFields | filter : {configurable : true}).length > 0">
 						<button type="button" class="btn btn-default" uib-dropdown-toggle id="dropdown-fields" data-ng-click="getHeight()">
-	                   				<span class="glyphicon glyphicon-wrench"></span> Configure fields <span class="caret">
+	                   		<span class="glyphicon glyphicon-wrench"></span> Configure fields <span class="caret">
 	                   	</button>
 	                   	<ul class="dropdown-menu dropdown-menu-right newspaper" uib-dropdown-menu role="menu" aria-labelledby="dropdown-fields" data-ng-style="{'max-height':maxHeight}">
 	         				<li role="menuitem" data-ng-repeat="field in jiraAlternatives.mandatoryFields | filter : {configurable : true}" >
@@ -40,7 +40,7 @@
 					<div class="pull-left">
 					<p>Please enter a ticket or a queue.<br/>
 					<b>Queue:</b> a ticket will be created and a new version of the Artifact will be attached.<br/>
-					<b>Ticket:</b> a new version of the Artifact will be attached to the ticket.
+					<b>Ticket:</b> a new version of the Artifact will be attached to the ticket.<br />
 					<span data-ng-if="(jiraAlternatives.mandatoryFields | filter : {configurable : true}).length > 0">
 						<b>Configure fields:</b> select an issue type before configuring fields in order to avoid set data from being discarded.
 					</span>

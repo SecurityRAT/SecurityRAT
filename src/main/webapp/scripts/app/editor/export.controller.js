@@ -386,7 +386,9 @@ angular.module('sdlctoolApp')
 						$scope.sendAttachment();
 					}
 				}
-			}, function() {});
+			}, function(error) {
+				console.log(error);
+			});
 			
 			return derefer.promise;
 		}
