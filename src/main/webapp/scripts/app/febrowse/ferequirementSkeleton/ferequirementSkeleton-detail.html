@@ -64,12 +64,12 @@
             <tr data-ng-if="optColumnContents.length > 0"><td  class="text-center titleSize" colspan="2"><strong>Option columns</strong></td></tr>
             <tr data-ng-repeat="content in optColumnContents">
                 <td><strong>{{content.optColumn.name}}</strong></td>
-                <td>{{content.content}}</td>
+                <td><div  marked="content.content"></div></td>
             </tr>
             <tr data-ng-if="altInstances.length > 0"><td class="text-center titleSize" colspan="2"><strong>Alternative Instances</strong></td></tr>
             <tr data-ng-repeat="instance in altInstances">
                 <td><strong>{{instance.alternativeSet.name}}</strong></td>
-                <td>{{instance.content}}</td>
+                <td><div  marked="instance.content"></div></td>
             </tr>
             </tbody>
         </table>
