@@ -25,9 +25,9 @@ angular.module('sdlctoolApp')
             },
 
             logout: function () {
-            	$uibModalStack.dismissAll('dismiss modal');
                 AuthServerProvider.logout();
                 Principal.authenticate(null);
+                $uibModalStack.dismissAll('dismiss modal');
             },
 
             authorize: function(force) {
