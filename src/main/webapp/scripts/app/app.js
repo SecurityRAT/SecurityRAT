@@ -41,7 +41,10 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
         $rootScope.$on('$stateChangeStart', function (event, toState, toStateParams) {
             $rootScope.toState = toState;
             $rootScope.toStateParams = toStateParams;
-            
+            var a = document.getElementById('redirect'); 
+            if(a != null) {
+            	document.body.removeChild(a);
+            }
             if (Principal.isIdentityResolved()) {
                 Auth.authorize();
             }

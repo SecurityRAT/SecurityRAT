@@ -1,0 +1,57 @@
+<div>
+
+    <h2 class="page-header">Requirement Skeletons</h2>
+    <jh-alert></jh-alert>
+    <BR>
+    <div class="container"  >
+        <div class="input-group" style="border-radius:30px;">
+        	<span class="input-group-addon" id="sizing-addon1"><span class="glyphicon glyphicon-search"></span></span>
+            <input type="text" class="form-control " data-ng-model="searchQuery" id="fesearchQuery" placeholder="Query" aria-describedby="sizing-addon1">
+            	
+        </div>
+    </div>
+    <BR>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Short Name</th>
+                    <th>Description</th>
+                   	<th>Tags</th>
+                    <th>Collections</th>
+                    <th>Project types</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="animate-repeat" data-ng-repeat="requirementSkeleton in requirementSkeletons| orderBy : ['reqCategory.showOrder','showOrder'] 
+                | filter: searchQuery | filter: {active: true} track by requirementSkeleton.id">
+                    <td><strong>{{requirementSkeleton.shortName}}</strong></td>
+                    <td>{{requirementSkeleton.description}}</td>
+
+                    <td>
+                        <span data-ng-repeat="tagInstance in requirementSkeleton.tagInstances">
+                            {{tagInstance.name}}{{$last ? '' : ', '}}
+                        </span>
+                    </td>
+                    <td>
+                        <span data-ng-repeat="collectionInstance in requirementSkeleton.collectionInstances">
+                            {{collectionInstance.name}}{{$last ? '' : ', '}}
+                        </span>
+                    </td>
+                    <td>
+                        <span data-ng-repeat="projectType in requirementSkeleton.projectTypes">
+                            {{projectType.name}}{{$last ? '' : ', '}}
+                        </span>
+                    </td>
+                    <td>
+                        <button type="submit"
+                                ui-sref="ferequirementSkeleton.detail({id:requirementSkeleton.id})"
+                                class="btn btn-info btn-sm">
+                            <span class="glyphicon glyphicon-eye-open"></span>&nbsp;<span> View</span>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

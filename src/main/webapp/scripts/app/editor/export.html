@@ -41,6 +41,9 @@
 					<p>Please enter a ticket or a queue.<br/>
 					<b>Queue:</b> a ticket will be created and a new version of the Artifact will be attached.<br/>
 					<b>Ticket:</b> a new version of the Artifact will be attached to the ticket.
+					<span data-ng-if="(jiraAlternatives.mandatoryFields | filter : {configurable : true}).length > 0">
+						<b>Configure fields:</b> select an issue type before configuring fields in order to avoid set data from being discarded.
+					</span>
 					</p>
 					</div>
 				</div>

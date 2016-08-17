@@ -52,6 +52,24 @@ Version number in navbar
     font-size: 10px;
     color: #ccc
 }
+#sizing-addon1.input-group-addon {
+	background-color:#ffffff;
+	border:0px solid #ccc;
+	border-width: 1px 0px 1px 1px;
+	border-style: solid;
+	border-color: #ccc;
+	border-radius: 15px 0px 0px 15px;
+}
+#fesearchQuery {
+	border:0px solid #ccc;
+	border-width: 1px 1px 1px 0px;
+	border-style: solid;
+	border-color: #ccc;
+	border-radius: 0px 15px 15px 0px;
+}
+#fesearchQuery:focus {
+	border-width: 1px 1px 1px 0px;
+}
 /* ==========================================================================
 JIRA Custom fields
 ========================================================================== */
