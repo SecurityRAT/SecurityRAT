@@ -389,13 +389,13 @@ angular.module('sdlctoolApp')
 			}, function(error) {
 				if(error.status === 400) {
 					angular.forEach(error.data.errors, function(value, key) {
-						var values = value.split(' ');
-						var result = "";
-						for(var i = 0; i < values.length; i++) {
-							result += escape(values[i]) + ' ';
-						}
+//						var values = value.split(' ');
+//						var result = "";
+//						for(var i = 0; i < values.length; i++) {
+//							result += escape(values[i]) + ' ';
+//						}
 						$scope.exportProperty.fail = true;
-				    	$scope.exportProperty.failed = result;
+				    	$scope.exportProperty.failed = encodeURI(value);
 					})
 				}
 			});
