@@ -392,7 +392,7 @@ angular.module('sdlctoolApp')
 						var values = value.split(' ');
 						var result = "";
 						for(var i = 0; i < values.length; i++) {
-							result += escape(value[i]) + ' ';
+							result += escape(values[i]) + ' ';
 						}
 						$scope.exportProperty.fail = true;
 				    	$scope.exportProperty.failed = result;
