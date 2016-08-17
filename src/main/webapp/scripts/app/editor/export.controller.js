@@ -388,8 +388,9 @@ angular.module('sdlctoolApp')
 				}
 			}, function(error) {
 				if(error.status === 400) {
-					angular.forEach(error.data.errors, function(key, value) {
-						SDLCToolExceptionService.showWarning('Export unsuccessful', escape(value), SDLCToolExceptionService.DANGER);
+					angular.forEach(error.data.errors, function(value, key) {
+						$scope.exportProperty.fail = true;
+				    	$scope.exportProperty.failed = escape(value);
 					})
 				}
 			});
