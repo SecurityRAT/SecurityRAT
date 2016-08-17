@@ -2,7 +2,7 @@
 
 angular.module('sdlctoolApp')
     .factory('Auth', function Auth($rootScope, $state, $q, Principal, AuthServerProvider, Account, Register, Activate, Password, PasswordResetInit, PasswordResetFinish, 
-    		ConfirmPassword) {
+    		ConfirmPassword, $uibModalStack) {
         return {
             login: function (credentials, callback) {
                 var cb = callback || angular.noop;
@@ -25,6 +25,7 @@ angular.module('sdlctoolApp')
             },
 
             logout: function () {
+            	$uibModalStack.dismissAll('dismiss modal');
                 AuthServerProvider.logout();
                 Principal.authenticate(null);
             },
