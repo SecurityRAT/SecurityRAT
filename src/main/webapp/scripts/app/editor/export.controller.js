@@ -387,7 +387,11 @@ angular.module('sdlctoolApp')
 					}
 				}
 			}, function(error) {
-				console.log(error);
+				if(error.status === 400) {
+					angular.forEach(error.data.errors, function(key, value) {
+						SDLCToolExceptionService.showWarning('Export unsuccessful', escape(value), SDLCToolExceptionService.DANGER);
+					})
+				}
 			});
 			
 			return derefer.promise;
