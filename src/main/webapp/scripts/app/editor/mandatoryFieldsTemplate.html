@@ -77,9 +77,7 @@
 				data-ng-pattern="/^(\w+,\s*)*\w*$/" data-ng-change="autoComplete(field.key, field.autoCompleteUrl)" is-open="toggleAutoCompleteDropdown[key]"></textarea>
 				<ul class="dropdown-menu dropdown-menu-right newspaper" uib-dropdown-menu role="menu" aria-labelledby="{{field.name}}" data-ng-style="{'max-height':maxHeight}">
       				<li role="menuitem" data-ng-repeat="item in autoComplete[key]" >
-      					<span>
-      						{{item.name}}
-      					</span>
+      					<span data-ng-bind-html="item.html"></span>
       				</li>
 	         	</ul>
 			</span>

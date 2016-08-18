@@ -270,13 +270,18 @@ angular.module('sdlctoolApp')
 				});
 		}
 		
-		$scope.autoComplete = function(key, url) {
+		$scope.autoComplete = function(key, url, itemType) {
 			$scope.autoComplete[key] = [];
 			var lastValue = $scope.fields[key].split(',').pop().trim();
 			apiFactory.getJIRAInfo(url + lastValue).then(function(response) {
 				console.log(response);
-//				$scope.autoComplete[key] = response;
-//				$scope.toggleAutoCompleteDropdown[key] = response.length > 0 ? true : false;
+				switch(itemType) {
+				
+				case "user": 	$scope.autoComplete[key] = response.users;
+								break;
+				}
+				
+				$scope.toggleAutoCompleteDropdown[key] = response.total > 0 ? true : false;
 			})
 		}
 		/**
