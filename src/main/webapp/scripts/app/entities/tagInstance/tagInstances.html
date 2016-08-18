@@ -9,16 +9,18 @@
                     <span class="glyphicon glyphicon-flash"></span> <span>Create a new Tag Instance</span>
                 </button>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-6">
                 <form name="searchForm" class="form-inline">
-                    <div class="form-group">
-                        <input type="text" class="form-control" data-ng-model="searchQuery" id="searchQuery" placeholder="query">
+                	<div class="input-group">
+                        <input type="text" class="form-control" data-ng-model="searchQuery" id="searchQuery" placeholder="Search a Tag Instance">
+                        <span class="input-group-btn">
+		                    <button class="btn btn-info" data-ng-click="search()"><span class="glyphicon glyphicon-search"></span>
+		                    </button>
+	                    </span>
                     </div>
-                    <button class="btn btn-info" data-ng-click="search()"><span class="glyphicon glyphicon-search"></span> <span>Search a Tag Instance</span>
-                    </button>
                 </form>
             </div>
-             <div class="col-md-3">
+             <div class="col-md-2">
                 <button class="btn btn-primary" ui-sref="tagInstance.bulk" data-ng-click="bulkChange()" data-ng-if="(tagInstances | filter:{selected: true}).length != 0">
                     <span class="glyphicon glyphicon-edit"></span> <span>Bulk change with selected</span>
                 </button>
