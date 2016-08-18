@@ -274,7 +274,7 @@ angular.module('sdlctoolApp')
 		 */
 		$scope.requestAutoComplete = function(field) {
 			$scope.autoComplete[key] = [];
-			$scope.getHeight('#' + field.name);
+			$scope.getHeight(field.name);
 			var lastValue = $scope.fields[field.key].split(',').pop().trim();
 			apiFactory.getJIRAInfo(field.autoCompleteUrl + lastValue).then(function(response) {
 				switch(field.itemType) {
@@ -374,7 +374,7 @@ angular.module('sdlctoolApp')
 		$scope.getHeight = function(id) {
 			console.log(id);
 //			var height = $(window).height() - ( + $("#dropdown-fields").height());
-			var height = $(window).height() - ($(id).offset().top - $( window).scrollTop()) - $(id).height();
+			var height = $(window).height() - ($('#' + id).offset().top - $( window).scrollTop()) - $('#' + id).height();
 			$scope.maxHeight = height + "px";
 		}
 		
