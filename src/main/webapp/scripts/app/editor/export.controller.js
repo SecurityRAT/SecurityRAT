@@ -269,8 +269,10 @@ angular.module('sdlctoolApp')
 					}
 				});
 		}
-		
-		$scope.autoComplete = function(field) {
+		/**
+		 * Queries the autoCompleteUrl with the entered text to help autocomplete
+		 */
+		$scope.requestAutoComplete = function(field) {
 			$scope.autoComplete[key] = [];
 			$scope.getHeight('#' + field.name);
 			var lastValue = $scope.fields[field.key].split(',').pop().trim();
@@ -282,9 +284,14 @@ angular.module('sdlctoolApp')
 				}
 				
 				$scope.toggleAutoCompleteDropdown[field.key] = response.total > 0 ? true : false;
-				console.log($scope.autoComplete[field.key]);
-				console.log($scope.toggleAutoCompleteDropdown[field.key]);
 			})
+		}
+		
+		$scope.finishAutocomplete = function(field, name) {
+			var values = $scope.fields[field.key].split(',');
+			values.pop(); values.push(name);
+			$scope.fields[field.key] = values.toString();
+			
 		}
 		/**
 		 * get the configurable and mandatory fields excluding excludedFields, fatalFields, array fields with now allowedValues and array fields with only the set operation.
