@@ -270,20 +270,20 @@ angular.module('sdlctoolApp')
 				});
 		}
 		
-		$scope.autoComplete = function(key, url, itemType) {
+		$scope.autoComplete = function(field) {
 			$scope.autoComplete[key] = [];
-			$scope.getHeight();
-			var lastValue = $scope.fields[key].split(',').pop().trim();
-			apiFactory.getJIRAInfo(url + lastValue).then(function(response) {
-				switch(itemType) {
+			$scope.getHeight('#' + field.name);
+			var lastValue = $scope.fields[field.key].split(',').pop().trim();
+			apiFactory.getJIRAInfo(field.autoCompleteUrl + lastValue).then(function(response) {
+				switch(field.itemType) {
 				
-				case "user": 	$scope.autoComplete[key] = response.users;
+				case "user": 	$scope.autoComplete[field.key] = response.users;
 								break;
 				}
 				
-				$scope.toggleAutoCompleteDropdown[key] = response.total > 0 ? true : false;
-				console.log($scope.autoComplete[key]);
-				console.log($scope.toggleAutoCompleteDropdown[key]);
+				$scope.toggleAutoCompleteDropdown[field.key] = response.total > 0 ? true : false;
+				console.log($scope.autoComplete[field.key]);
+				console.log($scope.toggleAutoCompleteDropdown[field.key]);
 			})
 		}
 		/**
@@ -361,10 +361,12 @@ angular.module('sdlctoolApp')
 			}
 			
 		})
-		// Determines the height to use for the dropdown list of custom fields
-		$scope.getHeight = function() {
+		/**
+		 * Determines the height of the window from the element with the id given as parameter
+		 */
+		$scope.getHeight = function(id) {
 //			var height = $(window).height() - ( + $("#dropdown-fields").height());
-			var height = $(window).height() - ($("#dropdown-fields").offset().top - $( window).scrollTop()) - $("#dropdown-fields").height();
+			var height = $(window).height() - ($(id).offset().top - $( window).scrollTop()) - $(id).height();
 			$scope.maxHeight = height + "px";
 		}
 		

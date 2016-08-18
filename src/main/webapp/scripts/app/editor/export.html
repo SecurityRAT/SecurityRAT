@@ -24,7 +24,7 @@
 						popover-append-to-body></span>
 					</div>
 					<div class="col-sm-offset-1" uib-dropdown auto-close="disabled" data-ng-if="(jiraAlternatives.mandatoryFields | filter : {configurable : true}).length > 0">
-						<button type="button" class="btn btn-default" uib-dropdown-toggle id="dropdown-fields" data-ng-click="getHeight()">
+						<button type="button" class="btn btn-default" uib-dropdown-toggle id="dropdown-fields" data-ng-click="getHeight('#drowndown-fields')">
 	                   		<span class="glyphicon glyphicon-wrench"></span> Configure fields <span class="caret">
 	                   	</button>
 	                   	<ul class="dropdown-menu dropdown-menu-right newspaper" uib-dropdown-menu role="menu" aria-labelledby="dropdown-fields" data-ng-style="{'max-height':maxHeight}">
