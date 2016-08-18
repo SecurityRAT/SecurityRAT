@@ -9,12 +9,14 @@ import org.appsec.securityRAT.repository.search.TagInstanceSearchRepository;
 import org.appsec.securityRAT.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -134,9 +136,13 @@ public class TagInstanceResource {
     @Timed
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         log.debug("REST request to delete TagInstance : {}", id);
-        tagInstanceRepository.delete(id);
-        tagInstanceSearchRepository.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("tagInstance", id.toString())).build();
+        
+        return Optional.ofNullable(tagInstanceRepository.findOne(id))
+                .map(tagInstance -> {
+                	tagInstanceRepository.delete(id);
+                    tagInstanceSearchRepository.delete(id);
+                    return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("tagInstance", id.toString())).build();
+                }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     /**

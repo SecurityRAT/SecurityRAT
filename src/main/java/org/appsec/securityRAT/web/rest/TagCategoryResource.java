@@ -112,9 +112,12 @@ public class TagCategoryResource {
     @Timed
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         log.debug("REST request to delete TagCategory : {}", id);
-        tagCategoryRepository.delete(id);
-        tagCategorySearchRepository.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("tagCategory", id.toString())).build();
+        return Optional.ofNullable(tagCategoryRepository.findOne(id))
+                .map(tagCategory -> {
+                	tagCategoryRepository.delete(id);
+                    tagCategorySearchRepository.delete(id);
+                    return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("tagCategory", id.toString())).build();
+                }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     /**

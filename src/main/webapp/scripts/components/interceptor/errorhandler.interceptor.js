@@ -4,7 +4,6 @@ angular.module('sdlctoolApp')
     .factory('errorHandlerInterceptor', function ($q, $rootScope, $timeout) {
         return {
             'responseError': function (response) {
-            	console.log(response);
             	var restApi = ['frontend-api', 'api', 'admin-api', "script/app"];
             	function filterUrl(value) {
             		return response.config.url.indexOf(value) !== -1

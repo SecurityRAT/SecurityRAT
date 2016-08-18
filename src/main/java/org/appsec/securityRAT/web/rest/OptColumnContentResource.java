@@ -160,9 +160,12 @@ public class OptColumnContentResource {
     @Timed
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         log.debug("REST request to delete OptColumnContent : {}", id);
-        optColumnContentRepository.delete(id);
-        optColumnContentSearchRepository.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("optColumnContent", id.toString())).build();
+        return Optional.ofNullable(optColumnContentRepository.findOne(id))
+                .map(optColumnContent -> {
+                	optColumnContentRepository.delete(id);
+                    optColumnContentSearchRepository.delete(id);
+                    return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("optColumnContent", id.toString())).build();
+                }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     /**

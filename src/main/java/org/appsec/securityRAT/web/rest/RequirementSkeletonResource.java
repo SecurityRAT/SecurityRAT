@@ -191,9 +191,12 @@ public class RequirementSkeletonResource {
     @Timed
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         log.debug("REST request to delete RequirementSkeleton : {}", id);
-        requirementSkeletonRepository.delete(id);
-        requirementSkeletonSearchRepository.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("requirementSkeleton", id.toString())).build();
+        return Optional.ofNullable(requirementSkeletonRepository.findOne(id))
+                .map(requirementSkeleton -> {
+                	requirementSkeletonRepository.delete(id);
+                    requirementSkeletonSearchRepository.delete(id);
+                    return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("requirementSkeleton", id.toString())).build();
+                }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     /**

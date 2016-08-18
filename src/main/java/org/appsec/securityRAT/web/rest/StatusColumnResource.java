@@ -112,9 +112,12 @@ public class StatusColumnResource {
     @Timed
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         log.debug("REST request to delete StatusColumn : {}", id);
-        statusColumnRepository.delete(id);
-        statusColumnSearchRepository.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("statusColumn", id.toString())).build();
+        return Optional.ofNullable(statusColumnRepository.findOne(id))
+                .map(statusColumn -> {
+                	statusColumnRepository.delete(id);
+                    statusColumnSearchRepository.delete(id);
+                    return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("statusColumn", id.toString())).build();
+                }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     /**

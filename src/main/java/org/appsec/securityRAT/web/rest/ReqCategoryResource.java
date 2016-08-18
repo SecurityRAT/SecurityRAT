@@ -112,9 +112,12 @@ public class ReqCategoryResource {
     @Timed
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         log.debug("REST request to delete ReqCategory : {}", id);
-        reqCategoryRepository.delete(id);
-        reqCategorySearchRepository.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("reqCategory", id.toString())).build();
+        return Optional.ofNullable(reqCategoryRepository.findOne(id))
+                .map(reqCategory -> {
+                	reqCategoryRepository.delete(id);
+                    reqCategorySearchRepository.delete(id);
+                    return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("reqCategory", id.toString())).build();
+                }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     /**

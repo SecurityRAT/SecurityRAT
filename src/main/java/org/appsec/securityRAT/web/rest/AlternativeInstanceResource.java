@@ -112,9 +112,12 @@ public class AlternativeInstanceResource {
     @Timed
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         log.debug("REST request to delete AlternativeInstance : {}", id);
-        alternativeInstanceRepository.delete(id);
-        alternativeInstanceSearchRepository.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("alternativeInstance", id.toString())).build();
+        return Optional.ofNullable(alternativeInstanceRepository.findOne(id))
+                .map(alternativeInstance -> {
+                	alternativeInstanceRepository.delete(id);
+                    alternativeInstanceSearchRepository.delete(id);
+                    return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("alternativeInstance", id.toString())).build();
+                }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     /**

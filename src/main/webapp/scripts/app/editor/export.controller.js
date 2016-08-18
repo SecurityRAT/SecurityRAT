@@ -18,6 +18,8 @@ angular.module('sdlctoolApp')
 		$scope.label = {};
 		$scope.ticketKeys = [];
 		$scope.datePicker =  {};
+		$scope.autoComplete = {};
+		$scope.toggleAutoCompleteDropdown = {};
 		
 		$scope.init = function() {
 			$scope.manFilterObject = {};
@@ -267,6 +269,16 @@ angular.module('sdlctoolApp')
 					}
 				});
 		}
+		
+		$scope.autoComplete = function(key, url) {
+			$scope.autoComplete[key] = [];
+			var lastValue = $scope.fields[key].split(',').pop().trim();
+			apiFactory.getJIRAInfo(url + lastValue).then(function(response) {
+				console.log(response);
+//				$scope.autoComplete[key] = response;
+//				$scope.toggleAutoCompleteDropdown[key] = response.length > 0 ? true : false;
+			})
+		}
 		/**
 		 * get the configurable and mandatory fields excluding excludedFields, fatalFields, array fields with now allowedValues and array fields with only the set operation.
 		 */
@@ -307,18 +319,18 @@ angular.module('sdlctoolApp')
 										key: key,
 										name: value.name,
 										type: value.schema.type,
-										schemaCustom: angular.isDefined(value.schema.custom) ? value.schema.custom : "",
-										itemType: angular.isDefined(value.schema.items) ? value.schema.items: "",
+										schemaCustom: value.schema.custom,
+										itemType: value.schema.items,
 										values : allowedValues,
 										configurable : !value.required,
-										mandatory : value.required
+										mandatory : value.required,
+										autoCompleteUrl: value.autoCompleteUrl
 									});
 								});
 						}
 					});
 				})
 			});
-			
 		}
 		
 		// watch the issue type field and gets the mandatory fields depending on he issue type selected.
@@ -389,13 +401,15 @@ angular.module('sdlctoolApp')
 			}, function(error) {
 				if(error.status === 400) {
 					angular.forEach(error.data.errors, function(value, key) {
-//						var values = value.split(' ');
-//						var result = "";
-//						for(var i = 0; i < values.length; i++) {
-//							result += escape(values[i]) + ' ';
-//						}
+						var values = value.split(' ');
+						var result = "";
+						for(var i = 0; i < values.length; i++) {
+							result += encodeURI(values[i]) + ' ';
+						}
 						$scope.exportProperty.fail = true;
-				    	$scope.exportProperty.failed = encodeURI(value);
+				    	$scope.exportProperty.failed = result;
+				    	if(angular.isDefined($scope.fields[key]))
+				    		$scope.fields[key] = "";
 					})
 				}
 			});

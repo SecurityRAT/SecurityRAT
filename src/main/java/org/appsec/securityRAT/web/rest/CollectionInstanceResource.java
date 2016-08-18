@@ -112,9 +112,12 @@ public class CollectionInstanceResource {
     @Timed
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         log.debug("REST request to delete CollectionInstance : {}", id);
-        collectionInstanceRepository.delete(id);
-        collectionInstanceSearchRepository.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("collectionInstance", id.toString())).build();
+        return Optional.ofNullable(collectionInstanceRepository.findOne(id))
+                .map(collectionInstance -> {
+                	collectionInstanceRepository.delete(id);
+                    collectionInstanceSearchRepository.delete(id);
+                    return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("collectionInstance", id.toString())).build();
+                }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     /**

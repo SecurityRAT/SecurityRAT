@@ -112,9 +112,12 @@ public class ProjectTypeResource {
     @Timed
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         log.debug("REST request to delete ProjectType : {}", id);
-        projectTypeRepository.delete(id);
-        projectTypeSearchRepository.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("projectType", id.toString())).build();
+        return Optional.ofNullable(projectTypeRepository.findOne(id))
+                .map(projectType -> {
+                	projectTypeRepository.delete(id);
+                    projectTypeSearchRepository.delete(id);
+                    return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("projectType", id.toString())).build();
+                }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     /**

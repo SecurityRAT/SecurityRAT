@@ -112,9 +112,12 @@ public class AlternativeSetResource {
     @Timed
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         log.debug("REST request to delete AlternativeSet : {}", id);
-        alternativeSetRepository.delete(id);
-        alternativeSetSearchRepository.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("alternativeSet", id.toString())).build();
+        return Optional.ofNullable(alternativeSetRepository.findOne(id))
+                .map(alternativeSet -> {
+                	alternativeSetRepository.delete(id);
+                    alternativeSetSearchRepository.delete(id);
+                    return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("alternativeSet", id.toString())).build();
+                }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     /**
