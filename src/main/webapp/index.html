@@ -27,8 +27,8 @@
         <![endif]-->
         <div id="ribbon" data-ng-show="{{ENV === 'dev'}}" class="development" data-ng-cloak="" ></div>
         <div ui-view="navbar" data-ng-cloak=""></div>
-        <div class="container" id="mainContent">
-            <div ui-view="content"></div>
+        <div class="container" id="mainContent" data-ng-class="{jumbotron: (toState.name=='editor')}">
+            <div ui-view="content" ></div>
 
             <div class="footer">
                 <p translate="footer"><a href="https://github.com/SecurityRAT">https://github.com/SecurityRAT</a></p>
