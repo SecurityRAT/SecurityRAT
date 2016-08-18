@@ -292,7 +292,8 @@ angular.module('sdlctoolApp')
 		$scope.finishAutocomplete = function(field, name) {
 			var values = $scope.fields[field.key].split(',');
 			values.pop(); values.push(name);
-			$scope.fields[field.key] = values.toString() + ',';
+			$scope.fields[field.key] = values.toString() + ', ';
+			$('#' + field.name.replace(' ', '-')).focus();
 			
 		}
 		/**
