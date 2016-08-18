@@ -277,7 +277,7 @@ angular.module('sdlctoolApp')
 			$scope.getHeight(field.name.replace(' ', '-'));
 			var lastValue = $scope.fields[field.key].split(',').pop().trim();
 			if(lastValue.length > 1) {
-				apiFactory.getJIRAInfo(field.autoCompleteUrl + lastValue).then(function(response) {
+				apiFactory.getJIRAInfo(field.autoCompleteUrl.replace('/null/', '/') + lastValue).then(function(response) {
 					switch(field.itemType) {
 					
 					case "user": 	$scope.autoComplete[field.key] = response.users;
