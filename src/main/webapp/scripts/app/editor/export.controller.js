@@ -283,6 +283,7 @@ angular.module('sdlctoolApp')
 				
 				$scope.toggleAutoCompleteDropdown[key] = response.total > 0 ? true : false;
 				console.log($scope.autoComplete[key]);
+				console.log($scope.toggleAutoCompleteDropdown[key]);
 			})
 		}
 		/**
