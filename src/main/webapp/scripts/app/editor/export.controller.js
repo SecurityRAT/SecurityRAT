@@ -273,7 +273,7 @@ angular.module('sdlctoolApp')
 		 * Queries the autoCompleteUrl with the entered text to help autocomplete
 		 */
 		$scope.requestAutoComplete = function(field) {
-			$scope.autoComplete[key] = [];
+			$scope.autoComplete[field.key] = [];
 			$scope.getHeight(field.name);
 			var lastValue = $scope.fields[field.key].split(',').pop().trim();
 			apiFactory.getJIRAInfo(field.autoCompleteUrl + lastValue).then(function(response) {
