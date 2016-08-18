@@ -372,7 +372,6 @@ angular.module('sdlctoolApp')
 		 * Determines the height of the window from the element with the id given as parameter
 		 */
 		$scope.getHeight = function(id) {
-			console.log(id);
 //			var height = $(window).height() - ( + $("#dropdown-fields").height());
 			var height = $(window).height() - ($('#' + id).offset().top - $( window).scrollTop()) - $('#' + id).height();
 			$scope.maxHeight = height + "px";
