@@ -272,9 +272,9 @@ angular.module('sdlctoolApp')
 		
 		$scope.autoComplete = function(key, url, itemType) {
 			$scope.autoComplete[key] = [];
+			$scope.getHeight();
 			var lastValue = $scope.fields[key].split(',').pop().trim();
 			apiFactory.getJIRAInfo(url + lastValue).then(function(response) {
-				console.log(response);
 				switch(itemType) {
 				
 				case "user": 	$scope.autoComplete[key] = response.users;
@@ -282,6 +282,7 @@ angular.module('sdlctoolApp')
 				}
 				
 				$scope.toggleAutoCompleteDropdown[key] = response.total > 0 ? true : false;
+				console.log($scope.autoComplete[key]);
 			})
 		}
 		/**
