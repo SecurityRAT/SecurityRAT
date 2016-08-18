@@ -1,13 +1,13 @@
 <div class="form-group">
 	<label for="IssueType" class="col-sm-2 control-label">Issue Type:</label>
 	<div class="col-sm-9">
-		<select id="IssueType" data-ng-model="fields.issuetype.name" data-ng-options="issueType.name as issueType.name for issueType in jiraAlternatives.issueTypes" class="form-control required-field">
+		<select id="IssueType" data-ng-model="fields.issuetype.name" data-ng-options="issueType.name as issueType.name for issueType in jiraAlternatives.issueTypes" class="form-control required-field" required>
 		</select>
 	</div>
 </div>
 <div data-ng-repeat="field in jiraAlternatives.mandatoryFields | filter : {mandatory : true}">
 	<div  data-ng-if="field.type != 'array' && field.type != ''" class="form-group">
-		<label for="{{field.name}}" class="col-sm-2 control-label">{{field.name}}:</label>
+		<label for="{{field.name}}" class="col-sm-2 control-label" data-ng-class="{'required-field': field.mandatory && !field.configurable}">{{field.name}}:</label>
 		<div class="col-sm-9" data-ng-if="!field.values">
 			<span data-ng-if="field.type == 'string'">
 				<input type="text" id="{{field.name}}" data-ng-model="fields[field.key]" class="form-control"/>
@@ -44,7 +44,7 @@
 		</div>
 	</div>
 	 <div  data-ng-if="field.type == 'array' && field.values" class="form-group">
-		<label for="{{field.name}}" class="col-sm-2 control-label required-field">{{field.name}}:</label>
+		<label for="{{field.name}}" class="col-sm-2 control-label" data-ng-class="{'required-field': field.mandatory && !field.configurable}">{{field.name}}:</label>
 		<div class="col-sm-9" data-ng-if="field.schemaCustom.indexOf('multicheckboxes') !== -1">
 			<span data-ng-if="field.values[0].value">
 				<select data-ng-if="field.itemType != 'issuelinks'" id="{{field.name}}" data-ng-model="fields[field.key]" data-ng-options="value as value.value for value in field.values" class="form-control" multiple>
@@ -67,15 +67,15 @@
 		</div>
 	</div>
 	<div  data-ng-if="field.type == 'array' && !field.values" class="form-group">
-		<label for="{{field.name}}" class="col-sm-2 control-label">{{field.name}}:</label>
+		<label for="{{field.name}}" class="col-sm-2 control-label" data-ng-class="{'required-field': field.mandatory && !field.configurable}">{{field.name}}:</label>
 		<div class="col-sm-9">
 			<span data-ng-if="!field.autoCompleteUrl">
 				<textarea class="form-control" id="{{field.name}}" name="{{field.name}}" rows="5" placeholder="comma seperated value" data-ng-model="fields[field.key]" data-ng-pattern="/^(\w+,\s*)*\w*$/"></textarea>
 			</span>
 			<span data-ng-if="field.autoCompleteUrl" uib-dropdown is-open="toggleAutoCompleteDropdown[field.key]">
-				<textarea class="form-control" id="{{field.name}}" name="{{field.name}}" rows="5" placeholder="comma seperated value" data-ng-model="fields[field.key]" 
+				<textarea class="form-control" data-ng-attr-id="field.name.replace(' ', '-')" name="{{field.name}}" rows="5" placeholder="comma seperated value" data-ng-model="fields[field.key]" 
 				data-ng-pattern="/^(\w+,\s*)*\w*$/" data-ng-change="requestAutoComplete(field)" ></textarea>
-				<ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="{{field.name}}" style="overflow: scroll;" data-ng-style="{'max-height':maxHeight}">
+				<ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="{{field.name.replace(' ', '-')}}" style="overflow: scroll;" data-ng-style="{'max-height':maxHeight}">
       				<li role="menuitem" data-ng-repeat="item in autoComplete[field.key]">
       					<a data-ng-click="finishAutocomplete(field, item.name)"><span data-ng-bind-html="item.html"></span></a>
       				</li>

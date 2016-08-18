@@ -276,21 +276,23 @@ angular.module('sdlctoolApp')
 			$scope.autoComplete[field.key] = [];
 			$scope.getHeight(field.name);
 			var lastValue = $scope.fields[field.key].split(',').pop().trim();
-			apiFactory.getJIRAInfo(field.autoCompleteUrl + lastValue).then(function(response) {
-				switch(field.itemType) {
-				
-				case "user": 	$scope.autoComplete[field.key] = response.users;
-								break;
-				}
-				
-				$scope.toggleAutoCompleteDropdown[field.key] = response.total > 0 ? true : false;
-			})
+			if(lastValue.length > 1) {
+				apiFactory.getJIRAInfo(field.autoCompleteUrl + lastValue).then(function(response) {
+					switch(field.itemType) {
+					
+					case "user": 	$scope.autoComplete[field.key] = response.users;
+									break;
+					}
+					
+					$scope.toggleAutoCompleteDropdown[field.key] = response.total > 0 ? true : false;
+				});
+			}
 		}
 		
 		$scope.finishAutocomplete = function(field, name) {
 			var values = $scope.fields[field.key].split(',');
 			values.pop(); values.push(name);
-			$scope.fields[field.key] = values.toString();
+			$scope.fields[field.key] = values.toString() + ',';
 			
 		}
 		/**
