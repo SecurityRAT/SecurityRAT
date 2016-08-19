@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Predicate;
 
 import javax.inject.Inject;
 
@@ -30,7 +29,6 @@ import org.appsec.securityRAT.repository.ReqCategoryRepository;
 import org.appsec.securityRAT.repository.RequirementSkeletonRepository;
 import org.appsec.securityRAT.repository.TagCategoryRepository;
 import org.appsec.securityRAT.web.rest.dto.FEAlternativeInstanceDTO;
-import org.appsec.securityRAT.web.rest.dto.FEBrowseRequirementDTO;
 import org.appsec.securityRAT.web.rest.dto.FECategoryDTO;
 import org.appsec.securityRAT.web.rest.dto.FECollectionCategoryDTO;
 import org.appsec.securityRAT.web.rest.dto.FEOptionColumnAlternativeDTO;
@@ -48,7 +46,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
-import com.google.common.base.Optional;
 
 
 /**
