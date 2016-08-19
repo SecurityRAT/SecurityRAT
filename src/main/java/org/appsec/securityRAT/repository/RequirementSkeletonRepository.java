@@ -24,7 +24,6 @@ public interface RequirementSkeletonRepository extends JpaRepository<Requirement
     		+ "left join fetch requirementSkeleton.projectTypes pt "
     		+ "where requirementSkeleton.active=true "
     		+ "and pt.active=true "
-    		+ "and tg.tagCategory.active=true and tg.active=true "
     		+ "and coll.collectionCategory.active=true and coll.active=true")
     List<RequirementSkeleton> findAllActiveWithEagerRelationships();
 
