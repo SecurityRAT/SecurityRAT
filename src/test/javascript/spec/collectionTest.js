@@ -30,7 +30,7 @@ describe('Protractor Security RAT general testsuite', function() {
 		entities.click();
 		element(by.partialLinkText('Collection Categories')).click();
 		element(by.id('searchQuery')).sendKeys('criticality');
-		element(by.partialButtonText('Search a Collection Category')).click();
+		element(by.id('searchButton')).click();
 		expect(element.all(by.repeater(collRepeater)).count()).toBe(1);
 		
 	});
@@ -90,12 +90,12 @@ describe('Protractor Security RAT general testsuite', function() {
 		entities.click();
 		element(by.partialLinkText('Collection Instances')).click();
 		element(by.id('searchQuery')).sendKeys('Criticality');
-		element(by.partialButtonText('Search a Collection Instance')).click();
+		element(by.id('searchButton')).click();
 		expect(element.all(by.repeater(collInsRepeater)).count()).toBeGreaterThan(1);
 		browser.sleep(2000);
 		element(by.id('searchQuery')).clear().then(function(){
 		});
-		element(by.partialButtonText('Search a Collection Instance')).click();		
+		element(by.id('searchButton')).click();		
 		element(by.buttonText("Collection Category")).click();
 		element(by.linkText("Criticality")).click();
 		expect(element.all(by.repeater(collInsRepeater)).count()).toBeGreaterThan(1);

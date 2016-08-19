@@ -20,8 +20,8 @@ angular.module('sdlctoolApp')
                 }
             })
             .state('ferequirementSkeleton.detail', {
-                parent: 'febrowse',
-                url: '/ferequirementSkeleton/{id}',
+                parent: 'ferequirementSkeleton',
+                url: '/{id}',
                 data: {
                     roles: ['ROLE_USER', 'ROLE_FRONTEND_USER', 'ROLE_ADMIN'],
                     pageTitle: 'Browse requirementSkeleton'
@@ -33,8 +33,10 @@ angular.module('sdlctoolApp')
                     }
                 },
                 resolve: {
-                    entity: ['$stateParams', 'RequirementSkeleton', function($stateParams, RequirementSkeleton) {
-                        return RequirementSkeleton.get({id : $stateParams.id});
+                    entity: ['$stateParams', 'apiFactory', function($stateParams, apiFactory) {
+                       return apiFactory.getAll('requirementSkeletons/' + $stateParams.id).then(function(result) {
+                        	return result;
+                        });
                     }]
                 }
             });

@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import javax.inject.Inject;
 
@@ -13,19 +14,23 @@ import org.appsec.securityRAT.domain.AlternativeSet;
 import org.appsec.securityRAT.domain.CollectionCategory;
 import org.appsec.securityRAT.domain.CollectionInstance;
 import org.appsec.securityRAT.domain.OptColumn;
+import org.appsec.securityRAT.domain.OptColumnContent;
 import org.appsec.securityRAT.domain.ProjectType;
 import org.appsec.securityRAT.domain.ReqCategory;
+import org.appsec.securityRAT.domain.RequirementSkeleton;
 import org.appsec.securityRAT.domain.TagCategory;
 import org.appsec.securityRAT.repository.AlternativeInstanceRepository;
 import org.appsec.securityRAT.repository.AlternativeSetRepository;
 import org.appsec.securityRAT.repository.CollectionCategoryRepository;
 import org.appsec.securityRAT.repository.CollectionInstanceRepository;
+import org.appsec.securityRAT.repository.OptColumnContentRepository;
 import org.appsec.securityRAT.repository.OptColumnRepository;
 import org.appsec.securityRAT.repository.ProjectTypeRepository;
 import org.appsec.securityRAT.repository.ReqCategoryRepository;
 import org.appsec.securityRAT.repository.RequirementSkeletonRepository;
 import org.appsec.securityRAT.repository.TagCategoryRepository;
 import org.appsec.securityRAT.web.rest.dto.FEAlternativeInstanceDTO;
+import org.appsec.securityRAT.web.rest.dto.FEBrowseRequirementDTO;
 import org.appsec.securityRAT.web.rest.dto.FECategoryDTO;
 import org.appsec.securityRAT.web.rest.dto.FECollectionCategoryDTO;
 import org.appsec.securityRAT.web.rest.dto.FEOptionColumnAlternativeDTO;
@@ -33,13 +38,17 @@ import org.appsec.securityRAT.web.rest.dto.FEProjectTypeDTO;
 import org.appsec.securityRAT.web.rest.dto.FETagCategoryDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
+import com.google.common.base.Optional;
 
 
 /**
@@ -73,6 +82,9 @@ public class FrontEndUniversalResource {
 
     @Inject
     private OptColumnRepository optColumnRepository;
+    
+    @Inject
+    private OptColumnContentRepository optColumnContentRepository;
 
     @Inject
     private AlternativeInstanceRepository alternativeInstanceRepository;
@@ -116,10 +128,7 @@ public class FrontEndUniversalResource {
     		feProjectTypeDTOs.add(new FEProjectTypeDTO(projectType));
     	}
     	return feProjectTypeDTOs;
-
     }
-
-
 
 	/**
      * GET  /collections
@@ -149,6 +158,68 @@ public class FrontEndUniversalResource {
     public List<ReqCategory> getAllActiveReqCategories() {
         log.debug("REST request to get all ReqCategories");
         return reqCategoryRepository.findAllActive();
+    }
+    
+    /**
+     * return all active requirement skeletons.
+     * @return
+     */
+    @RequestMapping(value = "/requirementSkeletons",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public List<RequirementSkeleton> getAllActiveRequirements() {
+        log.debug("REST request to get all Requirements");
+        return requirementSkeletonRepository.findAllActiveWithEagerRelationships();
+    }
+    
+    @RequestMapping(value = "/alternativeinstances",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public List<AlternativeInstance> alternativeInstances() {
+        log.debug("REST request to get all active alternative instances");
+        List<AlternativeInstance> instances = new ArrayList<AlternativeInstance>();
+        for (AlternativeInstance instance : alternativeInstanceRepository.findAll()) {
+			if(instance.getAlternativeSet().getActive()) {
+				instances.add(instance);
+			}
+		}
+        return instances;
+    }
+    
+    @RequestMapping(value = "/optColumnContents",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public List<OptColumnContent> getAll() {
+        log.debug("REST request to get all active OptColumnContents");
+        List<OptColumnContent> contents = new ArrayList<OptColumnContent>();
+        for (OptColumnContent element : optColumnContentRepository.findAll()) {
+			if(element.getOptColumn().getActive()) {
+				contents.add(element);
+			}
+		};
+		return contents;
+    }
+    
+    /**
+     * Get active requirement by id
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/requirementSkeletons/{id}",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<RequirementSkeleton> getActiveRequirement(@PathVariable Long id) {
+        log.debug("REST request requirement {}", id);
+        for (RequirementSkeleton requirement : requirementSkeletonRepository.findAllActiveWithEagerRelationships()) {
+			if(requirement.getId() == id) {
+				return new ResponseEntity<RequirementSkeleton>(requirement, HttpStatus.OK);
+			}
+		};
+        return new ResponseEntity<RequirementSkeleton>(HttpStatus.NOT_FOUND);
     }
 
     /**

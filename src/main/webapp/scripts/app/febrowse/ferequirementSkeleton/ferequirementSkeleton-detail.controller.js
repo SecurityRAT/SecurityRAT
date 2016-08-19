@@ -1,27 +1,36 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('FeRequirementSkeletonDetailController', function ($scope, $filter, $rootScope, entity, RequirementSkeleton, OptColumnContent, apiFactory, AlternativeInstance) {
+    .controller('FeRequirementSkeletonDetailController', function ($scope, $filter, $rootScope, entity, apiFactory, OptColumnContent, AlternativeInstance) {
         $scope.requirementSkeleton = entity;
         $scope.optColumnContents = [];
         $scope.altInstances = [];
-        $scope.load = function (id) {
-            RequirementSkeleton.get({id: id}, function(result) {
-            	
-                $scope.requirementSkeleton = result;
-            });
-        };
-        OptColumnContent.query(function(result) {
+        $scope.tagCategories = [];
+        $scope.collCategories = [];
+        
+        angular.forEach($scope.requirementSkeleton.collectionInstances, function(collInstance) {
+    		var isPresent = $filter('filter')($scope.collCategories, {'id' : collInstance.collectionCategory.id});;
+    		if(isPresent.length === 0) {
+    			$scope.collCategories.push(collInstance.collectionCategory);
+    		}
+    	})
+    	angular.forEach($scope.requirementSkeleton.tagInstances, function(tagInstance) {
+    		var isPresent = $filter('filter')($scope.tagCategories, {'id' : tagInstance.tagCategory.id});;
+    		if(isPresent.length === 0) {
+    			$scope.tagCategories.push(tagInstance.tagCategory);
+    		}
+    	});
+        apiFactory.getAll('alternativeinstances').then(function(result) {
+        	angular.forEach(result, function(instance){
+        		if(instance.requirementSkeleton.id == $scope.requirementSkeleton.id)
+        			$scope.altInstances.push(instance);
+        	})
+        });
+        apiFactory.getAll('optColumnContents').then(function(result) {
         	angular.forEach(result, function(content) {
         		if(content.requirementSkeleton.id === $scope.requirementSkeleton.id) {
         			$scope.optColumnContents.push(content);
         		}
-        	})
-        });
-        AlternativeInstance.query(function(result) {
-        	angular.forEach(result, function(instance){
-        		if(instance.requirementSkeleton.id == $scope.requirementSkeleton.id)
-        			$scope.altInstances.push(instance);
         	})
         });
         $rootScope.$on('sdlctoolApp:requirementSkeletonUpdate', function(event, result) {

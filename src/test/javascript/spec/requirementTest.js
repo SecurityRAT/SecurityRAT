@@ -27,7 +27,7 @@ describe('Protractor Security RAT general testsuite', function() {
 		entities.click();
 		element(by.partialLinkText('Requirement Categories')).click();
 		element(by.id('searchQuery')).sendKeys('Lifecycle');
-		element(by.partialButtonText('Search a Requirement Category')).click();
+		element(by.id('searchButton')).click();
 		expect(element.all(by.repeater("reqCategory in reqCategorys | orderBy:'showOrder'")).count()).toBe(1);
 		
 	});
@@ -88,11 +88,11 @@ describe('Protractor Security RAT general testsuite', function() {
 		entities.click();
 		element(by.partialLinkText('Requirement Skeletons')).click();
 		element(by.id('searchQuery')).sendKeys('Lifecycle');
-		element(by.partialButtonText('Search a Requirement Skeleton')).click();
+		element(by.id('searchButton')).click();
 		expect(element.all(by.repeater(skeletonRepeater)).count()).toBeGreaterThan(3);
 		browser.sleep(2000);
 		element(by.id('searchQuery')).clear().then(function(){});
-		element(by.partialButtonText('Search a Requirement Skeleton')).click();		
+		element(by.id('searchButton')).click();		
 		element(by.buttonText("Category")).click();
 		element.all(by.linkText("Lifecycle")).first().click();
 		expect(element.all(by.repeater(skeletonRepeater)).count()).toBeGreaterThan(3);

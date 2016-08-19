@@ -18,7 +18,14 @@ public interface RequirementSkeletonRepository extends JpaRepository<Requirement
     @Query("select distinct requirementSkeleton from RequirementSkeleton requirementSkeleton left join fetch requirementSkeleton.tagInstances left join fetch requirementSkeleton.collectionInstances left join fetch requirementSkeleton.projectTypes")
     List<RequirementSkeleton> findAllWithEagerRelationships();
 
-    @Query("select distinct requirementSkeleton from RequirementSkeleton requirementSkeleton left join fetch requirementSkeleton.tagInstances left join fetch requirementSkeleton.collectionInstances left join fetch requirementSkeleton.projectTypes where requirementSkeleton.active=true")
+    @Query("select distinct requirementSkeleton from RequirementSkeleton requirementSkeleton "
+    		+ "left join fetch requirementSkeleton.tagInstances tg "
+    		+ "left join fetch requirementSkeleton.collectionInstances coll "
+    		+ "left join fetch requirementSkeleton.projectTypes pt "
+    		+ "where requirementSkeleton.active=true "
+    		+ "and pt.active=true "
+    		+ "and tg.tagCategory.active=true and tg.active=true "
+    		+ "and coll.collectionCategory.active=true and coll.active=true")
     List<RequirementSkeleton> findAllActiveWithEagerRelationships();
 
     @Query("select requirementSkeleton from RequirementSkeleton requirementSkeleton left join fetch requirementSkeleton.tagInstances left join fetch requirementSkeleton.collectionInstances left join fetch requirementSkeleton.projectTypes where requirementSkeleton.id =:id")

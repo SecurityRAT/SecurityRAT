@@ -42,7 +42,7 @@ describe('Protractor Security RAT general testsuite', function() {
 		entities.click();
 		element(by.partialLinkText('Option Column Types')).click();
 		element(by.id('searchQuery')).sendKeys('ShortText');
-		element(by.partialButtonText('Search an Option Column Type')).click();
+		element(by.id('searchButton')).click();
 		expect(element.all(by.repeater("optColumnType in optColumnTypes")).count()).toBe(0);
 		
 	});
@@ -80,12 +80,12 @@ describe('Protractor Security RAT general testsuite', function() {
 		entities.click();
 		element(by.partialLinkText('Option Columns')).click();
 		element(by.id('searchQuery')).sendKeys('More Information');
-		element(by.partialButtonText('Search a Option Column')).click();
+		element(by.id('searchButton')).click();
 		expect(element.all(by.repeater(optColumnRepeater)).count()).toBe(1);
 		browser.sleep(2000);
 		element(by.id('searchQuery')).clear().then(function(){
 		});
-		element(by.partialButtonText('Search a Option Column')).click();		
+		element(by.id('searchButton')).click();		
 	});
 	
 	it('administering a opticon column', function() {
@@ -177,13 +177,13 @@ describe('Protractor Security RAT general testsuite', function() {
 		entities.click();
 		element(by.partialLinkText('Option Column Contents')).click();
 		element(by.id('searchQuery')).sendKeys('More Information');
-		element(by.partialButtonText('Search a OptColumnContent')).click();
+		element(by.id('searchButton')).click();
 		expect(element.all(by.repeater(optColumnContentRepeater))
 				.count()).toBeGreaterThan(3);
 		browser.sleep(2000);
 		element(by.id('searchQuery')).clear().then(function(){
 		});
-		element(by.partialButtonText('Search a OptColumnContent')).click();		
+		element(by.id('searchButton')).click();		
 	});
 	
 	it('administering a opticon column content', function() {

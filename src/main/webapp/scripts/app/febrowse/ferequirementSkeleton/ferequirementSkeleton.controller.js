@@ -1,50 +1,130 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('FeRequirementSkeletonController', function ($scope, $filter, sharedProperties, RequirementSkeleton, RequirementSkeletonSearch, ReqCategory, TagInstance
-    		, ProjectType, CollectionInstance, TagCategory, CollectionCategory, $document) {
+    .controller('FeRequirementSkeletonController', function ($scope, $filter, sharedProperties, apiFactory, $document) {
         $scope.requirementSkeletons = [];
-        $scope.filterCategory = [];
         $scope.tagCategories = [];
         $scope.collCategories = [];
         $scope.dropdowns = {};
         $scope.tagInstances = [];
         $scope.projectTypes = [];
         $scope.collectionsInstances = [];
+        $scope.selectedCategory = [];
+        $scope.selectedTags = [];
+        $scope.selectedTypes = [];
+        $scope.selectedColls = [];
+        $scope.selectedCategorySettings = {
+    			  smartButtonMaxItems: 2,
+    			  showCheckAll: false, showUncheckAll: false,
+    			  displayProp: 'name', idProp: 'id', externalIdProp: ''
+    	    };
+        $scope.selectedTagSettings = {
+    			  smartButtonMaxItems: 2,
+    			  showCheckAll: false, showUncheckAll: false,
+    			  displayProp: 'name', idProp: 'id', externalIdProp: '',
+    			  groupByTextProvider: function(groupValue) {
+    				  return groupValue.name;
+    			  }
+    	    };
+        $scope.typeLabelText = {buttonDefaultText: 'Implementation Types'};
         
         $scope.loadAll = function() {
-            RequirementSkeleton.query(function(result) {
-               $scope.requirementSkeletons = result;
-               angular.forEach($scope.requirementSkeletons, function(requirement) {
-            	   angular.extend(requirement, {selected: false});
-               });
-            });
-            ReqCategory.query(function(result) {
-            	$scope.filterCategory = result;
-            	$filter('orderBy')($scope.filterCategory, 'showOrder');
-             });
-            TagInstance.query(function(result) {
-            	$scope.tagInstances = result;
-            	$filter('orderBy')($scope.tagInstances, 'showOrder');
-             });
-            ProjectType.query(function(result) {
-            	$scope.projectTypes = result;
-            	$filter('orderBy')($scope.projectTypes, 'showOrder');
-             });
-            CollectionInstance.query(function(result) {
-            	$scope.collectionsInstances = result;
-            	$filter('orderBy')($scope.collectionsInstances, 'showOrder');
-             });
-            TagCategory.query(function(result) {
-            	$scope.tagCategories = result;
-            	$filter('orderBy')($scope.tagCategories, 'showOrder');
-            });
-            CollectionCategory.query(function(result) {
-            	$scope.collCategories = result;
-            	$filter('orderBy')($scope.collCategories, 'showOrder');
-            });
+        	apiFactory.getAll("requirementSkeletons").then(
+        		  	function(result) {
+        		  		console.log(result);
+        		  		$scope.requirementSkeletons = result;
+        		  	});
+            apiFactory.getAll("projectTypes").then(
+        		  	function(result) {
+        		  		$scope.projectTypes = result;
+        		  	});
+            apiFactory.getAll("tags").then(
+        		  	function(result) {
+        		  		$scope.tagCategories = result;
+        		  	});
+            apiFactory.getAll("collections").then(
+        		  	function(result) {
+        		  		$scope.collCategories = result;
+        		  	});
+            $scope.dropdowns.tag = {buttonText: 'Tags', open: false, defaultText: 'Tags'};
+            $scope.dropdowns.coll = {buttonText: 'Collections', open: false, defaultText: 'Collections'};
         };
         $scope.loadAll();
+        
+        $scope.toggleDropdown = function(selector, $event) {
+        	var dropdowns = ['tag', 'coll'];
+        	dropdowns.splice(dropdowns.indexOf(selector), 1);
+        	if(!$scope.dropdowns[selector].open) {
+	        	$document.on('click', function (e) {
+	                var target = e.target.parentElement;
+	                var parentFound = false;
+	
+					while (angular.isDefined(target) && target !== null && !parentFound) {
+					    if (angular.equals(target.id, 'multiselect-parent') && !parentFound) {
+					            parentFound = true;
+					    }
+					    target = target.parentElement;
+					}
+					
+					if (!parentFound) {
+					    $scope.$apply(function () {
+					        $scope.dropdowns[selector].open = false;
+					    });
+					}
+				});
+				for(var i = 0; i < dropdowns.length; i++) {
+					$scope.dropdowns[dropdowns[i]].open = false;
+				}
+				$scope.dropdowns[selector].open = true;
+        	}else {
+        		$scope.dropdowns[selector].open = false;
+        	}
+        }
+        
+        $scope.selectTagInstance = function(tagInstance, selector, dropdownSelector) {
+        	var exist = false;
+        	var index = 0;
+        	for(var i = 0; i < $scope[selector].length; i++) {
+        		if($scope[selector][i].id == tagInstance.id) {
+        			exist = true;
+        			index = i;
+        			break;
+        		}
+        	}
+        	if(!exist) {
+        		$scope[selector].push(tagInstance);
+        	} else {
+        		$scope[selector].splice(index, 1);
+        	}
+        	if($scope[selector].length === 0)  {
+        		$scope.dropdowns[dropdownSelector].buttonText = $scope.dropdowns[dropdownSelector].defaultText;
+        	}
+        	if($scope[selector].length > 0) {
+        		$scope.dropdowns[dropdownSelector].buttonText = '';
+        		$scope.dropdowns[dropdownSelector].buttonText = $scope[selector][0].name;
+        		for(var i = 1; i < $scope[selector].length && i < 2; i++) {
+        			$scope.dropdowns[dropdownSelector].buttonText += ', ' + $scope[selector][1].name;
+        		}
+        		if($scope[selector].length > 2 )
+        			$scope.dropdowns[dropdownSelector].buttonText += ',...'
+        	}
+        	
+        }
+        
+        $scope.isTagSelected = function(tagInstance, selector) {
+        	var exist = false;
+        	for(var i = 0; i < $scope[selector].length; i++) {
+        		if($scope[selector][i].id == tagInstance.id) {
+        			exist = true;
+        			break;
+        		}
+        	}
+        	if(!exist) {
+        		return false;
+        	}else {
+        		return true;
+        	}
+        }
         $scope.searchArrayByValue = function(search, object) {
         	var bool = false;
         	angular.forEach(object, function(obj) {

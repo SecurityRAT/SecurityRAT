@@ -11,7 +11,7 @@ describe('Protractor Security RAT general testsuite', function() {
 		admin.click();
 		element(by.partialLinkText('Constants')).click();
 		element(by.id('searchQuery')).sendKeys('custom');
-		element(by.partialButtonText('Search a constant')).click();
+		element(by.id('searchButton')).click();
 		expect(element.all(by.repeater(constantRepeater)).count()).toBe(1);
 		
 	});

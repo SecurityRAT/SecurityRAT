@@ -26,7 +26,7 @@ describe('Protractor Security RAT general testsuite', function() {
 		entities.click();
 		element(by.partialLinkText('Tag Categories')).click();
 		element(by.id('searchQuery')).sendKeys('QA');
-		element(by.partialButtonText('Search a Tag Category')).click();
+		element(by.id('searchButton')).click();
 		expect(element.all(by.repeater("tagCategory in tagCategorys | orderBy : 'showOrder'")).count()).toBe(1);
 		
 	});
@@ -90,7 +90,7 @@ describe('Protractor Security RAT general testsuite', function() {
 		expect(element.all(by.repeater("tagInstance in tagInstances | filterCategoryForEntities: selectedCategory: 'tagCategory' | orderBy: ['tagCategory.showOrder','showOrder']")).count()).toBeGreaterThan(3);
 		browser.sleep(2000);
 		element(by.id('searchQuery')).clear().then(function(){});
-		element(by.partialButtonText('Search a Tag Instance')).click();		
+		element(by.id('searchButton')).click();		
 		element(by.buttonText("Tag Category")).click();
 		element.all(by.linkText("Requirement Owner")).first().click();
 		expect(element.all(by.repeater("tagInstance in tagInstances | filterCategoryForEntities: selectedCategory: 'tagCategory' | orderBy: ['tagCategory.showOrder','showOrder']")).count()).toBeGreaterThan(3);

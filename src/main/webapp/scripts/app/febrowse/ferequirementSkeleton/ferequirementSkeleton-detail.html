@@ -26,40 +26,26 @@
             </tr>
             <tr>
                 <td>
-                    <span><strong>ShowOrder</strong></span>
-                </td>
-                <td>
-                    <span class="form-control-static">{{requirementSkeleton.showOrder}}</span>
-                </td>
-            </tr>
-            <tr>
-                <td>
                     <span><strong>Requirement Category</strong></span>
                 </td>
                 <td>
                     <p>{{requirementSkeleton.reqCategory.name}}</p>
                 </td>
             </tr>
-            <tr ><td class="text-center titleSize" colspan="2"><strong>Collection instances</strong></td></tr>
-            <tr>
-                <td>
-                    <span><strong>Collections</strong></span>
-                </td>
-                <td>
-                    <span data-ng-repeat="collectionInstance in requirementSkeleton.collectionInstances">
-                        {{collectionInstance.name}}{{$last ? '' : ', '}}
-                    <span>
-                </td>
+            <tr><td class="text-center titleSize" colspan="2"><strong>Collections</strong></td></tr>
+            <tr data-ng-repeat="category in collCategories">
+                <td><strong>{{category.name}}</strong></td>
+                <td><span data-ng-repeat="collectionInstance in requirementSkeleton.collectionInstances | orderBy : ['showOrder'] | filter : {collectionCategory :{id : category.id}}">{{collectionInstance.name}}{{$last ? '' : ', '}}</span></td>
             </tr>
-             <tr><td class="text-center titleSize" colspan="2"><strong>Tag instances</strong></td></tr>
-            <tr data-ng-repeat="tagInstance in requirementSkeleton.tagInstances">
-                <td><strong>{{tagInstance.name}}</strong></td>
-                <td>{{tagInstance.description}}</td>
+            <tr><td class="text-center titleSize" colspan="2"><strong>Tags</strong></td></tr>
+            <tr data-ng-repeat="category in tagCategories">
+                <td><strong>{{category.name}}</strong></td>
+                <td><span data-ng-repeat="tagInstance in requirementSkeleton.tagInstances | orderBy : ['showOrder'] | filter : {tagCategory :{id : category.id}}">{{tagInstance.name}}{{$last ? '' : ', '}}</span></td>
             </tr>
-            <tr><td class="text-center titleSize"  colspan="2"><strong>Project types</strong></td></tr>
-            <tr data-ng-repeat="projectType in requirementSkeleton.projectTypes">
-                <td><strong>{{projectType.name}}</strong></td>
-                <td>{{projectType.description}}</td>
+            <tr><td class="text-center titleSize"  colspan="2"><strong>Implementation types</strong></td></tr>
+            <tr colspan="2">
+                <td></td>
+                <td><span data-ng-repeat="projectType in requirementSkeleton.projectTypes" >{{projectType.name}}{{$last ? '' : ', '}}</span></td>
             </tr>
             <tr data-ng-if="optColumnContents.length > 0"><td  class="text-center titleSize" colspan="2"><strong>Option columns</strong></td></tr>
             <tr data-ng-repeat="content in optColumnContents">

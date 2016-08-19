@@ -41,7 +41,7 @@ describe('Protractor Security RAT general testsuite', function() {
 		entities.click();
 		element(by.partialLinkText('Alternative Sets')).click();
 		element(by.id('searchQuery')).sendKeys('Poseidon-based');
-		element(by.partialButtonText('Search a Alternative Set')).click();
+		element(by.id('searchButton')).click();
 		expect(element.all(by.repeater(AltSetRepeater))
 				.count()).toBe(1);
 		browser.sleep(2000);
@@ -145,13 +145,13 @@ describe('Protractor Security RAT general testsuite', function() {
 		entities.click();
 		element(by.partialLinkText('Alternative Instances')).click();
 		element(by.id('searchQuery')).sendKeys('Poseidon-based application');
-		element(by.partialButtonText('Search an Alternative Instance')).click();
+		element(by.id('searchButton')).click();
 		expect(element.all(by.repeater(AltInsRepeater))
 				.count()).toBeGreaterThan(1);
 		browser.sleep(2000);
 		element(by.id('searchQuery')).clear().then(function(){
 		});
-		element(by.partialButtonText('Search an Alternative Instance')).click();		
+		element(by.id('searchButton')).click();		
 	});
 	
 	it('administering an alternative instance', function() {

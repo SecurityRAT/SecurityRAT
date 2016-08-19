@@ -41,7 +41,7 @@ describe('Protractor Security RAT general testsuite', function() {
 		entities.click();
 		element(by.partialLinkText('Status Columns')).click();
 		element(by.id('searchQuery')).sendKeys('Strategy');
-		element(by.partialButtonText('Search a Status Column')).click();
+		element(by.id('searchButton')).click();
 		expect(element.all(by.repeater(statusColumRepeater)).count()).toBe(1);
 		browser.sleep(2000);
 		element(by.id('searchQuery')).clear().then(function(){
@@ -116,13 +116,13 @@ describe('Protractor Security RAT general testsuite', function() {
 		entities.click();
 		element(by.partialLinkText('Status Column Values')).click();
 		element(by.id('searchQuery')).sendKeys('Task');
-		element(by.partialButtonText('Search a Status Column Value')).click();
+		element(by.id('searchButton')).click();
 		expect(element.all(by.repeater(statValueRepeater))
 				.count()).toBe(1);
 		browser.sleep(2000);
 		element(by.id('searchQuery')).clear().then(function(){
 		});
-		element(by.partialButtonText('Search a Status Column Value')).click();		
+		element(by.id('searchButton')).click();		
 		element(by.buttonText("Status Column")).click();
 		element(by.linkText("Strategy")).click();
 		expect(element.all(by.repeater(statValueRepeater))
