@@ -276,7 +276,7 @@ angular.module('sdlctoolApp')
 		$scope.requestAutoComplete = function(field) {
 			$scope.autoComplete[field.key] = [];
 			$scope.getHeight(field.name.replace(' ', '-'));
-			var lastValue = $scope.fields[field.key].split(',').pop().trim();
+			var lastValue = $scope.fields[field.key][$scope.fields[field.key].length - 1];
 			if(lastValue.length > 1) {
 				apiFactory.getJIRAInfo(field.autoCompleteUrl.replace('/null/', '/') + lastValue).then(function(response) {
 					switch(field.itemType) {
@@ -290,11 +290,8 @@ angular.module('sdlctoolApp')
 		}
 		
 		$scope.finishAutocomplete = function(field, name) {
-			var values = $scope.fields[field.key].split(',');
-			values.pop(); values.push(name);
-			$scope.fields[field.key] = values.toString() + ', ';
-			$('#' + field.name.replace(' ', '-')).focus();
-			
+			$scope.fields[field.key].pop();
+			$scope.fields[field.key].push(name);
 		}
 		/**
 		 * get the configurable and mandatory fields excluding excludedFields, fatalFields, array fields with now allowedValues and array fields with only the set operation.
