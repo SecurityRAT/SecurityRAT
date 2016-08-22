@@ -292,6 +292,7 @@ angular.module('sdlctoolApp')
 		$scope.finishAutocomplete = function(field, name) {
 			$scope.fields[field.key].pop();
 			$scope.fields[field.key].push(name);
+			console.log($scope.fields[field.key])
 		}
 		/**
 		 * get the configurable and mandatory fields excluding excludedFields, fatalFields, array fields with now allowedValues and array fields with only the set operation.
