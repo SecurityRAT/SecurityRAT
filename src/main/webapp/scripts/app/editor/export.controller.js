@@ -428,7 +428,7 @@ angular.module('sdlctoolApp')
 						for(var i = 0; i< $scope.jiraAlternatives.mandatoryFields.length; i++) {
 							if($scope.jiraAlternatives.mandatoryFields[i].key === key) {
 								$scope.exportProperty.fail = true;
-						    	$scope.exportProperty.failed = 'Value to field' + key + ' ' + result;
+						    	$scope.exportProperty.failed = 'Value to field ' +  $scope.jiraAlternatives.mandatoryFields[i].name + ' ' + result;
 						    	if(angular.isDefined($scope.fields[key]))$scope.fields[key] = "";
 							}
 							// retrieves the old field values whose structure were changed to create a ticket.
