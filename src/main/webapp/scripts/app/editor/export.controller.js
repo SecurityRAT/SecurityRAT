@@ -423,10 +423,16 @@ angular.module('sdlctoolApp')
 						for(var i = 0; i < values.length; i++) {
 							result += encodeURI(values[i]) + ' ';
 						}
-						$scope.exportProperty.fail = true;
-				    	$scope.exportProperty.failed = result;
-				    	if(angular.isDefined($scope.fields[key]))
-				    		$scope.fields[key] = "";
+						// shows the error and scrolls the document to top to make sure the user sees it.
+						for(var i = 0; i< $scope.jiraAlternatives.mandatoryFields.length, i++) {
+							if($scope.jiraAlternatives.mandatoryFields[i].key === key) {
+								$scope.exportProperty.fail = true;
+						    	$scope.exportProperty.failed = 'Value to field' + key + ' ' + result;
+						    	if(angular.isDefined($scope.fields[key]))$scope.fields[key] = "";
+						    	break;
+							}
+							$window.scrollTo(0, 0);
+						})
 					})
 				}
 			});
@@ -616,8 +622,6 @@ angular.module('sdlctoolApp')
 											 // properly sets the data Structure for fields os schema type array in the scope.fields object.
 											 var tempValue = $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key].split(',');
 											 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = [];
-											 console.log($scope.jiraAlternatives.mandatoryFields[i].name);
-											 console.log(tempValue)
 											 if(tempValue.length > 0) {
 												 if($scope.jiraAlternatives.mandatoryFields[i].itemType === "string")
 													 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] =$scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key].concat(tempValue);
@@ -631,7 +635,6 @@ angular.module('sdlctoolApp')
 													 }
 												 }
 											 }
-											 console.log($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key]);
 										 } else if($scope.jiraAlternatives.mandatoryFields[i].type === 'datetime') { 
 											 // creates the date format for the datetime type.
 											 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = $filter('date')($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key], "yyyy-MM-dd'T'hh:mm:ss'.000'Z");
