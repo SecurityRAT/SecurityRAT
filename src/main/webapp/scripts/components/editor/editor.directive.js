@@ -4,7 +4,7 @@ angular.module('sdlctoolApp')
     .directive('splitArray', function () {
         return {
             restrict: 'A',
-            require: 'ngModel'
+            require: 'dataNgModel'
             link: function (scope, element, attrs) {
             	var itemType = attrs.splitArray;
             	
@@ -14,6 +14,7 @@ angular.module('sdlctoolApp')
             			tempValue[i] = tempValue[i].trim(); 
         			}
             		if(itemType === 'string') {
+            			console.log(tempValue)
             			return tempValue;
             		}
             			
@@ -21,6 +22,7 @@ angular.module('sdlctoolApp')
             	
             	function toUser(array) {
             		if(itemType === 'string') {
+            			console.log(array);
             			return array.join(', ');
             		}
             	}
