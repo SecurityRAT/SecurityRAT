@@ -316,34 +316,34 @@ angular.module('sdlctoolApp')
 						var  sync = $q.defer();
 						if((fatalFields.indexOf(key) === -1) && (excludedFields.indexOf(key) === -1)
 							&& !(angular.equals(value.schema.type, "array") && (value.operations.length == 1) && value.operations.indexOf("set") !== -1)) {
-								if(angular.isDefined(value.allowedValues)) {
-									if(value.allowedValues.length > 0)allowedValues = value.allowedValues;
-									else sync.reject(false); // slice out field without values in the allowedValues property.
-									if(angular.equals(value.schema.type, "array")) {
-										$scope.fields[key] = [];
-									}
+							if(angular.isDefined(value.allowedValues)) {
+								if(value.allowedValues.length > 0)allowedValues = value.allowedValues;
+								else sync.reject(false); // slice out field without values in the allowedValues property.
+								if(angular.equals(value.schema.type, "array")) {
+									$scope.fields[key] = [];
 								}
-								// creates new Date object for fields of schema dateType
-								if(dateType.indexOf(value.schema.type) !== -1) {
-									$scope.datePicker[key] = {};
-									$scope.datePicker[key].opened = false;
-									$scope.fields[key] = new Date();
-								}
-								sync.resolve(true);
-								//sync makes sure the array is updated when the datas are available.
-								sync.promise.then(function() {
-									$scope.jiraAlternatives.mandatoryFields.push({
-										key: key,
-										name: value.name,
-										type: value.schema.type,
-										schemaCustom: value.schema.custom,
-										itemType: value.schema.items,
-										values : allowedValues,
-										configurable : !value.required,
-										mandatory : value.required,
-										autoCompleteUrl: value.autoCompleteUrl
-									});
+							}
+							// creates new Date object for fields of schema dateType
+							if(dateType.indexOf(value.schema.type) !== -1) {
+								$scope.datePicker[key] = {};
+								$scope.datePicker[key].opened = false;
+								$scope.fields[key] = new Date();
+							}
+							sync.resolve(true);
+							//sync makes sure the array is updated when the datas are available.
+							sync.promise.then(function() {
+								$scope.jiraAlternatives.mandatoryFields.push({
+									key: key,
+									name: value.name,
+									type: value.schema.type,
+									schemaCustom: value.schema.custom,
+									itemType: value.schema.items,
+									values : allowedValues,
+									configurable : !value.required,
+									mandatory : value.required,
+									autoCompleteUrl: value.autoCompleteUrl
 								});
+							});
 						}
 					});
 				})
@@ -425,7 +425,7 @@ angular.module('sdlctoolApp')
 							result += encodeURI(values[i]) + ' ';
 						}
 						// shows the error and scrolls the document to top to make sure the user sees it.
-						for(var i = 0; i< $scope.jiraAlternatives.mandatoryFields.length, i++) {
+						for(var i = 0; i< $scope.jiraAlternatives.mandatoryFields.length; i++) {
 							if($scope.jiraAlternatives.mandatoryFields[i].key === key) {
 								$scope.exportProperty.fail = true;
 						    	$scope.exportProperty.failed = 'Value to field' + key + ' ' + result;
@@ -433,7 +433,7 @@ angular.module('sdlctoolApp')
 						    	break;
 							}
 							$window.scrollTo(0, 0);
-						})
+						}
 					})
 				}
 			});
