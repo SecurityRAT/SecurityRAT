@@ -31,7 +31,6 @@ angular.module('sdlctoolApp')
         $scope.loadAll = function() {
         	apiFactory.getAll("requirementSkeletons").then(
         		  	function(result) {
-        		  		console.log(result);
         		  		$scope.requirementSkeletons = result;
         		  	});
             apiFactory.getAll("projectTypes").then(

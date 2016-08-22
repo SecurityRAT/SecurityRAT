@@ -88,7 +88,7 @@
   - `target/securityRAT-${version}.war`
   - `target/securityRAT-${version}.war.original`
 - copy the file `target/securityRAT-${version}.war` file to your production server
-- in your target directory on the server, create a directory called `config` and copy the file `src/main/resources/config/application-prod.yml` there
+- in your target directory on the server, create a directory called `config` and copy the files `src/main/resources/config/application-prod.yml` and `src/main/resources/config/application.yml` there
 - switch to the target directory and fire `java -jar securityRAT-${version}.war --spring.profiles.active=prod`
 - log in to your mysql server and in the `JHI_USER` table rename the 'admin' user login to your CAS username **OR** log in with the credentials `admin` for the username and password (in order to get full rights for your user).
 - it is recommended to use a web server (e.g. [Apache](https://httpd.apache.org/) as a proxy, with a proper TLS configuration set etc.

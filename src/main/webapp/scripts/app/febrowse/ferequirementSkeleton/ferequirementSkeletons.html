@@ -49,7 +49,7 @@
                    				<li data-ng-repeat="category in collCategories" class="dropdown-submenu" id="list{{category.id}}">
                    					<a href="#" tabindex="-1" role="presentation">{{category.name}}</a>
                    					<ul class="dropdown-menu" aria-labelledby="list{{category.id}}">
-                   						<li data-ng-repeat="instance in category.collectionsInstances">
+                   						<li data-ng-repeat="instance in category.collectionInstances">
                    							<a href="#" data-ng-click="selectTagInstance(instance, 'selectedColls', 'coll')" tabindex="-1">
                    							<span data-ng-class="{'glyphicon glyphicon-ok':isTagSelected(instance, 'selectedColls')}"></span>
                    							 {{instance.name}}</a>

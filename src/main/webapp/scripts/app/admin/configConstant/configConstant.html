@@ -11,11 +11,13 @@
             </div> -->
             <div class="col-md-offset-4 col-md-8">
                 <form name="searchForm" class="form-inline">
-                    <div class="input-group">
+                	<div class="input-group">
                         <input type="text" class="form-control" data-ng-model="searchQuery" id="searchQuery" placeholder="Search for a constant">
+                        <span class="input-group-btn">
+	                    	<button class="btn btn-info" data-ng-click="search()" id="searchButton"><span class="glyphicon glyphicon-search"></span>
+	                    	</button> 
+                    	</span>   
                     </div>
-                    <button class="btn btn-info input-group-btn" id="searchButton" data-ng-click="search()"><span class="glyphicon glyphicon-search">
-                    </button>
                 </form>
             </div>
         </div>
