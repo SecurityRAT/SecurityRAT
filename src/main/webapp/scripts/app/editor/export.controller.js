@@ -430,7 +430,10 @@ angular.module('sdlctoolApp')
 								$scope.exportProperty.fail = true;
 						    	$scope.exportProperty.failed = 'Value to field' + key + ' ' + result;
 						    	if(angular.isDefined($scope.fields[key]))$scope.fields[key] = "";
-						    	break;
+							}
+							// retrieves the old field values whose structure were changed to create a ticket.
+							if(angular.isDefined($scope.tempMandatoryValue[$scope.jiraAlternatives.mandatoryFields[i].key])) {
+								$scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = $scope.tempMandatoryValue[$scope.jiraAlternatives.mandatoryFields[i].key];
 							}
 							$window.scrollTo(0, 0);
 						}
@@ -621,22 +624,15 @@ angular.module('sdlctoolApp')
 											break;
 										 } else if($scope.jiraAlternatives.mandatoryFields[i].type === "array" && !$scope.jiraAlternatives.mandatoryFields[i].values) {
 											 // properly sets the data Structure for fields os schema type array in the scope.fields object.
-//											 var tempValue = $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key].split(',');
-//											 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = [];
-//											 if(tempValue.length > 0) {
-//												 if($scope.jiraAlternatives.mandatoryFields[i].itemType === "string")
-//													 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key].concat(tempValue);
-//												 else {
-//													 for(var j = 0; j < tempValue.length; j++) {
-//														 if($scope.jiraAlternatives.mandatoryFields[i].itemType === "user") {
-//															 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key].push({
-//																 name: tempValue[j].trim()
-//															 });
-//														 }
-//													 }
-//												 }
-//											 }
-											 console.log($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key]);
+											 if($scope.jiraAlternatives.mandatoryFields[i].itemType === "user"
+												 && $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key].length > 0) {
+												 $scope.tempMandatoryValue[$scope.jiraAlternatives.mandatoryFields[i].key] = $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key];
+												 for(var j = 0; j < $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key].length; j++) {
+													 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key][j] = {
+															 name: $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key][j]
+													 };
+												 }
+											 }
 										 } else if($scope.jiraAlternatives.mandatoryFields[i].type === 'datetime') { 
 											 // creates the date format for the datetime type.
 											 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = $filter('date')($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key], "yyyy-MM-dd'T'hh:mm:ss'.000'Z");
