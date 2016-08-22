@@ -374,8 +374,6 @@ angular.module('sdlctoolApp')
 		 * Determines the height of the window from the element with the id given as parameter
 		 */
 		$scope.getHeight = function(id) {
-			console.log(id);
-//			var height = $(window).height() - ( + $("#dropdown-fields").height());
 			var height = $(window).height() - ($('#' + id).offset().top - $( window).scrollTop()) - $('#' + id).height();
 			$scope.maxHeight = height + "px";
 		}
@@ -620,13 +618,15 @@ angular.module('sdlctoolApp')
 											 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = [];
 											 console.log($scope.jiraAlternatives.mandatoryFields[i].name);
 											 console.log(tempValue)
-											 for(var j = 0; j < tempValue.length; j++) {
-												 if(tempValue.length > 0) {
-													 if($scope.jiraAlternatives.mandatoryFields[i].itemType === "string")$scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = tempValue[j].trim();
-													 else if($scope.jiraAlternatives.mandatoryFields[i].itemType === "user") {
-														 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key].push({
-															 name: tempValue[j].trim()
-														 });
+											 if(tempValue.length > 0) {
+												 if($scope.jiraAlternatives.mandatoryFields[i].itemType === "string")$scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key].concat(tempValue);
+												 else {
+													 for(var j = 0; j < tempValue.length; j++) {
+														 if($scope.jiraAlternatives.mandatoryFields[i].itemType === "user") {
+															 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key].push({
+																 name: tempValue[j].trim()
+															 });
+														 }
 													 }
 												 }
 											 }

@@ -155,7 +155,7 @@ describe('Protractor Security RAT importer testsuite', function() {
 		browser.get(browser.params.impTestFileUrl).then(function() {}, function(){
 			browser.switchTo().alert().accept();
 		})
-		expect(element.all(by.css('div[marked]')).last()).getText()).toBe('Invalid url in query parameter file. Please enter a valid JIRA ticket with an attachment.');
+		expect(element.all(by.css('div[marked]')).last().getText()).toBe('Invalid url in query parameter file. Please enter a valid JIRA ticket with an attachment.');
 	});
 	
 	// The first time you should not authenticate.
