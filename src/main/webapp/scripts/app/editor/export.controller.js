@@ -276,7 +276,7 @@ angular.module('sdlctoolApp')
 		$scope.requestAutoComplete = function(field) {
 			$scope.autoComplete[field.key] = [];
 			$scope.getHeight(field.name.replace(' ', '-'));
-			var lastValue = $scope.fields[field.key][$scope.fields[field.key].length - 1];
+			var lastValue = $scope.fields[field.key].split(',').pop().trim();
 			if(lastValue.length > 1) {
 				apiFactory.getJIRAInfo(field.autoCompleteUrl.replace('/null/', '/') + lastValue).then(function(response) {
 					switch(field.itemType) {
@@ -290,9 +290,11 @@ angular.module('sdlctoolApp')
 		}
 		
 		$scope.finishAutocomplete = function(field, name) {
-			$scope.fields[field.key].pop();
-			$scope.fields[field.key].push(name);
-			console.log($scope.fields[field.key])
+			var values = $scope.fields[field.key].split(',');
+			values.pop(); values.push(name);
+			$scope.fields[field.key] = values.toString() + ', ';
+			$('#' + field.name.replace(' ', '-')).focus();
+			
 		}
 		/**
 		 * get the configurable and mandatory fields excluding excludedFields, fatalFields, array fields with now allowedValues and array fields with only the set operation.
@@ -622,13 +624,15 @@ angular.module('sdlctoolApp')
 											break;
 										 } else if($scope.jiraAlternatives.mandatoryFields[i].type === "array" && !$scope.jiraAlternatives.mandatoryFields[i].values) {
 											 // properly sets the data Structure for fields os schema type array in the scope.fields object.
-											 if($scope.jiraAlternatives.mandatoryFields[i].itemType === "user"
-												 && $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key].length > 0) {
-												 $scope.tempMandatoryValue[$scope.jiraAlternatives.mandatoryFields[i].key] = $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key];
-												 for(var j = 0; j < $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key].length; j++) {
-													 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key][j] = {
-															 name: $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key][j]
-													 };
+											 if($scope.jiraAlternatives.mandatoryFields[i].itemType === "user") {
+												 var tempValue = $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key].split(',');
+												 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = [];
+												 if(tempValue.length > 0) {
+													 for(var j = 0; j < tempValue.length; j++) {
+														 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key].push({
+															 name: tempValue[j].trim()
+														 });
+													 }
 												 }
 											 }
 										 } else if($scope.jiraAlternatives.mandatoryFields[i].type === 'datetime') { 

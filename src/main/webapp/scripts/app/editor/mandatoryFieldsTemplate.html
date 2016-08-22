@@ -55,7 +55,7 @@
 				</select>
 			</span>
 		</div>
-		<div class="col-sm-9" data-ng-if="field.schemaCustom.indexOf('multicheckboxes') === -1">
+		<div class="col-sm-9" data-ng-if="!field.schemaCustom || field.schemaCustom.indexOf('multicheckboxes') === -1">
 			<span data-ng-if="field.values[0].value">
 				<select data-ng-if="field.itemType != 'issuelinks'" id="{{field.name}}" data-ng-model="fields[field.key][0]" data-ng-options="value as value.value for value in field.values" class="form-control" >
 				</select>
@@ -74,7 +74,7 @@
 			</span>
 			<span data-ng-if="field.autoCompleteUrl && field.itemType !== 'string'" uib-dropdown is-open="toggleAutoCompleteDropdown[field.key]" >
 				<textarea class="form-control" id="{{field.name.replace(' ', '-')}}" name="{{field.name}}" rows="5" placeholder="comma seperated value" data-ng-model="fields[field.key]" 
-				data-ng-pattern="/^(\w+,\s*)*\w*$/" data-ng-change="requestAutoComplete(field)" data-ng-list></textarea>
+				data-ng-pattern="/^(\w+,\s*)*\w*$/" data-ng-change="requestAutoComplete(field)"></textarea>
 				<ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="{{field.name.replace(' ', '-')}}" style="overflow: scroll;" data-ng-style="{'max-height':maxHeight}">
       				<li role="menuitem" data-ng-repeat="item in autoComplete[field.key]">
       					<a data-ng-click="finishAutocomplete(field, item.name)"><span data-ng-bind-html="item.html"></span></a>
