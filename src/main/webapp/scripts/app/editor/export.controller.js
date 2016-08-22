@@ -20,6 +20,7 @@ angular.module('sdlctoolApp')
 		$scope.datePicker =  {};
 		$scope.autoComplete = {};
 		$scope.toggleAutoCompleteDropdown = {};
+		$scope.tempMandatoryValue = [];
 		
 		$scope.init = function() {
 			$scope.manFilterObject = {};
@@ -317,7 +318,7 @@ angular.module('sdlctoolApp')
 							&& !(angular.equals(value.schema.type, "array") && (value.operations.length == 1) && value.operations.indexOf("set") !== -1)) {
 								if(angular.isDefined(value.allowedValues)) {
 									if(value.allowedValues.length > 0)allowedValues = value.allowedValues;
-									else sync.reject(false); // slice out field no values in allowedValues property.
+									else sync.reject(false); // slice out field without values in the allowedValues property.
 									if(angular.equals(value.schema.type, "array")) {
 										$scope.fields[key] = [];
 									}
@@ -624,7 +625,7 @@ angular.module('sdlctoolApp')
 											 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = [];
 											 if(tempValue.length > 0) {
 												 if($scope.jiraAlternatives.mandatoryFields[i].itemType === "string")
-													 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] =$scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key].concat(tempValue);
+													 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key].concat(tempValue);
 												 else {
 													 for(var j = 0; j < tempValue.length; j++) {
 														 if($scope.jiraAlternatives.mandatoryFields[i].itemType === "user") {

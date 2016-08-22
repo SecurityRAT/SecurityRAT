@@ -70,9 +70,9 @@
 		<label for="{{field.name}}" class="col-sm-2 control-label" data-ng-class="{'required-field': field.mandatory && !field.configurable}">{{field.name}}:</label>
 		<div class="col-sm-9">
 			<span data-ng-if="!field.autoCompleteUrl || field.itemType === 'string'">
-				<textarea class="form-control" id="{{field.name}}" name="{{field.name}}" rows="5" placeholder="comma seperated value" data-ng-model="fields[field.key]"></textarea>
+				<textarea class="form-control" id="{{field.name}}" name="{{field.name}}" rows="5" placeholder="comma seperated value" data-ng-model="fields[field.key]" splitArray="{{field.itemType}}"></textarea>
 			</span>
-			<span data-ng-if="field.autoCompleteUrl && field.itemType !== 'string'" uib-dropdown is-open="toggleAutoCompleteDropdown[field.key]">
+			<span data-ng-if="field.autoCompleteUrl && field.itemType !== 'string'" uib-dropdown is-open="toggleAutoCompleteDropdown[field.key]" splitArray="{{field.itemType}}">
 				<textarea class="form-control" id="{{field.name.replace(' ', '-')}}" name="{{field.name}}" rows="5" placeholder="comma seperated value" data-ng-model="fields[field.key]" 
 				data-ng-pattern="/^(\w+,\s*)*\w*$/" data-ng-change="requestAutoComplete(field)" ></textarea>
 				<ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="{{field.name.replace(' ', '-')}}" style="overflow: scroll;" data-ng-style="{'max-height':maxHeight}">
