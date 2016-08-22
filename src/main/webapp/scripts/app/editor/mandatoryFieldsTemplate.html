@@ -45,7 +45,7 @@
 	</div>
 	 <div  data-ng-if="field.type == 'array' && field.values" class="form-group">
 		<label for="{{field.name}}" class="col-sm-2 control-label" data-ng-class="{'required-field': field.mandatory && !field.configurable}">{{field.name}}:</label>
-		<div class="col-sm-9" data-ng-if="field.schemaCustom.indexOf('multicheckboxes') >= 0">
+		<div class="col-sm-9" data-ng-if="field.schemaCustom.indexOf('multicheckboxes') >= 0 || field.itemType == 'component'">
 			<span data-ng-if="field.values[0].value">
 				<select data-ng-if="field.itemType != 'issuelinks'" id="{{field.name}}" data-ng-model="fields[field.key]" data-ng-options="value as value.value for value in field.values" class="form-control" multiple>
 				</select>
@@ -55,7 +55,7 @@
 				</select>
 			</span>
 		</div>
-		<div class="col-sm-9" data-ng-if="!field.schemaCustom || field.schemaCustom.indexOf('multicheckboxes') === -1">
+		<div class="col-sm-9" data-ng-if="field.itemType !== 'component' && field.schemaCustom.indexOf('multicheckboxes') === -1">
 			<span data-ng-if="field.values[0].value">
 				<select data-ng-if="field.itemType != 'issuelinks'" id="{{field.name}}" data-ng-model="fields[field.key][0]" data-ng-options="value as value.value for value in field.values" class="form-control" >
 				</select>
