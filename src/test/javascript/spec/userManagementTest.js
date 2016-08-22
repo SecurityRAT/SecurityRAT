@@ -28,14 +28,14 @@ describe('Protractor Security RAT general testsuite', function() {
 			element(by.id('username')).clear().then(function(){
 				element(by.id('username')).sendKeys("testusername")
 			});
-			element(by.id('field_firstName')).clear().then(function(){
-				element(by.id('field_firstName')).sendKeys("zzzzz user.<script>alert(1)</script>");
+			element(by.id('firstName')).clear().then(function(){
+				element(by.id('firstName')).sendKeys("zzzzz user.<script>alert(1)</script>");
 			});
-			element(by.id('field_lastName')).clear().then(function(){
-				element(by.id('field_lastName')).sendKeys("zzzzz user last name.<script>alert(1)</script>");
+			element(by.id('lastName')).clear().then(function(){
+				element(by.id('lastName')).sendKeys("zzzzz user last name.<script>alert(1)</script>");
 			});
-			element(by.id('field_email')).clear().then(function(){
-				element(by.id('field_email')).sendKeys(browser.params.email);
+			element(by.id('email')).clear().then(function(){
+				element(by.id('email')).sendKeys(browser.params.email);
 			});
 			expect(element(by.partialButtonText('Save')).isEnabled()).toBe(true);
 			var roles = element.all(by.options('authority as authority.name for authority in authorities track by authority.name'));
@@ -48,8 +48,8 @@ describe('Protractor Security RAT general testsuite', function() {
 		})
 		element.all(by.buttonText("Edit")).last().click();
 		browser.sleep(2000);
-		element(by.id('field-login')).clear().then(function(){
-			element(by.id('field_login')).sendKeys("testusername2");
+		element(by.id('firstName')).clear().then(function(){
+			element(by.id('firstName')).sendKeys("testusername2");
 		});
 		
 		element(by.buttonText("Save")).click();
