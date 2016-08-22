@@ -47,7 +47,7 @@ describe('Protractor Security RAT general testsuite', function() {
 		browser.sleep(2000);
 		element(by.id('searchQuery')).clear().then(function(){
 		});
-		element(by.partialButtonText('Search a Alternative Set')).click();		
+		element(by.id('searchButton')).click();		
 		element(by.buttonText("Option Column")).click();
 		element(by.linkText("More Information")).click();
 		expect(element.all(by.repeater(AltSetRepeater))

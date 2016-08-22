@@ -86,7 +86,7 @@ describe('Protractor Security RAT general testsuite', function() {
 		entities.click();
 		element(by.partialLinkText('Tag Instances')).click();
 		element(by.id('searchQuery')).sendKeys('Requirement Owner');
-		element(by.partialButtonText('Search a Tag Instance')).click();
+		element(by.id('searchButton')).click();
 		expect(element.all(by.repeater("tagInstance in tagInstances | filterCategoryForEntities: selectedCategory: 'tagCategory' | orderBy: ['tagCategory.showOrder','showOrder']")).count()).toBeGreaterThan(3);
 		browser.sleep(2000);
 		element(by.id('searchQuery')).clear().then(function(){});

@@ -46,7 +46,7 @@ describe('Protractor Security RAT general testsuite', function() {
 		browser.sleep(2000);
 		element(by.id('searchQuery')).clear().then(function(){
 		});
-		element(by.partialButtonText('Search a Status Column')).click();		
+		element(by.id('searchButton')).click();		
 	});
 	
 	it('administering a status column', function() {

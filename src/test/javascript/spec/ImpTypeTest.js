@@ -26,7 +26,7 @@ describe('Protractor Security RAT general testsuite', function() {
 		entities.click();
 		element(by.partialLinkText('Implementation Types')).click();
 		element(by.id('searchQuery')).sendKeys('internal');
-		element(by.partialButtonText('Search an Implementation Type')).click();
+		element(by.id('searchButton')).click();
 		expect(element.all(by.repeater(projectTypeRepeater))
 				.count()).toBe(1);
 		browser.sleep(2000);

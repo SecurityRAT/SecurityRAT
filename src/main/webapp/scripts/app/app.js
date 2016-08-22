@@ -389,7 +389,8 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
 								exception.errorException.opened.$$state.value = false;
 								exception.errorException.opened.$$state.status = 1;
 		                	}
-		    				myFunction();
+		    				if(apiCall.indexOf(jiraRestApi) === -1)
+		    					myFunction();
 	    				}else {
 	    					property.showSpinner = false;
 	    					promise.derefer.reject(exception);

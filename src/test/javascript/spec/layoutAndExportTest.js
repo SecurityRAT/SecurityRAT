@@ -401,7 +401,7 @@ describe('Protractor Security RAT Testsuite', function() {
 		});
 		(element(by.buttonText(exportButton))).click();
 		browser.sleep(3000);
-		element(by.buttonText("OK")).click();
+		element(by.buttonText("Ok")).click();
 		browser.sleep(2000);
 		element(by.buttonText("No")).click();
 		browser.sleep(2000);

@@ -618,6 +618,8 @@ angular.module('sdlctoolApp')
 											 // properly sets the data Structure for fields os schema type array in the scope.fields object.
 											 var tempValue = $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key].split(',');
 											 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = [];
+											 console.log($scope.jiraAlternatives.mandatoryFields[i].name);
+											 console.log(tempValue)
 											 for(var j = 0; j < tempValue.length; j++) {
 												 if(tempValue.length > 0) {
 													 if($scope.jiraAlternatives.mandatoryFields[i].itemType === "string")$scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = tempValue[j].trim();
@@ -628,6 +630,7 @@ angular.module('sdlctoolApp')
 													 }
 												 }
 											 }
+											 console.log($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key]);
 										 } else if($scope.jiraAlternatives.mandatoryFields[i].type === 'datetime') { 
 											 // creates the date format for the datetime type.
 											 $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = $filter('date')($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key], "yyyy-MM-dd'T'hh:mm:ss'.000'Z");
