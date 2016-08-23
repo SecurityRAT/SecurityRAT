@@ -42,6 +42,28 @@ angular.module('sdlctoolApp')
             	};
             	ngModel.$parsers.push(fromUser);
             	ngModel.$formatters.push(toUser);
+            	
+            	scope.$watchCollection(attrs.ngModel, function ngModelWatch(value, old) {
+                    if (!Array.isArray(value) || old === value) {
+                        return;
+                    }
+
+                    ///copypasta from ngModelWatch()
+                    var formatters = ngModel.$formatters,
+                        idx = formatters.length;
+
+                    ngModel.$modelValue = value;
+                    while (idx--) {
+                        value = formatters[idx](value);
+                    }
+
+                    if (ngModel.$viewValue !== value) {
+                    	ngModel.$viewValue = value;
+                    	ngModel.$render();
+                    }
+            	});
+            	////endcopypasta
+            	
             }
         };
     });
