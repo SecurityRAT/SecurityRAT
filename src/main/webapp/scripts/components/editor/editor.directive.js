@@ -37,6 +37,13 @@ angular.module('sdlctoolApp')
 	            		}
             		}
             	}
+            	ngModel.$validators.validCharacters = function(modelValue, viewValue) {
+            		  if(field.itemType === 'user'){
+            			  var value = toUser(modelValue) || viewValue;
+            			  return /^(\w+,\s*)*\w*$/.test(value);
+            		  }
+            		  return false;
+            	};
             	ngModel.$parsers.push(fromUser);
             	ngModel.$formatters.push(toUser);
             }
