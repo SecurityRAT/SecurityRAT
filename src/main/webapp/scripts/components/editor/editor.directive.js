@@ -47,7 +47,7 @@ angular.module('sdlctoolApp')
             	ngModel.$parsers.push(fromUser);
             	ngModel.$formatters.push(toUser);
             	
-            	scope.$watchCollection(attrs.ngModel, function ngModelWatch(value, old) {
+            	scope.$watchCollection(scope.fields[field.key], function ngModelWatch(value, old) {
                     if (!Array.isArray(value) || angular.equals(old, value)) {
                         return;
                     }
