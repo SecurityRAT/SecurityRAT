@@ -4,7 +4,7 @@ angular.module('sdlctoolApp')
     .directive('splitArray', function () {
         return {
             restrict: 'A',
-            require: 'dataNgModel',
+            require: 'ngModel',
             link: function (scope, element, attrs) {
             	var itemType = attrs.splitArray;
             	
