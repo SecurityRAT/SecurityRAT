@@ -12,17 +12,15 @@ angular.module('sdlctoolApp')
             			return;
             		var tempValue = commaSeparatedValues.split(',');
             		var users = [];
-            		
-            		for(var i = 0; i < tempValue; i++) {
-            			users.push({
-            				name: tempValue[i].trim() 
-            			});
-        			}
             		if(field.itemType === 'user') {
+	            		for(var i = 0; i < tempValue.length; i++) {
+	            			users.push({
+	            				name: tempValue[i].trim() 
+	            			});
+	        			}
             			console.log(users)
             			return users;
             		}
-            			
             	}   
             	
             	function toUser(valuesFromController) {
