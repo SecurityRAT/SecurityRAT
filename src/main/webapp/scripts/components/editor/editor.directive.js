@@ -4,7 +4,7 @@ angular.module('sdlctoolApp')
     .directive('splitArray', function () {
         return {
             restrict: 'A',
-            require: 'ngModel'
+            require: 'ngModel',
             link: function (scope, element, attrs) {
             	var itemType = attrs.splitArray;
             	
@@ -16,7 +16,7 @@ angular.module('sdlctoolApp')
             		
             		for(var i = 0; i < tempValue; i++) {
             			users.push({
-            				name:tempValue[i].trim() 
+            				name: tempValue[i].trim() 
             			});
         			}
             		if(itemType === 'user') {
@@ -32,7 +32,7 @@ angular.module('sdlctoolApp')
 	            		if(itemType === 'user') {
 	            			var reference = angular.forEach(valuesFromController, function(user) {
 	            								modelValue.push(user.name);
-	            							})
+	            							});
 	            			console.log(reference);
 	            			console.log(modelValue);
 	            			return modelValue;
