@@ -281,7 +281,7 @@ angular.module('sdlctoolApp')
 			if($scope.fields[field.key]){
 				switch(field.itemType) {
 				
-				case "user": lastValue = JSON.prase($scope.fields[field.key][$scope.fields[field.key].length - 1]).name;
+				case "user": lastValue = JSON.parse($scope.fields[field.key][$scope.fields[field.key].length - 1]).name;
 							 break;
 				}
 				if(lastValue.length > 1) {
