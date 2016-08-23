@@ -5,12 +5,8 @@ angular.module('sdlctoolApp')
         return {
             restrict: 'A',
             require: 'ngModel',
-            link: function (scope, element, attrs) {
-            	console.log("attrs");
-            	console.log(attrs.splitArray);
+            link: function (scope, element, attrs, ngModel) {
             	var field = JSON.parse(attrs.splitArray);
-            	console.log("field");
-            	console.log(field);
             	function fromUser(commaSeparatedValues) {
             		if(!commaSeparatedValues)
             			return;
@@ -42,9 +38,8 @@ angular.module('sdlctoolApp')
 	            		}
             		}
             	}
-            	
-            	scope.fields[field.key].$parsers.push(fromUser);
-            	scope.fields[field.key].$formatters.push(toUser);
+            	ngModel.$parsers.push(fromUser);
+            	ngModel.$formatters.push(toUser);
             }
         };
     });
