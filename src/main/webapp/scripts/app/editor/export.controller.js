@@ -306,7 +306,8 @@ angular.module('sdlctoolApp')
 						 
 						 break;
 			}
-			$scope.fields[field.key] = JSON.stringify(value);
+			$scope.fields[field.key].pop()
+			$scope.fields[field.key].push(JSON.stringify(value));
 		}
 		
 		/**
