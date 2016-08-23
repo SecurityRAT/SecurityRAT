@@ -5,8 +5,28 @@ angular.module('sdlctoolApp')
         return {
             restrict: 'A',
             require: 'ngModel',
-            link: function (scope, element, attrs, ngModel) {
+            link: function (scope, element, attrs, ngModel, ctrl) {
             	var field = JSON.parse(attrs.splitArray);
+            	scope.$watchCollection(attr.ngModel, function ngModelWatch(value, old) {
+                    if (!Array.isArray(value) || old === value) {
+                        return;
+                    }
+
+                    ///copypasta from ngModelWatch()
+                    var formatters = ctrl.$formatters,
+                        idx = formatters.length;
+
+                    ctrl.$modelValue = value;
+                    while (idx--) {
+                        value = formatters[idx](value);
+                    }
+
+                    if (ctrl.$viewValue !== value) {
+                        ctrl.$viewValue = value;
+                        ctrl.$render();
+                    }
+            	});
+            	////endcopypasta
             	function fromUser(commaSeparatedValues) {
             		if(!commaSeparatedValues)
             			return;
