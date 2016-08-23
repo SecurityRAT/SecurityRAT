@@ -5,7 +5,7 @@ angular.module('sdlctoolApp')
         return {
             restrict: 'A',
             require: 'ngModel',
-            link: function (scope, element, attrs, ngModel, ctrl) {
+            link: function (scope, element, attrs, ngModel) {
             	var field = JSON.parse(attrs.splitArray);
             	scope.$watchCollection(attrs.ngModel, function ngModelWatch(value, old) {
                     if (!Array.isArray(value) || old === value) {
@@ -13,17 +13,17 @@ angular.module('sdlctoolApp')
                     }
 
                     ///copypasta from ngModelWatch()
-                    var formatters = ctrl.$formatters,
+                    var formatters = ngModel.$formatters,
                         idx = formatters.length;
 
-                    ctrl.$modelValue = value;
+                    ngModel.$modelValue = value;
                     while (idx--) {
                         value = formatters[idx](value);
                     }
 
-                    if (ctrl.$viewValue !== value) {
-                        ctrl.$viewValue = value;
-                        ctrl.$render();
+                    if (ngModel.$viewValue !== value) {
+                    	ngModel.$viewValue = value;
+                    	ngModel.$render();
                     }
             	});
             	////endcopypasta
