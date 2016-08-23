@@ -81,10 +81,10 @@
       				</li>
 	         	</ul>
 			</span>
-			<div data-ng-show="form[field.name].$dirty && form[field.name].$invalid">
-				<p class="help-block" data-ng-show="form[field.name].$error.pattern">Please enter comma seperated strings. E.g john, mary</p>
+			<div data-ng-show="!fields[field.key]">
+				<p class="help-block">Please enter comma seperated strings. E.g john, mary</p>
 				<BR>
-				<span class="help-block" data-ng-show="form[field.name].$error.pattern">
+				<span class="help-block" >
 					 Allowed standard characters:
                      <ul><li><b>A-Z, a-z, 0-9</b></li></ul>
 				</span> 

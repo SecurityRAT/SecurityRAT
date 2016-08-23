@@ -274,30 +274,35 @@ angular.module('sdlctoolApp')
 		 * Queries the autoCompleteUrl with the entered text to help autocomplete
 		 */
 		$scope.requestAutoComplete = function(field) {
-			console.log($scope.fields[field.key]);
-//			$scope.autoComplete[field.key] = [];
-//			$scope.getHeight(field.name.replace(' ', '-'));
-//			var lastValue = $scope.fields[field.key].split(',').pop().trim();
-//			if(lastValue.length > 1) {
-//				apiFactory.getJIRAInfo(field.autoCompleteUrl.replace('/null/', '/') + lastValue).then(function(response) {
-//					switch(field.itemType) {
-//					
-//					case "user": 	$scope.autoComplete[field.key] = response.users;
-//									break;
-//					}
-//					$scope.toggleAutoCompleteDropdown[field.key] = response.total > 0 ? true : false;
-//				});
-//			}
+			$scope.autoComplete[field.key] = [];
+			//renders identification by jquery id possible.
+			$scope.getHeight(field.name.replace(' ', '-'));
+			var lastValue = '';
+			switch(field.itemType) {
+			
+			case "user": lastValue = $scope.fields[field.key][$scope.fields[field.key].length - 1].name;
+						 break;
+			}
+			if(lastValue.length > 1) {
+				apiFactory.getJIRAInfo(field.autoCompleteUrl.replace('/null/', '/') + lastValue).then(function(response) {
+					switch(field.itemType) {
+					
+					case "user": 	$scope.autoComplete[field.key] = response.users;
+									break;
+					}
+					$scope.toggleAutoCompleteDropdown[field.key] = response.total > 0 ? true : false;
+				});
+			}
 		}
 		
 		$scope.finishAutocomplete = function(field, name) {
-			console.log($scope.fields[field.key]);
-//			var values = $scope.fields[field.key].split(',');
-//			values.pop(); values.push(name);
-//			$scope.fields[field.key] = values.toString() + ', ';
-//			$('#' + field.name.replace(' ', '-')).focus();
+			switch(field.itemType) {
 			
+			case "user": $scope.fields[field.key][$scope.fields[field.key].length - 1].name = name;
+						 break;
+			}
 		}
+		
 		/**
 		 * get the configurable and mandatory fields excluding excludedFields, fatalFields, array fields with now allowedValues and array fields with only the set operation.
 		 */
