@@ -17,7 +17,6 @@ angular.module('sdlctoolApp')
 	            		for(var i = 0; i < tempValue.length; i++) {
 	            			users.push(JSON.stringify({name: tempValue[i].trim()}));
 	        			}
-            			console.log(users)
             			return users;
             		}
             	}   
@@ -30,7 +29,6 @@ angular.module('sdlctoolApp')
 	            				modelValue.push(JSON.parse(valuesFromController[i]).name);
 	            				i++;
 	            			}
-	            			console.log(modelValue);
 	            			return modelValue.join(', ');
 	            		}
             		}
@@ -44,30 +42,6 @@ angular.module('sdlctoolApp')
             	};
             	ngModel.$parsers.push(fromUser);
             	ngModel.$formatters.push(toUser);
-            	
-            	scope.$watchCollection(attrs.ngModel, function ngModelWatch(value, old) {
-                    if (!Array.isArray(value) || old === value) {
-                        return;
-                    }
-
-                    ///copypasta from ngModelWatch()
-                    var formatters = ngModel.$formatters,
-                        idx = formatters.length;
-
-                    ngModel.$modelValue = value;
-                    while (idx--) {
-                        value = formatters[idx](value);
-                    }
-
-                    if (ngModel.$viewValue !== value) {
-                    	ngModel.$viewValue = value;
-                    	ngModel.$render();
-                    }
-            	});
-            	////endcopypasta
-            	
-            	
-            	
             }
         };
     });
