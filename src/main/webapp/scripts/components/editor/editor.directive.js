@@ -15,9 +15,7 @@ angular.module('sdlctoolApp')
             		var users = [];
             		if(field.itemType === 'user') {
 	            		for(var i = 0; i < tempValue.length; i++) {
-	            			users.push({
-	            				name: tempValue[i].trim() 
-	            			});
+	            			users.push(JSON.stringify({name: tempValue[i].trim()}));
 	        			}
             			console.log(users)
             			return users;
@@ -29,7 +27,7 @@ angular.module('sdlctoolApp')
             		if(Array.isArray(valuesFromController)) {
 	            		if(field.itemType === 'user') {
 	            			while(valuesFromController[i]) {
-	            				modelValue.push(valuesFromController[i].name);
+	            				modelValue.push(JSON.parse(valuesFromController[i]).name);
 	            				i++;
 	            			}
 	            			console.log(modelValue);
@@ -47,8 +45,8 @@ angular.module('sdlctoolApp')
             	ngModel.$parsers.push(fromUser);
             	ngModel.$formatters.push(toUser);
             	
-            	scope.$watchCollection(scope.fields[field.key], function ngModelWatch(value, old) {
-                    if (!Array.isArray(value) || angular.equals(old, value)) {
+            	scope.$watchCollection(attrs.ngModel, function ngModelWatch(value, old) {
+                    if (!Array.isArray(value) || old === value) {
                         return;
                     }
 

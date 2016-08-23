@@ -281,7 +281,7 @@ angular.module('sdlctoolApp')
 			if($scope.fields[field.key]){
 				switch(field.itemType) {
 				
-				case "user": lastValue = $scope.fields[field.key][$scope.fields[field.key].length - 1].name;
+				case "user": lastValue = JSON.prase($scope.fields[field.key][$scope.fields[field.key].length - 1]).name;
 							 break;
 				}
 				if(lastValue.length > 1) {
@@ -298,11 +298,15 @@ angular.module('sdlctoolApp')
 		}
 		
 		$scope.finishAutocomplete = function(field, name) {
+			var value = {};
 			switch(field.itemType) {
 			
-			case "user": $scope.fields[field.key][$scope.fields[field.key].length - 1].name = name;
+			case "user":  value =JSON.parse($scope.fields[field.key][$scope.fields[field.key].length - 1]).name;
+						 value.name = name;
+						 
 						 break;
 			}
+			$scope.fields[field.key] = JSON.stringify(value);
 		}
 		
 		/**
