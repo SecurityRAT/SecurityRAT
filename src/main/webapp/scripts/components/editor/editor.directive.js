@@ -6,8 +6,11 @@ angular.module('sdlctoolApp')
             restrict: 'A',
             require: 'ngModel',
             link: function (scope, element, attrs) {
-            	var itemType = attrs.splitArray;
-            	
+            	console.log("attrs");
+            	console.log(attrs.splitArray);
+            	var field = JSON.parse(attrs.splitArray);
+            	console.log("field");
+            	console.log(field);
             	function fromUser(commaSeparatedValues) {
             		if(!commaSeparatedValues)
             			return;
@@ -19,7 +22,7 @@ angular.module('sdlctoolApp')
             				name: tempValue[i].trim() 
             			});
         			}
-            		if(itemType === 'user') {
+            		if(field.itemType === 'user') {
             			console.log(users)
             			return users;
             		}
@@ -29,7 +32,7 @@ angular.module('sdlctoolApp')
             	function toUser(valuesFromController) {
             		var modelValue = [];
             		if(Array.isArray(valuesFromController)) {
-	            		if(itemType === 'user') {
+	            		if(field.itemType === 'user') {
 	            			var reference = angular.forEach(valuesFromController, function(user) {
 	            								modelValue.push(user.name);
 	            							});
@@ -40,8 +43,8 @@ angular.module('sdlctoolApp')
             		}
             	}
             	
-            	ngModel.$parsers.push(fromUser);
-                ngModel.$formatters.push(toUser);
+            	scope.fields[field.key].$parsers.push(fromUser);
+            	scope.fields[field.key].$formatters.push(toUser);
             }
         };
     });
