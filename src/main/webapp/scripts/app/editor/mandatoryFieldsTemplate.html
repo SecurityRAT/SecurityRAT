@@ -74,7 +74,7 @@
 			</span>
 			<span data-ng-if="field.autoCompleteUrl && field.itemType !== 'string'" uib-dropdown is-open="toggleAutoCompleteDropdown[field.key]" >
 				<textarea class="form-control" id="{{field.name.replace(' ', '-')}}" name="{{field.name}}" rows="5" placeholder="comma seperated value" ng-model="fields[field.key]" 
-				data-ng-pattern="/^(\w+,\s*)*\w*$/" data-ng-change="requestAutoComplete(field)" split-array="{{JSON.stringify(field)}}"></textarea>
+				data-ng-pattern="/^(\w+,\s*)*\w*$/" data-ng-change="requestAutoComplete(field)" split-array="{{field}}"></textarea>
 				<ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="{{field.name.replace(' ', '-')}}" style="overflow: scroll;" data-ng-style="{'max-height':maxHeight}">
       				<li role="menuitem" data-ng-repeat="item in autoComplete[field.key]">
       					<a data-ng-click="finishAutocomplete(field, item.name)"><span data-ng-bind-html="item.html"></span></a>
