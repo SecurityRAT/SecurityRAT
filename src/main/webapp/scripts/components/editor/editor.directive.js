@@ -25,14 +25,15 @@ angular.module('sdlctoolApp')
             	
             	function toUser(valuesFromController) {
             		var modelValue = [];
+            		var i = 0;
             		if(Array.isArray(valuesFromController)) {
 	            		if(field.itemType === 'user') {
-	            			var reference = angular.forEach(valuesFromController, function(user) {
-	            								modelValue.push(user.name);
-	            							});
-	            			console.log(reference);
+	            			while(valuesFromController[i]) {
+	            				modelValue.push(valuesFromController[i].name);
+	            				i++;
+	            			}
 	            			console.log(modelValue);
-	            			return modelValue;
+	            			return modelValue.join(', ');
 	            		}
             		}
             	}
