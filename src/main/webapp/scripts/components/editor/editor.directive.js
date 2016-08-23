@@ -7,7 +7,7 @@ angular.module('sdlctoolApp')
             require: 'ngModel',
             link: function (scope, element, attrs, ngModel, ctrl) {
             	var field = JSON.parse(attrs.splitArray);
-            	scope.$watchCollection(attr.ngModel, function ngModelWatch(value, old) {
+            	scope.$watchCollection(attrs.ngModel, function ngModelWatch(value, old) {
                     if (!Array.isArray(value) || old === value) {
                         return;
                     }
