@@ -274,26 +274,28 @@ angular.module('sdlctoolApp')
 		 * Queries the autoCompleteUrl with the entered text to help autocomplete
 		 */
 		$scope.requestAutoComplete = function(field) {
-			$scope.autoComplete[field.key] = [];
-			$scope.getHeight(field.name.replace(' ', '-'));
-			var lastValue = $scope.fields[field.key].split(',').pop().trim();
-			if(lastValue.length > 1) {
-				apiFactory.getJIRAInfo(field.autoCompleteUrl.replace('/null/', '/') + lastValue).then(function(response) {
-					switch(field.itemType) {
-					
-					case "user": 	$scope.autoComplete[field.key] = response.users;
-									break;
-					}
-					$scope.toggleAutoCompleteDropdown[field.key] = response.total > 0 ? true : false;
-				});
-			}
+			console.log($scope.fields[field.key]);
+//			$scope.autoComplete[field.key] = [];
+//			$scope.getHeight(field.name.replace(' ', '-'));
+//			var lastValue = $scope.fields[field.key].split(',').pop().trim();
+//			if(lastValue.length > 1) {
+//				apiFactory.getJIRAInfo(field.autoCompleteUrl.replace('/null/', '/') + lastValue).then(function(response) {
+//					switch(field.itemType) {
+//					
+//					case "user": 	$scope.autoComplete[field.key] = response.users;
+//									break;
+//					}
+//					$scope.toggleAutoCompleteDropdown[field.key] = response.total > 0 ? true : false;
+//				});
+//			}
 		}
 		
 		$scope.finishAutocomplete = function(field, name) {
-			var values = $scope.fields[field.key].split(',');
-			values.pop(); values.push(name);
-			$scope.fields[field.key] = values.toString() + ', ';
-			$('#' + field.name.replace(' ', '-')).focus();
+			console.log($scope.fields[field.key]);
+//			var values = $scope.fields[field.key].split(',');
+//			values.pop(); values.push(name);
+//			$scope.fields[field.key] = values.toString() + ', ';
+//			$('#' + field.name.replace(' ', '-')).focus();
 			
 		}
 		/**
