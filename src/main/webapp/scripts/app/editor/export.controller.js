@@ -301,7 +301,7 @@ angular.module('sdlctoolApp')
 			var value = {};
 			switch(field.itemType) {
 			
-			case "user":  value =JSON.parse($scope.fields[field.key][$scope.fields[field.key].length - 1]).name;
+			case "user":  value =JSON.parse($scope.fields[field.key][$scope.fields[field.key].length - 1]);
 						 value.name = name;
 						 
 						 break;
