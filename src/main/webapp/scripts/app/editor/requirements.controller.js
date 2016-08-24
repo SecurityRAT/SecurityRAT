@@ -15,6 +15,7 @@ angular.module('sdlctoolApp')
 	  $scope.endProgressbar = true;
 	  $scope.barValue = 0;
 	  $scope.showRequirements = false;
+	  $scope.withselectedDropdown = {toggleExcel: false};
 	  $scope.outputStatus = "";
 	  $scope.generatedOn;
 	  $scope.lastChanged;
@@ -39,7 +40,6 @@ angular.module('sdlctoolApp')
 	  $scope.updatedReqs = false;
 	  $scope.updatesCounter = 0;
 	  $scope.updatesAvailable = false;
-	  $scope.toggleExcel = false;
 	  //extra settings for the model for selecting categories
 	  $scope.selectedCategorySettings = {
 			  smartButtonMaxItems: 3,
@@ -1341,15 +1341,18 @@ angular.module('sdlctoolApp')
 		  }
 		  return str;
 	  }
-	  $scope.excelToggle = function (opened) {
-		  if(angular.isDefined(opened) && !opened) {
-			  $scope.toggleExcel = false;
+	  $scope.excelToggle = function (opened, backToMain) {
+		  if(angular.isDefined(opened) && !opened && backToMain) {
+			  $scope.withselectedDropdown.toggleExcel = false;
+			  $scope.withselectedDropdown.isopen = true;
+		  } else if(angular.isDefined(opened) && !opened) {
+			  $scope.withselectedDropdown.toggleExcel = false;
 		  } else if(angular.isUndefined(opened)) {
-			  $scope.toggleExcel = true;
+			  $scope.withselectedDropdown.toggleExcel = true;
 		  }
 	  }
 	  $scope.exportExcel = function(withStatusColumns) {
-		  $scope.toggleExcel = false;
+		  $scope.withselectedDropdown.toggleExcel = false;
 		  $scope.withselectedDropdown.isopen = false;
 		  var ws_name = $scope.removeUnwantedChars($scope.systemSettings.name, ['[', ']', "'", ':', '*', '?', '|', '/','\\', ':', '*', ]);
 		  ws_name = ws_name.replace("&", "&amp;");

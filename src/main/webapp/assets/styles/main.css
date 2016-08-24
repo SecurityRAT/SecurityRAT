@@ -585,11 +585,6 @@ Animation for export to excel
 #backFromExcel:hover {
 	color: rgb(135,206,250);
 }
-.animate-repeat {
-  line-height:30px;
-  list-style:none;
-  box-sizing:border-box;
-}
 @-webkit-keyframes mymove {
     from {left:50%;opacity:0;}
     to {left: 0%;opacity: 1;}
@@ -632,36 +627,37 @@ Animation for export to excel
     to {right: 50%;opacity: 0;}
 }
 
-.animate-show, .animate-hide {
-	-webkit-animation: myTransparent 0.2s; /* Chrome, Safari, Opera */
+.animate-dropdown {
+	-webkit-animation: myTransparent 0.2s; /*Chrome, Safari, Opera*/
     animation: myTransparent 0.2s;
 }
-.animate-show.ng-hide-remove, .animate-hide.ng-hide-remove, .animate-show.ng-hide-add, .animate-hide.ng-hide-add {
-	-webkit-animation-timing-function: linear;
-	animation-timing-function: linear;
-} 
-.animate-show.ng-hide-remove>li {
+.animate-show, .animate-hide {
+	
+}
+.animate-show.ng-hide-remove {
 	position:relative;
-	-webkit-animation: mymove 0.2s; /* Chrome, Safari, Opera */
+	-webkit-animation: mymove 0.2s; /*Chrome, Safari, Opera*/
     animation: mymove 0.2s;
 	-webkit-animation-timing-function: linear;
 	animation-timing-function: linear;
 }
-.animate-show.ng-hide-add>li {
-	-webkit-animation: mymove-reverse 0.2s; /* Chrome, Safari, Opera */
+.animate-show.ng-hide-add {
+	position:relative;
+	-webkit-animation: mymove-reverse 0.2s; Chrome, Safari, Opera
     animation: mymove-reverse 0.2s;
 	-webkit-animation-timing-function: linear;
 	animation-timing-function: linear;
 }
-.animate-hide.ng-hide-remove>li{
+.animate-hide.ng-hide-remove{
 	position:relative;
-	-webkit-animation: mymove2 0.2s; /* Chrome, Safari, Opera */
+	-webkit-animation: mymove2 0.2s; Chrome, Safari, Opera
     animation: mymove2 0.2s;
     -webkit-animation-timing-function: linear;
 	animation-timing-function: linear;
 }
-.animate-hide.ng-hide-add>li{
-	-webkit-animation: mymove2-reverse 0.2s; /* Chrome, Safari, Opera */
+.animate-hide.ng-hide-add{
+	position:relative;
+	-webkit-animation: mymove2-reverse 0.2s; Chrome, Safari, Opera
     animation: mymove2-reverse 0.2s;
     -webkit-animation-timing-function: linear;
 	animation-timing-function: linear;
@@ -669,8 +665,11 @@ Animation for export to excel
 /* ==========================================================================
 Animation
 ========================================================================== */
-
-
+.animate-repeat {
+  line-height:30px;
+  list-style:none;
+  box-sizing:border-box;
+}
 .animate-repeat.ng-move,
 .animate-repeat.ng-enter,
 .animate-repeat.ng-leave {
