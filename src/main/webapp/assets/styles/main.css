@@ -643,21 +643,21 @@ Animation for export to excel
 }
 .animate-show.ng-hide-add {
 	position:relative;
-	-webkit-animation: mymove-reverse 0.2s; Chrome, Safari, Opera
+	-webkit-animation: mymove-reverse 0.2s; /*Chrome, Safari, Opera*/
     animation: mymove-reverse 0.2s;
 	-webkit-animation-timing-function: linear;
 	animation-timing-function: linear;
 }
 .animate-hide.ng-hide-remove{
 	position:relative;
-	-webkit-animation: mymove2 0.2s; Chrome, Safari, Opera
+	-webkit-animation: mymove2 0.2s; /*Chrome, Safari, Opera*/
     animation: mymove2 0.2s;
     -webkit-animation-timing-function: linear;
 	animation-timing-function: linear;
 }
 .animate-hide.ng-hide-add{
 	position:relative;
-	-webkit-animation: mymove2-reverse 0.2s; Chrome, Safari, Opera
+	-webkit-animation: mymove2-reverse 0.2s; /*Chrome, Safari, Opera*/
     animation: mymove2-reverse 0.2s;
     -webkit-animation-timing-function: linear;
 	animation-timing-function: linear;
