@@ -1111,7 +1111,7 @@ angular.module('sdlctoolApp')
 												 	if((newRequirementContent.content.replace(/[^\x20-\x7E]|\s+/gmi, "") !== oldRequirementContent.content.replace(/[^\x20-\x7E]|\s+/gmi, "")) && (newRequirementContent.id === oldRequirementContent.id)) {
 												 		if (foundOne) {
 												 			angular.forEach(requirementToInsert.optionColumns, function(requirementToInsertOptColumn) {
-												 				angular.forEach(requirementToInsertOptColumn.content, function.word, another function(requirementToInsertContent) {
+												 				angular.forEach(requirementToInsertOptColumn.content, function.word, function( another function(requirementToInsertContent) {
 												 					if(requirementToInsertContent.content !== oldRequirementContent.content && requirementToInsertContent.id === oldRequirementContent.id) {
 												 						requirementToInsertContent.content = oldRequirementContent.content;
 												 					}
