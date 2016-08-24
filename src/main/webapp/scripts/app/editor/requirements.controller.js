@@ -39,6 +39,7 @@ angular.module('sdlctoolApp')
 	  $scope.updatedReqs = false;
 	  $scope.updatesCounter = 0;
 	  $scope.updatesAvailable = false;
+	  $scope.toggleExcel = false;
 	  //extra settings for the model for selecting categories
 	  $scope.selectedCategorySettings = {
 			  smartButtonMaxItems: 3,
@@ -1081,8 +1082,9 @@ angular.module('sdlctoolApp')
 			 angular.forEach($scope.requirements, function(oldRequirement) {
 				 // search for new changes in description
 				 if((newRequirement.description.replace(/[^\x20-\x7E]|\s+/gmi, "") !== oldRequirement.description.replace(/[^\x20-\x7E]|\s+/gmi, "")) && (newRequirement.id === oldRequirement.id)) {
+					 console.log(afterImport);
 					 requirementToInsert = newRequirement;
-					 angular.extend(requirementToInsert, {isNew: true, isOld: false, needsUpdate:true});
+					 angular.extend(requirementToInsert, {isNew: true, isOld: false, needsUpdate:true, onDescription: true});
 					 angular.extend(oldRequirement, {needsUpdate:true});
 					 requirementToInsert.statusColumns = oldRequirement.statusColumns;
 					 requirementToInsert.ticket = oldRequirement.ticket;
@@ -1117,7 +1119,7 @@ angular.module('sdlctoolApp')
 												 			});
 												 		} else {
 														    requirementToInsert = newRequirement;
-												 			angular.extend(requirementToInsert, {isNew: true, isOld: false, needsUpdate:true});
+												 			angular.extend(requirementToInsert, {isNew: true, isOld: false, needsUpdate:true, onOptColumn: true});
 												 			angular.extend(oldRequirement, {needsUpdate:true});
 												 			requirementToInsert.statusColumns = oldRequirement.statusColumns;
 												 			requirementToInsert.ticket = oldRequirement.ticket;
@@ -1150,7 +1152,8 @@ angular.module('sdlctoolApp')
 								 });
 					 });
 				 }
-			 }); 
+			 });
+//			 (reqs.isNew && req.optColumn) && {'background-color':'rgb(0,128,0)'} || (reqs.isNew && !req.optColumn) && {'background-color':'rgb(144,238,144)'}
 			 if (foundOne && !afterImport) {
 				 $scope.requirements.push(requirementToInsert);
 			 } else if (foundOne && afterImport){
@@ -1204,7 +1207,7 @@ angular.module('sdlctoolApp')
 				  SDLCToolExceptionService.showWarning('Change settings and update requirements successful', message, SDLCToolExceptionService.INFO);
 			  } else if ($scope.updateCounter > 0) {
 				  var message = "Summary:<ul><li>" + $scope.updateCounter + " requirement(s) were updated</li><li> " + $scope.newCounter + " new requirement(s) were added</li><li>" + $scope.deletedCounter + " requirement(s) were removed</li></ul><BR>You can now review the updates. " +
-				  	"The old requirement is marked in <font color='red'>red</font> and the new requirement in <font color='green'>green</font>. Please accept the change by clicking on the <button class='btn btn-success'>" +
+				  	"The old requirement is marked in <font color='rgb(247, 93, 89)'>light red</font> and the new requirement in <font color='rgb(144,238,144)'>light green</font>. Please accept the change by clicking on the <button class='btn btn-success'>" +
 					"<span class='glyphicon glyphicon-ok'></span></button> button to keep the new requirement or by clicking on the <button class='btn btn-danger'><span class='glyphicon glyphicon-remove'></span></button> " +
 					"to keep the old requirement.";
 				  if($scope.deletedReqs.length > 0) {
@@ -1256,8 +1259,10 @@ angular.module('sdlctoolApp')
 			  SDLCToolExceptionService.showWarning('Update requirements successful', message, SDLCToolExceptionService.INFO);
 			  $scope.updatesAvailable = false;
 		  } else if ($scope.updateCounter > 0) {
+			  
 			  var message = "Summary:<ul><li>" + $scope.updatesCounter + " requirement(s) were updated</li><li> " + $scope.newCounter + " new requirement(s) were added</li><li>" + $scope.deletedCounter + " requirement(s) were removed</li></ul><BR>You can now review the updates. " +
-			  	"The old requirement is marked in <font color='red'>red</font> and the new requirement in <font color='green'>green</font>. Please accept the change by clicking on the <button class='btn btn-success'>" +
+			  	"The old requirement is marked in <span style='color:rgb(247, 93, 89);'>light red</span>, the new requirement in <span style='color:rgb(144,238,144);'>light green</span> and the columns containing the changes are marked in <span style='color:rgb(50,205,50);'>lime green</span>." +
+			  	" Please accept the change by clicking on the <button class='btn btn-success'>" +
 				"<span class='glyphicon glyphicon-ok'></span></button> button to keep the new requirement or by clicking on the <button class='btn btn-danger'><span class='glyphicon glyphicon-remove'></span></button> " +
 				"to keep the old requirement.";
 			  if($scope.deletedReqs.length > 0) {
@@ -1269,6 +1274,7 @@ angular.module('sdlctoolApp')
 			  }
 			  SDLCToolExceptionService.showWarning('Update requirements successful', message, SDLCToolExceptionService.INFO);
 		  } 
+		  console.log($scope.requirements);
 	  }
 	  
 	  $scope.applyChanges = function(reqId, keepNewOne) {
@@ -1335,8 +1341,15 @@ angular.module('sdlctoolApp')
 		  }
 		  return str;
 	  }
-	  
-	  $scope.exportExcel = function() {
+	  $scope.excelToggle = function (opened) {
+		  if(angular.isDefined(opened) && !opened) {
+			  $scope.toggleExcel = false;
+		  } else if(angular.isUndefined(opened)) {
+			  $scope.toggleExcel = true;
+		  }
+	  }
+	  $scope.exportExcel = function(withStatusColumns) {
+		  $scope.toggleExcel = false;
 		  $scope.withselectedDropdown.isopen = false;
 		  var ws_name = $scope.removeUnwantedChars($scope.systemSettings.name, ['[', ']', "'", ':', '*', '?', '|', '/','\\', ':', '*', ]);
 		  ws_name = ws_name.replace("&", "&amp;");
@@ -1353,7 +1366,7 @@ angular.module('sdlctoolApp')
 			  }
 		  }
 		  var colspan = $scope.optColumns.length + $scope.statusColumns.length + 3;
-		  var ws = $scope.buildExcelFile(colspan);
+		  var ws = $scope.buildExcelFile(colspan, withStatusColumns);
 		  var wscols = [{wch:20},// width of column category
 		                {wch:12},// width of column Short name
 		                {wch:45}]// width of column description
@@ -1398,7 +1411,7 @@ angular.module('sdlctoolApp')
 			this.Sheets = {};
 		}
 		//builds the array with the requirement values for the excel export.
-		$scope.reproduceTable = function() {
+		$scope.reproduceTable = function(withStatusColumn) {
 			var titleSelector = ['category', 'shortName', 'description'];
 			var requirements = $filter('orderBy')($filter('filter')($scope.requirements, {selected:true}), ['categoryOrder','order']);
 			var counter = 0;
@@ -1464,11 +1477,18 @@ angular.module('sdlctoolApp')
 					});
 				});
 				angular.forEach(requirement.statusColumns, function(statColumn) {
-					$scope.tableArray[counter].push({
-						value: statColumn.value,
-//						value: "",
-						format: {fontId: 0}
-					});
+					if (withStatusColumn){
+						$scope.tableArray[counter].push({
+							value: statColumn.value,
+							format: {fontId: 0}
+						});
+					} else {
+						$scope.tableArray[counter].push({
+							value: "",
+							format: {fontId: 0}
+						});
+					}
+					
 				});
 			});
 			counter++;
@@ -1520,8 +1540,8 @@ angular.module('sdlctoolApp')
 			return excelFile;
 		}
 		//creates the requirement worksheet.
-		$scope.buildExcelFile = function(colspan) {
-			var row = $scope.reproduceTable();
+		$scope.buildExcelFile = function(colspan, withStatusColumn) {
+			var row = $scope.reproduceTable(withStatusColumn);
 			var excelFile = {};
 			var range = {s: {c:10000000, r:10000000}, e: {c:0, r:0 }};
 			for(var R = 0; R != row; ++R) {

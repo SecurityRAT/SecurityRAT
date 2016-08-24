@@ -29,7 +29,8 @@ angular.module('sdlctoolApp')
 	            				modelValue.push(JSON.parse(valuesFromController[i]).name);
 	            				i++;
 	            			}
-	            			return modelValue.join(', ');
+	            			
+	            			return modelValue.join(', ') + ', ';
 	            		}
             		}
             	}

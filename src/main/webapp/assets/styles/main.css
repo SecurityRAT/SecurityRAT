@@ -582,11 +582,44 @@ Dropdown submenu
 /* ==========================================================================
 Animation
 ========================================================================== */
-
 .animate-repeat {
   line-height:30px;
   list-style:none;
   box-sizing:border-box;
+}
+@-webkit-keyframes mymove {
+    from {left:50%;opacity:0;}
+    to {left: 0%;opacity: 1;}
+}
+@keyframes mymove {
+	from {left:50%;opacity:0;}
+    to {left: 0%;opacity: 1;}
+}
+@-webkit-keyframes myTransparent {
+    from {background:rgba(255, 255, 255, 0);height:0;}
+    to {background:rgba(255, 255, 255, 1);}
+}
+@keyframes myTransparent {
+	from {background:rgba(255, 255, 255, 0);height:0;}
+    to {background:rgba(255, 255, 255, 1);}
+}
+.animate-show{
+	-webkit-animation: myTransparent 0.2s; /* Chrome, Safari, Opera */
+    animation: myTransparent 0.2s;
+}
+.animate-show.ng-hide-remove {
+	-webkit-animation-timing-function: linear;
+	animation-timing-function: linear;
+}
+
+.animate-show>li{
+	position:relative;
+	-webkit-animation: mymove 0.2s; /* Chrome, Safari, Opera */
+    animation: mymove 0.2s;
+}
+.animate-show.ng-hide-remove>li {
+	-webkit-animation-timing-function: linear;
+	animation-timing-function: linear;
 }
 
 .animate-repeat.ng-move,

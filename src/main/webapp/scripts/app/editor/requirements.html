@@ -180,11 +180,11 @@
 			</div>
 		</div>
 		<div class="pull-right">
-			<div class="btn-group" uib-dropdown is-open="withselectedDropdown.isopen" auto-close="outsideClick">
+			<div class="btn-group" uib-dropdown is-open="withselectedDropdown.isopen" auto-close="outsideClick" on-toggle="excelToggle(open)">
 				<button class="btn btn-primary" uib-dropdown-toggle data-ng-disabled="systemSettings.name == null" data-ng-click="!withselectedDropdown.isopen">
 					Action with selected <span class="caret"></span>
 				</button>
-			    <ul class="uib-dropdown-menu" role="menu" aria-labelledby="selectDropdown">
+			    <ul class="uib-dropdown-menu" role="menu" aria-labelledby="selectDropdown" data-ng-hide="toggleExcel">
 			    <!-- show the link with a mouse over a ticket must first be created -->
 			   		<li role="menuitem">
 						<a href="" data-ng-click="createTicketReqs()" confirm-if="checkExistingTickets()" 
@@ -203,9 +203,9 @@
 							</span>
 						</a>
 					</li>
-					<li role="menuitem">
+					<li role="menuitem" class="dropdown-submenu">
 						<a href="">
-							<span data-ng-click="exportExcel()" data-ng-if="(requirements | filter:{selected: true}).length">
+							<span data-ng-click="excelToggle()" data-ng-if="(requirements | filter:{selected: true}).length">
 								<img src="assets/images/Excel-icon.png"/> Create excel
 							</span>
 							<span data-ng-if="(requirements | filter:{selected: true}).length == 0" uib-tooltip="Please select requirements first." 
@@ -216,6 +216,20 @@
 					</li>
 					<li role="menuitem">
 						<a href="" data-ng-click="exportPPT()" data-ng-show="false"><img src="assets/images/powerpoint-icon.png"/> create PPT</a>
+					</li>
+				</ul>
+				<ul  class="uib-dropdown-menu animate-show" role="menu" aria-labelledby="selectDropdown" data-ng-show="toggleExcel">
+					<li role="menuitem">
+						<a href="">
+							<span data-ng-click="exportExcel(true)" data-ng-if="(requirements | filter:{selected: true}).length">
+								<span class="glyphicon glyphicon-plus"></span> Edited status values
+							</span>
+						</a>
+						<a href="">
+							<span data-ng-click="exportExcel(false)" data-ng-if="(requirements | filter:{selected: true}).length">
+								<span class="glyphicon glyphicon-minus"></span> Edited status values
+							</span>
+						</a>
 					</li>
 				</ul>
 			</div>
@@ -324,8 +338,10 @@
 			    				</span>
 				    		</div>
 			    		</td>
-			    		<td data-ng-style="reqs.isNew && {'background-color':'rgb(144,238,144)'} || reqs.isOld && {'background-color':'rgb(247, 93, 89)'}">{{ reqs.description }}</td>
-			    		<td data-ng-repeat="optionColumn in reqs.optionColumns | orderBy:'showOrder'"  data-ng-style="reqs.isNew && {'background-color':'rgb(144,238,144)'} || reqs.isOld && {'background-color':'rgb(247, 93, 89)'}">
+			    		<td data-ng-style="(reqs.isNew && reqs.onDescription && {'background-color':'rgb(50,205,50)'}) || (reqs.isNew && !reqs.onDescription && {'background-color':'rgb(144,238,144)'}) || reqs.isOld && {'background-color':'rgb(247, 93, 89)'}">{{ reqs.description }}</td>
+			    		<td data-ng-repeat="optionColumn in reqs.optionColumns | orderBy:'showOrder'"  
+			    		data-ng-style="(reqs.isNew && reqs.onOptColumn && {'background-color':'rgb(50,205,50)'}) || (reqs.isNew && !reqs.onOptColumn 
+			    		&& {'background-color':'rgb(144,238,144)'})  || reqs.isOld && {'background-color':'rgb(247, 93, 89)'}">
 			    			<div  data-ng-repeat="optionColumnContent in optionColumn.content" data-ng-show="optToHide.indexOf(optionColumn.showOrder) == -1">
 		    					<div marked="optionColumnContent.content"></div>
 			    			</div>
