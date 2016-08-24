@@ -580,8 +580,11 @@ Dropdown submenu
     border-radius:6px 0 6px 6px;
 }
 /* ==========================================================================
-Animation
+Animation for export to excel
 ========================================================================== */
+#backFromExcel:hover {
+	color: rgb(135,206,250);
+}
 .animate-repeat {
   line-height:30px;
   list-style:none;
@@ -595,6 +598,14 @@ Animation
 	from {left:50%;opacity:0;}
     to {left: 0%;opacity: 1;}
 }
+@-webkit-keyframes mymove-reverse {
+    from {left:0%;opacity:1;}
+    to {left: 50%;opacity: 0;}
+}
+@keyframes mymove-reverse {
+	 from {left:0%;opacity:1;}
+    to {left: 50%;opacity: 0;}
+}
 @-webkit-keyframes myTransparent {
     from {background:rgba(255, 255, 255, 0);height:0;}
     to {background:rgba(255, 255, 255, 1);}
@@ -603,24 +614,62 @@ Animation
 	from {background:rgba(255, 255, 255, 0);height:0;}
     to {background:rgba(255, 255, 255, 1);}
 }
-.animate-show{
+@-webkit-keyframes mymove2 {
+    from {right:50%;opacity:0;}
+    to {right: 0%;opacity: 1;}
+}
+@keyframes mymove2 {
+	from {right:50%;opacity:0;}
+    to {right: 0%;opacity: 1;}
+}
+
+@-webkit-keyframes mymove2-reverse {
+    from {right:0%;opacity:1;}
+    to {right: 50%;opacity: 0;}
+}
+@keyframes mymove2-reverse {
+	 from {right:0%;opacity:1;}
+    to {right: 50%;opacity: 0;}
+}
+
+.animate-show, .animate-hide {
 	-webkit-animation: myTransparent 0.2s; /* Chrome, Safari, Opera */
     animation: myTransparent 0.2s;
 }
-.animate-show.ng-hide-remove {
+.animate-show.ng-hide-remove, .animate-hide.ng-hide-remove, .animate-show.ng-hide-add, .animate-hide.ng-hide-add {
 	-webkit-animation-timing-function: linear;
 	animation-timing-function: linear;
-}
-
-.animate-show>li{
+} 
+.animate-show.ng-hide-remove>li {
 	position:relative;
 	-webkit-animation: mymove 0.2s; /* Chrome, Safari, Opera */
     animation: mymove 0.2s;
-}
-.animate-show.ng-hide-remove>li {
 	-webkit-animation-timing-function: linear;
 	animation-timing-function: linear;
 }
+.animate-show.ng-hide-add>li {
+	-webkit-animation: mymove-reverse 0.2s; /* Chrome, Safari, Opera */
+    animation: mymove-reverse 0.2s;
+	-webkit-animation-timing-function: linear;
+	animation-timing-function: linear;
+}
+.animate-hide.ng-hide-remove>li{
+	position:relative;
+	-webkit-animation: mymove2 0.2s; /* Chrome, Safari, Opera */
+    animation: mymove2 0.2s;
+    -webkit-animation-timing-function: linear;
+	animation-timing-function: linear;
+}
+.animate-hide.ng-hide-add>li{
+	-webkit-animation: mymove2-reverse 0.2s; /* Chrome, Safari, Opera */
+    animation: mymove2-reverse 0.2s;
+    -webkit-animation-timing-function: linear;
+	animation-timing-function: linear;
+}
+/* ==========================================================================
+Animation
+========================================================================== */
+
 
 .animate-repeat.ng-move,
 .animate-repeat.ng-enter,

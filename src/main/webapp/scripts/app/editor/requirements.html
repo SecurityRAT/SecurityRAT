@@ -181,10 +181,10 @@
 		</div>
 		<div class="pull-right">
 			<div class="btn-group" uib-dropdown is-open="withselectedDropdown.isopen" auto-close="outsideClick" on-toggle="excelToggle(open)">
-				<button class="btn btn-primary" uib-dropdown-toggle data-ng-disabled="systemSettings.name == null" data-ng-click="!withselectedDropdown.isopen">
+				<button id="selectDropdown" class="btn btn-primary" uib-dropdown-toggle data-ng-disabled="systemSettings.name == null" data-ng-click="!withselectedDropdown.isopen">
 					Action with selected <span class="caret"></span>
 				</button>
-			    <ul class="uib-dropdown-menu" role="menu" aria-labelledby="selectDropdown" data-ng-hide="toggleExcel">
+			    <ul class="uib-dropdown-menu animate-hide" role="menu" aria-labelledby="selectDropdown" data-ng-hide="toggleExcel">
 			    <!-- show the link with a mouse over a ticket must first be created -->
 			   		<li role="menuitem">
 						<a href="" data-ng-click="createTicketReqs()" confirm-if="checkExistingTickets()" 
@@ -215,10 +215,16 @@
 						</a>
 					</li>
 					<li role="menuitem">
-						<a href="" data-ng-click="exportPPT()" data-ng-show="false"><img src="assets/images/powerpoint-icon.png"/> create PPT</a>
+						<a href=""><img src="assets/images/powerpoint-icon.png"/> Create PPT</a>
 					</li>
 				</ul>
 				<ul  class="uib-dropdown-menu animate-show" role="menu" aria-labelledby="selectDropdown" data-ng-show="toggleExcel">
+					<li role="menuitem">
+						<a href="">
+						<span id="backFromExcel" data-ng-click="!toggleExcel"><span class="glyphicon glyphicon-chevron-left"></span>Back</span>
+						</a>
+					</li>
+					<li class="divider"></li>
 					<li role="menuitem">
 						<a href="">
 							<span data-ng-click="exportExcel(true)" data-ng-if="(requirements | filter:{selected: true}).length">
