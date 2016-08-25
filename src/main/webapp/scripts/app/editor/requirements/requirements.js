@@ -10,7 +10,7 @@ angular.module('sdlctoolApp')
                 },
                 views: {
                     'content@': {
-                        templateUrl: 'scripts/app/editor/requirements.html',
+                        templateUrl: 'scripts/app/editor/requirements/requirements.html',
                         controller: 'RequirementsController',
                         reload: true
                     }

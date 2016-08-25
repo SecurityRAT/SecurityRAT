@@ -10,7 +10,7 @@ angular.module('sdlctoolApp')
 		var modalInstance = $uibModal.open({
 			size: 'lg',
 			backdrop: 'static',
-            templateUrl: 'scripts/app/editor/starter.html',
+            templateUrl: 'scripts/app/editor/starter/starter.html',
             controller: 'StarterController',
             resolve:  {
             	system: function() {
@@ -23,7 +23,7 @@ angular.module('sdlctoolApp')
 		var modalInstance = $uibModal.open({
 			size: 'lg',
 			backdrop:'static',
-			templateUrl: 'scripts/app/editor/import-modal.html',
+			templateUrl: 'scripts/app/editor/import/import-modal.html',
 			controller: 'ImportController'
 		});
 

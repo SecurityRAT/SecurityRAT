@@ -3,16 +3,16 @@
 angular.module('sdlctoolApp')
     .config(function ($stateProvider) {
         $stateProvider
-            .state('starter', {
+            .state('import', {
                 parent: 'site',
-                url: '/starter',
+                url: '/import',
                 data: {
                     roles: ['ROLE_FRONTEND_USER', 'ROLE_USER', 'ROLE_ADMIN']
                 },
                 views: {
                     'content@': {
-                        templateUrl: 'scripts/app/editor/starter.html',
-                        controller: 'StarterController'
+                        templateUrl: 'scripts/app/editor/import/import-modal.html',
+                        controller: 'ImportController'
                     }
                 },
                 resolve: {

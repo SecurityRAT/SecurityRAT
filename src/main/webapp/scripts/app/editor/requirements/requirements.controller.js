@@ -158,7 +158,7 @@ angular.module('sdlctoolApp')
 		  var modalInstance = $uibModal.open({
 			  size: 'lg',
 			  backdrop: 'static',
-	          templateUrl: 'scripts/app/editor/feedback.html',
+	          templateUrl: 'scripts/app/editor/feedback/feedback.html',
 	          controller: 'FeedbackController'
 		  });
 		  
@@ -206,7 +206,7 @@ angular.module('sdlctoolApp')
 		  var modalInstance = $uibModal.open({
 				size: 'lg',
 				backdrop: 'static',
-	            templateUrl: 'scripts/app/editor/starter.html',
+	            templateUrl: 'scripts/app/editor/starter/starter.html',
 	            controller: 'StarterController',
 	            resolve: {
 	            	system: function(){
@@ -533,7 +533,7 @@ angular.module('sdlctoolApp')
 		  var modalInstance = $uibModal.open({
 			  size: 'lg',
 			  backdrop: 'static',
-	          templateUrl: 'scripts/app/editor/customRequirement.html',
+	          templateUrl: 'scripts/app/editor/customrequirements/customRequirement.html',
 	          controller: 'customRequirementController'
 		  });
 		  //adds the categoryOrder, id of the item and updates the filterCategory library for the filter nach category.
@@ -552,7 +552,7 @@ angular.module('sdlctoolApp')
 		  var modalInstance = $uibModal.open({
 			  size: 'lg',
 			  backdrop: 'static',
-	          templateUrl: 'scripts/app/editor/remove-customRequirement.html',
+	          templateUrl: 'scripts/app/editor/customrequirements/remove-customRequirement.html',
 	          controller: 'removeRequirementController',
 	          resolve: {
 	        	  customRequirements: function() {
@@ -1082,9 +1082,13 @@ angular.module('sdlctoolApp')
 			 angular.forEach($scope.requirements, function(oldRequirement) {
 				 // search for new changes in description
 				 if((newRequirement.description.replace(/[^\x20-\x7E]|\s+/gmi, "") !== oldRequirement.description.replace(/[^\x20-\x7E]|\s+/gmi, "")) && (newRequirement.id === oldRequirement.id)) {
-					 console.log(afterImport);
+					 var changes = diffString2(oldRequirement.description, newRequirement.description);
+					// saves the hightlighted old changes in oldDescription property to prevent this from been shown when not needed.
+					 oldRequirement.oldDescription = changes.o; 
+					 newRequirement.oldDescription = newRequirement.description;
+					 newRequirement.description = changes.n;
 					 requirementToInsert = newRequirement;
-					 angular.extend(requirementToInsert, {isNew: true, isOld: false, needsUpdate:true, onDescription: true});
+					 angular.extend(requirementToInsert, {isNew: true, isOld: false, needsUpdate:true});
 					 angular.extend(oldRequirement, {needsUpdate:true});
 					 requirementToInsert.statusColumns = oldRequirement.statusColumns;
 					 requirementToInsert.ticket = oldRequirement.ticket;
@@ -1103,57 +1107,53 @@ angular.module('sdlctoolApp')
 				 //search for new changes in optionColumns
 				 if(newRequirement.id === oldRequirement.id) {
 					 angular.forEach(newRequirement.optionColumns, function(newRequirementOptColumns) {
-								 angular.forEach(oldRequirement.optionColumns, function(oldRequirementOptColumns) {
-									 if (newRequirementOptColumns.showOrder === oldRequirementOptColumns.showOrder) {
-										 angular.forEach(newRequirementOptColumns.content, function(newRequirementContent) {
-											 angular.forEach(oldRequirementOptColumns.content, function(oldRequirementContent) {
-												 	//var newRequirementcontentmodified =
-												 	if((newRequirementContent.content.replace(/[^\x20-\x7E]|\s+/gmi, "") !== oldRequirementContent.content.replace(/[^\x20-\x7E]|\s+/gmi, "")) && (newRequirementContent.id === oldRequirementContent.id)) {
-												 		if (foundOne) {
-												 			angular.forEach(requirementToInsert.optionColumns, function(requirementToInsertOptColumn) {
-												 				angular.forEach(requirementToInsertOptColumn.content, function(requirementToInsertContent) {
-												 					if(requirementToInsertContent.content !== oldRequirementContent.content && requirementToInsertContent.id === oldRequirementContent.id) {
-												 						requirementToInsertContent.content = oldRequirementContent.content;
-												 					}
-												 				});
-												 			});
-												 		} else {
-														    requirementToInsert = newRequirement;
-												 			angular.extend(requirementToInsert, {isNew: true, isOld: false, needsUpdate:true, onOptColumn: true});
-												 			angular.extend(oldRequirement, {needsUpdate:true});
-												 			requirementToInsert.statusColumns = oldRequirement.statusColumns;
-												 			requirementToInsert.ticket = oldRequirement.ticket;
-												 			requirementToInsert.linkStatus = oldRequirement.linkStatus;
-												 			$scope.updatesCounter++; 
-												 			$scope.updateCounter++;
-														    foundOne = true;
-														    if(afterImport) {
-																$scope.updatesAvailable = true;
-																$scope.oldRequirements.push(oldRequirement);
-															 } else if (changedSettings) {
-																 $scope.updatedReqs = true;
-																 oldRequirement.isOld = true;
-															 }
-												 		}
-												 		//the old requirement has alternative Sets, so we need to push them into the new one
-												 		if(oldRequirementOptColumns.content.length > 1) {
-												 			angular.forEach(requirementToInsert.optionColumns, function(requirementToInsertOptColumns) {
-													 			angular.forEach(oldRequirementOptColumns.content, function(oldRequirementOptColumnsContent) {
-													 						 if (oldRequirementOptColumnsContent.id > 0 && (requirementToInsertOptColumns.showOrder == oldRequirementOptColumns.showOrder)) {
-													 							requirementToInsertOptColumns.content.push(oldRequirementOptColumnsContent);
-													 						 } 
-												 			  	  });
-												 			  });
-												 		}
-												 	}
-											 }); 
-										 });
-									 } 
+						 angular.forEach(oldRequirement.optionColumns, function(oldRequirementOptColumns) {
+							 if (newRequirementOptColumns.showOrder === oldRequirementOptColumns.showOrder) {
+								 angular.forEach(newRequirementOptColumns.content, function(newRequirementContent) {
+									 angular.forEach(oldRequirementOptColumns.content, function(oldRequirementContent) {
+									 	//var newRequirementcontentmodified =
+									 	if((newRequirementContent.content.replace(/[^\x20-\x7E]|\s+/gmi, "") !== oldRequirementContent.content.replace(/[^\x20-\x7E]|\s+/gmi, "")) 
+									 			&& (newRequirementContent.id === oldRequirementContent.id)) {
+									 		var changes = diffString2(oldRequirementContent.content, newRequirementContent.content);
+									 		oldRequirementContent.oldContent = changes.o;
+									 		newRequirementContent.oldContent = newRequirementContent.content;
+									 		newRequirementContent.content = changes.n;
+									 		requirementToInsert = newRequirement;
+									 		if(!foundOne) {
+									 			angular.extend(requirementToInsert, {isNew: true, isOld: false, needsUpdate:true});
+									 			angular.extend(oldRequirement, {needsUpdate:true});
+									 			requirementToInsert.statusColumns = oldRequirement.statusColumns;
+									 			requirementToInsert.ticket = oldRequirement.ticket;
+									 			requirementToInsert.linkStatus = oldRequirement.linkStatus;
+									 			$scope.updatesCounter++; 
+									 			$scope.updateCounter++;
+											    foundOne = true;
+											    if(afterImport) {
+													$scope.updatesAvailable = true;
+													$scope.oldRequirements.push(oldRequirement);
+												 } else if (changedSettings) {
+													 $scope.updatedReqs = true;
+													 oldRequirement.isOld = true;
+												 }
+									 		}
+									 		//the old requirement has alternative Sets, so we need to push them into the new one
+									 		if(oldRequirementOptColumns.content.length > 1) {
+									 			angular.forEach(requirementToInsert.optionColumns, function(requirementToInsertOptColumns) {
+										 			angular.forEach(oldRequirementOptColumns.content, function(oldRequirementOptColumnsContent) {
+								 						 if (oldRequirementOptColumnsContent.id > 0 && (requirementToInsertOptColumns.showOrder == oldRequirementOptColumns.showOrder)) {
+								 							requirementToInsertOptColumns.content.push(oldRequirementOptColumnsContent);
+								 						 } 
+									 			  	  });
+									 			});
+									 		}
+									 	}
+									 }); 
 								 });
+							 } 
+						 });
 					 });
 				 }
 			 });
-//			 (reqs.isNew && req.optColumn) && {'background-color':'rgb(0,128,0)'} || (reqs.isNew && !req.optColumn) && {'background-color':'rgb(144,238,144)'}
 			 if (foundOne && !afterImport) {
 				 $scope.requirements.push(requirementToInsert);
 			 } else if (foundOne && afterImport){
@@ -1233,7 +1233,22 @@ angular.module('sdlctoolApp')
 		  
 		  if($scope.oldRequirements.length > 0) {
 			  angular.forEach($scope.oldRequirements, function(oldRequirement) {
-				  	oldRequirement.isOld = true;
+				  // makes sures the changes in the old requirments are highlighted
+				  if(angular.isDefined(oldRequirement.oldDescription)) {
+					  var tempValue = oldRequirement.description;
+					  oldRequirement.description = oldRequirement.oldDescription;
+					  oldRequirement.oldDescription = tempValue;  
+				  }
+				  angular.forEach(oldRequirement.optionColumns, function(oldRequirementOptColumns) {
+					  angular.forEach(oldRequirementOptColumns.content, function(oldRequirementContent) {
+						  if(angular.isDefined(oldRequirementContent.oldContent)){
+							  var tempValue = oldRequirementContent.content;
+							  oldRequirementContent.content = oldRequirementContent.oldContent;
+							  oldRequirementContent.oldContent = tempValue;
+						  }
+					  })
+				  })
+				  oldRequirement.isOld = true;
 			  });
 		  }
 		  
@@ -1261,7 +1276,7 @@ angular.module('sdlctoolApp')
 		  } else if ($scope.updateCounter > 0) {
 			  
 			  var message = "Summary:<ul><li>" + $scope.updatesCounter + " requirement(s) were updated</li><li> " + $scope.newCounter + " new requirement(s) were added</li><li>" + $scope.deletedCounter + " requirement(s) were removed</li></ul><BR>You can now review the updates. " +
-			  	"The old requirement is marked in <span style='color:rgb(247, 93, 89);'>light red</span>, the new requirement in <span style='color:rgb(144,238,144);'>light green</span> and the columns containing the changes are marked in <span style='color:rgb(50,205,50);'>lime green</span>." +
+			  	"The old requirement is marked in <span style='background-color:rgb(255, 204, 204);'>light red</span> and the new requirement in <span style='background-color:rgb(204, 255, 204);'>light green</span>" +
 			  	" Please accept the change by clicking on the <button class='btn btn-success'>" +
 				"<span class='glyphicon glyphicon-ok'></span></button> button to keep the new requirement or by clicking on the <button class='btn btn-danger'><span class='glyphicon glyphicon-remove'></span></button> " +
 				"to keep the old requirement.";
@@ -1274,12 +1289,22 @@ angular.module('sdlctoolApp')
 			  }
 			  SDLCToolExceptionService.showWarning('Update requirements successful', message, SDLCToolExceptionService.INFO);
 		  } 
-		  console.log($scope.requirements);
 	  }
 	  
 	  $scope.applyChanges = function(reqId, keepNewOne) {
 		  var decisionMade = false;
 		  angular.forEach($scope.requirements, function(requirement) {
+			  if(requirement.id === reqId) {
+				  if(angular.isDefined(requirement.oldDescription))requirement.description = requirement.oldDescription;
+				  angular.forEach(requirement.optionColumns, function(optColumn) {
+					  angular.forEach(optColumn.content, function(content) {
+						  if(angular.isDefined(content.oldContent)){
+							  content.content = content.oldContent;
+							  delete content.oldContent;
+						  }
+					  })
+				  });
+			  }
 			 //keep new one 
 			 if(requirement.id === reqId && keepNewOne && !requirement.isNew) {
 				 var idx = $scope.requirements.indexOf(requirement);
@@ -1341,11 +1366,12 @@ angular.module('sdlctoolApp')
 		  }
 		  return str;
 	  }
+	  $scope.exportPTT = function() {
+		  
+	  }
+	  
 	  $scope.excelToggle = function (opened, backToMain) {
-		  if(angular.isDefined(opened) && !opened && backToMain) {
-			  $scope.withselectedDropdown.toggleExcel = false;
-			  $scope.withselectedDropdown.isopen = true;
-		  } else if(angular.isDefined(opened) && !opened) {
+		  if(angular.isDefined(opened) && !opened) {
 			  $scope.withselectedDropdown.toggleExcel = false;
 		  } else if(angular.isUndefined(opened)) {
 			  $scope.withselectedDropdown.toggleExcel = true;
@@ -1598,7 +1624,7 @@ angular.module('sdlctoolApp')
 		  var modalInstance = $uibModal.open({
 				size: 'lg',
 				backdrop: 'static',
-	            templateUrl: 'scripts/app/editor/createTicket.html',
+	            templateUrl: 'scripts/app/editor/export/createTicket.html',
 	            controller: 'ExportController' 
 		  });
 		  modalInstance.result.then(function(jiraStatus) {
@@ -1652,7 +1678,7 @@ angular.module('sdlctoolApp')
 		  var modalInstance = $uibModal.open({
 					size: 'lg',
 					backdrop: 'static',
-		            templateUrl: 'scripts/app/editor/export.html',
+		            templateUrl: 'scripts/app/editor/export/export.html',
 		            controller: 'ExportController' 
 		  });
 		  modalInstance.result.then(function(obj){

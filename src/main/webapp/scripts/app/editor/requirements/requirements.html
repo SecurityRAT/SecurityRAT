@@ -215,7 +215,7 @@
 						</a>
 					</li>
 					<li role="menuitem"  class="animate-hide" data-ng-hide="withselectedDropdown.toggleExcel">
-						<a href=""><img src="assets/images/powerpoint-icon.png"/> Create PPT</a>
+						<a href="" data-ng-click="exportPTT()"><img src="assets/images/powerpoint-icon.png"/> Create PPT</a>
 					</li>
 					<li role="menuitem" class="animate-show" data-ng-show="withselectedDropdown.toggleExcel">
 						<a href=""><span id="backFromExcel" data-ng-click="excelToggle(false, true)"><span class="glyphicon glyphicon-chevron-left"></span>Back</span></a>
@@ -330,7 +330,8 @@
 								</button>
 							</div>
 						</td>
-			    		<td class="text-center" data-ng-style="reqs.isNew && {'background-color':'rgb(144,238,144)'} || reqs.isOld && {'background-color':'rgb(247, 93, 89)'}"><strong>{{ reqs.shortName }}</strong> 
+			    		<td class="text-center" data-ng-style="reqs.isNew && {'background-color':'rgb(204, 255, 204)'} || reqs.isOld && {'background-color':'rgb(255, 204, 204)'}">
+			    			<strong>{{ reqs.shortName }}</strong> 
 			    			<div disable-all="updatedReqs"  data-ng-if="reqs.id < 10000">
 				    			<span data-ng-if="updatedReqs" uib-tooltip="Please apply updates first." style="cursor:not-allowed" tooltip-append-to-body>
 				    				<img src="assets/images/feedback.png" width="16" height="16">
@@ -340,15 +341,15 @@
 			    				</span>
 				    		</div>
 			    		</td>
-			    		<td data-ng-style="(reqs.isNew && reqs.onDescription && {'background-color':'rgb(50,205,50)'}) || (reqs.isNew && !reqs.onDescription && {'background-color':'rgb(144,238,144)'}) || reqs.isOld && {'background-color':'rgb(247, 93, 89)'}">{{ reqs.description }}</td>
+			    		<td data-ng-class="{changes:reqs.isOld}" data-ng-style="(reqs.isNew && {'background-color':'rgb(204, 255, 204)'}) || reqs.isOld && {'background-color':'rgb(255, 204, 204)'}" data-ng-bind-html="reqs.description | trusted"></td>
 			    		<td data-ng-repeat="optionColumn in reqs.optionColumns | orderBy:'showOrder'"  
-			    		data-ng-style="(reqs.isNew && reqs.onOptColumn && {'background-color':'rgb(50,205,50)'}) || (reqs.isNew && !reqs.onOptColumn 
-			    		&& {'background-color':'rgb(144,238,144)'})  || reqs.isOld && {'background-color':'rgb(247, 93, 89)'}">
+			    		data-ng-style="(reqs.isNew && {'background-color':'rgb(204, 255, 204)'}) || reqs.isOld && {'background-color':'rgb(255, 204, 204)'}">
 			    			<div  data-ng-repeat="optionColumnContent in optionColumn.content" data-ng-show="optToHide.indexOf(optionColumn.showOrder) == -1">
 		    					<div marked="optionColumnContent.content"></div>
 			    			</div>
 			    		</td>
-			    		<td class="text-center"data-ng-repeat="stats in statusColumns | orderBy:'showOrder'" data-ng-style="reqs.isNew && {'background-color':'rgb(144,238,144)'} || reqs.isOld && {'background-color':'rgb(247, 93, 89)'}">
+			    		<td class="text-center"data-ng-repeat="stats in statusColumns | orderBy:'showOrder'" 
+			    		data-ng-style="reqs.isNew && {'background-color':'rgb(204, 255, 204)'} || reqs.isOld && {'background-color':'rgb(255, 204, 204)'}">
 			    			<div data-ng-if="!stats.isEnum">
 			    				<div data-ng-repeat="statusValue in reqs.statusColumns">
 			    						<div data-ng-if="!statusValue.isEnum">
@@ -363,12 +364,13 @@
 			    		 		</ul>
 			    			</div>	
 			    		</td>
-			    		<td class="text-center" data-ng-if="hasIssueLinks" data-ng-style="reqs.isNew && {'background-color':'rgb(144,238,144)'} || reqs.isOld && {'background-color':'rgb(247, 93, 89)'}">
+			    		<td class="text-center" data-ng-if="hasIssueLinks" 
+			    		data-ng-style="reqs.isNew && {'background-color':'rgb(204, 255, 204)'} || reqs.isOld && {'background-color':'rgb(255, 204, 204)'}">
 			    			<span uib-popover="Ticket summary: {{reqs.linkStatus.summary}}" popover-placement="top" popover-trigger="mouseenter" data-ng-if="reqs.linkStatus.summary != null">
 			    				<a href="{{reqs.ticket}}" target="_blank"><img data-ng-src="{{reqs.linkStatus.iconUrl}}" data-ng-if="reqs.linkStatus.iconUrl != null"/> {{reqs.linkStatus.name}}</a>
 			    			</span>
 			    		</td> 
-			    		<td class="text-center" data-ng-style="reqs.isNew && {'background-color':'rgb(144,238,144)'} || reqs.isOld && {'background-color':'rgb(247, 93, 89)'}"><input type="checkbox" data-ng-model="reqs.selected"/></td>
+			    		<td class="text-center" data-ng-style="reqs.isNew && {'background-color':'rgb(204, 255, 204)'} || reqs.isOld && {'background-color':'rgb(255, 204, 204)'}"><input type="checkbox" data-ng-model="reqs.selected"/></td>
 			    	</tr>
 				</tbody>
 		 	</table>

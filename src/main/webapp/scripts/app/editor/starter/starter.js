@@ -3,16 +3,16 @@
 angular.module('sdlctoolApp')
     .config(function ($stateProvider) {
         $stateProvider
-            .state('export', {
+            .state('starter', {
                 parent: 'site',
-                url: '/export',
+                url: '/starter',
                 data: {
                     roles: ['ROLE_FRONTEND_USER', 'ROLE_USER', 'ROLE_ADMIN']
                 },
                 views: {
                     'content@': {
-                        templateUrl: 'scripts/app/editor/export.html',
-                        controller: 'ExportController'
+                        templateUrl: 'scripts/app/editor/starter/starter.html',
+                        controller: 'StarterController'
                     }
                 },
                 resolve: {
