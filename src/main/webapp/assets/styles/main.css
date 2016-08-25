@@ -582,13 +582,6 @@ Dropdown submenu
 /* ==========================================================================
 Animation for export to excel
 ========================================================================== */
-.addedChanges {
-	background-color:rgb(144,238,144);
-}
-.changes>#removedChanges {
-	background-color: rgb(255, 128, 128);
-	text-decoration:line-through;
-}
 #backFromExcel:hover {
 	color: rgb(135,206,250);
 }

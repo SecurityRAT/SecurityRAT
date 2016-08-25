@@ -5,8 +5,8 @@ angular.module('sdlctoolApp')
         return {
             restrict: 'A',
             require: 'ngModel',
-            link: function (scope, element, attrs, ngModel) {
-            	var field = JSON.parse(attrs.splitArray);
+            link: function (scope, element, attr, ngModel) {
+            	var field = JSON.parse(attr.splitArray);
             	
             	function fromUser(commaSeparatedValues) {
             		if(!commaSeparatedValues)
@@ -44,7 +44,7 @@ angular.module('sdlctoolApp')
             	ngModel.$parsers.push(fromUser);
             	ngModel.$formatters.push(toUser);
             	
-            	scope.$watchCollection(attrs.ngModel, function ngModelWatch(value, old) {
+            	scope.$watchCollection(attr.ngModel, function ngModelWatch(value, old) {
                     if (!Array.isArray(value) || old === value) {
                         return;
                     }
