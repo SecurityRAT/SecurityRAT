@@ -1,0 +1,27 @@
+<div class="slides">
+	<section>
+		<h1>{{values.config.title}}</h1>
+		<h3 data-ng-if="values.config.subtitle">{{values.config.subtitle}}</h3>
+		<p data-ng-if="values.config.presenter">
+			<small>Presented by {{values.config.presenter}}</small>
+		</p>
+	</section>
+	<section data-ng-repeat-start="category in categories | orderBy: 'showOrder'">
+		<h2 >{{category.name}}</h2>
+	</section>
+	<section data-ng-repeat-end data-ng-repeat="requirement in values.requirements | filter : {categoryId: category.id} | orderBy: 'order'">
+		<h3>
+			{{requirement.shortName}}
+		</h3>
+		<section>
+			<h4>Description</h4>
+			<p >{{requirement.description}}</p>
+		</section>
+		<section data-ng-repeat="optColumn in requirement.optionColumns | orderBy : 'showOrder'">
+			<h4>{{optColumn.name}}</h4>
+			<p style="font-size: 25px" data-ng-repeat="content in optColumn.content" data-markdown>
+				{{content.content}}
+			</p>
+		</section>
+	</section>
+</div>

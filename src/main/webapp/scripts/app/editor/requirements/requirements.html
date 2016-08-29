@@ -131,7 +131,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="col-sm-12">
+	<div>
 		<p><strong>{{requirements.length}}</strong> Requirements found
 			<span data-ng-if="requirements.length > (requirements | orderBy:['categoryOrder','order'] | filterByTags : filteredRequirementsByTags 
 			   		    | filterByCategories : selectedCategory  | filterByStatus : selectedStatus | filterTicketStatus : jiraStatus.selectedStatus| filter:search).length" 
@@ -214,8 +214,16 @@
 							</span>
 						</a>
 					</li>
-					<li role="menuitem"  class="animate-hide" data-ng-hide="withselectedDropdown.toggleExcel">
-						<a href="" data-ng-click="exportPTT()"><img src="assets/images/powerpoint-icon.png"/> Create PPT</a>
+					<li role="menuitem"  class="animate-hide">
+						<a href="">
+							<span data-ng-if="(requirements | filter:{selected: true}).length" data-ng-click="exportPTT()">
+								<img src="assets/images/powerpoint-icon.png"/> Create Presentation
+							</span>
+							<span data-ng-if="(requirements | filter:{selected: true}).length == 0" uib-tooltip="Please select requirements first." 
+								tooltip-trigger="mouseenter" tooltip-placement="left" class="disabledButton" tooltip-append-to-body>
+								<img src="assets/images/powerpoint-icon.png"/> Create Presentation
+							</span>
+						</a>
 					</li>
 					<li role="menuitem" class="animate-show" data-ng-show="withselectedDropdown.toggleExcel">
 						<a href=""><span id="backFromExcel" data-ng-click="excelToggle(false, true)"><span class="glyphicon glyphicon-chevron-left"></span>Back</span></a>

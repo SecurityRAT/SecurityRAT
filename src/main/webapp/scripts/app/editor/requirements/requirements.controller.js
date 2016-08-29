@@ -9,7 +9,7 @@
  */
 angular.module('sdlctoolApp')
   .controller('RequirementsController',function ($scope, apiFactory, sharedProperties, $httpParamSerializer, $interval, 
-		  $timeout, $uibModal, $filter, getRequirementsFromImport, $confirm, $location, localStorageService, appConfig, $sce, SDLCToolExceptionService) {
+		  $timeout, $uibModal, $filter, getRequirementsFromImport, $confirm, $location, localStorageService, appConfig, $sce, SDLCToolExceptionService, $rootScope) {
 	  $scope.failed = "";
 	  $scope.fail = false;
 	  $scope.endProgressbar = true;
@@ -1366,8 +1366,19 @@ angular.module('sdlctoolApp')
 		  }
 		  return str;
 	  }
+	  // create the presentation page.
 	  $scope.exportPTT = function() {
-		  
+		  var modalInstance = $uibModal.open({
+				size: 'lg',
+				backdrop: 'static',
+	            templateUrl: 'scripts/app/editor/presentation/configuration/config-modal.html',
+	            controller: 'EditPresentation',
+	            resolve: {
+	            	requirements: function(){
+	            		return $filter('orderBy')($filter('filter')($scope.requirements, {selected: true}), ['categoryOrder','order']);
+	            	}
+	            }
+		  });
 	  }
 	  
 	  $scope.excelToggle = function (opened, backToMain) {
@@ -1418,12 +1429,12 @@ angular.module('sdlctoolApp')
 		  saveAs(new Blob([s2ab(wbout)], {type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet ;charset=utf-8"})
 		  , appConfig.filenamePrefix + "_" + $scope.removeUnwantedChars($scope.systemSettings.name, ['/','\\', ':', '*', '?', '"', '<', '>', '|', '.']) + "_" + $scope.getCurrentDate() + ".xlsx");
 	  }
-		function s2ab(s) {
-			  var buf = new ArrayBuffer(s.length);
-			  var view = new Uint8Array(buf);
-			  for (var i=0; i!=s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
-			  return buf;
-		}
+	  function s2ab(s) {
+		  var buf = new ArrayBuffer(s.length);
+		  var view = new Uint8Array(buf);
+		  for (var i=0; i!=s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+		  return buf;
+	  }
 		
 		// adjust the invalid excel syntax symbols to prevent errors on opening the generated excel file.
 		$scope.adjustExcelSyntaxSymbols = function(str) {

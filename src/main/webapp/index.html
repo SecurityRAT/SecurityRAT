@@ -16,7 +16,7 @@
         <!-- endbower -->
         <!-- endbuild -->
         <!-- build:css assets/styles/main.css -->
-        <link rel="stylesheet" href="/assets/styles/main.css" />
+      	<link id="maincss" rel="stylesheet" href="/assets/styles/main.css" />
         <!-- endbuild -->
 
     </head>
@@ -25,12 +25,12 @@
         <!--[if lt IE 9]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-        <div id="ribbon" data-ng-show="{{ENV === 'dev'}}" class="development" data-ng-cloak="" ></div>
-        <div ui-view="navbar" data-ng-cloak=""></div>
-        <div class="container" id="mainContent" data-ng-class="{jumbotron: (toState.name=='editor')}">
+        <div data-ng-if="toState.name!=='presentation'" id="ribbon" data-ng-show="{{ENV === 'dev'}}" class="development" data-ng-cloak="" ></div>
+        <div ui-view="navbar" data-ng-cloak="" data-ng-if="toState.name!=='presentation'"></div>
+        <div id="mainContent" data-ng-class="{jumbotron: (toState.name=='editor'), reveal: (toState.name=='presentation'), container: ((toState.name!='presentation'))}">
             <div ui-view="content" ></div>
 
-            <div class="footer">
+            <div class="footer" data-ng-if="toState.name!=='presentation'">
                 <p translate="footer"><a href="https://github.com/SecurityRAT">https://github.com/SecurityRAT</a></p>
             </div>
         </div>
@@ -283,6 +283,11 @@
     <script src="scripts/app/editor/starter/starter.controller.js"></script>
     <script src="scripts/app/editor/requirements/requirements.js"></script>
     <script src="scripts/app/editor/requirements/requirements.controller.js"></script>
+    <script src="scripts/app/editor/presentation/configuration/config-modal.controller.js"></script>
+    <script src="scripts/app/editor/presentation/myRevealjs/reveal.js/lib/js/head.min.js"></script>
+    <script src="scripts/app/editor/presentation/myRevealjs/reveal.js/js/reveal.js"></script>
+    <script src="scripts/app/editor/presentation/myRevealjs/presentation.js"></script>
+    <script src="scripts/app/editor/presentation/myRevealjs/presentation.controller.js"></script>
     <script src="scripts/app/editor/modal-alert.js"></script>
     <script src="scripts/app/editor/export/export.js"></script>
     <script src="scripts/app/editor/export/export.controller.js"></script>

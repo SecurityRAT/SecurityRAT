@@ -24,7 +24,7 @@ public class AngularJSForwardController {
     @RequestMapping(value = {"/audits*","/configuration*","/docs*","/apphealth*","/logs*","/appmetrics*",
                              "/error*","/accessdenied*", "/requirements","/collection*/**","/tag*/**","req*/**",
                              "opt*/**","status*/**","alternative*/**","projectTypes*/**", "/import*","/export*",
-                             "/config*/**", "/user*/**", "/authorities*", "/login*", "/password*", "/reset*", "/logout*", "/register*", "/ferequirement*/**"},
+                             "/config*/**", "/user*/**", "/authorities*", "/login*", "/password*", "/reset*", "/logout*", "/register*", "/ferequirement*/**", "/presentation"},
                               method = RequestMethod.GET)
     public void pageForward(HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
     	String[] onlyForm = { "/login*", "/password*", "/reset*", "/logout*", "/register*"};

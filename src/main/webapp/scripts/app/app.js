@@ -61,8 +61,6 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
             }
             $window.document.title = titleKey;
         });
-
-       
     })
     
     .config(function ($stateProvider, $urlRouterProvider, $httpProvider,$locationProvider,  httpRequestInterceptorCacheBusterProvider,
