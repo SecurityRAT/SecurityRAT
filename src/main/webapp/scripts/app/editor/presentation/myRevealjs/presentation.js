@@ -5,13 +5,13 @@ angular.module('sdlctoolApp')
         $stateProvider
             .state('presentation', {
                 parent: 'site',
-                url: '/presentation',
+                url: '/presentation?theme',
                 data: {
-                    roles: ['ROLE_FRONTEND_USER', 'ROLE_USER', 'ROLE_ADMIN']
+                    roles: ['ROLE_FRONTEND_USER', 'ROLE_USER', 'ROLE_ADMIN'],
+                    pageTitle: 'Presentation'
                 },
                 params: {
-                	requirements: [],
-                	config:{}
+                	theme: "securityrat.css"
                 },
                 views: {
                     'content@': {
@@ -24,7 +24,7 @@ angular.module('sdlctoolApp')
                 	link.id = 'theme';
         			link.rel = 'stylesheet';
         			link.type = 'text/css';
-        			link.href = 'scripts/app/editor/presentation/myRevealjs/reveal.js/css/theme/beige.css';
+        			link.href = 'scripts/app/editor/presentation/myRevealjs/reveal.js/css/theme/' + $stateParams.theme;
         			var link1 = document.createElement( 'link' );
         			link1.id = 'zenburn';
         			link1.rel = 'stylesheet';
@@ -36,8 +36,9 @@ angular.module('sdlctoolApp')
         			link2.type = 'text/css';
         			link2.href = 'scripts/app/editor/presentation/myRevealjs/reveal.js/css/reveal.css';
         			document.getElementsByTagName( 'head' )[0].appendChild( link2 );
+//        			document.getElementsByTagName( 'head' )[0].appendChild( link1 );
         			document.getElementsByTagName( 'head' )[0].appendChild( link );
-        			document.getElementsByTagName( 'head' )[0].appendChild( link1 );
+        			
         			
         			var maincss = document.getElementById('maincss');
         			document.head.removeChild(maincss);

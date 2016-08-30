@@ -1374,8 +1374,13 @@ angular.module('sdlctoolApp')
 	            templateUrl: 'scripts/app/editor/presentation/configuration/config-modal.html',
 	            controller: 'EditPresentation',
 	            resolve: {
-	            	requirements: function(){
-	            		return $filter('orderBy')($filter('filter')($scope.requirements, {selected: true}), ['categoryOrder','order']);
+	            	entity : function() {
+	            		var entity = {};
+	            		entity.requirements = angular.copy($filter('orderBy')($filter('filter')($scope.requirements, {selected: true}), ['categoryOrder','order']));
+	            		entity.optionColumns = angular.copy($filter('orderBy')($scope.optColumns, ['showOrder']));
+	            		entity.statusColumns = angular.copy($filter('orderBy')($scope.statusColumns, ['showOrder']));
+	            		entity.artifactName = $scope.systemSettings.name;
+	            		return entity;
 	            	}
 	            }
 		  });

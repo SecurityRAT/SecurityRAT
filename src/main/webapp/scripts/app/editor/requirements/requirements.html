@@ -214,7 +214,7 @@
 							</span>
 						</a>
 					</li>
-					<li role="menuitem"  class="animate-hide">
+					<li role="menuitem"  class="animate-hide" data-ng-hide="withselectedDropdown.toggleExcel">
 						<a href="">
 							<span data-ng-if="(requirements | filter:{selected: true}).length" data-ng-click="exportPTT()">
 								<img src="assets/images/powerpoint-icon.png"/> Create Presentation
@@ -232,12 +232,12 @@
 					<li role="menuitem" class="animate-show" data-ng-show="withselectedDropdown.toggleExcel">
 						<a href="">
 							<span data-ng-click="exportExcel(true)" data-ng-if="(requirements | filter:{selected: true}).length">
-								<span class="glyphicon glyphicon-plus"></span> Edited status values
+								With status values
 							</span>
 						</a>
 						<a href="">
 							<span data-ng-click="exportExcel(false)" data-ng-if="(requirements | filter:{selected: true}).length">
-								<span class="glyphicon glyphicon-minus"></span> Edited status values
+								Without status values
 							</span>
 						</a>
 					</li>

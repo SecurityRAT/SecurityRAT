@@ -7,15 +7,15 @@
 		</p>
 	</section>
 	<section data-ng-repeat-start="category in categories | orderBy: 'showOrder'">
-		<h2 >{{category.name}}</h2>
+		<h2>{{category.name}}</h2>
 	</section>
-	<section data-ng-repeat-end data-ng-repeat="requirement in values.requirements | filter : {categoryId: category.id} | orderBy: 'order'">
-		<h3>
+	<section data-ng-repeat="requirement in values.requirements | filter:{categoryId: category.id} : true | orderBy: 'order'">
+		<h2>
 			{{requirement.shortName}}
-		</h3>
-		<section>
+		</h2>
+		<section data-ng-if="requirement.description">
 			<h4>Description</h4>
-			<p >{{requirement.description}}</p>
+			<p style="font-size: 25px">{{requirement.description}}</p>
 		</section>
 		<section data-ng-repeat="optColumn in requirement.optionColumns | orderBy : 'showOrder'">
 			<h4>{{optColumn.name}}</h4>
@@ -23,5 +23,15 @@
 				{{content.content}}
 			</p>
 		</section>
+		<section data-ng-repeat="statColumn in requirement.statusColumns | orderBy : 'showOrder'" data-ng-if="statColumn.value !== ''">
+			<h4 >{{statColumn.name}}</h4>
+			<p style="font-size: 25px">
+				{{statColumn.value}}
+			</p>
+		</section>
+	</section>
+	<div  data-ng-repeat-end></div>
+	<section>
+		<h1 data-ng-if="values.config.end !== '' && values.config.end">{{values.config.end}}</h1>
 	</section>
 </div>
