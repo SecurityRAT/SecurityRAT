@@ -209,7 +209,7 @@
 					</li>
 					<li role="menuitem" class="animate-hide" data-ng-hide="withselectedDropdown.toggleExcel">
 						<a href="">
-							<span data-ng-click="excelConfig()" data-ng-if="(requirements | filter:{selected: true}).length">
+							<span data-ng-click="configExcel()" data-ng-if="(requirements | filter:{selected: true}).length">
 								<img src="assets/images/Excel-icon.png"/> Create excel
 							</span>
 							<span data-ng-if="(requirements | filter:{selected: true}).length == 0" uib-tooltip="Please select requirements first." 

@@ -1444,8 +1444,12 @@ angular.module('sdlctoolApp')
 		  ws['!cols'] = wscols;
 		  var wbopts = { bookType:'xlsx', bookSST:false, type:'binary' };
 		  var wbout = XLSX.write(wb,wbopts);
-		  saveAs(new Blob([s2ab(wbout)], {type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet ;charset=utf-8"})
-		  , appConfig.filenamePrefix + "_" + $scope.removeUnwantedChars($scope.systemSettings.name, ['/','\\', ':', '*', '?', '"', '<', '>', '|', '.']) + "_" + $scope.getCurrentDate() + ".xlsx");
+		  if(navigator.userAgent.indexOf('Safari') !== -1) {
+			  var blob = new Blob([s2ab(wbout)], {"type":"application/octet-stream"});
+		  } else {
+			  saveAs(new Blob([s2ab(wbout)], {type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet ;charset=utf-8"})
+			  , appConfig.filenamePrefix + "_" + $scope.removeUnwantedChars($scope.systemSettings.name, ['/','\\', ':', '*', '?', '"', '<', '>', '|', '.']) + "_" + $scope.getCurrentDate() + ".xlsx");
+		  }
 	  }
 	  function s2ab(s) {
 		  var buf = new ArrayBuffer(s.length);
