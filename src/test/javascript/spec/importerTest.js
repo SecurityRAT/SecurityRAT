@@ -142,7 +142,40 @@ describe('Protractor Security RAT importer testsuite', function() {
 		});
 		expect(element(by.binding('failMessage')).getText()).toBe('The entered URL is invalid. Please provide a valid URL');
 	});
-	
+	it('Update available test', function() {
+		browser.get(browser.params.impTestAttachmentUrl + browser.params.attachmentUrls[0]).then(function() {}, function(){
+			browser.switchTo().alert().accept();
+		});
+		browser.sleep(5000);
+		(element(by.buttonText('Close'))).click();
+		browser.sleep(3000);
+		element(by.buttonText('Updates available')).isPresent().then(function(v){ 
+		    element(by.buttonText('Updates available')).click();
+		    browser.wait(function() {
+				return element(by.buttonText('Close')).isPresent();
+			});
+		    browser.sleep(3000);
+		    element(by.buttonText('Close')).click();
+		    browser.sleep(3000);
+		    expect(element(by.buttonText('Updates available')).isEnabled()).toBe(false);
+		    expect(element(by.buttonText(SaveButton)).isEnabled()).toBe(false);
+		    expect(element.all(by.id("feedbackIcon")).count()).toBe(0);
+		    var acceptList = element.all(by.id('acceptReq'));
+		    
+		    var x = 0;
+		    acceptList.each(function(element, index) {
+		    	if(x <= 20)
+		    		element.click();
+		    	x++;
+		    });
+		    browser.sleep(3000);
+		    var removeList = element.all(by.id('removeReq'));
+		    removeList.each(function(element, index) {
+		    		element.click();
+		    });
+		    browser.sleep(10000);
+		});
+	});
 	it('Import with deleted attachment', function() {
 		browser.get(browser.params.impTestAttachmentUrl + browser.params.attachmentUrls[1]).then(function() {}, function(){
 			browser.switchTo().alert().accept();

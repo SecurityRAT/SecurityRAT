@@ -44,7 +44,7 @@ describe('Protractor Security RAT general testsuite', function() {
 	});
 	
 	//restores previous session.
-	it('Restores a previous session', function() {
+	it('Restores a previous session and html presentation', function() {
 		element(by.id('restoreSession')).isPresent().then(function(v){ 
 		    expect(v).toBe(true);
 		});
@@ -57,6 +57,13 @@ describe('Protractor Security RAT general testsuite', function() {
 		var list = element.all(by.tagName('textarea'));
 		// checks for the restored session according to the comment written before.
 		expect(list.first().getText()).toBe("restore session test.");
+		element(by.buttonText('Select')).click();
+		element(by.partialLinkText('Select all')).click();
+		element(by.buttonText('Action with selected')).click();
+		element(by.partialLinkText('Create presentation')).click();
+		browser.sleep(3000);
+		element(by.buttonText('Create')).click();
+		browser.sleep(10000);
 	});
 	
 	it('Delete local storage backup', function() {

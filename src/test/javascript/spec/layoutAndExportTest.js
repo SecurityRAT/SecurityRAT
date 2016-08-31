@@ -232,11 +232,23 @@ describe('Protractor Security RAT Testsuite', function() {
 		
 		browser.sleep(3000);
 		
-		//export to excel.
+		//export to excel with status values.
 		element(by.buttonText("Select")).click();
 		element(by.linkText("Select all")).click();
 		element(by.buttonText("Action with selected")).click();
 		element(by.linkText("Create excel")).click();
+		browser.sleep(2000);
+		element(by.buttonText('create')).click();
+		browser.sleep(2000);
+		
+		//export to excel without status values.
+		element(by.buttonText("Select")).click();
+		element(by.linkText("Select all")).click();
+		element(by.buttonText("Action with selected")).click();
+		element(by.linkText("Create excel")).click();
+		browser.sleep(2000);
+		element(by.id('statusValue')).click();
+		element(by.buttonText('create')).click();
 		
 		//deselects all
 		element(by.buttonText("Select")).click();
