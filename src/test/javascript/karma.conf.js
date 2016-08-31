@@ -36,7 +36,6 @@ module.exports = function (config) {
             'main/webapp/bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js',
             'main/webapp/bower_components/marked/lib/marked.js',
             'main/webapp/bower_components/angular-marked/dist/angular-marked.js',
-            'main/webapp/bower_components/highlightjs/highlight.pack.js',
             'main/webapp/bower_components/file-saver.js/FileSaver.js',
             'main/webapp/bower_components/spin.js/spin.js',
             'main/webapp/bower_components/angular-spinner/angular-spinner.js',
@@ -47,6 +46,7 @@ module.exports = function (config) {
             'main/webapp/bower_components/angular-bootstrap-switch/dist/angular-bootstrap-switch.js',
             'main/webapp/bower_components/angular-ui-indeterminate/dist/indeterminate.js',
             'main/webapp/bower_components/angular-confirm-modal/angular-confirm.js',
+            'main/webapp/bower_components/highlightjs/highlight.pack.js',
             'main/webapp/bower_components/angular-mocks/angular-mocks.js',
             // endbower
 	    'main/webapp/scripts/app/editor/config.js',

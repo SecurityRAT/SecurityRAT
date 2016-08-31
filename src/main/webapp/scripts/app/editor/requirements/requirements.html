@@ -137,7 +137,11 @@
 			   		    | filterByCategories : selectedCategory  | filterByStatus : selectedStatus | filterTicketStatus : jiraStatus.selectedStatus| filter:search).length" 
 			   		    >, 
 				<span style="color:red;"><strong id="requirementInRed">{{(requirements | orderBy:['categoryOrder','order'] | filterByTags : filteredRequirementsByTags 
-			   		    | filterByCategories : selectedCategory  | filterByStatus : selectedStatus | filterTicketStatus : jiraStatus.selectedStatus| filter:search).length}}</strong> Requirements shown.
+			   		    | filterByCategories : selectedCategory  | filterByStatus : selectedStatus | filterTicketStatus : jiraStatus.selectedStatus| filter:search).length}}</strong> Requirements shown
+				</span>
+			</span>
+			<span data-ng-if="(requirements | filter: {selected:true}).length">and 
+				<span style="color:#cc7a00;"><strong id="requirementInRed">{{(requirements | filter: {selected:true}).length}}</strong> Requirements selected.
 				</span>
 			</span>
 		</p>

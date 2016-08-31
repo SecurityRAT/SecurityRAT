@@ -5,7 +5,7 @@ angular.module('sdlctoolApp')
 		params.requirements = [];
 		$scope.config = {};
 		$scope.config.theme = 'securityrat';
-		$scope.config.transition = 'convex';
+		$scope.config.transition = 'concave';
 		$scope.config.end = 'Thank you.'
 		$scope.init = function() {
 			$scope.themes = ['beige', 'black', 'blood', 'league', 'moon', 'night', 'securityrat', 'serif', 'simple', 'sky', 'solarized', 'white'];
@@ -35,12 +35,11 @@ angular.module('sdlctoolApp')
 		
 		$scope.confirm = function() {
 			params.config = $scope.config;
-			console.log(params.requirements)
+//			console.log(params.requirements)
 			angular.forEach(params.requirements, function(requirement) {
 				if(!$scope.config.description) {
 					delete requirement.description
 				}
-				console.log(requirement.optionColumns)
 				for(var i = 0; i < requirement.optionColumns.length; i++) {
 					if(!$scope.config.optionColumns[requirement.optionColumns[i].showOrder]) {
 						requirement.optionColumns.splice(i, 1);

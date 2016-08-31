@@ -25,18 +25,12 @@ angular.module('sdlctoolApp')
         			link.rel = 'stylesheet';
         			link.type = 'text/css';
         			link.href = 'scripts/app/editor/presentation/myRevealjs/reveal.js/css/theme/' + $stateParams.theme;
-        			var link1 = document.createElement( 'link' );
-        			link1.id = 'zenburn';
-        			link1.rel = 'stylesheet';
-        			link1.type = 'text/css';
-        			link1.href = 'scripts/app/editor/presentation/myRevealjs/reveal.js/lib/css/zenburn.css';
         			var link2 = document.createElement( 'link' );
         			link2.id = 'reveal';
         			link2.rel = 'stylesheet';
         			link2.type = 'text/css';
         			link2.href = 'scripts/app/editor/presentation/myRevealjs/reveal.js/css/reveal.css';
         			document.getElementsByTagName( 'head' )[0].appendChild( link2 );
-//        			document.getElementsByTagName( 'head' )[0].appendChild( link1 );
         			document.getElementsByTagName( 'head' )[0].appendChild( link );
         			
         			
@@ -51,10 +45,8 @@ angular.module('sdlctoolApp')
                 	maincss.href = '/assets/styles/main.css';
         			document.getElementsByTagName( 'head' )[0].appendChild( maincss );
         			var theme = document.getElementById('theme');
-        			var zenburn = document.getElementById('zenburn');
         			var reveal = document.getElementById('reveal');
         			document.head.removeChild(theme);
-        			document.head.removeChild(zenburn);
         			document.head.removeChild(reveal);
                 },
                 resolve: {
