@@ -496,7 +496,7 @@ angular.module('sdlctoolApp')
 		  var modalInstance = $uibModal.open({
 			  size: 'lg',
 			  backdrop: 'static',
-	          templateUrl: 'scripts/app/editor/customRequirement.html',
+	          templateUrl: 'scripts/app/editor/customrequirements/customRequirement.html',
 	          controller: 'customRequirementController'
 		  });
 		  //adds the categoryOrder, id of the item and updates the filterCategory library for the filter nach category.
