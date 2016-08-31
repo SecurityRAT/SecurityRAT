@@ -708,7 +708,7 @@ angular.module('sdlctoolApp')
 				  angular.forEach(requirement.optionColumnContents, function(optColumn) {
 					  values.push(  
 								{								
-									content: [{id: 0, content: optColumn.content}],
+									content: [{id: 0, content: optColumn.content.trim()}],
 									name: optColumn.optionColumnName,
 									showOrder: optColumn.optionColumnId
 								}

@@ -4,6 +4,7 @@ angular.module('sdlctoolApp')
 //		console.log($scope.values);
 //		localStorageService.remove('myRevealjs');
 		$scope.categories = [];
+		$scope.regex = /^\s+$/g;
 		function hasValue(id, arrayValue) {
 			for(var i = 0; i < arrayValue.length; i++) {
 				if(arrayValue[i].id === id) {
