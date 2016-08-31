@@ -1393,6 +1393,19 @@ angular.module('sdlctoolApp')
 			  $scope.withselectedDropdown.toggleExcel = true;
 		  }
 	  }
+	  $scope.configExcel = function() {
+		  var modalInstance = $uibModal.open({
+				size: 'lg',
+				backdrop: 'static',
+	            templateUrl: 'scripts/app/editor/excel/excel.config.html',
+	            controller: 'EditExcel',
+	            resolve: {
+	            }
+		  });
+		  modalInstance.result.then(function(config) {
+			  $scope.exportExcel(config.statusValues);
+		  })
+	  }
 	  $scope.exportExcel = function(withStatusColumns) {
 		  $scope.withselectedDropdown.toggleExcel = false;
 		  $scope.withselectedDropdown.isopen = false;
