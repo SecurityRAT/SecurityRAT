@@ -30,7 +30,7 @@ angular.module('sdlctoolApp')
 	            				i++;
 	            			}
 	            			
-	            			return modelValue.join(', ') + ', ';
+	            			return modelValue.join(', ');
 	            		}
             		}
             	}
