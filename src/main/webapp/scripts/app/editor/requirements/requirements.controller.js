@@ -1445,8 +1445,7 @@ angular.module('sdlctoolApp')
 		  var wbopts = { bookType:'xlsx', bookSST:false, type:'binary' };
 		  var wbout = XLSX.write(wb,wbopts);
 		  if(navigator.userAgent.indexOf('Safari') !== -1) {
-			  var myWindow = window.open("data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8;base64," + window.btoa(wbout));
-			  myWindow.close();
+			  window.open("data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8;base64," + window.btoa(wbout), '', 'width=300,height=150');
 		  } else {
 			  saveAs(new Blob([s2ab(wbout)], {type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet ;charset=utf-8"})
 			  , appConfig.filenamePrefix + "_" + $scope.removeUnwantedChars($scope.systemSettings.name, ['/','\\', ':', '*', '?', '"', '<', '>', '|', '.']) + "_" + $scope.getCurrentDate() + ".xlsx");
