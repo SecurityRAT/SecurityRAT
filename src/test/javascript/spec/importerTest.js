@@ -44,7 +44,7 @@ describe('Protractor Security RAT importer testsuite', function() {
 		expect(list.count()).toBeGreaterThan(1);
 		// gives time to see whether attachments other than .yml were considered.
 		browser.sleep(6000);
-		element(by.partialButtonText("Import")).click();
+		element(by.buttonText("Import")).click();
 		browser.sleep(10000);
 		element(by.buttonText('Close')).isPresent().then(function(v){ 
 		    expect(v).toBe(true);
@@ -181,14 +181,14 @@ describe('Protractor Security RAT importer testsuite', function() {
 			browser.switchTo().alert().accept();
 		});
 		browser.sleep(10000);
-		expect(element.all(by.css('div[marked]')).get(1).getText()).toBe('No attachment with this id was found.');
+		expect(element.all(by.css('div[marked]')).last().getText()).toBe('No attachment with this id was found.');
 	});
 	
 	it('import with link to attachment content in file query parameter', function() {
 		browser.get(browser.params.impTestFileUrl).then(function() {}, function(){
 			browser.switchTo().alert().accept();
 		})
-		expect(element.all(by.css('div[marked]')).last().getText()).toBe('Invalid url in query parameter file. Please enter a valid JIRA ticket with an attachment.');
+		expect(element.all(by.css('div[marked]')).last().getText()).toBe('No attachment with this id was found.');
 	});
 	
 	// The first time you should not authenticate.
@@ -236,26 +236,6 @@ describe('Protractor Security RAT importer testsuite', function() {
 			browser.switchTo().alert().accept();
 		})
 		browser.sleep(1000);
-		element(by.binding('jira.url')).click();
-		browser.sleep(20000);
-		element(by.buttonText("Close")).click();
-	});
-	
-	it('imports from file with ', function() {
-		browser.get(browser.params.impTestAttachmentUrl + browser.params.attachmentUrls[2]).then(function() {}, function(){
-			browser.switchTo().alert().accept();
-		})
-		browser.sleep(5000);
-		element(by.binding('jira.url')).click();
-		browser.getAllWindowHandles().then(function(handles) {
-			expect(handles.length).toBeGreaterThan(1);
-			browser.switchTo().window(handles[0]).then();
-		});
-		browser.sleep(65000);
-		browser.get(browser.params.impTestAttachmentUrl + browser.params.attachmentUrls[2]).then(function() {}, function(){
-			browser.switchTo().alert().accept();
-		})
-		browser.sleep(5000);
 		element(by.binding('jira.url')).click();
 		browser.sleep(20000);
 		element(by.buttonText("Close")).click();

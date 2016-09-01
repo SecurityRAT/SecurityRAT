@@ -251,6 +251,9 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                         	response.errorException = SDLCToolExceptionService.showWarning('Internal Server Error', 'The server encountered an unexpected condition which prevented it from fulfilling the request.', SDLCToolExceptionService.DANGER);
                             return $q.reject(response);
                         }
+                        if(0 === parseInt(response.status, 10)) {
+                        	return $q.reject(response);
+                        }
 
                         response.errorException = SDLCToolExceptionService.showWarning('Service Unavailable', 'Service is not available for the moment. Please try again later.', SDLCToolExceptionService.DANGER);
                         return $q.reject(response);

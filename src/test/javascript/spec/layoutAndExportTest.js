@@ -238,7 +238,7 @@ describe('Protractor Security RAT Testsuite', function() {
 		element(by.buttonText("Action with selected")).click();
 		element(by.linkText("Create excel")).click();
 		browser.sleep(2000);
-		element(by.buttonText('create')).click();
+		element(by.buttonText('Create')).click();
 		browser.sleep(2000);
 		
 		//export to excel without status values.
@@ -248,7 +248,7 @@ describe('Protractor Security RAT Testsuite', function() {
 		element(by.linkText("Create excel")).click();
 		browser.sleep(2000);
 		element(by.id('statusValue')).click();
-		element(by.buttonText('create')).click();
+		element(by.buttonText('Create')).click();
 		
 		//deselects all
 		element(by.buttonText("Select")).click();
@@ -476,7 +476,7 @@ describe('Protractor Security RAT Testsuite', function() {
 		browser.sleep(1000);
 		element(by.binding('jira.url')).click();
 		browser.sleep(20000);
-		element(by.model('fields.issuetype.name')).sendKeys('Test');
+		element(by.id('issueType')).sendKeys('Test');
 		element(by.model('label.labelValue')).sendKeys('myNew Label');
 		element(by.id('addLabel')).click();
 		(element(by.buttonText("Create tickets"))).click();
