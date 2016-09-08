@@ -11,7 +11,8 @@
 		<span data-ng-if="field.autoCompleteUrl" uib-dropdown is-open="toggleAutoCompleteDropdown[field.key]" >
 			<ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="{{field.name.replace(' ', '-')}}" style="overflow: scroll;" data-ng-style="{'max-height':maxHeight}">
      				<li role="menuitem" data-ng-repeat="item in autoComplete[field.key]">
-     					<a data-ng-click="finishAutocomplete(field, item.name)"><span data-ng-bind-html="item.html"></span></a>
+     					<a data-ng-click="finishAutocomplete(field, item.name)" data-ng-if="item.html"><span data-ng-bind-html="item.html"></span></a>
+     					<a data-ng-click="finishAutocomplete(field, item.name)" data-ng-if="!item.html"><img src="item.avatarUrls[0]" /> {{item.displayName}} - {{item.emailAddress}} ({{item.key}})</a>
      				</li>
          	</ul>
 		</span>

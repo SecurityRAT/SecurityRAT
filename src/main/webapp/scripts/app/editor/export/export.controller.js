@@ -299,7 +299,7 @@ angular.module('sdlctoolApp')
 						case "user": 	$scope.autoComplete[field.key] = response.users;
 										break;
 						}
-						$scope.toggleAutoCompleteDropdown[field.key] = response.total > 0 ? true : false;
+						$scope.toggleAutoCompleteDropdown[field.key] = response.length > 0 ? true : false;
 					});
 				}
 			}

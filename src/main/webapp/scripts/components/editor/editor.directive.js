@@ -13,7 +13,7 @@ angular.module('sdlctoolApp')
 						return;
             		
             		switch(field.type) {
-            		case 'array':	var tempValue = commaSeparatedValues.split(',');
+            		case 'array':	var tempValue = values.split(',');
 	            					var users = [];
 	            					if(field.itemType === 'user') {
 	            						for(var i = 0; i < tempValue.length; i++) {
@@ -22,11 +22,6 @@ angular.module('sdlctoolApp')
 	            						return users;
 	            					}
 	            					break;
-            		case 'user':	var user = {
-            							name: values
-            						}
-            						return JSON.stringify(user);
-            						break;
             		}
             	}
             	// converts the controller value to view value.
@@ -48,8 +43,6 @@ angular.module('sdlctoolApp')
             							}
             						}
             						break;
-            		case 'user':	return JSON.parse(valuesFromController).name;
-            						break;
             		}
             	}
             	// Validates the model and view value.
@@ -57,8 +50,6 @@ angular.module('sdlctoolApp')
             		var value = toUser(modelValue) || viewValue;
             		if(field.itemType === 'user'){
             			return /^(\w+,\s*)*\w*$/.test(value);
-            		} else if (field.type === 'user') {
-            			return /^[a-z0-9]*$/.test(value);
             		}
             		return false;
             	};
