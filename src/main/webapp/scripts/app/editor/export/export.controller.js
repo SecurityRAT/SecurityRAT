@@ -384,7 +384,7 @@ angular.module('sdlctoolApp')
 		$scope.$watch('fields.issuetype.name', function(newVal, oldVal, scope) {
 			$scope.manFilterObject.projectKey = $scope.apiUrl.projectKey;
 			$scope.manFilterObject.issuetypeName = newVal;
-			var excludedFields = ['summary', 'issuetype', 'labels', 'project', 'description']; // reporter
+			var excludedFields = ['summary', 'issuetype', 'labels', 'project', 'reporter', 'description']; // 
 			var fatalFields = ['attachment', 'issuelinks'];
 			var tempFields = {};
 			angular.extend(tempFields, $scope.fields);
