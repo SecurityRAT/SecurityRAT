@@ -36,7 +36,11 @@ angular.module('sdlctoolApp')
             		case 'array':	if(Array.isArray(valuesFromController)) {
             							if(field.itemType === 'user') {
             								while(valuesFromController[i]) {
-            									modelValue.push(JSON.parse(valuesFromController[i]).name);
+            									try {
+            										modelValue.push(JSON.parse(valuesFromController[i]).name);
+            									} catch(err) {
+            										modelValue.push(valuesFromController[i].name)
+            									}
             									i++;
             								}
             							
