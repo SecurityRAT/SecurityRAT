@@ -6,6 +6,10 @@ server:
 # security configuration (this key should be unique for your application, and kept secret)
 jhipster.security.rememberme.key: c271d2839bfc8084e87cdbc4ef2982f431ad078e
 
+authentication:
+    type: FORM
+    registration: true
+    
 async:
     corePoolSize: 2
     maxPoolSize: 50
@@ -17,11 +21,11 @@ liquibase:
 spring:
     datasource:
         dataSourceClassName: org.h2.jdbcx.JdbcDataSource
-        url: jdbc:h2:mem:sdlctool;DB_CLOSE_DELAY=-1
+        url: jdbc:h2:mem:securityrat;DB_CLOSE_DELAY=-1
         databaseName:
         serverName:
-        username:
-        password:
+        username: 
+        password: 
 
     jpa:
         database-platform: org.appsec.securityRAT.domain.util.FixedH2Dialect
@@ -45,6 +49,11 @@ spring:
                 path:
                   logs: target/elasticsearch/log
                   data: target/elasticsearch/data
+    messages:
+        cache-seconds: 1
+    thymeleaf:
+        mode: XHTML
+        cache: false
 
 mail:
     host: localhost
@@ -54,6 +63,7 @@ mail:
     protocol: smtp
     tls: false
     auth: false
+    from: securityrat@localhost # from email address
 
 metrics:
     jmx.enabled: false
