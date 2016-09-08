@@ -5,8 +5,8 @@
 		</select>
 	</div>
 </div>
-<div data-ng-repeat="field in jiraAlternatives.mandatoryFields | filter : {mandatory : true}">
-	<div  data-ng-if="field.type != 'array' && field.type != ''" class="form-group" uib-dropdown is-open="toggleAutoCompleteDropdown[field.key]">
+<div data-ng-repeat="field in jiraAlternatives.mandatoryFields | filter : {mandatory : true}" uib-dropdown is-open="toggleAutoCompleteDropdown[field.key]">
+	<div  data-ng-if="field.type != 'array' && field.type != ''" class="form-group">
 		<label for="{{field.name}}" class="col-sm-2 control-label" data-ng-class="{'required-field': field.mandatory && !field.configurable}">{{field.name}}:</label>
 		<div class="col-sm-9" data-ng-if="!field.values">
 			<span data-ng-if="field.type == 'string'">
