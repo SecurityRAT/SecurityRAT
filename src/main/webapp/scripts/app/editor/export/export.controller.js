@@ -278,7 +278,7 @@ angular.module('sdlctoolApp')
 			//renders identification by jquery id possible.
 			$scope.getHeight(field.name.replace(' ', '-'));
 			var lastValue = '';
-			if($scope.fields[field.key]){
+			if($scope.fields[field.key] && angular.isDefined(field.autoCompleteUrl)){
 				switch(field.type) {
 				case 'array':	switch(field.itemType) {
 					
@@ -286,7 +286,7 @@ angular.module('sdlctoolApp')
 												break;
 								}
 								break;
-				case 'user':	lastValue = JSON.parse($scope.fields[field.key]).name;
+				case 'user':	lastValue = $scope.fields[field.key].name;
 								break;
 				}			
 				if(lastValue.length > 1) {
@@ -316,9 +316,7 @@ angular.module('sdlctoolApp')
 							$scope.fields[field.key].pop()
 							$scope.fields[field.key].push(JSON.stringify(value));
 							break;
-			case 'user':	value =JSON.parse($scope.fields[field.key]);
-							value.name = name;
-							$scope.fields[field.key] = JSON.stringify(value);
+			case 'user':	$scope.fields[field.key].name = name;
 			}
 		}
 		
@@ -373,8 +371,8 @@ angular.module('sdlctoolApp')
 						}
 					});
 				})
+				console.log($scope.jiraAlternatives.mandatoryFields);
 			});
-			console.log($scope.jiraAlternatives.mandatoryFields);
 		}
 		
 		// watch the issue type field and gets the mandatory fields depending on he issue type selected.

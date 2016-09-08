@@ -40,11 +40,8 @@
 			<span data-ng-if="field.type == 'number'">
 				<input type="number" id="{{field.name}}" data-ng-model="fields[field.key]" class="form-control"/>
 			</span>
-			<span data-ng-if="field.type == 'user'" data-ng-if="field.autoCompleteUrl">
-				<input type="text" id="{{field.name}}" ng-model="fields[field.key]" data-ng-change="requestAutoComplete(field)" split-array="{{field}}"class="form-control"/>
-			</span>
-			<span data-ng-if="field.type == 'user'" data-ng-if="!field.autoCompleteUrl" >
-				<input type="text" id="{{field.name}}" data-ng-model="fields[field.key]" class="form-control"/>
+			<span data-ng-if="(field.type == 'user') && field.autoCompleteUrl">
+				<input type="text" id="{{field.name}}" data-ng-model="fields[field.key]" data-ng-change="requestAutoComplete(field)" data-ng-pattern="/^[a-z0-9]*$/" class="form-control"/>
 			</span>
 		</div>
 		<div class="col-sm-9" data-ng-if="field.values">

@@ -33,7 +33,7 @@ angular.module('sdlctoolApp')
             	function toUser(valuesFromController) {
             		var modelValue = [];
             		var i = 0;
-            		if(angular.isUdefined(valuesFromController))
+            		if(angular.isUndefined(valuesFromController))
             			return;
             		
             		switch(field.type) {
