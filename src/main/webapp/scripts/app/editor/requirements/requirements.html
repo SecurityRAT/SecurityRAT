@@ -196,7 +196,7 @@
 						data-ng-if="(requirements | filter:{selected: true}).length && ticket.url != null">
 						
 						<img src="assets/images/jira-icon.png" width="16" height="16"/> Create JIRA tickets</a>
-						 <a href="" >
+						 <a href="" data-ng-if="(requirements | filter:{selected: true}).length == 0 || ticket.url == null && (requirements | filter:{selected: true}).length">
 							<span uib-tooltip="Please export the requirement set to JIRA first." tooltip-trigger="mouseenter" tooltip-placement="left"
 							data-ng-if="ticket.url == null && (requirements | filter:{selected: true}).length" class="disabledButton" tooltip-append-to-body>
 								<img src="assets/images/jira-icon.png" width="16" height="16"/> Create JIRA tickets
@@ -218,17 +218,6 @@
 							</span>
 						</a>
 					</li>
-					<!-- <li role="menuitem" class="dropdown-submenu" class="animate-hide" data-ng-hide="withselectedDropdown.toggleExcel">
-						<a href="">
-							<span data-ng-click="excelToggle()" data-ng-if="(requirements | filter:{selected: true}).length">
-								<img src="assets/images/Excel-icon.png"/> Create excel
-							</span>
-							<span data-ng-if="(requirements | filter:{selected: true}).length == 0" uib-tooltip="Please select requirements first." 
-								tooltip-trigger="mouseenter" tooltip-placement="left" class="disabledButton" tooltip-append-to-body>
-								<img src="assets/images/Excel-icon.png"/> Create excel
-							</span>
-						</a>
-					</li> -->
 					<li role="menuitem"  class="animate-hide" data-ng-hide="withselectedDropdown.toggleExcel">
 						<a href="">
 							<span data-ng-if="(requirements | filter:{selected: true}).length" data-ng-click="exportPTT()">
