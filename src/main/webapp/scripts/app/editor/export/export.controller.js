@@ -292,14 +292,19 @@ angular.module('sdlctoolApp')
 				if(lastValue.length > 1) {
 					apiFactory.getJIRAInfo(field.autoCompleteUrl.replace('/null/', '/') + lastValue).then(function(response) {
 						console.log(response);
-						if(field.type === 'array')
-							$scope.autoComplete[field.key] = response.users;
-						switch(field.itemType) {
-						
-						case "user": 	$scope.autoComplete[field.key] = response.users;
+
+						switch(field.type) {
+						case 'array': 	switch(field.itemType) {
+							
+										case "user": 	$scope.autoComplete[field.key] = response.users;
+														$scope.toggleAutoCompleteDropdown[field.key] = response.total > 0 ? true : false;
+														break;
+										}
+										break;
+						case 'user':	$scope.autoComplete[field.key] = response;
+										$scope.toggleAutoCompleteDropdown[field.key] = response.length > 0 ? true : false;
 										break;
 						}
-						$scope.toggleAutoCompleteDropdown[field.key] = response.length > 0 ? true : false;
 					});
 				}
 			}
