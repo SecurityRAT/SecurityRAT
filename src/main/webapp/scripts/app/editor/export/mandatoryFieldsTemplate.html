@@ -33,6 +33,12 @@
 			</span>
 			<span data-ng-if="(field.type == 'user') && field.autoCompleteUrl">
 				<input type="text" id="{{field.name.replace(' ', '-')}}" data-ng-model="fields[field.key].name" data-ng-change="requestAutoComplete(field)" data-ng-pattern="/^[a-z0-9]*$/" class="form-control"/>
+				<!-- dropdown for fields which can be auto completed. -->
+				<ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="{{field.name.replace(' ', '-')}}" style="overflow: scroll;" data-ng-style="{'max-height':maxHeight}">
+					<li role="menuitem" data-ng-repeat="item in autoComplete[field.key]">
+						<a data-ng-click="finishAutocomplete(field, item.name)" data-ng-if="!item.html"><img data-ng-src="{{item.avatarUrls['16x16']}}" alt="userAvatar"/> {{item.displayName}} - {{item.emailAddress}} ({{item.key}})</a>
+					</li>
+			  	</ul>
 			</span>
 		</div>
 		<div class="col-sm-9" data-ng-if="field.values">
@@ -78,6 +84,12 @@
 			<span data-ng-if="field.autoCompleteUrl && field.itemType !== 'string'">
 				<textarea class="form-control" id="{{field.name.replace(' ', '-')}}" name="{{field.name}}" rows="5" placeholder="comma seperated value" ng-model="fields[field.key]" 
 				data-ng-change="requestAutoComplete(field)" split-array="{{field}}"></textarea>
+				<!-- dropdown for fields which can be auto completed. -->
+				<ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="{{field.name.replace(' ', '-')}}" style="overflow: scroll;" data-ng-style="{'max-height':maxHeight}">
+					<li role="menuitem" data-ng-repeat="item in autoComplete[field.key]">
+						<a data-ng-click="finishAutocomplete(field, item.name)" data-ng-if="item.html"><span data-ng-bind-html="item.html"></span></a>
+					</li>
+			  	</ul>
 			</span>
 			<div data-ng-show="!fields[field.key]">
 				<p class="help-block">Please enter comma seperated strings. E.g john, mary</p>
@@ -89,11 +101,4 @@
 			</div>
 		</div>
 	</div>
-	<!-- dropdown for fields which can be auto completed. -->
-	<ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="{{field.name.replace(' ', '-')}}" style="overflow: scroll;" data-ng-style="{'max-height':maxHeight}">
-		<li role="menuitem" data-ng-repeat="item in autoComplete[field.key]">
-			<a data-ng-click="finishAutocomplete(field, item.name)" data-ng-if="item.html"><span data-ng-bind-html="item.html"></span></a>
-			<a data-ng-click="finishAutocomplete(field, item.name)" data-ng-if="!item.html"><img data-ng-src="{{item.avatarUrls['16x16']}}" alt="userAvatar"/> {{item.displayName}} - {{item.emailAddress}} ({{item.key}})</a>
-		</li>
-  	</ul>
 </div>
