@@ -291,7 +291,7 @@ angular.module('sdlctoolApp')
 				}			
 				if(lastValue.length > 1) {
 					apiFactory.getJIRAInfo(field.autoCompleteUrl.replace('/null/', '/') + lastValue).then(function(response) {
-
+						console.log(response)
 						switch(field.type) {
 						case 'array': 	switch(field.itemType) {
 							

@@ -6,15 +6,6 @@
 	</div>
 </div>
 <div data-ng-repeat="field in jiraAlternatives.mandatoryFields | filter : {mandatory : true}">
-	<!-- dropdown for fields which can be auto completed. -->
-	<span data-ng-if="field.autoCompleteUrl" uib-dropdown is-open="toggleAutoCompleteDropdown[field.key]">
-		<ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="{{field.name.replace(' ', '-')}}" style="overflow: scroll;" data-ng-style="{'max-height':maxHeight}">
-    				<li role="menuitem" data-ng-repeat="item in autoComplete[field.key]">
-    					<a data-ng-click="finishAutocomplete(field, item.name)" data-ng-if="item.html"><span data-ng-bind-html="item.html"></span></a>
-    					<a data-ng-click="finishAutocomplete(field, item.name)" data-ng-if="!item.html"><img src="item.avatarUrls.16x16" /> {{item.displayName}} - {{item.emailAddress}} ({{item.key}})</a>
-    				</li>
-        	</ul>
-	</span>
 	<div  data-ng-if="field.type != 'array' && field.type != ''" class="form-group">
 		<label for="{{field.name}}" class="col-sm-2 control-label" data-ng-class="{'required-field': field.mandatory && !field.configurable}">{{field.name}}:</label>
 		<div class="col-sm-9" data-ng-if="!field.values">
@@ -98,4 +89,13 @@
 			</div>
 		</div>
 	</div>
+	<!-- dropdown for fields which can be auto completed. -->
+	<span data-ng-if="field.autoCompleteUrl" uib-dropdown is-open="toggleAutoCompleteDropdown[field.key]">
+		<ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="{{field.name.replace(' ', '-')}}" style="overflow: scroll;" data-ng-style="{'max-height':maxHeight}">
+    				<li role="menuitem" data-ng-repeat="item in autoComplete[field.key]">
+    					<a data-ng-click="finishAutocomplete(field, item.name)" data-ng-if="item.html"><span data-ng-bind-html="item.html"></span></a>
+    					<a data-ng-click="finishAutocomplete(field, item.name)" data-ng-if="!item.html"><img data-ng-src="item.avatarUrls.16x16" /> {{item.displayName}} - {{item.emailAddress}} ({{item.key}})</a>
+    				</li>
+        	</ul>
+	</span>
 </div>
