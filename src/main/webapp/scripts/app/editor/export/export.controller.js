@@ -374,13 +374,14 @@ angular.module('sdlctoolApp')
 					});
 				})
 			});
+			console.log($scope.jiraAlternatives.mandatoryFields);
 		}
 		
 		// watch the issue type field and gets the mandatory fields depending on he issue type selected.
 		$scope.$watch('fields.issuetype.name', function(newVal, oldVal, scope) {
 			$scope.manFilterObject.projectKey = $scope.apiUrl.projectKey;
 			$scope.manFilterObject.issuetypeName = newVal;
-			var excludedFields = ['summary', 'issuetype', 'labels', 'project', 'description']; //'reporter',
+			var excludedFields = ['summary', 'issuetype', 'labels', 'project', 'description']; // reporter
 			var fatalFields = ['attachment', 'issuelinks'];
 			var tempFields = {};
 			angular.extend(tempFields, $scope.fields);

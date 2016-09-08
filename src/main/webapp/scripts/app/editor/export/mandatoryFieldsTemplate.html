@@ -41,10 +41,10 @@
 				<input type="number" id="{{field.name}}" data-ng-model="fields[field.key]" class="form-control"/>
 			</span>
 			<span data-ng-if="field.type == 'user'" data-ng-if="field.autoCompleteUrl">
-				<input type="number" id="{{field.name}}" ng-model="fields[field.key]" data-ng-change="requestAutoComplete(field)" split-array="{{field}}"class="form-control"/>
+				<input type="text" id="{{field.name}}" ng-model="fields[field.key]" data-ng-change="requestAutoComplete(field)" split-array="{{field}}"class="form-control"/>
 			</span>
 			<span data-ng-if="field.type == 'user'" data-ng-if="!field.autoCompleteUrl" >
-				<input type="number" id="{{field.name}}" data-ng-model="fields[field.key]" class="form-control"/>
+				<input type="text" id="{{field.name}}" data-ng-model="fields[field.key]" class="form-control"/>
 			</span>
 		</div>
 		<div class="col-sm-9" data-ng-if="field.values">

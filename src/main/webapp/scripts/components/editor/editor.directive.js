@@ -11,6 +11,7 @@ angular.module('sdlctoolApp')
             	function fromUser(values) {
             		if(!values)
 						return;
+            		
             		switch(field.type) {
             		case 'array':	var tempValue = commaSeparatedValues.split(',');
 	            					var users = [];
@@ -32,6 +33,9 @@ angular.module('sdlctoolApp')
             	function toUser(valuesFromController) {
             		var modelValue = [];
             		var i = 0;
+            		if(angular.isUdefined(valuesFromController))
+            			return;
+            		
             		switch(field.type) {
             		case 'array':	if(Array.isArray(valuesFromController)) {
             							if(field.itemType === 'user') {
