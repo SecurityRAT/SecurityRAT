@@ -279,13 +279,21 @@ angular.module('sdlctoolApp')
 			$scope.getHeight(field.name.replace(' ', '-'));
 			var lastValue = '';
 			if($scope.fields[field.key]){
-				switch(field.itemType) {
-				
-				case "user": lastValue = JSON.parse($scope.fields[field.key][$scope.fields[field.key].length - 1]).name;
-							 break;
-				}
+				switch(field.type) {
+				case 'array':	switch(field.itemType) {
+					
+								case "user":	lastValue = JSON.parse($scope.fields[field.key][$scope.fields[field.key].length - 1]).name;
+												break;
+								}
+								break;
+				case 'user':	lastValue = JSON.parse($scope.fields[field.key]).name;
+								break;
+				}			
 				if(lastValue.length > 1) {
 					apiFactory.getJIRAInfo(field.autoCompleteUrl.replace('/null/', '/') + lastValue).then(function(response) {
+						console.log(response);
+						if(field.type === 'array')
+							$scope.autoComplete[field.key] = response.users;
 						switch(field.itemType) {
 						
 						case "user": 	$scope.autoComplete[field.key] = response.users;
@@ -299,15 +307,19 @@ angular.module('sdlctoolApp')
 		
 		$scope.finishAutocomplete = function(field, name) {
 			var value = {};
-			switch(field.itemType) {
-			
-			case "user":  value =JSON.parse($scope.fields[field.key][$scope.fields[field.key].length - 1]);
-						 value.name = name;
-						 
-						 break;
+			switch(field.type) {
+			case 'array':	switch(field.itemType) {
+							case "user":	value =JSON.parse($scope.fields[field.key][$scope.fields[field.key].length - 1]);
+											value.name = name;
+											break;
+							}
+							$scope.fields[field.key].pop()
+							$scope.fields[field.key].push(JSON.stringify(value));
+							break;
+			case 'user':	value =JSON.parse($scope.fields[field.key]);
+							value.name = name;
+							$scope.fields[field.key] = JSON.stringify(value);
 			}
-			$scope.fields[field.key].pop()
-			$scope.fields[field.key].push(JSON.stringify(value));
 		}
 		
 		/**
@@ -368,7 +380,7 @@ angular.module('sdlctoolApp')
 		$scope.$watch('fields.issuetype.name', function(newVal, oldVal, scope) {
 			$scope.manFilterObject.projectKey = $scope.apiUrl.projectKey;
 			$scope.manFilterObject.issuetypeName = newVal;
-			var excludedFields = ['summary', 'issuetype', 'labels', 'reporter', 'project', 'description'];
+			var excludedFields = ['summary', 'issuetype', 'labels', 'project', 'description']; //'reporter',
 			var fatalFields = ['attachment', 'issuelinks'];
 			var tempFields = {};
 			angular.extend(tempFields, $scope.fields);

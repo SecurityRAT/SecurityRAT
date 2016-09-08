@@ -28,7 +28,6 @@ angular.module('sdlctoolApp').controller('UserManagementDialogController',
             	$scope.user.password = "Dummy=2pass";
             	$scope.user.langKey = 'en';
             	User.save($scope.user, onSaveFinished, function(error) {
-            		console.log(error);
             		if(error.status == 400) {
             			AlertService.error('Username or email already in use', ['email', 'username'])
             		}

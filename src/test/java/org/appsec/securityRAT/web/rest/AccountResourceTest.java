@@ -148,7 +148,7 @@ public class AccountResourceTest {
     public void testRegisterValid() throws Exception {
         UserDTO u = new UserDTO(
             "joe",                  // login
-            "password",             // password
+            "JLrs~1`&",             // password
             "Joe",                  // firstName
             "Shmoe",                // lastName
             "joe@example.com",      // e-mail
@@ -171,7 +171,7 @@ public class AccountResourceTest {
     public void testRegisterInvalidLogin() throws Exception {
         UserDTO u = new UserDTO(
             "funky-log!n",          // login <-- invalid
-            "password",             // password
+            "JLrs~1`&",             // password
             "Funky",                // firstName
             "One",                  // lastName
             "funky@example.com",    // e-mail
@@ -194,7 +194,7 @@ public class AccountResourceTest {
     public void testRegisterInvalidEmail() throws Exception {
         UserDTO u = new UserDTO(
             "bob",              // login
-            "password",         // password
+            "JLrs~1`&",         // password
             "Bob",              // firstName
             "Green",            // lastName
             "invalid",          // e-mail <-- invalid
@@ -218,7 +218,7 @@ public class AccountResourceTest {
         // Good
         UserDTO u = new UserDTO(
             "alice",                // login
-            "password",             // password
+            "JLrs~1`&",             // password
             "Alice",                // firstName
             "Something",            // lastName
             "alice@example.com",    // e-mail
@@ -254,7 +254,7 @@ public class AccountResourceTest {
         // Good
         UserDTO u = new UserDTO(
             "john",                 // login
-            "password",             // password
+            "JLrs~1`&",             // password
             "John",                 // firstName
             "Doe",                  // lastName
             "john@example.com",     // e-mail
@@ -289,7 +289,7 @@ public class AccountResourceTest {
     public void testRegisterAdminIsIgnored() throws Exception {
         UserDTO u = new UserDTO(
             "badguy",               // login
-            "password",             // password
+            "JLrs~1`&",             // password
             "Bad",                  // firstName
             "Guy",                  // lastName
             "badguy@example.com",   // e-mail
@@ -306,6 +306,6 @@ public class AccountResourceTest {
         Optional<User> userDup = userRepository.findOneByLogin("badguy");
         assertThat(userDup.isPresent()).isTrue();
         assertThat(userDup.get().getAuthorities()).hasSize(1)
-            .containsExactly(authorityRepository.findOne(AuthoritiesConstants.USER));
+            .containsExactly(authorityRepository.findOne(AuthoritiesConstants.FRONTEND_USER));
     }
 }

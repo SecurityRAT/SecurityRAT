@@ -6,7 +6,7 @@
     <div class="modal-body">
     <uib-alert  class="text-center col-sm-10" data-ng-if="exportProperty.fail" type="alert alert-danger">{{exportProperty.failed}}</uib-alert>
     	<div class="row form-group">
-			<div class="text-center col-sm-11">		
+			<div class="text-center col-sm-9">		
 				<div class="input-group">
 					<span class="input-group-addon required-field">URL:</span>
 					<input type="text" placeholder="e.g. https://www.example-jira.com/browse/DUMBQ" data-ng-model="jiraUrl.url" class="form-control"/>
@@ -15,6 +15,18 @@
 			<div data-ng-if="exportProperty.showSpinner"class="text-center col-sm-1" uib-popover="Authentication running..." popover-placement="top" popover-trigger="mouseenter" 
 				popover-append-to-body>
 				<span id="UsSpinner" spinner-on="exportProperty.showSpinner" us-spinner="{radius:5, width:3, length:3, lines:9}"></span>
+			</div>
+			<div class="col-sm-offset-1" uib-dropdown auto-close="disabled" data-ng-if="()(jiraAlternatives.mandatoryFields | filter : {configurable : true}).length > 0) && fields.issuetype.name">
+				<button type="button" class="btn btn-default" uib-dropdown-toggle id="dropdown-fields" data-ng-click="getHeight('dropdown-fields')">
+                  		<span class="glyphicon glyphicon-wrench"></span> Configure fields <span class="caret">
+                  	</button>
+                  	<ul class="dropdown-menu dropdown-menu-right newspaper" uib-dropdown-menu role="menu" aria-labelledby="dropdown-fields" data-ng-style="{'max-height':maxHeight}">
+        				<li role="menuitem" data-ng-repeat="field in jiraAlternatives.mandatoryFields | filter : {configurable : true}" >
+        					<span class="customFields"><input type="checkbox" data-ng-model="field.mandatory">
+        					{{field.name}}
+        					</span>
+        				</li>
+        			</ul>
 			</div>
 		</div>
 		<div class="row col-sm-12">

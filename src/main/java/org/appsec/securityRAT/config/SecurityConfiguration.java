@@ -177,7 +177,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.GET, "/frontend-api/**").hasAnyAuthority(AuthoritiesConstants.FRONTEND_USER, AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER)
 				.antMatchers("/api/**").hasAnyAuthority(AuthoritiesConstants.ADMIN, AuthoritiesConstants.USER)
 				.antMatchers(HttpMethod.GET, "/admin-api/configConstants").permitAll()
-				.antMatchers("/admin-api/**").hasAnyAuthority(AuthoritiesConstants.ADMIN)
+				.antMatchers("/admin-api/**").hasAuthority(AuthoritiesConstants.ADMIN)
 	//			.antMatchers("/v2/api-docs/**").permitAll()
 				.antMatchers("/configuration/security").permitAll()
 				.antMatchers("/configuration/ui").permitAll()

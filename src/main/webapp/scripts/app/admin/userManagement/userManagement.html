@@ -63,7 +63,7 @@
         	<col style="width:15%">
             <thead>
                 <tr>
-                    <!--<th>ID</th>-->
+                    <th>Username</th>
                     <th>Firstname</th>
                     <th>Lastname</th>
                     <th>Email</th>
@@ -73,6 +73,7 @@
             </thead>
             <tbody>
                 <tr class="animate-repeat" data-ng-repeat="user in usersWithAuthorities  | orderBy :['firstname', 'lastname']">
+                	<td class="col-sm-3"><strong>{{user.login}}</strong></td>
                     <td class="col-sm-3">{{user.firstName}}</td>
                     <td class="col-sm-3">{{user.lastName}}</td>
                     <td class="col-sm-3">{{user.email}}</td>
