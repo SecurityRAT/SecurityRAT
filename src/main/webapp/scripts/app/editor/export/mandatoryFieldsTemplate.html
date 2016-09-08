@@ -5,7 +5,7 @@
 		</select>
 	</div>
 </div>
-<div data-ng-repeat="field in jiraAlternatives.mandatoryFields | filter : {mandatory : true}" uib-dropdown is-open="toggleAutoCompleteDropdown[field.key]">
+<div data-ng-repeat="field in jiraAlternatives.mandatoryFields | filter : {mandatory : true}" >
 	<div  data-ng-if="field.type != 'array' && field.type != ''" class="form-group" >
 		<label for="{{field.name}}" class="col-sm-2 control-label" data-ng-class="{'required-field': field.mandatory && !field.configurable}">{{field.name}}:</label>
 		<div class="col-sm-9" data-ng-if="!field.values">
@@ -31,12 +31,12 @@
 			<span data-ng-if="field.type == 'number'">
 				<input type="number" id="{{field.name}}" data-ng-model="fields[field.key]" class="form-control"/>
 			</span>
-			<span data-ng-if="(field.type == 'user') && field.autoCompleteUrl">
+			<span data-ng-if="(field.type == 'user') && field.autoCompleteUrl" uib-dropdown is-open="toggleAutoCompleteDropdown[field.key]">
 				<input type="text" id="{{field.name.replace(' ', '-')}}" data-ng-model="fields[field.key].name" data-ng-change="requestAutoComplete(field)" data-ng-pattern="/^[a-z0-9]*$/" class="form-control"/>
 				<!-- dropdown for fields which can be auto completed. -->
 				<ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="{{field.name.replace(' ', '-')}}" style="overflow: scroll;" data-ng-style="{'max-height':maxHeight}">
 					<li role="menuitem" data-ng-repeat="item in autoComplete[field.key]">
-						<a data-ng-click="finishAutocomplete(field, item.name)" data-ng-if="!item.html"><img data-ng-src="{{item.avatarUrls['16x16']}}" alt="userAvatar"/> {{item.displayName}} - {{item.emailAddress}} ({{item.key}})</a>
+						<a data-ng-click="finishAutocomplete(field, item.name)"><img data-ng-src="{{item.avatarUrls['16x16']}}" alt="userAvatar"/> {{item.displayName}} - {{item.emailAddress}} ({{item.key}})</a>
 					</li>
 			  	</ul>
 			</span>
@@ -81,13 +81,13 @@
 			<span data-ng-if="!field.autoCompleteUrl || field.itemType === 'string'">
 				<textarea class="form-control" id="{{field.name}}" name="{{field.name}}" rows="5" placeholder="comma seperated value" ng-model="fields[field.key]" data-ng-list></textarea>
 			</span>
-			<span data-ng-if="field.autoCompleteUrl && field.itemType !== 'string'">
+			<span data-ng-if="field.autoCompleteUrl && field.itemType !== 'string'" uib-dropdown is-open="toggleAutoCompleteDropdown[field.key]">
 				<textarea class="form-control" id="{{field.name.replace(' ', '-')}}" name="{{field.name}}" rows="5" placeholder="comma seperated value" ng-model="fields[field.key]" 
 				data-ng-change="requestAutoComplete(field)" split-array="{{field}}"></textarea>
 				<!-- dropdown for fields which can be auto completed. -->
 				<ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="{{field.name.replace(' ', '-')}}" style="overflow: scroll;" data-ng-style="{'max-height':maxHeight}">
 					<li role="menuitem" data-ng-repeat="item in autoComplete[field.key]">
-						<a data-ng-click="finishAutocomplete(field, item.name)" data-ng-if="item.html"><span data-ng-bind-html="item.html"></span></a>
+						<a data-ng-click="finishAutocomplete(field, item.name)"><span data-ng-bind-html="item.html"></span></a>
 					</li>
 			  	</ul>
 			</span>
