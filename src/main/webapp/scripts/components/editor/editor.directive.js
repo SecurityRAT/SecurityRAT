@@ -26,6 +26,7 @@ angular.module('sdlctoolApp')
             	}
             	// converts the controller value to view value.
             	function toUser(valuesFromController) {
+            		console.log(valuesFromController);
             		var modelValue = [];
             		var i = 0;
             		if(angular.isUndefined(valuesFromController))
