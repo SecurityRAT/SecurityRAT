@@ -291,7 +291,6 @@ angular.module('sdlctoolApp')
 				}			
 				if(lastValue.length > 1) {
 					apiFactory.getJIRAInfo(field.autoCompleteUrl.replace('/null/', '/') + lastValue).then(function(response) {
-						console.log(response);
 
 						switch(field.type) {
 						case 'array': 	switch(field.itemType) {
@@ -305,6 +304,7 @@ angular.module('sdlctoolApp')
 										$scope.toggleAutoCompleteDropdown[field.key] = response.length > 0 ? true : false;
 										break;
 						}
+						console.log($scope.autoComplete);
 					});
 				}
 			}
