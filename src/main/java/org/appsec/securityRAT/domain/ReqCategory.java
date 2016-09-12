@@ -1,9 +1,11 @@
 package org.appsec.securityRAT.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -31,6 +33,7 @@ public class ReqCategory implements Serializable {
     private String shortcut;
 
     @Column(name = "description")
+    @Lob
     private String description;
 
     @Column(name = "show_order")

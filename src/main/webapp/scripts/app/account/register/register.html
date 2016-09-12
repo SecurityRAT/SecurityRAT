@@ -113,7 +113,7 @@
                                data-ng-show="form.password.$error.maxlength">
                             Your password cannot be longer than 50 characters.
                         </p>
-                        <span class="help-block"
+                        <div class="help-block"
                                data-ng-show="form.password.$error.pattern" id="patternPassError">
                             <p>Your password should have:</p> 
                             <ul>
@@ -125,8 +125,8 @@
                             Allowed standard characters:
                             <ul><li><b>A-Z, a-z, 0-9</b></li></ul>
                             Allowed symbols
-                            <ul><li><b>!"#$%&'()*+,-./:;<=>?@[]^_`{|}~</b></li></ul>
-                        </span>
+                            <ul><li><b>!"#$%&'()*+,-./:;&lt;&gt;=?@[]^_`{|}~</b></li></ul>
+                        </div>
                     </div>
                     <password-strength-bar password-to-check="registerAccount.password"></password-strength-bar>
                 </div>
@@ -147,7 +147,7 @@
                                data-ng-show="form.confirmPassword.$error.maxlength">
                             Your confirmation password cannot be longer than 50 characters.
                         </p>
-                        <span class="help-block"
+                        <div class="help-block"
                                data-ng-show="form.password.$error.pattern">
                             <p>Your password should have:</p> 
                             <ul>
@@ -159,8 +159,8 @@
                             Allowed standard characters:
                             <ul><li><b>A-Z, a-z, 0-9</b></li></ul>
                             Allowed symbols
-                            <ul><li><b>!"#$%&'()*+,-./:;<=>?@[]^_`{|}~</b></li></ul>
-                        </span>
+                            <ul><li><b>!"#$%&'()*+,-./:;&lt;&gt;=?@[]^_`{|}~</b></li></ul>
+                        </div>
                     </div>
                 </div>
 

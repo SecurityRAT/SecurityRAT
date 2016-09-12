@@ -24,12 +24,12 @@ angular.module('sdlctoolApp')
                 	link.id = 'theme';
         			link.rel = 'stylesheet';
         			link.type = 'text/css';
-        			link.href = 'scripts/app/editor/presentation/myRevealjs/reveal.js/css/theme/' + $stateParams.theme;
+        			link.href = 'scripts/app/editor/presentation/myRevealjs/revealjs/css/theme/' + $stateParams.theme;
         			var link2 = document.createElement( 'link' );
         			link2.id = 'reveal';
         			link2.rel = 'stylesheet';
         			link2.type = 'text/css';
-        			link2.href = 'scripts/app/editor/presentation/myRevealjs/reveal.js/css/reveal.css';
+        			link2.href = 'scripts/app/editor/presentation/myRevealjs/revealjs/css/reveal.css';
         			document.getElementsByTagName( 'head' )[0].appendChild( link2 );
         			document.getElementsByTagName( 'head' )[0].appendChild( link );
         			

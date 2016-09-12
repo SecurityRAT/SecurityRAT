@@ -2,7 +2,7 @@ angular.module('sdlctoolApp')
 	.controller('PresentationController', function ($scope, $rootScope, localStorageService, $filter, $timeout, $state) {
 		$scope.values = localStorageService.get('myRevealjs');
 //		console.log($scope.values);
-//		localStorageService.remove('myRevealjs');
+		localStorageService.remove('myRevealjs');
 		$scope.categories = [];
 		$scope.regex = /^\s+$/g;
 		function hasValue(id, arrayValue) {
@@ -30,20 +30,18 @@ angular.module('sdlctoolApp')
 				progress: true,
 				center: true,
 				transition: $scope.values.config.transition,
-				// More info https://github.com/hakimel/reveal.js#dependencies
+				// More info https://github.com/hakimel/revealjs#dependencies
 				dependencies: [
-					{ src: 'scripts/app/editor/presentation/myRevealjs/reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
-					{ src: 'scripts/app/editor/presentation/myRevealjs/reveal.js/plugin/markdown/marked.js' },
-					{ src: 'scripts/app/editor/presentation/myRevealjs/reveal.js/plugin/markdown/markdown.js' },
-					{ src: 'scripts/app/editor/presentation/myRevealjs/reveal.js/plugin/notes/notes.js', async: true },
-					{ src: 'scripts/app/editor/presentation/myRevealjs/reveal.js/plugin/zoom-js/zoom.js', async: true },
+					{ src: 'scripts/app/editor/presentation/myRevealjs/revealjs/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'scripts/app/editor/presentation/myRevealjs/revealjs/plugin/markdown/marked.js' },
+					{ src: 'scripts/app/editor/presentation/myRevealjs/revealjs/plugin/markdown/markdown.js' },
+					{ src: 'scripts/app/editor/presentation/myRevealjs/revealjs/plugin/notes/notes.js', async: true },
+					{ src: 'scripts/app/editor/presentation/myRevealjs/revealjs/plugin/zoom-js/zoom.js', async: true },
 				]
 			});
 			$timeout(function() {
 				$(document).ready(function() {
-				console.log('fertig');
 				  $('pre code').each(function(i, block) {
-					  console.log(block);
 				    hljs.highlightBlock(block);
 				  });
 				});

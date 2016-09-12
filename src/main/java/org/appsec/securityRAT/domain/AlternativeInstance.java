@@ -24,6 +24,7 @@ public class AlternativeInstance implements Serializable {
 
 
     @Column(name = "content")
+    @Lob
     private String content;
 
     @ManyToOne

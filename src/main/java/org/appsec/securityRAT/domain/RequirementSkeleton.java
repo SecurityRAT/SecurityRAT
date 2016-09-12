@@ -31,6 +31,7 @@ public class RequirementSkeleton implements Serializable {
     private String shortName;
 
     @Column(name = "description")
+    @Lob
     private String description;
 
     @Column(name = "show_order")

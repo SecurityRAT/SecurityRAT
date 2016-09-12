@@ -5,6 +5,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -24,6 +25,7 @@ public class OptColumnContent implements Serializable {
 
 
     @Column(name = "content")
+    @Lob
     private String content;
 
     @ManyToOne

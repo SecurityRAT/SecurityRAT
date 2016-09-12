@@ -40,7 +40,6 @@ angular.module('sdlctoolApp')
 				if(!$scope.config.description) {
 					delete requirement.description
 				}
-				console.log(requirement.optionColumns)
 				for(var i = 0; i < requirement.optionColumns.length; i++) {
 					if(!$scope.config.optionColumns[requirement.optionColumns[i].showOrder]) {
 						requirement.optionColumns.splice(i, 1);

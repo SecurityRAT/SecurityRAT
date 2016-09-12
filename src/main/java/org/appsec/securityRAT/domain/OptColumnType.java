@@ -1,11 +1,13 @@
 package org.appsec.securityRAT.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -30,6 +32,7 @@ public class OptColumnType implements Serializable {
     private String name;
 
     @Column(name = "description")
+    @Lob
     private String description;
 
     @OneToMany(mappedBy = "optColumnType")
