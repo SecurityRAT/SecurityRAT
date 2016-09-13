@@ -5,7 +5,7 @@ angular.module('sdlctoolApp')
         $stateProvider
             .state('ferequirementSkeleton', {
                 parent: 'febrowse',
-                url: '/ferequirementSkeletons',
+                url: '/reqId',
                 data: {
                     roles: ['ROLE_USER', 'ROLE_FRONTEND_USER', 'ROLE_ADMIN'],
                     pageTitle: 'Browse requirementSkeletons'

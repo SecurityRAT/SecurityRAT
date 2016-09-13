@@ -68,7 +68,12 @@
             <tbody>
                 <tr class="animate-repeat" data-ng-repeat="requirementSkeleton in requirementSkeletons | filterByTagForReqSkeletons : selectedTags | filterByCollsForReqSkeletons : selectedColls| filterByTypesForReqSkeletons : selectedTypes 
                 | orderBy : ['reqCategory.showOrder','showOrder'] | filter: searchQuery  track by requirementSkeleton.id">
-                    <td><strong>{{requirementSkeleton.shortName}}</strong></td>
+                    <td>
+                    	<strong>{{requirementSkeleton.shortName}}</strong>
+                    	<span id="feedbackIcon" data-ng-if="!updatedReqs" uib-tooltip="Give feedback for this requirement." style="cursor:pointer;" data-ng-click="openFeedback(requirementSkeleton)" tooltip-append-to-body>
+	    					<img src="assets/images/feedback.png" width="16" height="16">
+	    				</span>
+			    	</td>
                     <td>{{requirementSkeleton.description}}</td>
                     <!-- <td class="text-center">{{requirementSkeleton.showOrder}}</td>-->
 

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('FeRequirementSkeletonController', function ($scope, $filter, sharedProperties, apiFactory, $document) {
+    .controller('FeRequirementSkeletonController', function ($scope, $filter, sharedProperties, apiFactory, $document, $uibModal) {
         $scope.requirementSkeletons = [];
         $scope.tagCategories = [];
         $scope.collCategories = [];
@@ -49,6 +49,19 @@ angular.module('sdlctoolApp')
             $scope.dropdowns.coll = {buttonText: 'Collections', open: false, defaultText: 'Collections'};
         };
         $scope.loadAll();
+        
+        $scope.openFeedback = function(requirement) {
+  		  //console.log(requirement);
+  		  sharedProperties.setProperty(requirement);
+  		  var modalInstance = $uibModal.open({
+  			  size: 'lg',
+  			  backdrop: 'static',
+  	          templateUrl: 'scripts/app/editor/feedback/feedback.html',
+  	          controller: 'FeedbackController'
+  		  });
+  		  
+  		  modalInstance.result.then();
+        }
         
         $scope.toggleDropdown = function(selector, $event) {
         	var dropdowns = ['tag', 'coll'];
