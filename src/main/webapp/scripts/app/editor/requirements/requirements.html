@@ -214,14 +214,14 @@
 							</span>
 							<span data-ng-if="(requirements | filter:{selected: true}).length == 0" uib-tooltip="Please select requirements first." 
 								tooltip-trigger="mouseenter" tooltip-placement="left" class="disabledButton" tooltip-append-to-body>
-								<img src="assets/images/Excel-icon.png"/> Create excel
+								<img src="assets/images/Excel-icon.png"/> Create spreadsheet
 							</span>
 						</a>
 					</li>
 					<li role="menuitem"  class="animate-hide" data-ng-hide="withselectedDropdown.toggleExcel">
 						<a href="">
 							<span data-ng-if="(requirements | filter:{selected: true}).length" data-ng-click="exportPTT()">
-								<img src="assets/images/powerpoint-icon.png"/> Create presentation
+								<img src="assets/images/powerpoint-icon.png"/> Create slides
 							</span>
 							<span data-ng-if="(requirements | filter:{selected: true}).length == 0" uib-tooltip="Please select requirements first." 
 								tooltip-trigger="mouseenter" tooltip-placement="left" class="disabledButton" tooltip-append-to-body>
@@ -356,7 +356,7 @@
 			    		<td data-ng-class="{changes:reqs.isOld}" data-ng-style="(reqs.isNew && {'background-color':'rgb(204, 255, 204)'}) || reqs.isOld && {'background-color':'rgb(255, 204, 204)'}" data-ng-bind-html="reqs.description | trusted"></td>
 			    		<td data-ng-repeat="optionColumn in reqs.optionColumns | orderBy:'showOrder'"  
 			    		data-ng-style="(reqs.isNew && {'background-color':'rgb(204, 255, 204)'}) || reqs.isOld && {'background-color':'rgb(255, 204, 204)'}">
-			    			<div  data-ng-repeat="optionColumnContent in optionColumn.content" data-ng-show="optToHide.indexOf(optionColumn.showOrder) == -1">
+			    			<div data-ng-repeat="optionColumnContent in optionColumn.content" data-ng-show="optToHide.indexOf(optionColumn.showOrder) == -1">
 		    					<div marked="optionColumnContent.content"></div>
 			    			</div>
 			    		</td>

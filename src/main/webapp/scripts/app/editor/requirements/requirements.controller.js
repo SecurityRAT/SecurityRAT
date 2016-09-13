@@ -9,7 +9,7 @@
  */
 angular.module('sdlctoolApp')
   .controller('RequirementsController',function ($scope, apiFactory, sharedProperties, $httpParamSerializer, $interval, 
-		  $timeout, $uibModal, $filter, getRequirementsFromImport, $confirm, $location, localStorageService, appConfig, $sce, SDLCToolExceptionService, $rootScope) {
+		  $timeout, $uibModal, $filter, getRequirementsFromImport, $confirm, $location, localStorageService, appConfig, $sce, SDLCToolExceptionService, $rootScope, marked) {
 	  $scope.failed = "";
 	  $scope.fail = false;
 	  $scope.endProgressbar = true;
@@ -1112,12 +1112,12 @@ angular.module('sdlctoolApp')
 								 angular.forEach(newRequirementOptColumns.content, function(newRequirementContent) {
 									 angular.forEach(oldRequirementOptColumns.content, function(oldRequirementContent) {
 									 	//var newRequirementcontentmodified =
-									 	if((newRequirementContent.content.replace(/[^\x20-\x7E]|\s+/gmi, "") !== oldRequirementContent.content.replace(/[^\x20-\x7E]|\s+/gmi, "")) 
+									 	if((newRequirementContent.content.replace(/[^\x20-\x7E]|\s+|\x60/gmi, "") !== oldRequirementContent.content.replace(/[^\x20-\x7E]|\s+|\x60/gmi, "")) 
 									 			&& (newRequirementContent.id === oldRequirementContent.id)) {
 									 		var changes = diffString2(oldRequirementContent.content, newRequirementContent.content);
-									 		oldRequirementContent.oldContent = changes.o;
+									 		oldRequirementContent.oldContent = changes.o.replace(/\x60/gmi, "");
 									 		newRequirementContent.oldContent = newRequirementContent.content;
-									 		newRequirementContent.content = changes.n;
+									 		newRequirementContent.content = changes.n.replace(/\x60/gmi, "");
 									 		requirementToInsert = newRequirement;
 									 		if(!foundOne) {
 									 			angular.extend(requirementToInsert, {isNew: true, isOld: false, needsUpdate:true});
