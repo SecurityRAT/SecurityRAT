@@ -1,7 +1,7 @@
 {
-  "name": "sdlctool",
+  "name": "securityRAT",
   "version": "0.0.0",
-  "description": "Description for sdlctool",
+  "description": "Description for securityRAT",
   "private": true,
   "dependencies": {},
   "devDependencies": {
