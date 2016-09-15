@@ -97,7 +97,7 @@
                     <td>
                         <a ui-sref="optColumn.detail({id:optColumnContent.optColumn.id})">{{optColumnContent.optColumn.name}}</a>
                     </td>
-                    <td><div marked='optColumnContent.content'></div></td>
+                    <td data-ng-bind-html="optColumnContent.content | trusted"></td>
 
                     <td>
                         <button type="submit"

@@ -21,7 +21,7 @@
                     > -->
             <textarea id="field_content" class="container" data-ng-model='optColumnContent.content' rows="10" cols="125" required></textarea>
         </div>
-        <div marked="optColumnContent.content"></div>
+        <div data-ng-bind-html="optColumnContent.content | trusted"></div>
         <div class="form-group">
             <label for="field_optColumn">optColumn</label>
 

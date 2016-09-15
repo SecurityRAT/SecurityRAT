@@ -250,11 +250,13 @@ angular.module('sdlctoolApp')
 				apiFactory.postExport(url, postData, {'X-Atlassian-Token': 'nocheck', 'Content-Type': 'application/json'}).then(function() {
 					
 				}, function(exception) {
+					console.log(exception)
 					if(exception.status !== 500) {
 						if(exception.errorException.opened.$$state.status === 0) {
 							exception.errorException.opened.$$state.value = false;
 							exception.errorException.opened.$$state.status = 1;
 	                	}
+						
 						if(parseInt(exception.status) === 404) {
 							var project = $scope.jiraUrl.url.split("/").pop();
 							$scope.exportProperty.issuelink = "disabled";

@@ -21,7 +21,7 @@
                     > -->
             <textarea id="field_content" class="container" data-ng-model='alternativeInstance.content' cols="125" rows="10" required></textarea>
         </div>
-        <div marked="alternativeInstance.content"></div>
+        <div data-ng-bind-html="alternativeInstance.content | trusted"></div>
         <div class="form-group">
             <label for="field_alternativeSet">alternativeSet</label>
             

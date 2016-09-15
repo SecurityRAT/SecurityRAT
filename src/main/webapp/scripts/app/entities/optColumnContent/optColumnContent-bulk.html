@@ -28,7 +28,7 @@
         			<th>Content</th>
         		</tr>
 				<tr data-ng-repeat="content in optColumnContents">
-					<td marked="content.content"></td>
+					<td data-ng-bind-html="content.content | trusted"></td>
 				</tr>
 			</table>
         </div>

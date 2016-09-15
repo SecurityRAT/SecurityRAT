@@ -137,7 +137,7 @@ angular.module('sdlctoolApp')
 	  
 	  $scope.close = function() {
 		  var item = {};
-		  $scope.updateOptColumns();
+//		  $scope.updateOptColumns();
 		  if($scope.status.add) {
 			  var index = -1;
 			  var categoryIndex = 0;

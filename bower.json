@@ -4,7 +4,7 @@
   "appPath": "src/main/webapp",
   "testPath": "src/test/javascript/spec",
   "dependencies": {
-    "angular": "1.4.4",
+    "angular": "1.5.8",
     "angular-animate": "1.4.4",
     "angular-bootstrap": "~0.14.3",
     "angular-cache-buster": "0.4.3",
@@ -52,7 +52,7 @@
     }
   },
   "resolutions": {
-    "angular": "1.4.4",
+    "angular": "1.5.8",
     "angular-cookies": "1.4.4",
     "jquery": "2.1.4"
   }

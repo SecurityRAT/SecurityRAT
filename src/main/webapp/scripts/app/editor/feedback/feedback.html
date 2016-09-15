@@ -15,7 +15,7 @@
 					<label  class="col-sm-2 control-label">{{optColumn.name}}</label>
 					<div class="col-sm-10">
 						<span data-ng-repeat="con in optColumn.content" >
-							<span marked="con.content"></span>
+							<span data-ng-bind-html="con.content | trusted"></span>
 						</span>
 					</div>
 				</div>

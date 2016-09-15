@@ -695,8 +695,9 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
         		}
         	}
         })
-        .filter('trusted', function($sce){
+        .filter('trusted', function($sce, marked){
 	        return function(html){
-	            return $sce.trustAsHtml(html)
+	        	if(!!$sce.getTrustedHtml(html));
+	            	return marked(html);
 	        }
         });

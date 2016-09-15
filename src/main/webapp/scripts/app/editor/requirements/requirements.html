@@ -353,11 +353,14 @@
 			    				</span>
 				    		</div>
 			    		</td>
-			    		<td data-ng-class="{changes:reqs.isOld}" data-ng-style="(reqs.isNew && {'background-color':'rgb(204, 255, 204)'}) || reqs.isOld && {'background-color':'rgb(255, 204, 204)'}" data-ng-bind-html="reqs.description | trusted"></td>
+			    		<td  data-ng-class="{changes:reqs.isOld}" data-ng-style="(reqs.isNew && {'background-color':'rgb(204, 255, 204)'}) 
+			    		|| reqs.isOld && {'background-color':'rgb(255, 204, 204)'}">
+			    			<div  marked="reqs.description"></div>
+			    		</td>
 			    		<td data-ng-repeat="optionColumn in reqs.optionColumns | orderBy:'showOrder'"  
 			    		data-ng-style="(reqs.isNew && {'background-color':'rgb(204, 255, 204)'}) || reqs.isOld && {'background-color':'rgb(255, 204, 204)'}">
 			    			<div data-ng-repeat="optionColumnContent in optionColumn.content" data-ng-show="optToHide.indexOf(optionColumn.showOrder) == -1">
-		    					<div marked="optionColumnContent.content"></div>
+			    				<div marked="optionColumnContent.content"></div>
 			    			</div>
 			    		</td>
 			    		<td class="text-center"data-ng-repeat="stats in statusColumns | orderBy:'showOrder'" 
