@@ -291,7 +291,13 @@ angular.module('sdlctoolApp')
 									"object" : {
 										"url": $scope.jiraUrl.url + '-' + outwardKey.split('-')[outwardKey.split('-').length - 1],
 										"title": outwardKey,
-										"summary": remoteIssueInfo.summary
+										"summary": remoteIssueInfo.fieldObject.summary
+									},
+									"status" : {
+										"icon": {
+											"url16x16": remoteIssueInfo.fields.status.iconUrl,
+											"title": remoteIssueInfo.fields.status.name
+										}
 									},
 									"relationship": "relates to"
 							}
@@ -305,9 +311,6 @@ angular.module('sdlctoolApp')
 										"url": $scope.exported.ticket.url,
 										"title": inwardKey,
 										"summary": $scope.remoteLinking.inwardSummary
-									},
-									"application" : {
-										"type": "com.atlassian.jira"
 									},
 									"relationship": "relates to"
 							}
@@ -816,10 +819,14 @@ angular.module('sdlctoolApp')
 				
 				$scope.createTicket(fieldObject, false).then(function() {	
 					requirement.ticket = $scope.ticketURL;
-					//links the newly created ticket to the common ticket
-					$scope.addIssueLinks($scope.exported.ticket.key, $scope.apiUrl.ticketKey[0], fieldObject);
 					// get the status of the newly created tickets and updates the filter.
 					apiFactory.getJIRAInfo($scope.buildUrlCall("issueKey")).then(function(response) {
+						consoel.log(response.fields.status)
+						var remoteInfoObject = {};
+						remoteInfoObject.fieldObject = fieldObject;
+						remoteInfoObject.status = response;
+						//links the newly created ticket to the common ticket
+						$scope.addIssueLinks($scope.exported.ticket.key, $scope.apiUrl.ticketKey[0], remoteInfoObject);
 						size--;
 						linkStatus = {
 								iconUrl: response.fields.status.iconUrl,
