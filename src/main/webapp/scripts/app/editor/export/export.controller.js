@@ -821,7 +821,7 @@ angular.module('sdlctoolApp')
 					requirement.ticket = $scope.ticketURL;
 					// get the status of the newly created tickets and updates the filter.
 					apiFactory.getJIRAInfo($scope.buildUrlCall("issueKey")).then(function(response) {
-						consoel.log(response.fields.status)
+						console.log(response.fields.status)
 						var remoteInfoObject = {};
 						remoteInfoObject.fieldObject = fieldObject;
 						remoteInfoObject.status = response;
