@@ -260,9 +260,9 @@ angular.module('sdlctoolApp')
 			angular.extend(apiUrl, $scope.buildUrl(urlSplit, false));
 			console.log(apiUrl);
 			// get the summary of the main JIRA to prepare for remote linking if necessary
-			if(angular.isUndefined($scope.remoteLinking.inwardSummary)) {
+			if(angular.isUndefined($scope.remoteLinking.info)) {
 				apiFactory.getJIRAInfo(apiUrl.http + "//" + apiUrl.host + appConfig.jiraApiPrefix+ "/" + apiUrl.ticketKey[0]).then(function(response) {
-					$scope.remoteLinking.inwardSummary = response.fields.summary;
+					$scope.remoteLinking.info = response;
 				})
 			}
 			var postData = {
@@ -291,12 +291,17 @@ angular.module('sdlctoolApp')
 									"object" : {
 										"url": $scope.jiraUrl.url + '-' + outwardKey.split('-')[outwardKey.split('-').length - 1],
 										"title": outwardKey,
-										"summary": remoteIssueInfo.fieldObject.summary
-									},
-									"status" : {
-										"icon": {
-											"url16x16": remoteIssueInfo.fields.status.iconUrl,
-											"title": remoteIssueInfo.fields.status.name
+										"summary": remoteIssueInfo.fieldObject.summary,
+//										"icon": {                                         
+//								            "url16x16":"http://www.openwebgraphics.com/resources/data/3321/16x16_voice-support.png",    
+//								            "title":"Support Ticket"     
+//								        }
+										"status" : {
+											"resolved": remoteIssueInfo.fields.status.name === "Closed" ? true : false,
+											"icon": {
+												"url16x16": remoteIssueInfo.fields.status.iconUrl,
+												"title": remoteIssueInfo.fields.status.name
+											}
 										}
 									},
 									"relationship": "relates to"
@@ -310,7 +315,14 @@ angular.module('sdlctoolApp')
 									"object" : {
 										"url": $scope.exported.ticket.url,
 										"title": inwardKey,
-										"summary": $scope.remoteLinking.inwardSummary
+										"summary": $scope.remoteLinking.info.fields.summary,
+										"status" : {
+											"resolved": $scope.remoteLinking.info.fields.status.name === "Closed" ? true : false,
+											"icon": {
+												"url16x16": $scope.remoteLinking.info.fields.status.iconUrl,
+												"title": $scope.remoteLinking.info.fields.status.name
+											}
+										}
 									},
 									"relationship": "relates to"
 							}
@@ -821,10 +833,10 @@ angular.module('sdlctoolApp')
 					requirement.ticket = $scope.ticketURL;
 					// get the status of the newly created tickets and updates the filter.
 					apiFactory.getJIRAInfo($scope.buildUrlCall("issueKey")).then(function(response) {
-						console.log(response.fields.status)
+						console.log(response)
 						var remoteInfoObject = {};
 						remoteInfoObject.fieldObject = fieldObject;
-						remoteInfoObject.status = response;
+						remoteInfoObject.fields = response.fields;
 						//links the newly created ticket to the common ticket
 						$scope.addIssueLinks($scope.exported.ticket.key, $scope.apiUrl.ticketKey[0], remoteInfoObject);
 						size--;
