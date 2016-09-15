@@ -246,9 +246,7 @@ angular.module('sdlctoolApp')
 		
 		$scope.createRemoteLink = function(infoObject) {
 			apiFactory.postExport(infoObject.url, infoObject.postData, {'X-Atlassian-Token': 'nocheck', 'Content-Type': 'application/json'}).then(function(data) {
-				console.log(data);
 			}, function(exception) {
-				console.log(exception);
 			});
 		}
 		
@@ -258,12 +256,9 @@ angular.module('sdlctoolApp')
 			var urlSplit = $scope.exported.ticket.url.split("/");
 			var apiUrl = {};
 			angular.extend(apiUrl, $scope.buildUrl(urlSplit, false));
-			console.log(apiUrl);
 			// get the summary of the main JIRA to prepare for remote linking if necessary
 			if(angular.isUndefined($scope.remoteLinking.info)) {
 				apiFactory.getJIRAInfo(apiUrl.http + "//" + apiUrl.host + appConfig.jiraApiPrefix+ "/" + apiUrl.ticketKey[0]).then(function(response) {
-					console.log("test");
-					console.log(response);
 					$scope.remoteLinking.info = response;
 				})
 			}
@@ -313,28 +308,57 @@ angular.module('sdlctoolApp')
 							// links ticket from main JIRA to ticket in different JIRA
 							$scope.createRemoteLink(object1);
 							var object2 = {};
-							object2.postData = {
-									"object" : {
-										"url": $scope.exported.ticket.url,
-										"title": inwardKey,
-										"summary": $scope.remoteLinking.info.fields.summary,
-										"icon": {                                         
-								            "url16x16":$scope.remoteLinking.info.fields.issuetype.iconUrl,    
-								            "title":$scope.remoteLinking.info.fields.issuetype.description     
-								        },
-										"status" : {
-											"resolved": $scope.remoteLinking.info.fields.status.name === "Closed" ? true : false,
-											"icon": {
-												"url16x16": $scope.remoteLinking.info.fields.status.iconUrl,
-												"title": $scope.remoteLinking.info.fields.status.name
+							// get the summary of the main JIRA to prepare for remote linking if necessary
+							if(angular.isUndefined($scope.remoteLinking.info)) {
+								apiFactory.getJIRAInfo(apiUrl.http + "//" + apiUrl.host + appConfig.jiraApiPrefix+ "/" + apiUrl.ticketKey[0]).then(function(response) {
+									$scope.remoteLinking.info = response;
+									object2.postData = {
+											"object" : {
+												"url": $scope.exported.ticket.url,
+												"title": inwardKey,
+												"summary": $scope.remoteLinking.info.fields.summary,
+												"icon": {                                         
+										            "url16x16":$scope.remoteLinking.info.fields.issuetype.iconUrl,    
+										            "title":$scope.remoteLinking.info.fields.issuetype.description     
+										        },
+												"status" : {
+													"resolved": $scope.remoteLinking.info.fields.status.name === "Closed" ? true : false,
+													"icon": {
+														"url16x16": $scope.remoteLinking.info.fields.status.iconUrl,
+														"title": $scope.remoteLinking.info.fields.status.name
+													}
+												}
+											},
+											"relationship": "relates to"
+									}
+									object2.url = tempRemoteUrl + '/' + outwardKey + "/remotelink";
+									// links ticket from different JIRA to ticket in main JIRA
+									$scope.createRemoteLink(object2);
+								})
+							} else {
+								object2.postData = {
+										"object" : {
+											"url": $scope.exported.ticket.url,
+											"title": inwardKey,
+											"summary": $scope.remoteLinking.info.fields.summary,
+											"icon": {                                         
+									            "url16x16":$scope.remoteLinking.info.fields.issuetype.iconUrl,    
+									            "title":$scope.remoteLinking.info.fields.issuetype.description     
+									        },
+											"status" : {
+												"resolved": $scope.remoteLinking.info.fields.status.name === "Closed" ? true : false,
+												"icon": {
+													"url16x16": $scope.remoteLinking.info.fields.status.iconUrl,
+													"title": $scope.remoteLinking.info.fields.status.name
+												}
 											}
-										}
-									},
-									"relationship": "relates to"
+										},
+										"relationship": "relates to"
+								}
+								object2.url = tempRemoteUrl + '/' + outwardKey + "/remotelink";
+								// links ticket from different JIRA to ticket in main JIRA
+								$scope.createRemoteLink(object2);
 							}
-							object2.url = tempRemoteUrl + '/' + outwardKey + "/remotelink";
-							// links ticket from different JIRA to ticket in main JIRA
-							$scope.createRemoteLink(object2);
 					}
 					else if(parseInt(exception.status) === 404) {
 						var project = $scope.jiraUrl.url.split("/").pop();
@@ -572,7 +596,6 @@ angular.module('sdlctoolApp')
 //			console.log(file);
 			try {
 				for(var i = 0; i < $scope.ticketKeys.length; i++) {
-					console.log($scope.ticketKeys[i]);
 					$scope.addIssueLinks($scope.apiUrl.ticketKey[0], $scope.ticketKeys[i], '');
 				}
 				var doc = jsyaml.safeDump(file);
@@ -839,7 +862,6 @@ angular.module('sdlctoolApp')
 					requirement.ticket = $scope.ticketURL;
 					// get the status of the newly created tickets and updates the filter.
 					apiFactory.getJIRAInfo($scope.buildUrlCall("issueKey")).then(function(response) {
-						console.log(response)
 						var remoteInfoObject = {};
 						remoteInfoObject.fieldObject = fieldObject;
 						remoteInfoObject.fields = response.fields;
