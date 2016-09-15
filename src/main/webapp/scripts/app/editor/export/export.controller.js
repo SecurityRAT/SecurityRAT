@@ -133,25 +133,27 @@ angular.module('sdlctoolApp')
 		//build the url call need according to the distinguisher. 
 		$scope.buildUrlCall = function(selector) {
 			var baseJiraCall = $scope.apiUrl.http + "//" + $scope.apiUrl.host + appConfig.jiraApiPrefix; 
+			var returnValue = "";
 			if(angular.equals(selector, "ticket")) {
-				return  baseJiraCall;
+				returnValue =  baseJiraCall;
 			}else if(angular.equals(selector, "attachment")) {
-				return baseJiraCall + "/" + $scope.apiUrl.ticketKey[0] + appConfig.jiraAttachment;
+				returnValue = baseJiraCall + "/" + $scope.apiUrl.ticketKey[0] + appConfig.jiraAttachment;
 			}else if(angular.equals(selector, "comment")) {
-				return baseJiraCall + "/" + $scope.apiUrl.ticketKey[0] + appConfig.jiraComment;
+				returnValue = baseJiraCall + "/" + $scope.apiUrl.ticketKey[0] + appConfig.jiraComment;
 			} else if (angular.equals(selector, "issueType")) {
-				return $scope.apiUrl.http + "//" + $scope.apiUrl.host + appConfig.jiraApiIssueType;
+				returnValue = $scope.apiUrl.http + "//" + $scope.apiUrl.host + appConfig.jiraApiIssueType;
 			} else if(angular.equals(selector, "project")) {
-				return $scope.apiUrl.http + "//" + $scope.apiUrl.host + appConfig.jiraApiProject;
+				returnValue = $scope.apiUrl.http + "//" + $scope.apiUrl.host + appConfig.jiraApiProject;
 			} else if (angular.equals(selector, "issueKey")) {
-				return  baseJiraCall + "/" + $scope.apiUrl.ticketKey[0];
+				returnValue =  baseJiraCall + "/" + $scope.apiUrl.ticketKey[0];
 			} else if(angular.equals(selector, "search")) {
-				return  $scope.apiUrl.http + "//" + $scope.apiUrl.host + appConfig.jiraRestApi + "/search";
+				returnValue =  $scope.apiUrl.http + "//" + $scope.apiUrl.host + appConfig.jiraRestApi + "/search";
 			} else if (angular.equals(selector, "issueLink")) {
-				return  $scope.apiUrl.http + "//" + $scope.apiUrl.host + appConfig.jiraRestApi + "/issueLink";
+				returnValue =  $scope.apiUrl.http + "//" + $scope.apiUrl.host + appConfig.jiraRestApi + "/issueLink";
 			} else if (angular.equals(selector, "field")) {
-				return  $scope.apiUrl.http + "//" + $scope.apiUrl.host + appConfig.jiraRestApi + "/field";
+				returnValue =  $scope.apiUrl.http + "//" + $scope.apiUrl.host + appConfig.jiraRestApi + "/field";
 			}
+			return returnValue;
 		}
 		
 		//checks if the queue exist.
@@ -256,8 +258,21 @@ angular.module('sdlctoolApp')
 							exception.errorException.opened.$$state.value = false;
 							exception.errorException.opened.$$state.status = 1;
 	                	}
-						
-						if(parseInt(exception.status) === 404) {
+						if((parseInt(exception.status) === 404) && (exception.status.errorMessages.indexOf("Issue Does Not Exist") !== -1)) {
+							var postData = {
+								"object" : {
+									"title": outwardKey
+								},
+								"relationship": "Relates"
+							}
+							var url = $scope.buildUrlCall('ticket') + outwardKey + "/remotelink";
+							apiFactory.postExport(url, postData, {'X-Atlassian-Token': 'nocheck', 'Content-Type': 'application/json'}).then(function(data) {
+								console.log(data);
+							}, function(exception) {
+								console.log(exception);
+							}
+						}
+						else if(parseInt(exception.status) === 404) {
 							var project = $scope.jiraUrl.url.split("/").pop();
 							$scope.exportProperty.issuelink = "disabled";
 							message = "The issues could not be linked. This can occur when the issue linking between " + $scope.exported.ticket.url + " and " +
@@ -730,7 +745,7 @@ angular.module('sdlctoolApp')
 				//console.log(name);
 				fieldObject.description = "";
 				fieldObject.summary = "";
-				fieldObject.summary +=  requirement.shortName + " " + requirement.description;
+				fieldObject.summary +=  '[' + $scope.exported.name + ']' + requirement.description + " (" + requirement.shortName + ")";
 				fieldObject.description += "Category:\n";
 				fieldObject.description += requirement.category + "\n\n";
 				fieldObject.description += "Short name:\n";
