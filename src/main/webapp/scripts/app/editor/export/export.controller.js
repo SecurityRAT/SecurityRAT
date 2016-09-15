@@ -265,7 +265,7 @@ angular.module('sdlctoolApp')
 								},
 								"relationship": "Relates"
 							}
-							var url = $scope.buildUrlCall('ticket') + outwardKey + "/remotelink";
+							var url = $scope.buildUrlCall('ticket') '/' + outwardKey + "/remotelink";
 							apiFactory.postExport(url, postData, {'X-Atlassian-Token': 'nocheck', 'Content-Type': 'application/json'}).then(function(data) {
 								console.log(data);
 							}, function(exception) {
