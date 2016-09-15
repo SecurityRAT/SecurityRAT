@@ -261,7 +261,7 @@ angular.module('sdlctoolApp')
 						if((parseInt(exception.status) === 404) && (exception.data.errorMessages.indexOf("Issue Does Not Exist") !== -1)) {
 								var postData = {
 									"object" : {
-										"url": jiraUrl.url + outwardKey,
+										"url": $scope.jiraUrl.url + '-' + outwardKey.split('-')[outwardKey.split('-').length - 1],
 										"title": outwardKey
 									},
 									"relationship": "relates to"
