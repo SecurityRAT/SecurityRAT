@@ -62,7 +62,7 @@ angular.module('sdlctoolApp')
 		
 		// Dirty Dirty Dirty Hack.
 		$scope.initLabels = function() {
-			$scope.fields.labels = [appConfig.filenamePrefix + "_REQUIREMENT", $scope.removeSpace($scope.exported.name)];
+			$scope.fields.labels = [appConfig.filenamePrefix + "_REQUIREMENT"];
 		} 
 		// Dirty Dirty Dirty Hack.
 		$scope.fillDefaultValues = function() {
@@ -265,7 +265,7 @@ angular.module('sdlctoolApp')
 								},
 								"relationship": "Relates"
 							}
-							var url = $scope.buildUrlCall('ticket') '/' + outwardKey + "/remotelink";
+							var url = $scope.buildUrlCall('ticket') + '/' + outwardKey + "/remotelink";
 							apiFactory.postExport(url, postData, {'X-Atlassian-Token': 'nocheck', 'Content-Type': 'application/json'}).then(function(data) {
 								console.log(data);
 							}, function(exception) {
