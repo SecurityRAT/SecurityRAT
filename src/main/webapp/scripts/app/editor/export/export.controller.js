@@ -128,7 +128,7 @@ angular.module('sdlctoolApp')
 				checks.isTicket = true;
 			}
 			//gets the project key.
-			if(!angular.equals(list[list.length - 1], "browse") && angular.isUndefinedapiUrl.projectKey)) {
+			if(!angular.equals(list[list.length - 1], "browse") && angular.isUndefined(apiUrl.projectKey)) {
 				if(list[list.length - 1].indexOf("-") >= 0) {
 					angular.extend(apiUrl, {projectKey : list[list.length - 1].slice(0, list[list.length - 1].indexOf("-"))})
 				} else {
