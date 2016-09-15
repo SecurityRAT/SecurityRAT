@@ -270,7 +270,7 @@ angular.module('sdlctoolApp')
 								console.log(data);
 							}, function(exception) {
 								console.log(exception);
-							}
+							});
 						}
 						else if(parseInt(exception.status) === 404) {
 							var project = $scope.jiraUrl.url.split("/").pop();
