@@ -286,8 +286,8 @@ angular.module('sdlctoolApp')
                 	}
 					// creates remote link to the different JIRA.
 					if((parseInt(exception.status) === 404) && (exception.data.errorMessages.indexOf("Issue Does Not Exist") !== -1)) {
-							var object = {};
-							object.postData = {
+							var object1 = {};
+							object1.postData = {
 									"object" : {
 										"url": $scope.jiraUrl.url + '-' + outwardKey.split('-')[outwardKey.split('-').length - 1],
 										"title": outwardKey,
@@ -296,21 +296,24 @@ angular.module('sdlctoolApp')
 									"relationship": "relates to"
 							}
 							
-							object.url = apiUrl.http + "//" + apiUrl.host + appConfig.jiraApiPrefix + '/' + inwardKey + "/remotelink";
+							object1.url = apiUrl.http + "//" + apiUrl.host + appConfig.jiraApiPrefix + '/' + inwardKey + "/remotelink";
 							// links ticket from main JIRA to ticket in different JIRA
-							$scope.createRemoteLink(object);
-							object = {};
-							object.postData = {
+							$scope.createRemoteLink(object1);
+							var object2 = {};
+							object2.postData = {
 									"object" : {
 										"url": $scope.exported.ticket.url,
 										"title": inwardKey,
 										"summary": $scope.remoteLinking.inwardSummary
 									},
+									"application" : {
+										"type": "com.atlassian.jira"
+									},
 									"relationship": "relates to"
 							}
-							object.url = tempRemoteUrl + '/' + outwardKey + "/remotelink";
+							object2.url = tempRemoteUrl + '/' + outwardKey + "/remotelink";
 							// links ticket from different JIRA to ticket in main JIRA
-							$scope.createRemoteLink(object);
+							$scope.createRemoteLink(object2);
 					}
 					else if(parseInt(exception.status) === 404) {
 						var project = $scope.jiraUrl.url.split("/").pop();
