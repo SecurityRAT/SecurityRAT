@@ -262,6 +262,8 @@ angular.module('sdlctoolApp')
 			// get the summary of the main JIRA to prepare for remote linking if necessary
 			if(angular.isUndefined($scope.remoteLinking.info)) {
 				apiFactory.getJIRAInfo(apiUrl.http + "//" + apiUrl.host + appConfig.jiraApiPrefix+ "/" + apiUrl.ticketKey[0]).then(function(response) {
+					console.log("test");
+					console.log(response);
 					$scope.remoteLinking.info = response;
 				})
 			}
