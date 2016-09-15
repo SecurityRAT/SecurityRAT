@@ -258,6 +258,7 @@ angular.module('sdlctoolApp')
 			var urlSplit = $scope.exported.ticket.url.split("/");
 			var apiUrl = {};
 			angular.extend(apiUrl, $scope.buildUrl(urlSplit));
+			console.log(apiUrl);
 			// get the summary of the main JIRA to prepare for remote linking if necessary
 			if(angular.isUndefined($scope.remoteLinking.inwardSummary)) {
 				apiFactory.getJiraInfo(apiUrl.http + "//" + apiUrl.host + appConfig.jiraApiPrefix+ "/" + apiUrl.ticketKey[0], function(response) {
@@ -278,7 +279,6 @@ angular.module('sdlctoolApp')
 			apiFactory.postExport(url, postData, {'X-Atlassian-Token': 'nocheck', 'Content-Type': 'application/json'}).then(function() {
 				
 			}, function(exception) {
-				console.log(exception)
 				if(exception.status !== 500) {
 					if(exception.errorException.opened.$$state.status === 0) {
 						exception.errorException.opened.$$state.value = false;
@@ -308,7 +308,7 @@ angular.module('sdlctoolApp')
 									},
 									"relationship": "relates to"
 							}
-							object.url = tempRemoteUrl + '/' + inwardKey + "/remotelink";
+							object.url = tempRemoteUrl + '/' + outwardKey + "/remotelink";
 							// links ticket from different JIRA to ticket in main JIRA
 							$scope.createRemoteLink(object);
 					}
