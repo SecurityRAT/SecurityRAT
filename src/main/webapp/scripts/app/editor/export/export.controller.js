@@ -21,6 +21,7 @@ angular.module('sdlctoolApp')
 		$scope.autoComplete = {};
 		$scope.toggleAutoCompleteDropdown = {};
 		$scope.tempMandatoryValue = [];
+		$scope.remoteLinking = {};
 		
 		$scope.init = function() {
 			$scope.manFilterObject = {};
@@ -98,6 +99,12 @@ angular.module('sdlctoolApp')
 		$scope.buildUrlObject = function(list) {
 			$scope.apiUrl = {};
 			$scope.apiUrl.ticketKey = [];
+			angular.extend($scope.apiUrl, $scope.buildUrl(list));
+		}
+		
+		$scope.buildUrl = function(list) {
+			apiUrl = {};
+			apiUrl.ticketKey = [];
 			var hostSet = false;
 			for(var i = 0; i < list.length; i++) {
 				if(angular.equals(list[i], "")) {
@@ -106,28 +113,29 @@ angular.module('sdlctoolApp')
 				}
 				else if(urlpattern.http.test(list[i])) {
 				//else if((list[i].indexOf("https:") > -1) || (list[i].indexOf("http:") > -1)) {
-					angular.extend($scope.apiUrl, {http: list[i]});
+					angular.extend(apiUrl, {http: list[i]});
 				}
 				else if(urlpattern.host.test(list[i]) && !hostSet) {
 				//else if(list[i].indexOf(".") > -1) 
 					hostSet = true;
-					angular.extend($scope.apiUrl, {host: list[i]});
+					angular.extend(apiUrl, {host: list[i]});
 				} else if(list[i].indexOf("-") > -1) {
-					$scope.apiUrl.ticketKey.push(list[i]); 
+					apiUrl.ticketKey.push(list[i]); 
 //					angular.extend($scope.apiUrl, {ticketKey: list[i]});
 				} 
 			}
-			if($scope.apiUrl.ticketKey.length === 1) {
-				$scope.checks.isTicket = true;
+			if(apiUrl.ticketKey.length === 1) {
+				checks.isTicket = true;
 			}
 			//gets the project key.
-			if(!angular.equals(list[list.length - 1], "browse") && angular.isUndefined($scope.apiUrl.projectKey)) {
+			if(!angular.equals(list[list.length - 1], "browse") && angular.isUndefinedapiUrl.projectKey)) {
 				if(list[list.length - 1].indexOf("-") >= 0) {
-					angular.extend($scope.apiUrl, {projectKey : list[list.length - 1].slice(0, list[list.length - 1].indexOf("-"))})
+					angular.extend(apiUrl, {projectKey : list[list.length - 1].slice(0, list[list.length - 1].indexOf("-"))})
 				} else {
-					angular.extend($scope.apiUrl, {projectKey : list[list.length - 1]});
+					angular.extend(apiUrl, {projectKey : list[list.length - 1]});
 				}
 			}
+			return apiUrl;
 		}
 		
 		//build the url call need according to the distinguisher. 
@@ -236,57 +244,88 @@ angular.module('sdlctoolApp')
 			
 		}
 		
-		$scope.addIssueLinks = function(inwardKey, outwardKey) {
+		$scope.createRemoteLink = function(infoObject) {
+			apiFactory.postExport(infoObject.url, infoObject.postData, {'X-Atlassian-Token': 'nocheck', 'Content-Type': 'application/json'}).then(function(data) {
+				console.log(data);
+			}, function(exception) {
+				console.log(exception);
+			});
+		}
+		
+		$scope.addIssueLinks = function(inwardKey, outwardKey, remoteIssueInfo) {
 			var url = $scope.buildUrlCall("issueLink");
-				var postData = {
-						type: {
-							name: "Relates"
-						},
-						inwardIssue: {
-							key: inwardKey
-						},
-						outwardIssue: {
-							key: outwardKey
-						}
-				};
-				apiFactory.postExport(url, postData, {'X-Atlassian-Token': 'nocheck', 'Content-Type': 'application/json'}).then(function() {
-					
-				}, function(exception) {
-					console.log(exception)
-					if(exception.status !== 500) {
-						if(exception.errorException.opened.$$state.status === 0) {
-							exception.errorException.opened.$$state.value = false;
-							exception.errorException.opened.$$state.status = 1;
-	                	}
-						if((parseInt(exception.status) === 404) && (exception.data.errorMessages.indexOf("Issue Does Not Exist") !== -1)) {
-								var postData = {
+			var tempRemoteUrl = $scope.buildUrlCall("ticket");
+			var urlSplit = $scope.exported.ticket.url.split("/");
+			var apiUrl = {};
+			angular.extend(apiUrl, $scope.buildUrl(urlSplit));
+			// get the summary of the main JIRA to prepare for remote linking if necessary
+			if(angular.isUndefined($scope.remoteLinking.inwardSummary)) {
+				apiFactory.getJiraInfo(apiUrl.http + "//" + apiUrl.host + appConfig.jiraApiPrefix+ "/" + apiUrl.ticketKey[0], function(response) {
+					$scope.remoteLinking.inwardSummary = response.fields.summary;
+				})
+			}
+			var postData = {
+					type: {
+						name: "Relates"
+					},
+					inwardIssue: {
+						key: inwardKey
+					},
+					outwardIssue: {
+						key: outwardKey
+					}
+			};
+			apiFactory.postExport(url, postData, {'X-Atlassian-Token': 'nocheck', 'Content-Type': 'application/json'}).then(function() {
+				
+			}, function(exception) {
+				console.log(exception)
+				if(exception.status !== 500) {
+					if(exception.errorException.opened.$$state.status === 0) {
+						exception.errorException.opened.$$state.value = false;
+						exception.errorException.opened.$$state.status = 1;
+                	}
+					// creates remote link to the different JIRA.
+					if((parseInt(exception.status) === 404) && (exception.data.errorMessages.indexOf("Issue Does Not Exist") !== -1)) {
+							var object = {};
+							object.postData = {
 									"object" : {
 										"url": $scope.jiraUrl.url + '-' + outwardKey.split('-')[outwardKey.split('-').length - 1],
-										"title": outwardKey
+										"title": outwardKey,
+										"summary": remoteIssueInfo.summary
 									},
 									"relationship": "relates to"
-								}
-							var url = $scope.buildUrlCall('ticket') + '/' + inwardKey + "/remotelink";
-							apiFactory.postExport(url, postData, {'X-Atlassian-Token': 'nocheck', 'Content-Type': 'application/json'}).then(function(data) {
-								console.log(data);
-							}, function(exception) {
-								console.log(exception);
-							});
-						}
-						else if(parseInt(exception.status) === 404) {
-							var project = $scope.jiraUrl.url.split("/").pop();
-							$scope.exportProperty.issuelink = "disabled";
-							message = "The issues could not be linked. This can occur when the issue linking between " + $scope.exported.ticket.url + " and " +
-							$scope.jiraUrl.url.slice(0, $scope.jiraUrl.url.indexOf(project)) + outwardKey + " is disabled.";
-							SDLCToolExceptionService.showWarning('Issue link unsuccessful', message, SDLCToolExceptionService.DANGER);
-						}
-						else if(exception.status === 401) {
-							$scope.exportProperty.issuelink = "permission";
-							message = "The issues could not be linked. You do not have the permission to link issues.";
-							SDLCToolExceptionService.showWarning('Issue link unsuccessful', message, SDLCToolExceptionService.DANGER);
-						}
+							}
+							
+							object.url = apiUrl.http + "//" + apiUrl.host + appConfig.jiraApiPrefix + '/' + inwardKey + "/remotelink";
+							// links ticket from main JIRA to ticket in different JIRA
+							$scope.createRemoteLink(object);
+							object = {};
+							object.postData = {
+									"object" : {
+										"url": $scope.exported.ticket.url,
+										"title": inwardKey,
+										"summary": $scope.remoteLinking.inwardSummary
+									},
+									"relationship": "relates to"
+							}
+							object.url = tempRemoteUrl + '/' + inwardKey + "/remotelink";
+							// links ticket from different JIRA to ticket in main JIRA
+							$scope.createRemoteLink(object);
 					}
-				});
+					else if(parseInt(exception.status) === 404) {
+						var project = $scope.jiraUrl.url.split("/").pop();
+						$scope.exportProperty.issuelink = "disabled";
+						message = "The issues could not be linked. This can occur when the issue linking between " + $scope.exported.ticket.url + " and " +
+						$scope.jiraUrl.url.slice(0, $scope.jiraUrl.url.indexOf(project)) + outwardKey + " is disabled.";
+						SDLCToolExceptionService.showWarning('Issue link unsuccessful', message, SDLCToolExceptionService.DANGER);
+					}
+					else if(exception.status === 401) {
+						$scope.exportProperty.issuelink = "permission";
+						message = "The issues could not be linked. You do not have the permission to link issues.";
+						SDLCToolExceptionService.showWarning('Issue link unsuccessful', message, SDLCToolExceptionService.DANGER);
+					}
+				}
+			});
 		}
 		/**
 		 * Queries the autoCompleteUrl with the entered text to help autocomplete
@@ -509,6 +548,7 @@ angular.module('sdlctoolApp')
 //			console.log(file);
 			try {
 				for(var i = 0; i < $scope.ticketKeys.length; i++) {
+					console.log($scope.ticketKeys[i]);
 					$scope.addIssueLinks($scope.apiUrl.ticketKey[0], $scope.ticketKeys[i], '');
 				}
 				var doc = jsyaml.safeDump(file);
@@ -746,7 +786,7 @@ angular.module('sdlctoolApp')
 				//console.log(name);
 				fieldObject.description = "";
 				fieldObject.summary = "";
-				fieldObject.summary +=  '[' + $scope.exported.name + ']' + requirement.description + " (" + requirement.shortName + ")";
+				fieldObject.summary +=  '[' + $scope.exported.name + '] ' + requirement.description + " (" + requirement.shortName + ")";
 				fieldObject.description += "Category:\n";
 				fieldObject.description += requirement.category + "\n\n";
 				fieldObject.description += "Short name:\n";
@@ -771,10 +811,10 @@ angular.module('sdlctoolApp')
 					})
 				});
 				
-				$scope.createTicket(fieldObject, false).then(function(response) {	
+				$scope.createTicket(fieldObject, false).then(function() {	
 					requirement.ticket = $scope.ticketURL;
 					//links the newly created ticket to the common ticket
-					$scope.addIssueLinks($scope.exported.ticket.key, $scope.apiUrl.ticketKey[0]);
+					$scope.addIssueLinks($scope.exported.ticket.key, $scope.apiUrl.ticketKey[0], fieldObject);
 					// get the status of the newly created tickets and updates the filter.
 					apiFactory.getJIRAInfo($scope.buildUrlCall("issueKey")).then(function(response) {
 						size--;
@@ -785,7 +825,6 @@ angular.module('sdlctoolApp')
 						}
 						angular.extend(requirement, {linkStatus : linkStatus});
 						$scope.jiraStatus.allStatus.push(linkStatus);
-						
 						// shows the successful modal and updates the attachment.
 						if(size === 0) {
 							var urlSplit = $scope.exported.ticket.url.split("/");
