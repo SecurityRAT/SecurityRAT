@@ -99,10 +99,10 @@ angular.module('sdlctoolApp')
 		$scope.buildUrlObject = function(list) {
 			$scope.apiUrl = {};
 			$scope.apiUrl.ticketKey = [];
-			angular.extend($scope.apiUrl, $scope.buildUrl(list));
+			angular.extend($scope.apiUrl, $scope.buildUrl(list, true));
 		}
 		
-		$scope.buildUrl = function(list) {
+		$scope.buildUrl = function(list, checkTicket) {
 			apiUrl = {};
 			apiUrl.ticketKey = [];
 			var hostSet = false;
@@ -124,8 +124,8 @@ angular.module('sdlctoolApp')
 //					angular.extend($scope.apiUrl, {ticketKey: list[i]});
 				} 
 			}
-			if(apiUrl.ticketKey.length === 1) {
-				checks.isTicket = true;
+			if(apiUrl.ticketKey.length === 1 && checkTicket) {
+				$scope.checks.isTicket = true;
 			}
 			//gets the project key.
 			if(!angular.equals(list[list.length - 1], "browse") && angular.isUndefined(apiUrl.projectKey)) {
@@ -257,7 +257,7 @@ angular.module('sdlctoolApp')
 			var tempRemoteUrl = $scope.buildUrlCall("ticket");
 			var urlSplit = $scope.exported.ticket.url.split("/");
 			var apiUrl = {};
-			angular.extend(apiUrl, $scope.buildUrl(urlSplit));
+			angular.extend(apiUrl, $scope.buildUrl(urlSplit, false));
 			console.log(apiUrl);
 			// get the summary of the main JIRA to prepare for remote linking if necessary
 			if(angular.isUndefined($scope.remoteLinking.inwardSummary)) {
