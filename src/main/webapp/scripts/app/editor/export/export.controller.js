@@ -259,13 +259,14 @@ angular.module('sdlctoolApp')
 							exception.errorException.opened.$$state.status = 1;
 	                	}
 						if((parseInt(exception.status) === 404) && (exception.data.errorMessages.indexOf("Issue Does Not Exist") !== -1)) {
-							var postData = {
-								"object" : {
-									"title": outwardKey
-								},
-								"relationship": "Relates"
-							}
-							var url = $scope.buildUrlCall('ticket') + '/' + outwardKey + "/remotelink";
+								var postData = {
+									"object" : {
+										"url": jiraUrl.url + outwardKey,
+										"title": outwardKey
+									},
+									"relationship": "relates to"
+								}
+							var url = $scope.buildUrlCall('ticket') + '/' + inwardKey + "/remotelink";
 							apiFactory.postExport(url, postData, {'X-Atlassian-Token': 'nocheck', 'Content-Type': 'application/json'}).then(function(data) {
 								console.log(data);
 							}, function(exception) {
@@ -454,7 +455,7 @@ angular.module('sdlctoolApp')
 				if(response != undefined) {
 					$scope.apiUrl.ticketKey = [];
 					$scope.apiUrl.ticketKey.push(response.key);
-					derefer.resolve("creation terminated");
+					derefer.resolve(response);
 					$scope.ticketURL = $scope.apiUrl.http + "//" + $scope.apiUrl.host + "/browse/" + response.key;
 					$scope.ticketURLs.push($scope.ticketURL);
 					if(withAttachment) {
@@ -508,7 +509,7 @@ angular.module('sdlctoolApp')
 //			console.log(file);
 			try {
 				for(var i = 0; i < $scope.ticketKeys.length; i++) {
-					$scope.addIssueLinks($scope.apiUrl.ticketKey[0], $scope.ticketKeys[i]);
+					$scope.addIssueLinks($scope.apiUrl.ticketKey[0], $scope.ticketKeys[i], '');
 				}
 				var doc = jsyaml.safeDump(file);
 				var filename = appConfig.filenamePrefix + "_" + $scope.exported.name + "_" + $scope.getCurrentDate() + ".yml";
@@ -770,7 +771,7 @@ angular.module('sdlctoolApp')
 					})
 				});
 				
-				$scope.createTicket(fieldObject, false).then(function() {	
+				$scope.createTicket(fieldObject, false).then(function(response) {	
 					requirement.ticket = $scope.ticketURL;
 					//links the newly created ticket to the common ticket
 					$scope.addIssueLinks($scope.exported.ticket.key, $scope.apiUrl.ticketKey[0]);
