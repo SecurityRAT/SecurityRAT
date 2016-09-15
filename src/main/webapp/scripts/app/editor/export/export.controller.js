@@ -292,10 +292,10 @@ angular.module('sdlctoolApp')
 										"url": $scope.jiraUrl.url + '-' + outwardKey.split('-')[outwardKey.split('-').length - 1],
 										"title": outwardKey,
 										"summary": remoteIssueInfo.fieldObject.summary,
-//										"icon": {                                         
-//								            "url16x16":"http://www.openwebgraphics.com/resources/data/3321/16x16_voice-support.png",    
-//								            "title":"Support Ticket"     
-//								        }
+										"icon": {                                         
+								            "url16x16":remoteIssueInfo.fields.issuetype.iconUrl,    
+								            "title":remoteIssueInfo.fields.issuetype.description     
+								        },
 										"status" : {
 											"resolved": remoteIssueInfo.fields.status.name === "Closed" ? true : false,
 											"icon": {
@@ -316,6 +316,10 @@ angular.module('sdlctoolApp')
 										"url": $scope.exported.ticket.url,
 										"title": inwardKey,
 										"summary": $scope.remoteLinking.info.fields.summary,
+										"icon": {                                         
+								            "url16x16":$scope.remoteLinking.info.fields.issuetype.iconUrl,    
+								            "title":$scope.remoteLinking.info.fields.issuetype.description     
+								        },
 										"status" : {
 											"resolved": $scope.remoteLinking.info.fields.status.name === "Closed" ? true : false,
 											"icon": {
