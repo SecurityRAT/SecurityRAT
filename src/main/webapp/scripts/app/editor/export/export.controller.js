@@ -258,7 +258,7 @@ angular.module('sdlctoolApp')
 							exception.errorException.opened.$$state.value = false;
 							exception.errorException.opened.$$state.status = 1;
 	                	}
-						if((parseInt(exception.status) === 404) && (exception.status.errorMessages.indexOf("Issue Does Not Exist") !== -1)) {
+						if((parseInt(exception.status) === 404) && (exception.data.errorMessages.indexOf("Issue Does Not Exist") !== -1)) {
 							var postData = {
 								"object" : {
 									"title": outwardKey
