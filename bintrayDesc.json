@@ -3,7 +3,7 @@
         "name": "SecurityRATv1.4.0",
         "repo": "SecurityRAT",
         "subject": "rylyade1",
-        "desc": "travis build securityRAT",
+        "desc": "SecurityRAT version 1.4.0",
         "website_url": "",
         "issue_tracker_url": "",
         "vcs_url": "https://github.com/SecurityRAT/SecurityRAT.git",
@@ -18,7 +18,7 @@
 
     "version": {
         "name": "v1.4.0",
-        "desc": "This is a test package",
+        "desc": "This is the version 1.4.0 of the SecurityRAT tool.",
         "released": "2016-09-13",
         "vcs_tag": "v1.4.0",
         "attributes": [],

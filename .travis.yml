@@ -7,10 +7,27 @@ before_install:
 - curl -L https://www.npmjs.com/install.sh | sh
 - npm install bower
 - npm install grunt-cli
-script: 
+script:
 - mvn -Pprod package
 - chmod +x createArchive.sh
 - "./createArchive.sh"
 branches:
   only:
   - master
+deploy:
+  - provider: releases
+    api_key:
+      secure: T2Blmetw45MKwt9nmERqfjw9XwKeZVRXXg/JeW1mHOwr9UDn7L93MAItGEmMq0UdGB+mj49JyNys2Gz2PO5D8fnFVAqcXolbjJ7DprGW8Ha7ghUSHPYuHaJRZC+87f08+tRoNP4bYVpFG/HOr2km7lfuTxnpK+fnEdY+tkTBvMYsNMwyKUzHezXXpeiY8nULfsj2Mxgpuj6J0e7Wv/tYgXaGME6jn3czko5Zpu/7fVTFz5xuXc7C+ULx8WTEBm3XKBYOT4bM3j4qV2VyNXeTdcLi2tj1XOLswch2U73NBGaBnAlLkch/Hp2uSkY25+ajQzyBid5bM5bCI8xISta7cUNdxQQ83ER1xele1y3m5PlC9rGxgz1VEjBkn3rgf0797l11z6xohre54MpZYsCtjKXFy1qs8bURmmxyufMXmBamJMWYH+Ven6gAqIZudo8nF0iSATzvffvTEZ2/7Gm3kQ2RFYUsqpXgxxi7LikuDnyvsOBb4mU/HTzYyDKmnxYU/cazDJw9pPryUZerFJg48IpP4dKtievafFxPVJbf/KE3MZCwp6oqB8E1g7BJg72IdmWWGP3XINkTb72l5vL70aR7YvxfRDwRb6tnu0V6xyCkNXxy/6RHNuCwKrHFdXamK/U3Q9hjfDRE6W9GRp/8kagh6TKGx0Spu5rOJU7NQ5U=
+    skip_cleanup: true
+    file: 
+      - target/securityRAT-1.4.0.zip
+      - target/securityRAT-1.4.0.tar.gz
+    on:
+      repo: SecurityRAT/SecurityRAT
+      branch: master
+      tag: true
+  - provider: bintray
+    file: bintrayDesc.json
+    user: rylyade1
+    key:
+      secure: eo856YfplIPhqog7btVZ2QkgyNYIVyaBbOhkyQE4nscgETRC/WXyPuDsLddaJH13TSz795kM6Y7y/iq0rcKKGcrWyfCPAIHwl9JPbQWyONiJOLzuPHLZ6+g8EAG9KzYlAK2DC4j5VZ+DSGGPSHSymM8OCjuTGwllyUeYmWfZ23W+vgu2uxz8m3kSUcpuAUXavHaTfc1PXfw5CqQJdWmZQlMXGfYr0jrkhN4clG+GSDacHCEIym8/o31DOhB3bOvyNAzc9Ef+fYzcPyQ38NxvXgrwkiO16Es7YUcUUMAwvpI13mEq4+9Wsf2bOyo6y88ln7U/NVwwsmUGNAvZ24Ggv2mWI6xqnrH7OGaTCc+RIzNjR5YmwSSpmW6KvEdYy43AdyDeuA/3W81J/o5XeiBzgMStvQyQK3D6el46jhTu9++x/xA6Z2WqXbOVB9cCXojsbs5FqFMT6dJoGJ2VxsdwGvZnvdYqzZViOIMGv8vi4cbh+L9lgFK2ooeiz8wNOrb7eDBk0ZsKu5+Fmr8UsEQwPBsScPcjajGO/uSDHuwLmdoCQf3KfprkSk/W2DANAS042CG7S1A0TBlSrLna/cfJ0u1KD0N3MIIAeWKsZLfEUzCCFaqU+L90AdBlgSYYqAAzAbM9Dzb4W5rkYyJXH1o9FPXDe5XCqmjNiIAElfoKvLM=
