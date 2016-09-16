@@ -4,12 +4,29 @@ angular.module('sdlctoolApp')
     .controller('ReqCategoryBulkController', function($scope, $stateParams, $uibModalInstance, $filter, entity, ReqCategory, sharedProperties) {
     	$scope.requirementCategories = [];
     	$scope.active = true;
+    	$scope.state = {
+    			active: true
+    	}
     	
+    	$scope.getIndeterminateForActiveButton = function() {
+        	var count = 0;
+        	$scope.state.active = $scope.requirementCategories[0].active;
+        	angular.forEach($scope.requirementCategories, function(instance) {
+    			if(instance.active === $scope.state.active) {
+    				count++
+    			}
+        	});
+        	
+        	if(count !== $scope.requirementCategories.length) {
+        		delete $scope.state.active;
+        	}
+        }
         $scope.loadAll = function() {
         	$scope.showTypes = 'Show selected requirement categories';
     		$scope.glyphicon = "glyphicon glyphicon-plus";
     		$scope.show = true;
         	$scope.requirementCategories = sharedProperties.getProperty();
+        	$scope.getIndeterminateForActiveButton ();
         };
         $scope.loadAll();
       	  		  
@@ -20,7 +37,7 @@ angular.module('sdlctoolApp')
 
         $scope.save = function () {
     		angular.forEach($scope.requirementCategories, function(category) {
-    			category.active = $scope.active;
+    			category.active = $scope.state.active;
     			ReqCategory.update(category, onSaveFinished);
     		});
         }
