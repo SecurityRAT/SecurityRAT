@@ -331,7 +331,7 @@ angular.module('sdlctoolApp')
 											},
 											"relationship": "relates to"
 									}
-									object2.url = remoteIssueInfo.apiUrl.http + "//" + remoteIssueInfo.apiUrl.host + appConfig.jiraApiPrefix + '/' + inwardKey + "/remotelink";
+									object2.url = remoteIssueInfo.apiUrl.http + "//" + remoteIssueInfo.apiUrl.host + appConfig.jiraApiPrefix + '/' + outwardKey + "/remotelink";
 									// links ticket from different JIRA to ticket in main JIRA
 									$scope.createRemoteLink(object2);
 								})
@@ -355,7 +355,7 @@ angular.module('sdlctoolApp')
 										},
 										"relationship": "relates to"
 								}
-								object2.url = tempRemoteUrl + '/' + outwardKey + "/remotelink";
+								object2.url = remoteIssueInfo.apiUrl.http + "//" + remoteIssueInfo.apiUrl.host + appConfig.jiraApiPrefix + '/' + outwardKey + "/remotelink";
 								// links ticket from different JIRA to ticket in main JIRA
 								$scope.createRemoteLink(object2);
 							}
