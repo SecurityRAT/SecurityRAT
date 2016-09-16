@@ -32,7 +32,7 @@ describe('Protractor Security RAT general testsuite', function() {
 		browser.sleep(2000);
 		element(by.id('searchQuery')).clear().then(function(){
 		});
-		element(by.partialButtonText('Search an Implementation Type')).click();		
+		element(by.id('searchButton')).click();		
 	});
 	
 	

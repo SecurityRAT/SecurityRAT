@@ -60,7 +60,7 @@ describe('Protractor Security RAT general testsuite', function() {
 		element(by.buttonText('Select')).click();
 		element(by.partialLinkText('Select all')).click();
 		element(by.buttonText('Action with selected')).click();
-		element(by.partialLinkText('Create presentation')).click();
+		element(by.partialLinkText('Create slides')).click();
 		browser.sleep(3000);
 		element(by.buttonText('Create')).click();
 		browser.sleep(10000);

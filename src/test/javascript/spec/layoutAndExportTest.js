@@ -15,7 +15,18 @@ describe('Protractor Security RAT Testsuite', function() {
 			expect(handles.length).toBeGreaterThan(1);
 			browser.switchTo().window(handles[1]).then(function() {
 				browser.manage().getCookie("JSESSIONID").then(function(cookie) {
-					browser.manage().deleteCookie("JSESSIONID");
+					browser.manage().deleteCookie(browser.params.jiraCookieNames[0]);
+					browser.switchTo().window(handles[0]).then();
+				});				
+			});
+		});
+	}
+	var deleteCookie1 = function() {
+		browser.getAllWindowHandles().then(function(handles) {
+			expect(handles.length).toBeGreaterThan(1);
+			browser.switchTo().window(handles[1]).then(function() {
+				browser.manage().getCookie("JSESSIONID").then(function(cookie) {
+					browser.manage().deleteCookie(browser.params.jiraCookieNames[1]);
 					browser.switchTo().window(handles[0]).then();
 				});				
 			});
@@ -75,7 +86,7 @@ describe('Protractor Security RAT Testsuite', function() {
 		element(by.buttonText('Category')).click();
 		//clicks on Action with selected and check if the buttons are grey
 		element(by.buttonText("Action with selected")).click();
-		expect(element.all(by.className("disabledButton")).count()).toBe(4)
+		expect(element.all(by.className("disabledButton")).count()).toBe(5)
 		element(by.buttonText(moreInfo)).click();
 		element(by.linkText(poseidon)).click();
 		element(by.buttonText('Search')).click();
@@ -236,7 +247,7 @@ describe('Protractor Security RAT Testsuite', function() {
 		element(by.buttonText("Select")).click();
 		element(by.linkText("Select all")).click();
 		element(by.buttonText("Action with selected")).click();
-		element(by.linkText("Create excel")).click();
+		element(by.linkText("Create spreadsheet")).click();
 		browser.sleep(2000);
 		element(by.buttonText('Create')).click();
 		browser.sleep(2000);
@@ -245,7 +256,7 @@ describe('Protractor Security RAT Testsuite', function() {
 		element(by.buttonText("Select")).click();
 		element(by.linkText("Select all")).click();
 		element(by.buttonText("Action with selected")).click();
-		element(by.linkText("Create excel")).click();
+		element(by.linkText("Create spreadsheet")).click();
 		browser.sleep(2000);
 		element(by.css('span[class="bootstrap-switch-label"]')).click();
 		browser.sleep(1000);
@@ -412,18 +423,18 @@ describe('Protractor Security RAT Testsuite', function() {
 		browser.sleep(2000);
 		(element(by.buttonText(SaveButton))).click();
 		element(by.model('jiraUrl.url')).clear().then(function(){
-			element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraQueue + browser.params.issueNumbers[0]);
+			element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraQueue + "-" + browser.params.issueNumbers[0]);
 		});
 		(element(by.buttonText(exportButton))).click();
 		browser.sleep(3000);
-		element(by.buttonText("Ok")).click();
+		element(by.buttonText("OK")).click();
 		browser.sleep(2000);
 		element(by.buttonText("No")).click();
 		browser.sleep(2000);
 	});	
 	
 	it('Export to ticket and create a ticket without being authenticated', function() {
-		
+		deleteCookie1();
 		(element(by.buttonText(moreInfo))).click();
 		(element(by.linkText(poseidon))).click();
 		element.all(by.buttonText("Task")).first().click();
@@ -435,7 +446,7 @@ describe('Protractor Security RAT Testsuite', function() {
 		
 		element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraQueue);
 		(element(by.buttonText(exportButton))).click();
-		browser.sleep(1000);
+		browser.sleep(3000);
 		element(by.binding('jira.url')).click();
 		browser.getAllWindowHandles().then(function(handles) {
 			browser.switchTo().window(handles[0]).then();
