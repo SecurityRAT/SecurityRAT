@@ -18,6 +18,7 @@ exports.config = {
 	   },// this is only relevant when you use FORM authentication.
 	   testHost:"https://securityrat.test.local", //FQDN of test instance of Security RAT
 	   jiraQueue : 'https://test-jira.local/browse/XYZ', //path to a JIRA Queue where test tickets can be opened
+	   jiraRemoteLinkQueue: 'https://second-test-jira.local/browse/ABC', // second jira to test the remote linking 
 	   jiraHost : 'https://test-jira.local/browse/', //path to test JIRA
 	   impTestAttachmentUrl : 'https://securityrat.test.local/?file=https%3A%2F%2Ftest-jira.local%2Frest%2Fapi%2F2%2Fattachment%2F',
 	   impTestUrl2: 'https://securityrat.test.local/?ticket=https://test-jira.local/browse/XYZ-123', // the specied ticket in the "ticket" parameter should preferably have different attachment types. For e.g .yml, .xlsx. 
@@ -30,7 +31,8 @@ exports.config = {
 	                   '#{issuenum2}' // JIRA issue number from "jiraQueue" containing more than one attachment added through SecurityRAT
 	                   ],
 	   issuetypes : ['#{issuetype1}', // issuetype with no mandatory fields other than project, summary name 
-	                 '#{issuetype2}' // an issue type with a mandatory fields other than project, summary name
+	                 '#{issuetype2}', // an issue type with a mandatory fields other than project, summary name
+	                 '#{issuetype2}' // issue type for the {jiraRemoteLinkQueue} propperty
 	                 ],
        email: '#{registrationEmail}' // Email address to test for the registration.
    },

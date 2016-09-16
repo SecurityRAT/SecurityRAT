@@ -16,7 +16,7 @@ angular.module('sdlctoolApp')
 		$scope.ticketURL = '';
 		$scope.backupUrl = "";
 		$scope.label = {};
-		$scope.ticketKeys = [];
+		$scope.ticketsToLink = [];
 		$scope.datePicker =  {};
 		$scope.autoComplete = {};
 		$scope.toggleAutoCompleteDropdown = {};
@@ -286,9 +286,9 @@ angular.module('sdlctoolApp')
 							var object1 = {};
 							object1.postData = {
 									"object" : {
-										"url": $scope.jiraUrl.url + '-' + outwardKey.split('-')[outwardKey.split('-').length - 1],
+										"url": $scope.jiraUrl.url + '-' + outwardKey.split('-').pop(),
 										"title": outwardKey,
-										"summary": remoteIssueInfo.fieldObject.summary,
+										"summary": remoteIssueInfo.fields.summary,
 										"icon": {                                         
 								            "url16x16":remoteIssueInfo.fields.issuetype.iconUrl,    
 								            "title":remoteIssueInfo.fields.issuetype.description     
@@ -595,9 +595,18 @@ angular.module('sdlctoolApp')
 			var file = $scope.buildYAMLFile();
 //			console.log(file);
 			try {
-				for(var i = 0; i < $scope.ticketKeys.length; i++) {
-					$scope.addIssueLinks($scope.apiUrl.ticketKey[0], $scope.ticketKeys[i], '');
+				// links the newly created ticket to the existing ticket (created in batch mode) from the yaml file. 
+				// This happens when the requirement set has already been saved in a ticket and the user save it into a new one.
+				for(var i = 0; i < $scope.ticketsToLink.length; i++) {
+					var urlSplit = $scope.ticketsToLink[i].split('/');
+					var apiUrl = {};
+					angular.extend(apiUrl, $scope.buildUrl(urlSplit, false));
+					// get Info to the ticket key
+					apiFactory.getJIRAInfo(apiUrl.http + "//" + apiUrl.host + appConfig.jiraApiPrefix+ "/" + apiUrl.ticketKey[0]).then(function(response) {
+						$scope.addIssueLinks($scope.apiUrl.ticketKey[0], urlSplit.pop(), {fields: response.fields});
+					})
 				}
+				
 				var doc = jsyaml.safeDump(file);
 				var filename = appConfig.filenamePrefix + "_" + $scope.exported.name + "_" + $scope.getCurrentDate() + ".yml";
 				var blob = new Blob([doc], {type:'application/x-yaml'})
@@ -862,11 +871,8 @@ angular.module('sdlctoolApp')
 					requirement.ticket = $scope.ticketURL;
 					// get the status of the newly created tickets and updates the filter.
 					apiFactory.getJIRAInfo($scope.buildUrlCall("issueKey")).then(function(response) {
-						var remoteInfoObject = {};
-						remoteInfoObject.fieldObject = fieldObject;
-						remoteInfoObject.fields = response.fields;
 						//links the newly created ticket to the common ticket
-						$scope.addIssueLinks($scope.exported.ticket.key, $scope.apiUrl.ticketKey[0], remoteInfoObject);
+						$scope.addIssueLinks($scope.exported.ticket.key, $scope.apiUrl.ticketKey[0], {fields: response.fields});
 						size--;
 						linkStatus = {
 								iconUrl: response.fields.status.iconUrl,
@@ -917,7 +923,8 @@ angular.module('sdlctoolApp')
 				return "";
 			} else if ($scope.checks.hasReqTicket) {
 				if(req.ticket !== '' && req.ticket !== null)
-					$scope.ticketKeys.push(req.ticket.split('/').pop());
+					// save the ticket url from yaml, to later on link them to main Ticket. 
+					$scope.ticketsToLink.push(req.ticket);
 				return req.ticket;
 			}
 		}

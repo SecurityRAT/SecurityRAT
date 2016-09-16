@@ -247,9 +247,10 @@ describe('Protractor Security RAT Testsuite', function() {
 		element(by.buttonText("Action with selected")).click();
 		element(by.linkText("Create excel")).click();
 		browser.sleep(2000);
-		element(by.id('statusValue')).click();
+		element(by.css('span[class="bootstrap-switch-label"]')).click();
+		browser.sleep(1000);
 		element(by.buttonText('Create')).click();
-		
+		browser.sleep(2000);
 		//deselects all
 		element(by.buttonText("Select")).click();
 		element(by.linkText("Deselect all")).click();
@@ -269,6 +270,7 @@ describe('Protractor Security RAT Testsuite', function() {
 			element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraQueue);
 		});
 		(element(by.buttonText("Create tickets"))).click();
+		browser.sleep(2000);
 		element(by.model('fields.issuetype.name')).sendKeys(browser.params.issuetypes[0]);
 		element(by.model('label.labelValue')).sendKeys('myNew Label');
 		element(by.id('addLabel')).click();
@@ -376,7 +378,8 @@ describe('Protractor Security RAT Testsuite', function() {
 			element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraRemoteLinkQueue);
 		});
 		(element(by.buttonText("Create tickets"))).click();
-		element(by.model('fields.issuetype.name')).sendKeys(browser.params.issuetypes[1]);
+		browser.sleep(1000);
+		element(by.model('fields.issuetype.name')).sendKeys(browser.params.issuetypes[2]);
 		element(by.model('label.labelValue')).sendKeys('myNew Label');
 		element(by.id('addLabel')).click();
 		
