@@ -837,7 +837,7 @@ angular.module('sdlctoolApp')
 			 angular.forEach($filter('orderBy')($filter('filter')($scope.exported.requirements, {selected: true}), ['categoryOrder','order']), function(requirement){
 				var remoteObject = {};
 				remoteObject.apiUrl = $scope.apiUrl
-				remoremoteObject.url = $scope.jiraUrl.url + "-" + $scope.apiUrl.ticketKey[0].split('-').pop();
+				remoteObject.url = $scope.jiraUrl.url + "-" + $scope.apiUrl.ticketKey[0].split('-').pop();
 				var fieldObject = {}
 				angular.extend(fieldObject, $scope.fields);
 				var commentBody = "";
