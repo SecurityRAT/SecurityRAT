@@ -252,7 +252,6 @@ angular.module('sdlctoolApp')
 		
 		$scope.addIssueLinks = function(inwardKey, outwardKey, remoteIssueInfo) {
 			var url = $scope.buildUrlCall("issueLink");
-			var tempRemoteUrl = $scope.buildUrlCall("ticket");
 			var urlSplit = $scope.exported.ticket.url.split("/");
 			var apiUrl = {};
 			angular.extend(apiUrl, $scope.buildUrl(urlSplit, false));
@@ -286,7 +285,7 @@ angular.module('sdlctoolApp')
 							var object1 = {};
 							object1.postData = {
 									"object" : {
-										"url": $scope.jiraUrl.url + '-' + outwardKey.split('-').pop(),
+										"url": remoteIssueInfo.url,
 										"title": outwardKey,
 										"summary": remoteIssueInfo.fields.summary,
 										"icon": {                                         
@@ -603,7 +602,7 @@ angular.module('sdlctoolApp')
 					angular.extend(apiUrl, $scope.buildUrl(urlSplit, false));
 					// get Info to the ticket key
 					apiFactory.getJIRAInfo(apiUrl.http + "//" + apiUrl.host + appConfig.jiraApiPrefix+ "/" + apiUrl.ticketKey[0]).then(function(response) {
-						$scope.addIssueLinks($scope.apiUrl.ticketKey[0], urlSplit.pop(), {fields: response.fields, apiUrl: apiUrl});
+						$scope.addIssueLinks($scope.apiUrl.ticketKey[0], urlSplit.pop(), {fields: response.fields, apiUrl: apiUrl, url: $scope.ticketsToLink[i]});
 					})
 				}
 				
@@ -837,6 +836,7 @@ angular.module('sdlctoolApp')
 			 angular.forEach($filter('orderBy')($filter('filter')($scope.exported.requirements, {selected: true}), ['categoryOrder','order']), function(requirement){
 				var apiUrl = {};
 				angular.extend(apiUrl, $scope.apiUrl);
+				var remoteUrl = $scope.jiraUrl.url;
 				var fieldObject = {}
 				angular.extend(fieldObject, $scope.fields);
 				var commentBody = "";
@@ -874,7 +874,7 @@ angular.module('sdlctoolApp')
 					// get the status of the newly created tickets and updates the filter.
 					apiFactory.getJIRAInfo($scope.buildUrlCall("issueKey")).then(function(response) {
 						//links the newly created ticket to the common ticket
-						$scope.addIssueLinks($scope.exported.ticket.key, $scope.apiUrl.ticketKey[0], {fields: response.fields, apiUrl: apiUrl});
+						$scope.addIssueLinks($scope.exported.ticket.key, $scope.apiUrl.ticketKey[0], {fields: response.fields, apiUrl: apiUrl, url: remoteUrl});
 						size--;
 						linkStatus = {
 								iconUrl: response.fields.status.iconUrl,
