@@ -597,12 +597,13 @@ angular.module('sdlctoolApp')
 				// links the newly created ticket to the existing ticket (created in batch mode) from the yaml file. 
 				// This happens when the requirement set has already been saved in a ticket and the user save it into a new one.
 				for(var i = 0; i < $scope.ticketsToLink.length; i++) {
-					var urlSplit = $scope.ticketsToLink[i].split('/');
+					var url = $scope.ticketsToLink[i];
+					var urlSplit = url.split('/');
 					var apiUrl = {};
 					angular.extend(apiUrl, $scope.buildUrl(urlSplit, false));
 					// get Info to the ticket key
 					apiFactory.getJIRAInfo(apiUrl.http + "//" + apiUrl.host + appConfig.jiraApiPrefix+ "/" + apiUrl.ticketKey[0]).then(function(response) {
-						$scope.addIssueLinks($scope.apiUrl.ticketKey[0], urlSplit.pop(), {fields: response.fields, apiUrl: apiUrl, url: $scope.ticketsToLink[i]});
+						$scope.addIssueLinks($scope.apiUrl.ticketKey[0], urlSplit.pop(), {fields: response.fields, apiUrl: apiUrl, url: url});
 					})
 				}
 				
@@ -834,9 +835,9 @@ angular.module('sdlctoolApp')
 		$scope.createReqTickets = function() {
 			var size = ($filter('filter')($scope.exported.requirements, {selected: true})).length;
 			 angular.forEach($filter('orderBy')($filter('filter')($scope.exported.requirements, {selected: true}), ['categoryOrder','order']), function(requirement){
-				var apiUrl = {};
-				angular.extend(apiUrl, $scope.apiUrl);
-				var remoteUrl = $scope.jiraUrl.url;
+				var remoteObject = {};
+				remoteObject.apiUrl = $scope.apiUrl
+				remoremoteObject.url = $scope.jiraUrl.url + "-" + $scope.apiUrl.ticketKey[0].split('-').pop();
 				var fieldObject = {}
 				angular.extend(fieldObject, $scope.fields);
 				var commentBody = "";
@@ -873,8 +874,9 @@ angular.module('sdlctoolApp')
 					requirement.ticket = $scope.ticketURL;
 					// get the status of the newly created tickets and updates the filter.
 					apiFactory.getJIRAInfo($scope.buildUrlCall("issueKey")).then(function(response) {
+						remoteObject.fields = response.fields;
 						//links the newly created ticket to the common ticket
-						$scope.addIssueLinks($scope.exported.ticket.key, $scope.apiUrl.ticketKey[0], {fields: response.fields, apiUrl: apiUrl, url: remoteUrl});
+						$scope.addIssueLinks($scope.exported.ticket.key, $scope.apiUrl.ticketKey[0], remoteObject);
 						size--;
 						linkStatus = {
 								iconUrl: response.fields.status.iconUrl,
