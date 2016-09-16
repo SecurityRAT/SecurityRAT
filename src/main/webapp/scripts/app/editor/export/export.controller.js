@@ -331,7 +331,7 @@ angular.module('sdlctoolApp')
 											},
 											"relationship": "relates to"
 									}
-									object2.url = tempRemoteUrl + '/' + outwardKey + "/remotelink";
+									object2.url = remoteIssueInfo.apiUrl.http + "//" + remoteIssueInfo.apiUrl.host + appConfig.jiraApiPrefix + '/' + inwardKey + "/remotelink";
 									// links ticket from different JIRA to ticket in main JIRA
 									$scope.createRemoteLink(object2);
 								})
@@ -603,7 +603,7 @@ angular.module('sdlctoolApp')
 					angular.extend(apiUrl, $scope.buildUrl(urlSplit, false));
 					// get Info to the ticket key
 					apiFactory.getJIRAInfo(apiUrl.http + "//" + apiUrl.host + appConfig.jiraApiPrefix+ "/" + apiUrl.ticketKey[0]).then(function(response) {
-						$scope.addIssueLinks($scope.apiUrl.ticketKey[0], urlSplit.pop(), {fields: response.fields});
+						$scope.addIssueLinks($scope.apiUrl.ticketKey[0], urlSplit.pop(), {fields: response.fields, apiUrl: apiUrl});
 					})
 				}
 				
@@ -835,6 +835,8 @@ angular.module('sdlctoolApp')
 		$scope.createReqTickets = function() {
 			var size = ($filter('filter')($scope.exported.requirements, {selected: true})).length;
 			 angular.forEach($filter('orderBy')($filter('filter')($scope.exported.requirements, {selected: true}), ['categoryOrder','order']), function(requirement){
+				var apiUrl = {};
+				angular.extend(apiUrl, $scope.apiUrl);
 				var fieldObject = {}
 				angular.extend(fieldObject, $scope.fields);
 				var commentBody = "";
@@ -872,7 +874,7 @@ angular.module('sdlctoolApp')
 					// get the status of the newly created tickets and updates the filter.
 					apiFactory.getJIRAInfo($scope.buildUrlCall("issueKey")).then(function(response) {
 						//links the newly created ticket to the common ticket
-						$scope.addIssueLinks($scope.exported.ticket.key, $scope.apiUrl.ticketKey[0], {fields: response.fields});
+						$scope.addIssueLinks($scope.exported.ticket.key, $scope.apiUrl.ticketKey[0], {fields: response.fields, apiUrl: apiUrl});
 						size--;
 						linkStatus = {
 								iconUrl: response.fields.status.iconUrl,
