@@ -837,7 +837,6 @@ angular.module('sdlctoolApp')
 			 angular.forEach($filter('orderBy')($filter('filter')($scope.exported.requirements, {selected: true}), ['categoryOrder','order']), function(requirement){
 				var remoteObject = {};
 				remoteObject.apiUrl = $scope.apiUrl
-				remoteObject.url = $scope.jiraUrl.url + "-" + $scope.apiUrl.ticketKey[0].split('-').pop();
 				var fieldObject = {}
 				angular.extend(fieldObject, $scope.fields);
 				var commentBody = "";
@@ -875,6 +874,7 @@ angular.module('sdlctoolApp')
 					// get the status of the newly created tickets and updates the filter.
 					apiFactory.getJIRAInfo($scope.buildUrlCall("issueKey")).then(function(response) {
 						remoteObject.fields = response.fields;
+						remoteObject.url = $scope.jiraUrl.url + "-" + $scope.apiUrl.ticketKey[0].split('-').pop();
 						//links the newly created ticket to the common ticket
 						$scope.addIssueLinks($scope.exported.ticket.key, $scope.apiUrl.ticketKey[0], remoteObject);
 						size--;
