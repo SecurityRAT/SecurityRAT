@@ -1,6 +1,17 @@
 describe('Protractor Security RAT general testsuite', function() {
 	var browseLink = element(by.partialLinkText('Browse'));
 	var constantRepeater = "requirementSkeleton in requirementSkeletons| orderBy : ['reqCategory.showOrder','showOrder']| filter: searchQuery | filter: {active: true} track by requirementSkeleton.id";
+	var deleteCookie = function() {
+		browser.getAllWindowHandles().then(function(handles) {
+			expect(handles.length).toBeGreaterThan(1);
+			browser.switchTo().window(handles[1]).then(function() {
+				browser.manage().getCookie("JSESSIONID").then(function(cookie) {
+					browser.manage().deleteCookie("JSESSIONID");
+					browser.switchTo().window(handles[0]).then();
+				});				
+			});
+		});
+	}
 	
 	beforeEach(function() {
 		browser.get(browser.params.testHost);
@@ -16,5 +27,28 @@ describe('Protractor Security RAT general testsuite', function() {
 		element(by.buttonText('View')).click();
 		browser.sleep(6000);
 		element(by.buttonText('Back')).click();
+	});
+	it('Test for the feedback feature', function() {
+		deleteCookie();
+		browseLink.click();
+		element.all(by.id('feedbackIcon')).get(1).click();
+		element(by.model('comment')).sendKeys('Feedback test submitted by automatic test. <script>alert(1)</script>');
+		element(by.buttonText('Submit')).click();
+		browser.sleep(2000);
+		element(by.binding('jira.url')).click();
+		browser.getAllWindowHandles().then(function(handles) {
+			browser.switchTo().window(handles[0]).then();
+		});
+		browser.sleep(65000);
+		expect(element.all(by.css('div[marked]')).last().getText()).toBe('You could not authenticate yourself within the time interval! Please try later.');
+		element(by.buttonText("Close")).click();
+		browser.sleep(3000);
+		element(by.buttonText('Submit')).click();
+		browser.sleep(2000);
+		element(by.binding('jira.url')).click();
+		browser.wait(function(){
+			return element(by.partialLinkText(browser.params.jiraHost)).isPresent();
+		});
+		browser.sleep(2000);
 	});
 });

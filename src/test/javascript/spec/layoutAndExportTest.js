@@ -373,10 +373,10 @@ describe('Protractor Security RAT Testsuite', function() {
 		expect(element(by.binding("exportProperty.failed")).getText()).toBe("You have entered a ticket. Please provide a queue.");
 		
 		element(by.model('jiraUrl.url')).clear().then(function(){
-			element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraQueue);
+			element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraRemoteLinkQueue);
 		});
 		(element(by.buttonText("Create tickets"))).click();
-		element(by.model('fields.issuetype.name')).sendKeys(browser.params.issuetypes[0]);
+		element(by.model('fields.issuetype.name')).sendKeys(browser.params.issuetypes[1]);
 		element(by.model('label.labelValue')).sendKeys('myNew Label');
 		element(by.id('addLabel')).click();
 		
