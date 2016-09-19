@@ -10,9 +10,9 @@
         <link rel="icon" type="image/x-icon" href="/assets/static/favicon.ico" />
         <!-- build:css assets/styles/vendor.css -->
         <!-- bower:css -->
-        <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css" />
-        <link rel="stylesheet" href="/bower_components/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.css" />
-        <link rel="stylesheet" href="/bower_components/highlightjs/styles/default.css" />
+        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="bower_components/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.css" />
+        <link rel="stylesheet" href="bower_components/highlightjs/styles/default.css" />
         <!-- endbower -->
         <!-- endbuild -->
         <!-- build:css assets/styles/main.css -->
@@ -83,11 +83,13 @@
         <script src="bower_components/highlightjs/highlight.pack.js"></script>
         <!-- endbower -->
         <!-- endbuild -->
-	<script src="scripts/app/editor/Blob.js"></script>
 	<!-- Include all of your other dependencies here -->
+	<script src="bower_components/Blobjs/Blob.js"></script>
 	<script src="bower_components/js-yaml/dist/js-yaml.js"></script>
 	<script src="bower_components/file-saver.js/FileSaver.js"></script>
 	<script src="bower_components/xregexp/xregexp-all.js"></script>
+	<script src="bower_components/revealjs/lib/js/head.min.js"></script>
+    <script src="bower_components/revealjs/js/reveal.js"></script>
 
     <!-- build:js({.tmp,src/main/webapp}) scripts/app.js -->
 	<script src="scripts/app/editor/regex-weburl.js"></script>
@@ -285,10 +287,8 @@
     <script src="scripts/app/editor/requirements/requirements.js"></script>
     <script src="scripts/app/editor/requirements/requirements.controller.js"></script>
     <script src="scripts/app/editor/presentation/configuration/config-modal.controller.js"></script>
-    <script src="scripts/app/editor/presentation/myRevealjs/revealjs/lib/js/head.min.js"></script>
-    <script src="scripts/app/editor/presentation/myRevealjs/revealjs/js/reveal.js"></script>
-    <script src="scripts/app/editor/presentation/myRevealjs/presentation.js"></script>
-    <script src="scripts/app/editor/presentation/myRevealjs/presentation.controller.js"></script>
+    <script src="scripts/app/editor/presentation/presentation.js"></script>
+    <script src="scripts/app/editor/presentation/presentation.controller.js"></script>
     <script src="scripts/app/editor/excel/excel.config.controller.js"></script>
     <script src="scripts/app/editor/modal-alert.js"></script>
     <script src="scripts/app/editor/export/export.js"></script>

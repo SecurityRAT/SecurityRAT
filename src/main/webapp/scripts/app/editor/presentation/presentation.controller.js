@@ -32,11 +32,11 @@ angular.module('sdlctoolApp')
 				transition: $scope.values.config.transition,
 				// More info https://github.com/hakimel/revealjs#dependencies
 				dependencies: [
-					{ src: 'scripts/app/editor/presentation/myRevealjs/revealjs/lib/js/classList.js', condition: function() { return !document.body.classList; } },
-					{ src: 'scripts/app/editor/presentation/myRevealjs/revealjs/plugin/markdown/marked.js' },
-					{ src: 'scripts/app/editor/presentation/myRevealjs/revealjs/plugin/markdown/markdown.js' },
-					{ src: 'scripts/app/editor/presentation/myRevealjs/revealjs/plugin/notes/notes.js', async: true },
-					{ src: 'scripts/app/editor/presentation/myRevealjs/revealjs/plugin/zoom-js/zoom.js', async: true },
+					{ src: 'bower_components/revealjs/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'bower_components/revealjs/plugin/markdown/marked.js' },
+					{ src: 'bower_components/revealjs/plugin/markdown/markdown.js' },
+					{ src: 'bower_components/revealjs/plugin/notes/notes.js', async: true },
+					{ src: 'bower_components/revealjs/plugin/zoom-js/zoom.js', async: true },
 				]
 			});
 			$timeout(function() {

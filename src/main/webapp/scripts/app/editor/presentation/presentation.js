@@ -15,7 +15,7 @@ angular.module('sdlctoolApp')
                 },
                 views: {
                     'content@': {
-                        templateUrl: 'scripts/app/editor/presentation/myRevealjs/presentation.html',
+                        templateUrl: 'scripts/app/editor/presentation/presentation.html',
                         controller: 'PresentationController'
                     }
                 },
@@ -24,18 +24,23 @@ angular.module('sdlctoolApp')
                 	link.id = 'theme';
         			link.rel = 'stylesheet';
         			link.type = 'text/css';
-        			link.href = 'scripts/app/editor/presentation/myRevealjs/revealjs/css/theme/' + $stateParams.theme;
+        			link.href = 'bower_components/revealjs/css/theme/' + $stateParams.theme;
         			var link2 = document.createElement( 'link' );
         			link2.id = 'reveal';
         			link2.rel = 'stylesheet';
         			link2.type = 'text/css';
-        			link2.href = 'scripts/app/editor/presentation/myRevealjs/revealjs/css/reveal.css';
+        			link2.href = 'bower_components/revealjs/css/reveal.css';
         			document.getElementsByTagName( 'head' )[0].appendChild( link2 );
         			document.getElementsByTagName( 'head' )[0].appendChild( link );
         			
-        			
-        			var maincss = document.getElementById('maincss');
-        			document.head.removeChild(maincss);
+        			var links = document.getElementsByTagName('link');
+        			for(var i = 0; i < links.length; i++) {
+        				if(links[i].href.indexOf('main.css') !== -1) {
+        					document.head.removeChild(links[i]);
+        				}
+        			}
+//        			var maincss = document.getElementById('maincss');
+//        			document.head.removeChild(links[i]);
                 },
                 onExit: function() {
                 	var maincss = document.createElement( 'link' );
