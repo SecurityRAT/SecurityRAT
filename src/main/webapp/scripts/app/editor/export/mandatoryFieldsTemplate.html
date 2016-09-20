@@ -10,29 +10,29 @@
 		<label for="{{field.name}}" class="col-sm-2 control-label" data-ng-class="{'required-field': field.mandatory && !field.configurable}">{{field.name}}:</label>
 		<div class="col-sm-9" data-ng-if="!field.values">
 			<span data-ng-if="field.type == 'string'">
-				<input type="text" id="{{field.name}}" data-ng-model="fields[field.key]" class="form-control"/>
+				<input type="text" id="{{field.key}}" data-ng-model="fields[field.key]" class="form-control"/>
 			</span>
-			<span data-ng-if="field.type == 'date' || field.type == 'datetime'">
-				<input id="{{field.name}}" type="text" class="form-control" is-open="datePicker[field.key].opened"
+			<span data-ng-if="field.type == 'date' || field.type == 'datetime'" id="{{field.key}}">
+				<input type="text" class="form-control" is-open="datePicker[field.key].opened"
 					close-text="Close" uib-datepicker-popup="dd-MM-yyyy" data-ng-model="fields[field.key]" />
 				<span class="input-group-btn">
-					<button type="button" id ="{{field.name}}" class="btn btn-default" data-ng-click="calDueDate($event, field.key)">
+					<button type="button" class="btn btn-default" data-ng-click="calDueDate($event, field.key)">
 						<i class="glyphicon glyphicon-calendar"></i>
 					</button>
 				</span>
 			</span>
 			<span data-ng-if="field.type == 'priority'">
-				<select id="{{field.name}}" data-ng-model="fields.priority.id" data-ng-options="value.id as value.name for value in field.values" class="form-control">
+				<select id="{{field.key}}" data-ng-model="fields.priority.id" data-ng-options="value.id as value.name for value in field.values" class="form-control">
 				</select>
 			</span>
 			<span data-ng-if="field.type == 'timetracking'">
-				<input type="number" id="{{field.name}}" data-ng-model="fields.timetracking.originalEstimate" placeholder="due time in minutes" class="form-control"/>
+				<input type="number" id="{{field.key}}" data-ng-model="fields.timetracking.originalEstimate" placeholder="due time in minutes" class="form-control"/>
 			</span>
 			<span data-ng-if="field.type == 'number'">
-				<input type="number" id="{{field.name}}" data-ng-model="fields[field.key]" class="form-control"/>
+				<input type="number" id="{{field.key}}" data-ng-model="fields[field.key]" class="form-control"/>
 			</span>
 			<span data-ng-if="(field.type == 'user') && field.autoCompleteUrl" uib-dropdown is-open="toggleAutoCompleteDropdown[field.key]">
-				<input type="text" id="{{field.name.replace(' ', '-')}}" data-ng-model="fields[field.key].name" data-ng-change="requestAutoComplete(field)" data-ng-pattern="/^[a-z0-9]*$/" class="form-control"/>
+				<input type="text" id="{{field.key}}" data-ng-model="fields[field.key].name" data-ng-change="requestAutoComplete(field)" data-ng-pattern="/^[a-z0-9]*$/" class="form-control"/>
 				<!-- dropdown for fields which can be auto completed. -->
 				<ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="{{field.name.replace(' ', '-')}}" style="overflow: scroll;" data-ng-style="{'max-height':maxHeight}">
 					<li role="menuitem" data-ng-repeat="item in autoComplete[field.key]">
@@ -40,14 +40,25 @@
 					</li>
 			  	</ul>
 			</span>
+			<span data-ng-if="(field.type == 'user') && !field.autoCompleteUrl">
+				<input type="text" id="{{field.key}}" data-ng-model="fields[field.key].name" data-ng-pattern="/^[a-z0-9]*$/" class="form-control"/>
+			</span>
+			<span data-ng-show="!fields[field.key] && (field.type == 'user')">
+				<p class="help-block">Please enter comma seperated strings. E.g john, mary</p>
+				<BR>
+				<span class="help-block" >
+					 Allowed standard characters:
+	                    <ul><li><b>A-Z, a-z, 0-9</b></li></ul>
+				</span> 
+			</span>
 		</div>
 		<div class="col-sm-9" data-ng-if="field.values">
 			<span data-ng-if="field.values[0].value">
-				<select data-ng-if="field.itemType != 'issuelinks'" id="{{field.name}}" data-ng-model="fields[field.key]" data-ng-options="value as value.value for value in field.values" class="form-control" >
+				<select data-ng-if="field.itemType != 'issuelinks'" id="{{field.key}}" data-ng-model="fields[field.key]" data-ng-options="value as value.value for value in field.values" class="form-control" >
 				</select>
 			</span>
 			<span data-ng-if="field.values[0].name">
-				<select data-ng-if="field.itemType != 'issuelinks'" id="{{field.name}}" data-ng-model="fields[field.key]" data-ng-options="value as value.name for value in field.values" class="form-control" >
+				<select data-ng-if="field.itemType != 'issuelinks'" id="{{field.key}}" data-ng-model="fields[field.key]" data-ng-options="value as value.name for value in field.values" class="form-control" >
 				</select>
 			</span>
 		</div>
@@ -56,21 +67,21 @@
 		<label for="{{field.name}}" class="col-sm-2 control-label" data-ng-class="{'required-field': field.mandatory && !field.configurable}">{{field.name}}:</label>
 		<div class="col-sm-9" data-ng-if="field.schemaCustom.indexOf('multicheckboxes') >= 0 || field.itemType == 'component'">
 			<span data-ng-if="field.values[0].value">
-				<select data-ng-if="field.itemType != 'issuelinks'" id="{{field.name}}" data-ng-model="fields[field.key]" data-ng-options="value as value.value for value in field.values" class="form-control" multiple>
+				<select data-ng-if="field.itemType != 'issuelinks'" id="{{field.key}}" data-ng-model="fields[field.key]" data-ng-options="value as value.value for value in field.values" class="form-control" multiple>
 				</select>
 			</span>
 			<span data-ng-if="field.values[0].name">
-				<select data-ng-if="field.itemType != 'issuelinks'" id="{{field.name}}" data-ng-model="fields[field.key]" data-ng-options="value as value.name for value in field.values" class="form-control" multiple>
+				<select data-ng-if="field.itemType != 'issuelinks'" id="{{field.key}}" data-ng-model="fields[field.key]" data-ng-options="value as value.name for value in field.values" class="form-control" multiple>
 				</select>
 			</span>
 		</div>
 		<div class="col-sm-9" data-ng-if="field.itemType !== 'component' && field.schemaCustom.indexOf('multicheckboxes') === -1">
 			<span data-ng-if="field.values[0].value">
-				<select data-ng-if="field.itemType != 'issuelinks'" id="{{field.name}}" data-ng-model="fields[field.key][0]" data-ng-options="value as value.value for value in field.values" class="form-control" >
+				<select data-ng-if="field.itemType != 'issuelinks'" id="{{field.key}}" data-ng-model="fields[field.key][0]" data-ng-options="value as value.value for value in field.values" class="form-control" >
 				</select>
 			</span>
 			<span data-ng-if="field.values[0].name">
-				<select data-ng-if="field.itemType != 'issuelinks'" id="{{field.name}}" data-ng-model="fields[field.key][0]" data-ng-options="value as value.name for value in field.values" class="form-control">
+				<select data-ng-if="field.itemType != 'issuelinks'" id="{{field.key}}" data-ng-model="fields[field.key][0]" data-ng-options="value as value.name for value in field.values" class="form-control">
 				</select>
 			</span>
 		</div>
@@ -78,11 +89,29 @@
 	<div  data-ng-if="field.type == 'array' && !field.values" class="form-group">
 		<label for="{{field.name}}" class="col-sm-2 control-label" data-ng-class="{'required-field': field.mandatory && !field.configurable}">{{field.name}}:</label>
 		<div class="col-sm-9">
-			<span data-ng-if="!field.autoCompleteUrl || field.itemType === 'string'">
-				<textarea class="form-control" id="{{field.name}}" name="{{field.name}}" rows="5" placeholder="comma seperated value" ng-model="fields[field.key]" data-ng-list></textarea>
+			<span data-ng-if="field.key === 'labels'">
+				<span data-ng-init="initLabels()" >
+					<span class="input-group">
+						<input type="text" data-ng-model="label.labelValue" class="form-control"></input>
+						<span class="input-group-btn">
+							<button id="addLabel" class="btn btn-default text-center" data-ng-click="addLabel(label.labelValue)"  uib-tooltip="Add label"
+							tooltip-placement="right" tooltip-append-to-body><span class="glyphicon glyphicon-plus"></span></button>
+						</span>
+					</span>
+				</span>
+				<span class="form-group">
+					<ul class="items">
+						<li class="item-row" data-ng-repeat="label in fields.labels" title="{{label}}">
+							<button class="value-item" type="button" tabindex="-1"><span><span class="value-text">{{label}}</span></span></button><em class="item-delete" data-ng-click="removeLabel(label)"></em>
+						</li>
+					</ul>
+				</span>
+			</span>
+			<span data-ng-if="(!field.autoCompleteUrl || field.itemType === 'string') && field.key !== 'labels'">
+				<textarea class="form-control" id="{{field.key}}" name="{{field.name}}" rows="5" placeholder="comma seperated value" ng-model="fields[field.key]" data-ng-list></textarea>
 			</span>
 			<span data-ng-if="field.autoCompleteUrl && field.itemType !== 'string'" uib-dropdown is-open="toggleAutoCompleteDropdown[field.key]">
-				<textarea class="form-control" id="{{field.name.replace(' ', '-')}}" name="{{field.name}}" rows="5" placeholder="comma seperated value" ng-model="fields[field.key]" 
+				<textarea class="form-control" id="{{field.key}}" name="{{field.name}}" rows="5" placeholder="comma seperated value" ng-model="fields[field.key]" 
 				data-ng-change="requestAutoComplete(field)" split-array="{{field}}"></textarea>
 				<!-- dropdown for fields which can be auto completed. -->
 				<ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="{{field.name.replace(' ', '-')}}" style="overflow: scroll;" data-ng-style="{'max-height':maxHeight}">
@@ -91,7 +120,11 @@
 					</li>
 			  	</ul>
 			</span>
-			<div data-ng-show="!fields[field.key]">
+			<span data-ng-if="!field.autoCompleteUrl && field.itemType !== 'string'">
+				<textarea class="form-control" id="{{field.key}}" name="{{field.name}}" rows="5" placeholder="comma seperated value" ng-model="fields[field.key]" 
+				split-array="{{field}}"></textarea>
+			</span>
+			<div data-ng-show="!fields[field.key] && field.key !== 'labels'">
 				<p class="help-block">Please enter comma seperated strings. E.g john, mary</p>
 				<BR>
 				<span class="help-block" >

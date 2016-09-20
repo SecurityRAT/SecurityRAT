@@ -63,7 +63,8 @@ angular.module('sdlctoolApp')
 		
 		// Dirty Dirty Dirty Hack.
 		$scope.initLabels = function() {
-			$scope.fields.labels = [appConfig.filenamePrefix + "_REQUIREMENT"];
+			if($scope.selection.jira)$scope.fields.labels = [appConfig.filenamePrefix];
+			if($scope.selection.createTickets)$scope.fields.labels = [appConfig.filenamePrefix + "_REQUIREMENT"];
 		} 
 		// Dirty Dirty Dirty Hack.
 		$scope.fillDefaultValues = function() {
@@ -380,7 +381,7 @@ angular.module('sdlctoolApp')
 		$scope.requestAutoComplete = function(field) {
 			$scope.autoComplete[field.key] = [];
 			//renders identification by jquery id possible.
-			$scope.getHeight(field.name.replace(' ', '-'));
+			$scope.getHeight(field.key);
 			var lastValue = '';
 			if($scope.fields[field.key] && angular.isDefined(field.autoCompleteUrl)){
 				switch(field.type) {
@@ -408,6 +409,12 @@ angular.module('sdlctoolApp')
 										$scope.toggleAutoCompleteDropdown[field.key] = response.length > 0 ? true : false;
 										break;
 						}
+					}, function(error) {
+						angular.forEach($scope.jiraAlternatives.mandatoryFields, function(manField) {
+							if(angular.equals(manField.key, field.key)) {
+								delete manField.autoCompleteUrl;
+							}
+						});
 					});
 				}
 			}
@@ -447,7 +454,7 @@ angular.module('sdlctoolApp')
 						var itemType = "";
 						var  sync = $q.defer();
 						if((fatalFields.indexOf(key) === -1) && (excludedFields.indexOf(key) === -1)
-							&& !(angular.equals(value.schema.type, "array") && (value.operations.length == 1) && value.operations.indexOf("set") !== -1)) {
+							&& !(angular.equals(value.schema.type, "array") && (value.operations.length === 1) && value.operations.indexOf("set") !== -1)) {
 							if(angular.isDefined(value.allowedValues)) {
 								if(value.allowedValues.length > 0)allowedValues = value.allowedValues;
 								else sync.reject(false); // slice out field without values in the allowedValues property.
@@ -471,15 +478,16 @@ angular.module('sdlctoolApp')
 									schemaCustom: value.schema.custom,
 									itemType: value.schema.items,
 									values : allowedValues,
-									configurable : !value.required,
+									configurable : $scope.selection.createTickets && key === 'labels' ? true : !value.required,
 									mandatory : value.required,
 									autoCompleteUrl: value.autoCompleteUrl
 								});
+//								console.log($scope.jiraAlternatives.mandatoryFields);
 							});
 						}
 					});
+					
 				})
-//				console.log($scope.jiraAlternatives.mandatoryFields);
 			});
 		}
 		
@@ -487,7 +495,7 @@ angular.module('sdlctoolApp')
 		$scope.$watch('fields.issuetype.name', function(newVal, oldVal, scope) {
 			$scope.manFilterObject.projectKey = $scope.apiUrl.projectKey;
 			$scope.manFilterObject.issuetypeName = newVal;
-			var excludedFields = ['summary', 'issuetype', 'labels', 'project', 'reporter', 'description']; // 
+			var excludedFields = ['summary', 'issuetype', 'project', 'reporter', 'description']; // 
 			var fatalFields = ['attachment', 'issuelinks'];
 			var tempFields = {};
 			angular.extend(tempFields, $scope.fields);
@@ -522,7 +530,7 @@ angular.module('sdlctoolApp')
 		// create a new ticket
 		$scope.createTicket = function(fieldObject, withAttachment) {
 			var derefer = $q.defer();
-			var excludedFields = ['summary', 'issuetype', 'labels', 'reporter', 'project', 'description'];
+//			var excludedFields = ['summary', 'issuetype', 'labels', 'reporter', 'project', 'description'];
 			for(var i = 0; i < $scope.jiraAlternatives.mandatoryFields.length && $scope.jiraAlternatives.mandatoryFields.length > 0; i++) {
 				if(!$scope.jiraAlternatives.mandatoryFields[i].mandatory) {
 					delete fieldObject[$scope.jiraAlternatives.mandatoryFields[i].key];
@@ -714,7 +722,7 @@ angular.module('sdlctoolApp')
 						$scope.alertType = "danger";
 						$scope.exportProperty.failed = "You have entered a invalid ticket. Please provide a valid ticket.";
 					}else {
-						var excludedFields = ['summary', 'issuetype', 'labels', 'reporter', 'project', 'description'];
+						var excludedFields = ['summary', 'issuetype', 'reporter', 'project', 'description'];
 						var fatalFields = ['attachment', 'issuelinks'];
 						if(angular.isUndefined($scope.fields.summary) || angular.equals($scope.fields.summary, "")) {
 							$scope.fields.summary = appConfig.filenamePrefix + " " + $scope.exported.name;
@@ -786,7 +794,6 @@ angular.module('sdlctoolApp')
 							// create a ticket only when the required fields have been set.
 							if(!fieldNotfulfilled) {
 								if($scope.selection.jira) {
-									$scope.fields.labels = [appConfig.filenamePrefix];
 									if(angular.isDefined($scope.exported.ticket.url)) {
 										$confirm({text: 'You have already exported this artifact in the ticket ' + $scope.exported.ticket.url + 
 											'. Are you sure you want to export into a new ticket in the queue ' + $scope.jiraUrl.url, title:'Confirm'

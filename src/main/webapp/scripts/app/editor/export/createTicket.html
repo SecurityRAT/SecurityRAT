@@ -49,27 +49,6 @@
 		<div>&nbsp;</div>
 		<form class="form-horizontal" role="form" data-ng-if="checks.isQueue">
 			<ng-include src="'scripts/app/editor/export/mandatoryFieldsTemplate.html'"></ng-include>
-			<div class="form-group" data-ng-init="initLabels()">
-				<label for="IssueType" class="col-sm-2 control-label">Labels:</label>
-				<div class="col-sm-9">
-					<div class="input-group">
-						<input type="text" data-ng-model="label.labelValue" class="form-control"></input>
-						<span class="input-group-btn">
-							<button id="addLabel" class="btn btn-default text-center" data-ng-click="addLabel(label.labelValue)"  uib-tooltip="Add label"
-							tooltip-placement="right" tooltip-append-to-body><span class="glyphicon glyphicon-plus"></span></button>
-						</span>
-					</div>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-offset-2 col-sm-9">
-					<ul class="items">
-						<li class="item-row" data-ng-repeat="label in fields.labels" title="{{label}}">
-							<button class="value-item" type="button" tabindex="-1"><span><span class="value-text">{{label}}</span></span></button><em class="item-delete" data-ng-click="removeLabel(label)"></em>
-						</li>
-					</ul>
-				</div>
-			</div>
 		</form>
 		<div>&nbsp;</div>
 	</div>
