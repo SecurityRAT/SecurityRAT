@@ -7,7 +7,7 @@ before_install:
 - curl -L https://www.npmjs.com/install.sh | sh
 - npm install bower
 - npm install grunt-cli
-script: 
+script:
 - mvn -Pprod package
 - chmod +x createArchive.sh
 - "./createArchive.sh"
