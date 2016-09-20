@@ -25,7 +25,7 @@ deploy:
   file_glob: true
   file: 
     - "${RELEASE_ZIP_FILE}"
-    - "${RELEASE_TAR_FILE}
+    - "${RELEASE_TAR_FILE}"
   on:
     repo: SecurityRAT/SecurityRAT
     branch: master
