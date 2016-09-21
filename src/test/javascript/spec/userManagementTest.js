@@ -71,6 +71,8 @@ describe('Protractor Security RAT general testsuite', function() {
 						alert('csrf test unsuccessful')
 					})
 		});
+		browser.sleep(3500);
+		browser.switchTo().alert().accept();
 	})
 	
 });

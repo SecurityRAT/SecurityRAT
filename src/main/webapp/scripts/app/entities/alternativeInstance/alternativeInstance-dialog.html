@@ -36,7 +36,7 @@
             <label for="field_requirementSkeleton">requirementSkeleton</label>
             
             <select class="form-control" id="field_requirementSkeleton" name="requirementSkeleton" data-ng-model="alternativeInstance.requirementSkeleton" 
-            data-ng-options="requirementSkeleton as requirementSkeleton.shortName + ' - ' + requirementSkeleton.description group by requirementSkeleton.reqCategory.name for requirementSkeleton in requirementskeletons 
+            data-ng-options="requirementSkeleton as requirementSkeleton.shortName + ' - ' + requirementSkeleton.description.substr(0, 80) + '...' group by requirementSkeleton.reqCategory.name for requirementSkeleton in requirementskeletons 
             | orderBy : ['reqCategory.id', 'showOrder'] track by requirementSkeleton.id"
             required>
                 <option value=""></option>

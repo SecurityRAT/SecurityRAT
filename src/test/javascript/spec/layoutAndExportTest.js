@@ -15,7 +15,7 @@ describe('Protractor Security RAT Testsuite', function() {
 			expect(handles.length).toBeGreaterThan(1);
 			browser.switchTo().window(handles[1]).then(function() {
 				browser.manage().getCookie("JSESSIONID").then(function(cookie) {
-					browser.manage().deleteCookie(browser.params.jiraCookieNames[0]);
+					browser.manage().deleteCookie("JSESSIONID");
 					browser.switchTo().window(handles[0]).then();
 				});				
 			});
@@ -24,7 +24,7 @@ describe('Protractor Security RAT Testsuite', function() {
 	var deleteCookie1 = function() {
 		browser.getAllWindowHandles().then(function(handles) {
 			expect(handles.length).toBeGreaterThan(1);
-			browser.switchTo().window(handles[1]).then(function() {
+			browser.switchTo().window(handles[2]).then(function() {
 				browser.manage().getCookie("JSESSIONID").then(function(cookie) {
 					browser.manage().deleteCookie(browser.params.jiraCookieNames[1]);
 					browser.switchTo().window(handles[0]).then();
@@ -376,6 +376,8 @@ describe('Protractor Security RAT Testsuite', function() {
 		var requirements = element.all(by.model("reqs.selected"));
 		
 		requirements.first().click();
+		requirements.get(1).click();
+		requirements.get(2).click();
 		
 		element(by.buttonText("Action with selected")).click();
 		element(by.linkText("Create JIRA tickets")).click();
@@ -435,12 +437,12 @@ describe('Protractor Security RAT Testsuite', function() {
 	
 	it('Export to ticket and create a ticket without being authenticated', function() {
 		deleteCookie1();
+		deleteCookie();
+		browser.sleep(3000);
 		(element(by.buttonText(moreInfo))).click();
 		(element(by.linkText(poseidon))).click();
 		element.all(by.buttonText("Task")).first().click();
 		(element(by.linkText('Refused'))).click();
-		deleteCookie();
-		browser.sleep(3000);
 		(element(by.buttonText(SaveButton))).click();
 //		browser.sleep(3000);
 		
@@ -520,5 +522,9 @@ describe('Protractor Security RAT Testsuite', function() {
 			return element(by.partialLinkText(browser.params.jiraHost)).isPresent();
 		});
 		browser.sleep(2000);
+		browser.refresh().then(function() {}, function(){
+			browser.sleep(2000);
+			browser.switchTo().alert().accept();
+		})
 	});
 });

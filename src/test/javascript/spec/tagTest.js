@@ -22,14 +22,14 @@ describe('Protractor Security RAT general testsuite', function() {
 		});
 	}
 	 
-	it('searching a tag category', function() {
-		entities.click();
-		element(by.partialLinkText('Tag Categories')).click();
-		element(by.id('searchQuery')).sendKeys('QA');
-		element(by.id('searchButton')).click();
-		expect(element.all(by.repeater("tagCategory in tagCategorys | orderBy : 'showOrder'")).count()).toBe(1);
-		
-	});
+//	it('searching a tag category', function() {
+//		entities.click();
+//		element(by.partialLinkText('Tag Categories')).click();
+//		element(by.id('searchQuery')).sendKeys('QA');
+//		element(by.id('searchButton')).click();
+//		expect(element.all(by.repeater("tagCategory in tagCategorys | orderBy : 'showOrder'")).count()).toBe(1);
+//		
+//	});
 	
 	it('administring a tag category', function() {
 		entities.click();
@@ -82,22 +82,22 @@ describe('Protractor Security RAT general testsuite', function() {
 		element(by.buttonText("Save")).click();
 	});
 	
-	it('searching a tag Instance', function() {
-		entities.click();
-		element(by.partialLinkText('Tag Instances')).click();
-		element(by.id('searchQuery')).sendKeys('Requirement Owner');
-		element(by.id('searchButton')).click();
-		expect(element.all(by.repeater("tagInstance in tagInstances | filterCategoryForEntities: selectedCategory: 'tagCategory' | orderBy: ['tagCategory.showOrder','showOrder']")).count()).toBeGreaterThan(3);
-		browser.sleep(2000);
-		element(by.id('searchQuery')).clear().then(function(){});
-		element(by.id('searchButton')).click();		
-		element(by.buttonText("Tag Category")).click();
-		element.all(by.linkText("Requirement Owner")).first().click();
-		expect(element.all(by.repeater("tagInstance in tagInstances | filterCategoryForEntities: selectedCategory: 'tagCategory' | orderBy: ['tagCategory.showOrder','showOrder']")).count()).toBeGreaterThan(3);
-		browser.sleep(2000);
-		element.all(by.linkText("Requirement Owner")).first().click();
-		element(by.buttonText("Tag Category")).click();
-	});
+//	it('searching a tag Instance', function() {
+//		entities.click();
+//		element(by.partialLinkText('Tag Instances')).click();
+//		element(by.id('searchQuery')).sendKeys('Requirement Owner');
+//		element(by.id('searchButton')).click();
+//		expect(element.all(by.repeater("tagInstance in tagInstances | filterCategoryForEntities: selectedCategory: 'tagCategory' | orderBy: ['tagCategory.showOrder','showOrder']")).count()).toBeGreaterThan(3);
+//		browser.sleep(2000);
+//		element(by.id('searchQuery')).clear().then(function(){});
+//		element(by.id('searchButton')).click();		
+//		element(by.buttonText("Tag Category")).click();
+//		element.all(by.linkText("Requirement Owner")).first().click();
+//		expect(element.all(by.repeater("tagInstance in tagInstances | filterCategoryForEntities: selectedCategory: 'tagCategory' | orderBy: ['tagCategory.showOrder','showOrder']")).count()).toBeGreaterThan(3);
+//		browser.sleep(2000);
+//		element.all(by.linkText("Requirement Owner")).first().click();
+//		element(by.buttonText("Tag Category")).click();
+//	});
 	
 	
 	it('administring a tag Instances', function() {

@@ -1444,7 +1444,7 @@ angular.module('sdlctoolApp')
 		  ws['!cols'] = wscols;
 		  var wbopts = { bookType:'xlsx', bookSST:false, type:'binary' };
 		  var wbout = XLSX.write(wb,wbopts);
-		  if(navigator.userAgent.indexOf('Safari') !== -1) {
+		  if(navigator.userAgent.indexOf('Safari') !== -1 && navigator.userAgent.indexOf('Chrome') === -1) {
 			  window.open("data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8;base64," + window.btoa(wbout), '', 'width=300,height=150');
 		  } else {
 			  saveAs(new Blob([s2ab(wbout)], {type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet ;charset=utf-8"})

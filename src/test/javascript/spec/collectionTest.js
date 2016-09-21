@@ -26,14 +26,14 @@ describe('Protractor Security RAT general testsuite', function() {
 		});
 	}
 	 
-	it('searching a collection category', function() {
-		entities.click();
-		element(by.partialLinkText('Collection Categories')).click();
-		element(by.id('searchQuery')).sendKeys('criticality');
-		element(by.id('searchButton')).click();
-		expect(element.all(by.repeater(collRepeater)).count()).toBe(1);
-		
-	});
+//	it('searching a collection category', function() {
+//		entities.click();
+//		element(by.partialLinkText('Collection Categories')).click();
+//		element(by.id('searchQuery')).sendKeys('criticality');
+//		element(by.id('searchButton')).click();
+//		expect(element.all(by.repeater(collRepeater)).count()).toBe(1);
+//		
+//	});
 	
 	it('administering collection category', function() {
 		entities.click();
@@ -86,23 +86,23 @@ describe('Protractor Security RAT general testsuite', function() {
 		element(by.buttonText("Save")).click();
 	});
 	
-	it('searching a collection Instance', function() {
-		entities.click();
-		element(by.partialLinkText('Collection Instances')).click();
-		element(by.id('searchQuery')).sendKeys('Criticality');
-		element(by.id('searchButton')).click();
-		expect(element.all(by.repeater(collInsRepeater)).count()).toBeGreaterThan(1);
-		browser.sleep(2000);
-		element(by.id('searchQuery')).clear().then(function(){
-		});
-		element(by.id('searchButton')).click();		
-		element(by.buttonText("Collection Category")).click();
-		element(by.linkText("Criticality")).click();
-		expect(element.all(by.repeater(collInsRepeater)).count()).toBeGreaterThan(1);
-		browser.sleep(2000);
-		element(by.linkText("Criticality")).click();
-		element(by.buttonText("Collection Category")).click();
-	});
+//	it('searching a collection Instance', function() {
+//		entities.click();
+//		element(by.partialLinkText('Collection Instances')).click();
+//		element(by.id('searchQuery')).sendKeys('Criticality');
+//		element(by.id('searchButton')).click();
+//		expect(element.all(by.repeater(collInsRepeater)).count()).toBeGreaterThan(1);
+//		browser.sleep(2000);
+//		element(by.id('searchQuery')).clear().then(function(){
+//		});
+//		element(by.id('searchButton')).click();		
+//		element(by.buttonText("Collection Category")).click();
+//		element(by.linkText("Criticality")).click();
+//		expect(element.all(by.repeater(collInsRepeater)).count()).toBeGreaterThan(1);
+//		browser.sleep(2000);
+//		element(by.linkText("Criticality")).click();
+//		element(by.buttonText("Collection Category")).click();
+//	});
 	
 	
 	it('adminisetring collection Instances', function() {

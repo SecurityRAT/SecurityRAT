@@ -1,12 +1,23 @@
 describe('Protractor Security RAT general testsuite', function() {
 	var browseLink = element(by.partialLinkText('Browse'));
-	var constantRepeater = "requirementSkeleton in requirementSkeletons| orderBy : ['reqCategory.showOrder','showOrder']| filter: searchQuery | filter: {active: true} track by requirementSkeleton.id";
+	var constantRepeater = "requirementSkeleton in requirementSkeletons | filterByTagForReqSkeletons : selectedTags | filterByCollsForReqSkeletons : selectedColls| filterByTypesForReqSkeletons : selectedTypes| orderBy : ['reqCategory.showOrder','showOrder'] | filter: searchQuery  track by requirementSkeleton.id";
 	var deleteCookie = function() {
 		browser.getAllWindowHandles().then(function(handles) {
 			expect(handles.length).toBeGreaterThan(1);
 			browser.switchTo().window(handles[1]).then(function() {
-				browser.manage().getCookie("JSESSIONID").then(function(cookie) {
-					browser.manage().deleteCookie("JSESSIONID");
+				browser.manage().getCookie(browser.params.jiraCookieNames[0]).then(function(cookie) {
+					browser.manage().deleteCookie(browser.params.jiraCookieNames[0]);
+					browser.switchTo().window(handles[0]).then();
+				});				
+			});
+		});
+	}
+	var deleteCookie1 = function() {
+		browser.getAllWindowHandles().then(function(handles) {
+			expect(handles.length).toBeGreaterThan(1);
+			browser.switchTo().window(handles[2]).then(function() {
+				browser.manage().getCookie(browser.params.jiraCookieNames[1]).then(function(cookie) {
+					browser.manage().deleteCookie(browser.params.jiraCookieNames[1]);
 					browser.switchTo().window(handles[0]).then();
 				});				
 			});
@@ -30,7 +41,10 @@ describe('Protractor Security RAT general testsuite', function() {
 	});
 	it('Test for the feedback feature', function() {
 		deleteCookie();
+		deleteCookie1();
+		browser.sleep(5000);
 		browseLink.click();
+		element(by.partialLinkText('Requirements')).click();
 		element.all(by.id('feedbackIcon')).get(1).click();
 		element(by.model('comment')).sendKeys('Feedback test submitted by automatic test. <script>alert(1)</script>');
 		element(by.buttonText('Submit')).click();
@@ -51,4 +65,8 @@ describe('Protractor Security RAT general testsuite', function() {
 		});
 		browser.sleep(2000);
 	});
+	it('Test Requirement browser loses CSS after refresh', function() {
+		browser.get(browser.params.testHost + '/reqId/2');
+		browser.sleep(5000);
+	})
 });

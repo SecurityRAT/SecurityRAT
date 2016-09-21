@@ -7,14 +7,14 @@ describe('Protractor Security RAT general testsuite', function() {
 		
 	});
 	
-	it('searching for a constant', function() {
-		admin.click();
-		element(by.partialLinkText('Constants')).click();
-		element(by.id('searchQuery')).sendKeys('custom');
-		element(by.id('searchButton')).click();
-		expect(element.all(by.repeater(constantRepeater)).count()).toBe(1);
-		
-	});
+//	it('searching for a constant', function() {
+//		admin.click();
+//		element(by.partialLinkText('Constants')).click();
+//		element(by.id('searchQuery')).sendKeys('custom');
+//		element(by.id('searchButton')).click();
+//		expect(element.all(by.repeater(constantRepeater)).count()).toBe(1);
+//		
+//	});
 	
 	it('administering a constant', function() {
 		admin.click();

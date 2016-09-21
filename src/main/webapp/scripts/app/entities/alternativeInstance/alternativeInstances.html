@@ -91,7 +91,7 @@
                     <td>
                         <a ui-sref="requirementSkeleton.detail({id:alternativeInstance.requirementSkeleton.id})" title="{{alternativeInstance.requirementSkeleton.description}}">{{alternativeInstance.requirementSkeleton.shortName}}</a>
                     </td>
-                    <td data-ng-bind-html="alternativeInstance.content | trusted"></td>
+                    <td id="content" data-ng-bind-html="alternativeInstance.content | trusted"></td>
 
                     <td>
                         <button type="submit"

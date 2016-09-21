@@ -132,14 +132,7 @@ public class UserResource {
 	                ":" +                                  // ":"
 	                request.getServerPort();               // "80"
 	        mailService.sendActivationEmail(user, baseUrl);
-	        String content = "";
-	        try {
-				content = Files.toString(new File("src/main/resources/templates/mail_password_user.txt"),	Charsets.UTF_8);
-			} catch (IOException e) {
-			}
-	        content = content.replaceAll("§USERNAME_LOGIN§", userdto.getLogin());
-	        content = content.replaceAll("§PASSWORD§", generatedPassword);
-	        mailService.sendEmail(userdto.getEmail(), "Password", content, false, false);
+	        mailService.sendActivationPassword(user, generatedPassword);
         }
         return ResponseEntity.created(new URI("/admin-api/userAuthorities/" + user.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert("user", user.getId().toString()))

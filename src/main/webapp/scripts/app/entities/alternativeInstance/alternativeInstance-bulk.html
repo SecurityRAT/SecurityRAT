@@ -43,7 +43,9 @@
         <div class="form-group">
             <label for="field_requirementSkeleton">requirementSkeleton</label>
             
-            <select class="form-control" id="field_requirementSkeleton" name="requirementSkeleton" ng-model="selectedRequirementSkeleton.value" ng-options="requirementSkeleton.id as requirementSkeleton.shortName for requirementSkeleton in requirementSkeletons track by requirementSkeleton.id">
+            <select class="form-control" id="field_requirementSkeleton" name="requirementSkeleton" data-ng-model="selectedRequirementSkeleton.value" 
+            data-ng-options="requirementSkeleton.id as requirementSkeleton.shortName + ' - ' + requirementSkeleton.description.substr(0, 80) + '...' group by 
+            requirementSkeleton.reqCategory.name for requirementSkeleton in requirementSkeletons| orderBy : ['reqCategory.id', 'showOrder'] track by requirementSkeleton.id">
                 <option value=""></option>
             </select>
             
@@ -54,7 +56,7 @@
         <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clear()">
             <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span>
         </button>
-        <button type="submit" ng-disabled="editForm.$invalid" class="btn btn-primary">
+        <button type="submit" data-ng-disabled="editForm.$invalid" class="btn btn-primary">
             <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Save</span>
         </button>
     </div>

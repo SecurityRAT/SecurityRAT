@@ -22,18 +22,18 @@ describe('Protractor Security RAT general testsuite', function() {
 		});
 	}
 	
-	it('searching a implementation type', function() {
-		entities.click();
-		element(by.partialLinkText('Implementation Types')).click();
-		element(by.id('searchQuery')).sendKeys('internal');
-		element(by.id('searchButton')).click();
-		expect(element.all(by.repeater(projectTypeRepeater))
-				.count()).toBe(1);
-		browser.sleep(2000);
-		element(by.id('searchQuery')).clear().then(function(){
-		});
-		element(by.id('searchButton')).click();		
-	});
+//	it('searching a implementation type', function() {
+//		entities.click();
+//		element(by.partialLinkText('Implementation Types')).click();
+//		element(by.id('searchQuery')).sendKeys('internal');
+//		element(by.id('searchButton')).click();
+//		expect(element.all(by.repeater(projectTypeRepeater))
+//				.count()).toBe(1);
+//		browser.sleep(2000);
+//		element(by.id('searchQuery')).clear().then(function(){
+//		});
+//		element(by.id('searchButton')).click();		
+//	});
 	
 	
 	it('adminisetring an implementation type', function() {

@@ -24,10 +24,10 @@ describe('Protractor Security RAT general testsuite', function() {
 	}
 	var deleteContent = function() {
 		var deletes = element.all(by.css('button[class="btn btn-danger btn-sm"]'));
-		var contents = element.all(by.css("div[marked='alternativeInstance.content']"));
+		var contents = element.all(by.id("content"));
 		contents.each(function(elem, indexElem) {
 			elem.getText().then(function(elemText) {
-				if(elemText === "test instance content modification <script>alert(1)</script>") {
+				if(elemText === "test instance content modification") {
 					deletes.get(indexElem).click();
 					browser.sleep(2000);
 					element.all(by.buttonText('Delete')).last().click();
@@ -37,25 +37,25 @@ describe('Protractor Security RAT general testsuite', function() {
 		});
 	}
 	
-	it('searching a alternative set', function() {
-		entities.click();
-		element(by.partialLinkText('Alternative Sets')).click();
-		element(by.id('searchQuery')).sendKeys('Poseidon-based');
-		element(by.id('searchButton')).click();
-		expect(element.all(by.repeater(AltSetRepeater))
-				.count()).toBe(1);
-		browser.sleep(2000);
-		element(by.id('searchQuery')).clear().then(function(){
-		});
-		element(by.id('searchButton')).click();		
-		element(by.buttonText("Option Column")).click();
-		element(by.linkText("More Information")).click();
-		expect(element.all(by.repeater(AltSetRepeater))
-				.count()).toBe(1);
-		browser.sleep(2000);
-		element(by.linkText("More Information")).click();
-		element(by.buttonText("Option Column")).click();
-	});
+//	it('searching a alternative set', function() {
+//		entities.click();
+//		element(by.partialLinkText('Alternative Sets')).click();
+//		element(by.id('searchQuery')).sendKeys('Poseidon-based');
+//		element(by.id('searchButton')).click();
+//		expect(element.all(by.repeater(AltSetRepeater))
+//				.count()).toBe(1);
+//		browser.sleep(2000);
+//		element(by.id('searchQuery')).clear().then(function(){
+//		});
+//		element(by.id('searchButton')).click();		
+//		element(by.buttonText("Option Column")).click();
+//		element(by.linkText("More Information")).click();
+//		expect(element.all(by.repeater(AltSetRepeater))
+//				.count()).toBe(1);
+//		browser.sleep(2000);
+//		element(by.linkText("More Information")).click();
+//		element(by.buttonText("Option Column")).click();
+//	});
 	
 	
 	it('adminisetring a alternative set', function() {
@@ -141,18 +141,18 @@ describe('Protractor Security RAT general testsuite', function() {
 		element(by.buttonText("Save")).click();
 	});
 	
-	it('searching an alternative instances', function() {
-		entities.click();
-		element(by.partialLinkText('Alternative Instances')).click();
-		element(by.id('searchQuery')).sendKeys('Poseidon-based application');
-		element(by.id('searchButton')).click();
-		expect(element.all(by.repeater(AltInsRepeater))
-				.count()).toBeGreaterThan(1);
-		browser.sleep(2000);
-		element(by.id('searchQuery')).clear().then(function(){
-		});
-		element(by.id('searchButton')).click();		
-	});
+//	it('searching an alternative instances', function() {
+//		entities.click();
+//		element(by.partialLinkText('Alternative Instances')).click();
+//		element(by.id('searchQuery')).sendKeys('Poseidon-based application');
+//		element(by.id('searchButton')).click();
+//		expect(element.all(by.repeater(AltInsRepeater))
+//				.count()).toBeGreaterThan(1);
+//		browser.sleep(2000);
+//		element(by.id('searchQuery')).clear().then(function(){
+//		});
+//		element(by.id('searchButton')).click();		
+//	});
 	
 	it('administering an alternative instance', function() {
 		entities.click();
@@ -168,26 +168,41 @@ describe('Protractor Security RAT general testsuite', function() {
 			expect(element(by.buttonText("Save")).isEnabled()).toBe(false);
 			element(by.id('field_content')).sendKeys('test instance content <script>alert(1)</script>');
 			element(by.cssContainingText('option', 'Testcase for trained monkeys')).click();
-			element(by.cssContainingText('option', 'LC-01')).click();
+			var allOptions = element.all(by.tagName('option'));
+			allOptions.each(function(elem, index) {
+				elem.getText().then(function(text) {
+					if(text.indexOf('LC-01') !== -1) {
+						element(by.model('alternativeInstance.requirementSkeleton')).sendKeys(text);
+					}
+				})
+			})
 			element(by.buttonText("Save")).click();
 			browser.sleep(3000);
 			expect(element.all(by.repeater(AltInsRepeater))
 					.count()).toBe(count);
 		});
-		var contents = element.all(by.css('div[marked="alternativeInstance.content"]'));
+		
+		var contents = element.all(by.id('content'));
 		var edits = element.all(by.buttonText('Edit'));
 		contents.each(function(element, index) {
 			element.getText().then(function(elemText) {
-				if(elemText === "test instance content <script>alert(1)</script>") {
+				if(elemText === "test instance content") {
 					edits.get(index).click();
 				}
 			})
 		});
 		browser.sleep(2000);
+		var allOptions = element.all(by.tagName('option'));
 		element(by.id('field_content')).clear().then(function(){
-			element(by.id('field_content')).sendKeys('test instance content modification <script>alert(1)</script>');
+			element(by.id('field_content')).sendKeys('test instance content modification');
 		});
-		element(by.cssContainingText('option', 'LC-02')).click();
+		allOptions.each(function(elem, index) {
+			elem.getText().then(function(text) {
+				if(text.indexOf('LC-02') !== -1) {
+					element(by.model('alternativeInstance.requirementSkeleton')).sendKeys(text);
+				}
+			})
+		})
 		element(by.buttonText("Save")).click();
 		browser.sleep(2000);
 		deleteContent();
@@ -201,11 +216,17 @@ describe('Protractor Security RAT general testsuite', function() {
 							.column('alternativeInstance.alternativeSet.name'));
 		var requirements = element.all(by.repeater(AltInsRepeater)
         					.column('alternativeInstance.requirementSkeleton.shortName'));
-		
+		selectButton.get(0).click();
 		selectButton.get(1).click();
-		selectButton.get(2).click();
 		element(by.buttonText("Bulk change with selected")).click();
-		element(by.cssContainingText('option', 'SM-02')).click();
+		var allOptions = element.all(by.tagName('option'));
+		allOptions.each(function(elem, index) {
+			elem.getText().then(function(text) {
+				if(text.indexOf('SM-02') !== -1) {
+					element(by.model('selectedRequirementSkeleton.value')).sendKeys(text);
+				}
+			})
+		})
 		element(by.buttonText("Save")).click();
 		browser.sleep(2000);
 		var count = 0;
@@ -220,7 +241,14 @@ describe('Protractor Security RAT general testsuite', function() {
 					})
 				});
 		element(by.buttonText("Bulk change with selected")).click();
-		element(by.cssContainingText('option', 'AU-03')).click();
+		var allOptions = element.all(by.tagName('option'));
+		allOptions.each(function(elem, index) {
+			elem.getText().then(function(text) {
+				if(text.indexOf('AU-03') !== -1) {
+					element(by.model('selectedRequirementSkeleton.value')).sendKeys(text);
+				}
+			})
+		})
 		element(by.buttonText('Save')).click();
 	});
 

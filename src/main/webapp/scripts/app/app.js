@@ -697,7 +697,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
         })
         .filter('trusted', function($sce, marked, $timeout){
 	        return function(html){
-	        	if(angular.isDefined(html))
+	        	if(angular.isDefined(html) && html !== null)
 	        		return marked(html);
 	        }
         });

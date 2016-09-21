@@ -23,14 +23,14 @@ describe('Protractor Security RAT general testsuite', function() {
 		});
 	}
 	 
-	it('searching a requirement category', function() {
-		entities.click();
-		element(by.partialLinkText('Requirement Categories')).click();
-		element(by.id('searchQuery')).sendKeys('Lifecycle');
-		element(by.id('searchButton')).click();
-		expect(element.all(by.repeater("reqCategory in reqCategorys | orderBy:'showOrder'")).count()).toBe(1);
-		
-	});
+//	it('searching a requirement category', function() {
+//		entities.click();
+//		element(by.partialLinkText('Requirement Categories')).click();
+//		element(by.id('searchQuery')).sendKeys('Lifecycle');
+//		element(by.id('searchButton')).click();
+//		expect(element.all(by.repeater("reqCategory in reqCategorys | orderBy:'showOrder'")).count()).toBe(1);
+//		
+//	});
 	
 	it('administering requirement category', function() {
 		entities.click();
@@ -84,28 +84,28 @@ describe('Protractor Security RAT general testsuite', function() {
 		element(by.buttonText("Save")).click();
 	});
 	
-	it('searching a requirement skeleton', function() {
-		entities.click();
-		element(by.partialLinkText('Requirement Skeletons')).click();
-		element(by.id('searchQuery')).sendKeys('Lifecycle');
-		element(by.id('searchButton')).click();
-		expect(element.all(by.repeater(skeletonRepeater)).count()).toBeGreaterThan(3);
-		browser.sleep(2000);
-		element(by.id('searchQuery')).clear().then(function(){});
-		element(by.id('searchButton')).click();		
-		element(by.buttonText("Category")).click();
-		element.all(by.linkText("Lifecycle")).first().click();
-		expect(element.all(by.repeater(skeletonRepeater)).count()).toBeGreaterThan(3);
-		browser.sleep(2000);
-		element.all(by.linkText("Lifecycle")).first().click();
-		element(by.buttonText("Category")).click();
-		element(by.buttonText("Tags")).click();
-		element(by.linkText("Requirement Owner")).click();
-		element.all(by.linkText("Product Manager")).first().click();
-		expect(element.all(by.repeater(skeletonRepeater)).count()).toBeGreaterThan(3);
-		element.all(by.linkText("Product Manager")).first().click();
-		element(by.linkText("Requirement Owner")).click();
-	});
+//	it('searching a requirement skeleton', function() {
+//		entities.click();
+//		element(by.partialLinkText('Requirement Skeletons')).click();
+//		element(by.id('searchQuery')).sendKeys('Lifecycle');
+//		element(by.id('searchButton')).click();
+//		expect(element.all(by.repeater(skeletonRepeater)).count()).toBeGreaterThan(3);
+//		browser.sleep(2000);
+//		element(by.id('searchQuery')).clear().then(function(){});
+//		element(by.id('searchButton')).click();		
+//		element(by.buttonText("Category")).click();
+//		element.all(by.linkText("Lifecycle")).first().click();
+//		expect(element.all(by.repeater(skeletonRepeater)).count()).toBeGreaterThan(3);
+//		browser.sleep(2000);
+//		element.all(by.linkText("Lifecycle")).first().click();
+//		element(by.buttonText("Category")).click();
+//		element(by.buttonText("Tags")).click();
+//		element(by.linkText("Requirement Owner")).click();
+//		element.all(by.linkText("Product Manager")).first().click();
+//		expect(element.all(by.repeater(skeletonRepeater)).count()).toBeGreaterThan(3);
+//		element.all(by.linkText("Product Manager")).first().click();
+//		element(by.linkText("Requirement Owner")).click();
+//	});
 	
 	it('administring a tag Instances', function() {
 		entities.click();

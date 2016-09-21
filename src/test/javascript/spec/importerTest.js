@@ -164,7 +164,7 @@ describe('Protractor Security RAT importer testsuite', function() {
 		    
 		    var x = 0;
 		    acceptList.each(function(element, index) {
-		    	if(x <= 20)
+		    	if(x <= 5)
 		    		element.click();
 		    	x++;
 		    });
