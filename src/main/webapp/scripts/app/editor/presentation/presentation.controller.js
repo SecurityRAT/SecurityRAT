@@ -36,7 +36,7 @@ angular.module('sdlctoolApp')
 					{ src: 'bower_components/revealjs/plugin/markdown/marked.js' },
 					{ src: 'bower_components/revealjs/plugin/markdown/markdown.js' },
 					{ src: 'bower_components/revealjs/plugin/notes/notes.js', async: true },
-					{ src: 'bower_components/revealjs/plugin/zoom-js/zoom.js', async: true },
+					{ src: 'bower_components/revealjs/plugin/zoom-js/zoom.js', async: true }
 				]
 			});
 			$timeout(function() {
