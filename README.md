@@ -98,7 +98,7 @@
 - **it is important to change the `admin` password in `prod mode`.**
 
 # Next steps
-- Fill securityRAT with requirements. You can import your own requirements or import the requirements.sql file to get started quickly
+- Fill securityRAT with requirements. You can import your own requirements or import the [requirements.sql](https://github.com/SecurityRAT/Security-Requirements) file to get started quickly
 - In order to be able to export the requirements to JIRA, you need to set the following CORS headers at your JIRA instance:
 ```
 Access-Control-Allow-Origin: https://$SecurityRAT_URL
