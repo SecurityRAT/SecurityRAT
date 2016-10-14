@@ -64,6 +64,7 @@
 	```
 	authentication:
 		type: FORM
+        registration: true # restrict the registration only to the administrators by setting the value to 'false'
 	
 	mail:
    		host: localhost # mail server
