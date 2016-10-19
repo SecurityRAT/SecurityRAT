@@ -36,8 +36,8 @@ spring:
 
     data:
         elasticsearch:
-            cluster-name:
-            cluster-nodes: localhost:9200
+            enabled: false
+            cluster-nodes:
     thymeleaf:
         mode: XHTML
         cache: true
