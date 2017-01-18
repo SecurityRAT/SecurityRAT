@@ -1528,7 +1528,7 @@ angular.module('sdlctoolApp')
 							format:{ fontId: 0} 
 					});
 				}
-				angular.forEach(requirement.optionColumns, function(optColumn) {
+				angular.forEach($filter('orderBy')(requirement.optionColumns, ['showOrder']), function(optColumn) {
 					var contentValue = "";
 					angular.forEach(optColumn.content, function(content) {
 						contentValue += content.content;
@@ -1538,7 +1538,7 @@ angular.module('sdlctoolApp')
 							format : {fontId: 0, xfinnertags :[{ alignment: {wrapText: "1"}, name : 'alignment'}]}
 					});
 				});
-				angular.forEach(requirement.statusColumns, function(statColumn) {
+				angular.forEach($filter('orderBy')(requirement.statusColumns, ['showOrder']), function(statColumn) {
 					if (withStatusColumn){
 						$scope.tableArray[counter].push({
 							value: statColumn.value,
