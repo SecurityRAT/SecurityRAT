@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .factory('ReqCategory', function ($resource, DateUtils) {
+    .factory('ReqCategory', function ($resource, DateUtils, SDLCToolExceptionService) {
         return $resource('api/reqCategorys/:id', {}, {
             'query': { method: 'GET', isArray: true},
             'get': {
@@ -11,6 +11,22 @@ angular.module('sdlctoolApp')
                     return data;
                 }
             },
-            'update': { method:'PUT' }
+            'update': { method:'PUT' },
+            'delete': {
+                method: 'DELETE',
+                transformResponse: function (data) {
+                     //check if dependency error in database
+                     if (data.includes("hibernate.exception.ConstraintViolationException")) {
+                        var message = "The Requirement Category could not be deleted because a Requirement Skeleton entity is still referencing to that Requirement Category. Please delete the corresponding Requirement Skeleton first.";
+                        SDLCToolExceptionService.showWarning('Deletion of Requirement Category failed due to dependencies', message, SDLCToolExceptionService.DANGER);
+                        $('#deleteReqCategoryConfirmation').modal('hide');
+                        return null;
+                    } else {
+                        $('#deleteReqCategoryConfirmation').modal('hide');
+                        return data;
+                    }
+                }
+            }
+
         });
     });
