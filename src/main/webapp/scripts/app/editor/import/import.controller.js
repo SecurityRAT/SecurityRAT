@@ -8,7 +8,7 @@
  * Controller of the sdlcFrontendApp
  */
 angular.module('sdlctoolApp')
-  .controller('ImportController', function ($scope, $location, $uibModalStack, sharedProperties, getRequirementsFromImport,
+  .controller('ImportController', function ($scope, $location, $uibModalStack, sharedProperties, getRequirementsFromImport, Helper,
 		  					apiFactory, $filter, authenticatorService, $interval, SDLCToolExceptionService, $timeout, appConfig, $q,$uibModal, localStorageService) {
 	  $scope.status = {file: false, jira:false};
 	  $scope.importObject = {};
@@ -27,37 +27,15 @@ angular.module('sdlctoolApp')
 	  $scope.name = '';
 	  $scope.importProperty = {};
 	  $scope.attachmentProperties = {}
-//	  $scope.urlpattern = {
-//                                http: new RegExp('((http|https):){1}'),
-//                                host: new RegExp('(([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}(\:\d{2,5})?')
-//           }
 
 	//builds the URL object
 	$scope.buildUrlObject = function(list) {
 		$scope.apiUrl = {};
 		$scope.apiUrl.ticketKey = [];
 		var hostSet = false;
-		for(var i = 0; i < list.length; i++) {
-			if(angular.equals(list[i], "")) {
-				list.splice(i, 1);
-			}
-			if(urlpattern.http.test(list[i])) {
-		//	if(list[i].indexOf("https:") > -1) {
-				angular.extend($scope.apiUrl, {http: list[i]});
-			}
-			else if(urlpattern.host.test(list[i]) && !hostSet) {
-		//	else if(list[i].indexOf(".") > -1) {
-				hostSet = true;
-				angular.extend($scope.apiUrl, {host: list[i]});
-			} else if(list[i].indexOf("-") > -1) {
-				$scope.apiUrl.ticketKey.push(list[i]);
-//				angular.extend($scope.apiUrl, {ticketKey: list[i]});
-				$scope.isTicket = true;
-			}
-		}
-		//gets the project key.
-		if(!angular.equals(list[list.length - 1], "browse") && (list[list.length - 1].indexOf("-") < 0) && angular.isUndefined($scope.apiUrl.projectKey)) {
-			angular.extend($scope.apiUrl, {projectKey : list[list.length - 1]});
+		angular.extend($scope.apiUrl, Helper.buildUrl(list));
+		if($scope.apiUrl.ticketKey.length === 1) {
+			$scope.checks.isTicket = true;
 		}
 	}
 	  $scope.init = function() {
@@ -77,10 +55,6 @@ angular.module('sdlctoolApp')
 				  SDLCToolExceptionService.showWarning('Import unsuccessful', "Invalid url in query parameter file. Please enter a valid JIRA ticket with an attachment.", SDLCToolExceptionService.DANGER);
 			  }
 		  }
-//		  $scope.pattern = new RegExp('(^(http|https):\/\/){1}'+ // protocol
-//			    '(([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}'+ // domain name
-//			    '(\:\d{2,5})?(\/[-a-z\d%_.~+]*)*' // port and path
-//			    ,'i');
 		  var url = sharedProperties.getProperty();
 		  angular.extend($scope.attachmentProperties, {attachments: [], hasAttachments: false, selectedAttachment: ""});
 		  angular.extend($scope.jiraLink, {url: "", backupUrl: ""});
@@ -169,15 +143,6 @@ angular.module('sdlctoolApp')
 				});
 			  return modalInstance;
 		  }});
-	  }
-	// remove space from string
-	  $scope.removeSpace = function(str) {
-		  var strTemp = str.split(" ");
-		  str = "";
-		  for(var i = 0; i < strTemp.length; i++) {
-			  str += strTemp[i];
-		  }
-		  return str;
 	  }
 
 	  $scope.upload = function() {

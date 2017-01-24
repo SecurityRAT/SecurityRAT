@@ -137,19 +137,6 @@ angular.module('sdlctoolApp')
         		return true;
         	}
         }
-        $scope.searchArrayByValue = function(search, object) {
-        	var bool = false;
-        	angular.forEach(object, function(obj) {
-        		angular.forEach(obj, function(value, key) {
-        			if(key === 'id') {
-	        			if(value === search){
-	        				bool = true;
-	        			}
-        			}
-        		});
-        	});
-        	return bool;
-        }
 
         $scope.refresh = function () {
             $scope.loadAll();

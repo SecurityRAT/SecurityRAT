@@ -1,0 +1,11 @@
+<div class="modal-body" style="300px">
+  <div class="container">
+    <div id="UsSpinner1" class=" text-center col-md-8" style="margin-top:100px"id="UsSpinner" spinner-on="true" us-spinner="{radius:51, width:14, length:30, lines:13, speed:0.8}"></div><br/>
+    <h4 class="text-center" style="margin-top:200px"> Automated test is running...</h4>
+  </div>
+</div>
+<div class="modal-footer">
+  <form name="stopForm" role="form" data-ng-submit="stopTest()">
+    <button type="submit" class="btn btn-danger col-md-offset-2 text-center" data-ng-disabled="testForm.$submitted">Stop running test</button>
+  </form>
+</div>

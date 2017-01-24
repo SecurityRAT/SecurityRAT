@@ -1,26 +1,14 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('UserManagementController', function ($scope, UserManagement, Authorities, User, UserManagementSearch) {
+    .controller('UserManagementController', function ($scope, UserManagement, Authorities, User, UserManagementSearch, Helper) {
         $scope.authorities = [];
         $scope.userSet = {};
         $scope.usersWithAuthorities = [];
         
-        $scope.searchArrayByValue = function(search, object) {
-        	var bool = false;
-        	angular.forEach(object, function(obj) {
-        		angular.forEach(obj, function(value, key) {
-        			if(value === search){
-        				bool = true;
-        			}
-        		});
-        	});
-        	return bool;
-        }
-        
         function callback(user) {
         	angular.forEach($scope.authorities, function(authority) {
-    			if($scope.searchArrayByValue(authority.name, user.authorities)) {
+    			if(Helper.searchArrayByValue(authority.name, user.authorities)) {
     				$scope.userSet[user.login][authority.name] = true;
        			} else {
        				$scope.userSet[user.login][authority.name] = false;

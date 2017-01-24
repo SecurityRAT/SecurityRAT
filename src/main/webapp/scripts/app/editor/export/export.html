@@ -54,8 +54,8 @@
 						<div class="col-sm-9">
 							<input type="text" class="col-sm-2 " data-ng-model="filterProject" placeholder="search Project"/>
 							<select id="ProjectKey" data-ng-model="fields.project.key" class="form-control">
-								<option data-ng-repeat="project in jiraAlternatives.projects | orderBy: 'name' | filter: filterProject" data-ng-if="project.name != ''" value="{{project.key}}">{{project.name}}</option>
-								<option data-ng-repeat="project in jiraAlternatives.projects | orderBy: 'name' | filter: filterProject" data-ng-if="project.name == ''" value="{{project.key}}">{{project.key}}</option>
+								<option data-ng-repeat="project in jiraAlternatives.projects | orderBy: 'name' | filter: filterProject" data-ng-if="project.name != ''" value="{{project.key}}"><img src="{{project.avatarUrls.16x16}}"> {{project.name}}</option>
+								<option data-ng-repeat="project in jiraAlternatives.projects | orderBy: 'name' | filter: filterProject" data-ng-if="project.name == ''" value="{{project.key}}"><img src="{{project.avatarUrls.16x16}}"> {{project.key}}</option>
 							</select>
 						</div>
 					</div>
