@@ -66,6 +66,25 @@ angular.module('sdlctoolApp')
     			OptColumn.update(optColumn, onSaveFinished);
     		});
         };
+
+        $scope.delete = function () {
+          $('#deleteOptColumnsConfirmation').appendTo("body").modal('show');
+        };
+
+        $scope.confirmDeleteAll = function (optColumns) {
+            var count = 1;
+            angular.forEach(optColumns, function(optColumn) {
+                if (count == optColumns.length) {
+                  OptColumn.delete({id: optColumn.id}, function(result) {
+                       $('#deleteOptColumnsConfirmation').modal('hide');
+                       onSaveFinished(result);
+                  });
+                } else {
+                  OptColumn.delete({id: optColumn.id}, function() {});
+                }
+                count++;
+            });
+        };
         
         $scope.clear = function() {
         	$uibModalInstance.dismiss('cancel');

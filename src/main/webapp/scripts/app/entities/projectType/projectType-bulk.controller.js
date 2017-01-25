@@ -144,7 +144,26 @@ angular.module('sdlctoolApp')
     			ProjectType.update(type, onSaveFinished);
     		});
         };
-        
+       
+        $scope.delete = function () {
+          $('#deleteProjectTypesConfirmation').appendTo("body").modal('show');
+        };
+
+        $scope.confirmDeleteAll = function (types) {
+            var count = 1;
+            angular.forEach(types, function(type) {
+                if (count == types.length) {
+                  ProjectType.delete({id: type.id}, function(result) {
+                       $('#deleteProjectTypesConfirmation').modal('hide');
+                       onSaveFinished(result);
+                  });
+                } else {
+                  ProjectType.delete({id: type.id}, function() {});
+                }
+                count++;
+            });
+        };   
+ 
         $scope.clear = function() {
         	$uibModalInstance.dismiss('cancel');
         };

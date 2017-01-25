@@ -66,6 +66,25 @@ angular.module('sdlctoolApp')
     			CollectionInstance.update(instance, onSaveFinished);
     		});
         };
+
+        $scope.delete = function () {
+          $('#deleteCollectionInstancesConfirmation').appendTo("body").modal('show');
+        };
+
+        $scope.confirmDeleteAll = function (collInstances) {
+            var count = 1;
+            angular.forEach(collInstances, function(instance) {
+                if (count == collInstances.length) {
+                  CollectionInstance.delete({id: instance.id}, function(result) {
+                       $('#deleteCollectionInstancesConfirmation').modal('hide');
+                       onSaveFinished(result);
+                  });
+                } else {
+                  CollectionInstance.delete({id: instance.id}, function() {});
+                }
+                count++;
+            });
+        };
         
         $scope.clear = function() {
         	$uibModalInstance.dismiss('cancel');

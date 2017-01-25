@@ -51,6 +51,26 @@ angular.module('sdlctoolApp')
         		$scope.glyphicon = "glyphicon glyphicon-minus";
         	}
         }
+
+        $scope.delete = function () {
+          $('#deleteTagCategoriesConfirmation').appendTo("body").modal('show');
+        };
+
+        $scope.confirmDeleteAll = function (tagCategories) {
+            var count = 1;
+            angular.forEach(tagCategories, function(tagCat) {
+                if (count == tagCategories.length) {
+                  TagCategory.delete({id: tagCat.id}, function(result) {
+                       $('#deleteTagCategoriesConfirmation').modal('hide');
+                       onSaveFinished(result);
+                  });
+                } else {
+                  TagCategory.delete({id: tagCat.id}, function() {});
+                }
+                count++;
+            });
+        }; 
+
         $scope.clear = function() {
         	$uibModalInstance.dismiss('cancel');
         };

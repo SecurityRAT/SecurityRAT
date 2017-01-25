@@ -236,6 +236,25 @@ angular.module('sdlctoolApp')
         		RequirementSkeleton.update(requirement, onSaveFinished);
         	});
         };
+
+         $scope.delete = function () {
+          $('#deleteRequirementSkeletonsConfirmation').appendTo("body").modal('show');
+        };
+
+        $scope.confirmDeleteAll = function (requirements) {
+            var count = 1;
+            angular.forEach(requirements, function(req) {
+                if (count == requirements.length) {
+                  RequirementSkeleton.delete({id: req.id}, function(result) {
+                       $('#deleteRequirementSkeletonsConfirmation').modal('hide');
+                       onSaveFinished(result);
+                  });
+                } else {
+                  RequirementSkeleton.delete({id: req.id}, function() {});
+                }
+                count++;
+            });
+        };
         
         $scope.clear = function() {
         	$uibModalInstance.dismiss('cancel');
