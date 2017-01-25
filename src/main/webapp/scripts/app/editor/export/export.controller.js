@@ -642,7 +642,7 @@ angular.module('sdlctoolApp')
 					}
 				});
 			} catch(e) {
-				SDLCToolExceptionService.showWarning('Export unsuccessful', "Yaml file could not be created for export please contact the developpers.", SDLCToolExceptionService.DANGER);
+				SDLCToolExceptionService.showWarning('Export unsuccessful', "Yaml file could not be created for export please contact the developers.", SDLCToolExceptionService.DANGER);
 			}
 			
 		}

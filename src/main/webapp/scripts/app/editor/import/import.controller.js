@@ -328,10 +328,11 @@ angular.module('sdlctoolApp')
 					  yamlData = event.target.result;
 					  try {
 						  var doc = jsyaml.safeLoad(yamlData, {filename:file.name});
+						  console.log(doc);
 						  $scope.buildSystemSettings(doc);
 						  $scope.buildRequirement(doc.requirementCategories);
 					  }catch(e) {
-						  SDLCToolExceptionService.showWarning('Import unsuccessful', "Yaml file could not be read please contact the developpers.", SDLCToolExceptionService.DANGER);
+						  SDLCToolExceptionService.showWarning('Import unsuccessful', "Yaml file could not be read please contact the developers.", SDLCToolExceptionService.DANGER);
 					  }
 				  }
 				  r.readAsText(file);

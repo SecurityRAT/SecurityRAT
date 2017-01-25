@@ -20,21 +20,27 @@
     "**/.*",
     "node_modules",
     "benchmark",
+    "bin",
     "bower_components",
+    "coverage",
+    "demo",
+    "examples",
+    "lib",
+    "support",
     "test",
     "Makefile",
     "index*",
     "package.json"
   ],
-  "version": "3.4.6",
-  "_release": "3.4.6",
+  "version": "3.7.0",
+  "_release": "3.7.0",
   "_resolution": {
     "type": "version",
-    "tag": "3.4.6",
-    "commit": "38f9b2e82e80a9a540a264ab8920344165a2018b"
+    "tag": "3.7.0",
+    "commit": "279655fa5ad46d17117f60680fa3b46a0b5391c5"
   },
-  "_source": "git://github.com/nodeca/js-yaml.git",
-  "_target": "~3.4.6",
+  "_source": "https://github.com/nodeca/js-yaml.git",
+  "_target": "^3.7.0",
   "_originalSource": "js-yaml",
   "_direct": true
 }
