@@ -154,16 +154,6 @@ angular.module('sdlctoolApp')
         	$scope[selector][propertyId].isKnown = false;
         }
         
-        $scope.searchArrayByValue = function(array, value) {
-  		  var bool = false;
-  		  angular.forEach(array, function(obj) {
-			    if(value === obj){
-			      bool = true;
-			    }
-  		  });
-  		  return bool;
-  	  	}
-        
         $scope.toggleShowHide = function() {
         	$scope.show = !$scope.show;
         	if($scope.show) {

@@ -8,7 +8,8 @@
  * Controller of the sdlcFrontendApp
  */
 angular.module('sdlctoolApp')
-  .controller('FeedbackController', function ($scope, apiFactory, sharedProperties, $filter, appConfig, authenticatorService, $uibModalInstance, $q, SDLCToolExceptionService) {
+  .controller('FeedbackController', function ($scope, apiFactory, sharedProperties, $filter, appConfig, authenticatorService, 
+		  $uibModalInstance, $q, SDLCToolExceptionService, Helper) {
 	  $scope.requirement = {};
 	  $scope.requirement = sharedProperties.getProperty();
 	  $scope.fields = {};
@@ -32,17 +33,6 @@ angular.module('sdlctoolApp')
 		  $uibModalInstance.dismiss('cancel');
 		  authenticatorService.cancelPromises($scope.promise);
 	  }
-	  $scope.removeMarkdown = function(changedContent) {
-			changedContent = changedContent.replace(/(\*)/g, "");
-			changedContent = changedContent.replace(/(1\.\s)/g, "- ");
-			changedContent = changedContent.replace(/#/g, "");
-			changedContent = changedContent.replace(/`/g, "");
-			changedContent = changedContent.replace(/(\s{3,})/g, "\n");
-			changedContent = changedContent.replace(/([\[]\S+[\]])/g, "");
-			changedContent = changedContent.replace(/(mailto:)/g, "");
-			
-			return changedContent;
-	  } 
 	  
 	  $scope.close = function() {
 		  var apiCall = appConfig.reportJIRAHost + appConfig.jiraApiIssueType;
@@ -58,7 +48,7 @@ angular.module('sdlctoolApp')
 		  angular.forEach($filter('orderBy')($scope.requirement.optionColumns, 'showOrder'), function(optColumn) {
 			  fieldObject += "\n" + optColumn.name + ":\n";
 			  angular.forEach(optColumn.content, function(content) {
-				  fieldObject += $scope.removeMarkdown(content.content);
+				  fieldObject += Helper.removeMarkdown(content.content, "feedback");
 				  fieldObject += "\n";
 			  }); 
 		  });

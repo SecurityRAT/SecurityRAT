@@ -144,19 +144,6 @@ angular.module('sdlctoolApp')
         		return true;
         	}
         }
-        $scope.searchArrayByValue = function(search, object) {
-        	var bool = false;
-        	angular.forEach(object, function(obj) {
-        		angular.forEach(obj, function(value, key) {
-        			if(key === 'id') {
-	        			if(value === search){
-	        				bool = true;
-	        			}
-        			}
-        		});
-        	});
-        	return bool;
-        }
         
         $scope.selectAllReqs = function() {
         	var requirements = $filter('filterCategoryForEntities')($scope.requirementSkeletons, $scope.selectedCategory, 'reqCategory');

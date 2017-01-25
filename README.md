@@ -8,7 +8,7 @@
 - import the main JIRA ticket into the tool anytime in order to see progress of the particular tickets
 
 # Quick and easy start
-- if you want to play around with the SecurityRAT tool, you can pull the our docker image [securityrat/all_in_one](https://hub.docker.com/r/securityrat/all_in_one/).
+- if you want to play around with the SecurityRAT tool, you can pull our docker image [securityrat/all_in_one](https://hub.docker.com/r/securityrat/all_in_one/).
 - of course for that you will need to install [docker](https://docs.docker.com/engine/installation/) on your system.
 - **important: this setup is not suitable for a production environment!**
 
