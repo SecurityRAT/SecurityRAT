@@ -75,14 +75,14 @@
     </div>
     <div class="modal-footer">
          <div class="col-sm-1">
-                <button type="submit" data-ng-click="delete()" class="btn btn-danger">
+                <button type="button" data-ng-click="delete()" class="btn btn-danger">
                         <span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span> Delete all selected Alternative Sets</span>
                 </button>
         </div>
         <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clear()">
             <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span>
         </button>
-        <button type="submit" ng-disabled="editForm.$invalid" class="btn btn-primary">
+        <button type="submit" ng-disabled="editForm.$invalid" class="btn btn-primary" data-ng-click="save()">
             <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Save</span>
         </button>
     </div>

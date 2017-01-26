@@ -51,6 +51,7 @@ angular.module('sdlctoolApp')
         };
 
         $scope.save = function () {
+		var count = 1;
     		angular.forEach($scope.alternativeSets, function(set) {
     			if(angular.isDefined($scope.state.active))
     				set.active = $scope.state.active;
@@ -61,7 +62,12 @@ angular.module('sdlctoolApp')
     	        		}
     	        	});
     			}
-    			AlternativeSet.update(set, onSaveFinished);
+			if (count == $scope.alternativeSets.length) {
+    				AlternativeSet.update(set, onSaveFinished);
+			} else {
+				AlternativeSet.update(set);
+			}
+			count++;
     		});
         };
 

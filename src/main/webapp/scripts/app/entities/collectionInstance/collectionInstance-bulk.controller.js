@@ -53,6 +53,7 @@ angular.module('sdlctoolApp')
         }
         
         $scope.save = function () {
+                var count = 1;
     		angular.forEach($scope.collectionInstance, function(instance) {
     			if(angular.isDefined($scope.state.active))
     				instance.active = $scope.state.active;
@@ -63,7 +64,12 @@ angular.module('sdlctoolApp')
     	        		}
     	        	});
     			}
-    			CollectionInstance.update(instance, onSaveFinished);
+                        if (count == $scope.collectionInstance.length) {
+    			       CollectionInstance.update(instance, onSaveFinished);
+                        } else {
+                               CollectionInstance.update(instance);
+                        }
+                        count++;
     		});
         };
 

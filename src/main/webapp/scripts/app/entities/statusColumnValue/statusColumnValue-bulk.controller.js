@@ -51,6 +51,7 @@ angular.module('sdlctoolApp')
         };
 
         $scope.save = function () {
+		var count = 1;
     		angular.forEach($scope.statusColumnValues, function(value) {
     			if(angular.isDefined($scope.state.active))
     				value.active = $scope.state.active;
@@ -61,7 +62,12 @@ angular.module('sdlctoolApp')
     	        		}
     	        	});
     			}
-    			StatusColumnValue.update(value, onSaveFinished);
+			if (count == $scope.statusColumnValues.length) {
+    				StatusColumnValue.update(value, onSaveFinished);
+			} else {
+				StatusColumnValue.update(value);
+			}
+			count++;
     		});
         };
        

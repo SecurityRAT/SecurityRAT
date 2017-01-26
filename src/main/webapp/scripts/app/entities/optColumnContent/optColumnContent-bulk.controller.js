@@ -46,6 +46,7 @@ angular.module('sdlctoolApp')
         };
 
         $scope.save = function () {
+                var count = 1;
     		angular.forEach($scope.optColumnContents, function(content) {
     			if($scope.selectedOptColumn.value !== null) {
     				angular.forEach($scope.optColumns, function(opt) {
@@ -61,7 +62,12 @@ angular.module('sdlctoolApp')
     	        		}
     	        	});
     			}
-    			OptColumnContent.update(content, onSaveFinished);
+ 			if (count == $scope.optColumnContents.length) {
+    				OptColumnContent.update(content, onSaveFinished);
+ 			} else {
+				OptColumnContent.update(content);
+			}
+			count++;
     		});
         };
 

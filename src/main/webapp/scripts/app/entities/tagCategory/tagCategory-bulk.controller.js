@@ -36,9 +36,15 @@ angular.module('sdlctoolApp')
         };
 
         $scope.save = function () {
+                var count = 1;
     		angular.forEach($scope.tagCategories, function(category) {
     			category.active = $scope.state.active;
-    			TagCategory.update(category, onSaveFinished);
+                        if (count == $scope.tagCategories.length) {
+                               TagCategory.update(category, onSaveFinished);
+                        } else {
+                               TagCategory.update(category);
+                        }
+                        count++;
     		});
         };
         $scope.toggleShowHide = function() {

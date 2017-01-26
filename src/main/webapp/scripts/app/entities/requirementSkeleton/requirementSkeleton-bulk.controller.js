@@ -171,6 +171,7 @@ angular.module('sdlctoolApp')
         };
 
         $scope.save = function () {
+                var count = 1;
         	angular.forEach($scope.requirements, function(requirement) {
     			angular.forEach($scope.tagInstances, function(tag) {
     				var hasInstance = false;
@@ -233,7 +234,12 @@ angular.module('sdlctoolApp')
     			}
         		if(angular.isDefined($scope.state.active))
         			requirement.active = $scope.state.active;
-        		RequirementSkeleton.update(requirement, onSaveFinished);
+        		if (count == $scope.requirements.length) {
+                            RequirementSkeleton.update(requirement, onSaveFinished);
+                        } else {
+                            RequirementSkeleton.update(requirement);
+                        }
+                        count++;
         	});
         };
 

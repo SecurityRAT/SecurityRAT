@@ -36,14 +36,18 @@ angular.module('sdlctoolApp')
         };
 
         $scope.save = function () {
-        	var count = 0;
+        	var count = 1;
     		angular.forEach($scope.collectionCategorys, function(category) {
-    			count++;
-        		category.active = $scope.state.active;
-        		CollectionCategory.update(category);
+                    if(count === $scope.collectionCategorys.length) {
+                        category.active = $scope.state.active;
+                        CollectionCategory.update(category);
+                        onSaveFinished('done');
+    		    } else {
+                        category.active = $scope.state.active;
+                        CollectionCategory.update(category);
+                    }	
+                   count++;
         	});
-    		if(count === $scope.collectionCategorys.length)
-    			onSaveFinished('done');
         };
         $scope.toggleShowHide = function() {
         	$scope.show = !$scope.show;

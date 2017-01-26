@@ -48,12 +48,18 @@ angular.module('sdlctoolApp')
         };
 
         $scope.save = function () {
+ 		var count = 1;
     		angular.forEach($scope.statusColumns, function(statColumn) {
     			if(angular.isDefined($scope.state.active))
     				statColumn.active = $scope.state.active;
     			if(angular.isDefined($scope.state.isEnum))
     				statColumn.isEnum = $scope.state.isEnum;
-    			StatusColumn.update(statColumn, onSaveFinished);
+			if (count == $scope.statusColumns.length) {
+    				StatusColumn.update(statColumn, onSaveFinished);
+			} else {
+				StatusColumn.update(statColumn);
+			}
+			count++;
     		});
         };
 
