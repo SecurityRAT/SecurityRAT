@@ -10,6 +10,7 @@ angular.module('sdlctoolApp')
         		'description': 'The URL for the SecurityCAT application.'
         }
         $scope.loadAll = function() {
+          $scope.activate = false;
         	ConfigConstant.query(function(result) {
                $scope.constants = result;
                var value = $filter('filter')(result, {name: $scope.testAutomation.name})
@@ -71,6 +72,5 @@ angular.module('sdlctoolApp')
 
         $scope.clear = function () {
             $scope.constant = {name: null, description: null, id: null};
-            $scope.activate = true;
         };
     });

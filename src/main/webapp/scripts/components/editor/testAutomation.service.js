@@ -46,7 +46,7 @@ angular.module('sdlctoolApp')
       function checkState(restcall, checkStatePromise) {
 
         apiFactory.testRequirementApi('GET', restcall, '', headerConfig, false).then(function(data) {
-          if(data.state === "COMPLETE") {
+          if(data.resourceURI !== null) {
             checkStatePromise.resolve(data.resourceURI);
           } else {
             if(checkStatePromise.promise.$$state.status === 0) {
