@@ -15,6 +15,8 @@ angular.module('sdlctoolApp')
         $scope.selectedTags = [];
         $scope.selectedTypes = [];
         $scope.selectedColls = [];
+	$scope.length = 1000;
+	$scope.numberToDisplay = 50;
         $scope.categoryLabelText = {buttonDefaultText: 'Category'};
         $scope.selectedCategorySettings = {
   			  smartButtonMaxItems: 2,
@@ -40,6 +42,7 @@ angular.module('sdlctoolApp')
                angular.forEach($scope.requirementSkeletons, function(requirement) {
             	   angular.extend(requirement, {selected: false});
                });
+	       $scope.length = $scope.requirementSkeletons.length;
             });
             ReqCategory.query(function(result) {
             	$scope.filterCategory = result;
@@ -69,6 +72,14 @@ angular.module('sdlctoolApp')
             $scope.dropdowns.coll = {buttonText: 'Collections', open: false, defaultText: 'Collections'};
         };
         $scope.loadAll();
+        
+	$scope.loadMore = function() {
+	   if ($scope.numberToDisplay + 50 < $scope.length) {
+           	$scope.numberToDisplay += 50;
+	   } else {
+		$scope.numberToDisplay = $scope.length;
+	   }
+       };
         
         $scope.toggleDropdown = function(selector, $event) {
         	var dropdowns = ['tag', 'coll'];

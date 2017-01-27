@@ -57,7 +57,7 @@
 
 
     <div class="table-responsive">
-        <table class="table table-striped">
+        <table class="table table-striped" infinite-scroll="loadMore()" infinite-scroll-distance="1">
             <thead>
                 <tr>
                     <th><span ng-dropdown-multiselect="" options="filterCategory" selected-model="selectedCategory" translation-texts="categoryLabelText" extra-settings="selectedCategorySettings">
@@ -134,7 +134,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr class="animate-repeat" data-ng-repeat="requirementSkeleton in requirementSkeletons | filterCategoryForEntities : selectedCategory:'reqCategory'| filterByTagForReqSkeletons : selectedTags | filterByCollsForReqSkeletons : selectedColls| filterByTypesForReqSkeletons : selectedTypes | orderBy : ['reqCategory.showOrder','showOrder'] track by requirementSkeleton.id">
+                <tr class="animate-repeat" data-ng-repeat="requirementSkeleton in requirementSkeletons | filterCategoryForEntities : selectedCategory:'reqCategory'| filterByTagForReqSkeletons : selectedTags | filterByCollsForReqSkeletons : selectedColls| filterByTypesForReqSkeletons : selectedTypes | orderBy : ['reqCategory.showOrder','showOrder'] | limitTo:numberToDisplay track by requirementSkeleton.id">
                     <td>
                         <a ui-sref="reqCategory.detail({id:requirementSkeleton.reqCategory.id})">{{requirementSkeleton.reqCategory.name}}</a>
                     </td>

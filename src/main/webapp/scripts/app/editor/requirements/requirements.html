@@ -263,7 +263,7 @@
 	<BR> -->
 	<div class="container-fluid" data-ng-show="showRequirements" >
 		<div class="table-responsive myMinHeight">
-		   <table id="requirementTable" class="table table-hover">
+		   <table id="requirementTable" class="table table-hover" infinite-scroll="loadMore()" infinite-scroll-distance="1">
 		      <thead>
 		    		<tr>
 		    			<th data-ng-if="updatedReqs">Updates</th>
@@ -324,7 +324,7 @@
 			    		</th>
 		    		</tr>
 		    	</thead>
-		   		<tbody data-ng-repeat="category in filterCategory | orderBy: 'showOrder' | filterCategoryByCategory : selectedCategory">
+		   		<tbody data-ng-repeat="category in filterCategory | orderBy: 'showOrder' | filterCategoryByCategory : selectedCategory | limitTo:numberToDisplay">
 		   			<tr>
 		   				<td class="text-center titleSize" colspan="{{3 + optColumns.length + statusColumns.length}}"><b>{{category.label}}</b><br/></td>
 		   			</tr>

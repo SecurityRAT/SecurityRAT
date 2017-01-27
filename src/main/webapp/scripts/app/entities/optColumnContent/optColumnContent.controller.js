@@ -6,6 +6,8 @@ angular.module('sdlctoolApp')
         $scope.requirementSkeletons = [];
         $scope.optColumns = [];
         $scope.selectedOptColumns = [];
+	$scope.length = 1000;
+        $scope.numberToDisplay = 100;
 //        $scope.selectedReqSkeletons = [];
         
 //        $scope.reqLabelText = {buttonDefaultText: 'Requirement Skeleton'};
@@ -27,6 +29,7 @@ angular.module('sdlctoolApp')
                angular.forEach($scope.optColumnContents, function(content) {
             	   angular.extend(content, {selected: false});
                });
+	       $scope.length = $scope.optColumnContents.length;
             });
             OptColumn.query(function(result) {
             	$scope.optColumns = result;
@@ -38,6 +41,14 @@ angular.module('sdlctoolApp')
             });
         };
         $scope.loadAll();
+
+	$scope.loadMore = function() {
+           if ($scope.numberToDisplay + 100 < $scope.length) {
+                $scope.numberToDisplay += 100;
+           } else {
+                $scope.numberToDisplay = $scope.length;
+           }
+       };
 
         $scope.delete = function (id) {
             OptColumnContent.get({id: id}, function(result) {

@@ -40,6 +40,8 @@ angular.module('sdlctoolApp')
 	  $scope.updatedReqs = false;
 	  $scope.updatesCounter = 0;
 	  $scope.updatesAvailable = false;
+	  $scope.numberToDisplay = 15;
+	  $scope.length = 1000;
 	  //extra settings for the model for selecting categories
 	  $scope.selectedCategorySettings = {
 			  smartButtonMaxItems: 3,
@@ -142,6 +144,14 @@ angular.module('sdlctoolApp')
 //		  console.log($scope.customRequirements);
 //		  console.log($scope.requirements);
 	  }
+
+	  $scope.loadMore = function() {
+          	if ($scope.numberToDisplay + 10 < $scope.length) {
+          		$scope.numberToDisplay += 10;
+          	} else {
+          		$scope.numberToDisplay = $scope.length;
+          	}
+          };
 
 	  $scope.hideColumn = function(id) {
 		  var index = $scope.optToHide.indexOf(id);
@@ -804,6 +814,7 @@ angular.module('sdlctoolApp')
 		  //do a initial localBackup
 		  $scope.onTimeout();
 		  $scope.promiseForStorage = $interval($scope.onTimeout, 60000);
+		  $scope.length = $scope.requirementSkeletons.length;
 	  }
 
 	  $scope.mergeOldAndNewRequirements = function() {
