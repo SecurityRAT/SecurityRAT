@@ -3,6 +3,7 @@
 angular.module('sdlctoolApp')
     .controller('ProjectTypeController', function ($scope, ProjectType, ProjectTypeSearch, $filter, sharedProperties) {
         $scope.projectTypes = [];
+	$scope.searchString = '';
         $scope.loadAll = function() {
             ProjectType.query(function(result) {
                $scope.projectTypes = result;

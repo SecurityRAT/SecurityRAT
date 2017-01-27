@@ -6,6 +6,7 @@ angular.module('sdlctoolApp')
         $scope.requirementSkeletons = [];
         $scope.optColumns = [];
         $scope.selectedOptColumns = [];
+	$scope.searchString = '';
 	$scope.length = 1000;
         $scope.numberToDisplay = 100;
 //        $scope.selectedReqSkeletons = [];

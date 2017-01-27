@@ -3,6 +3,7 @@
 angular.module('sdlctoolApp')
     .controller('TagCategoryController', function ($scope, TagCategory, TagCategorySearch, sharedProperties, $filter) {
         $scope.tagCategorys = [];
+	$scope.searchString = '';
         $scope.loadAll = function() {
             TagCategory.query(function(result) {
                $scope.tagCategorys = result;

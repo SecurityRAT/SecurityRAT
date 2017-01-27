@@ -9,7 +9,7 @@
                     <span class="glyphicon glyphicon-flash"></span> <span>Create a new Requirement Skeleton</span>
                 </button>
             </div>
-            <div class="col-md-4">
+            <!--<div class="col-md-4">
                 <form name="searchForm" class="form-inline">
                 	<div class="input-group">
                         <input type="text" class="form-control" data-ng-model="searchQuery" id="searchQuery" placeholder="Search a Requirement Skeleton">
@@ -19,6 +19,18 @@
 	                    </span>
                     </div>
                 </form>
+            </div>-->
+	   <div class="col-md-5">
+                                <form>
+                                        <button type="button" class="btn btn-info pull-left" data-toggle="collapse" data-target="#searchStringID">Search
+                                        <span class="glyphicon glyphicon-search"></span>
+                                        </button>
+                                        <div id="searchStringID" class="collapse">
+                                                <div class="input-group">
+                                                                <input type="text" class="form-control col-md-5" placeholder="Search String" data-ng-model="searchString">
+                                                        </div>
+                                        </div>
+                                        </form>
             </div>
             <div class="pull-right">
             	<div class="col-md-4">
@@ -134,7 +146,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr class="animate-repeat" data-ng-repeat="requirementSkeleton in requirementSkeletons | filterCategoryForEntities : selectedCategory:'reqCategory'| filterByTagForReqSkeletons : selectedTags | filterByCollsForReqSkeletons : selectedColls| filterByTypesForReqSkeletons : selectedTypes | orderBy : ['reqCategory.showOrder','showOrder'] | limitTo:numberToDisplay track by requirementSkeleton.id">
+                <tr class="animate-repeat" data-ng-repeat="requirementSkeleton in requirementSkeletons | filterCategoryForEntities : selectedCategory:'reqCategory'| filterByTagForReqSkeletons : selectedTags | filterByCollsForReqSkeletons : selectedColls| filterByTypesForReqSkeletons : selectedTypes | filter:searchString | orderBy : ['reqCategory.showOrder','showOrder'] | limitTo:numberToDisplay track by requirementSkeleton.id">
                     <td>
                         <a ui-sref="reqCategory.detail({id:requirementSkeleton.reqCategory.id})">{{requirementSkeleton.reqCategory.name}}</a>
                     </td>

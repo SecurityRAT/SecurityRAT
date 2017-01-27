@@ -5,6 +5,7 @@ angular.module('sdlctoolApp')
         $scope.collectionInstances = [];
         $scope.collectionCategories = [];
         $scope.selectedCategory = [];
+	$scope.searchString = '';
         $scope.loadAll = function() {
             CollectionInstance.query(function(result) {
                $scope.collectionInstances = result;

@@ -3,6 +3,7 @@
 angular.module('sdlctoolApp')
     .controller('StatusColumnController', function ($scope, StatusColumn, StatusColumnSearch, sharedProperties, $filter) {
         $scope.statusColumns = [];
+	$scope.searchString = '';
         $scope.loadAll = function() {
             StatusColumn.query(function(result) {
                $scope.statusColumns = result;

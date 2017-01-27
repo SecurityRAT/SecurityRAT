@@ -5,6 +5,7 @@ angular.module('sdlctoolApp')
         $scope.statusColumnValues = [];
         $scope.statusColumns = [];
         $scope.selectedColumns = [];
+	$scope.searchString = '';
         $scope.statusColumnLabelText = {buttonDefaultText: 'Status Column'};
         $scope.selectedColumnSettings = {
   			  smartButtonMaxItems: 2,

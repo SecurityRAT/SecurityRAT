@@ -9,7 +9,7 @@
                     <span class="glyphicon glyphicon-flash"></span> <span>Create a new Option Column</span>
                 </button>
             </div>
-            <div class="col-md-5">
+            <!--<div class="col-md-5">
                 <form name="searchForm" class="form-inline">
                 	<div class="input-group">
                         <input type="text" class="form-control" data-ng-model="searchQuery" id="searchQuery" placeholder="Search a Option Column">
@@ -19,6 +19,18 @@
 	                    </span>
                     </div>
                 </form>
+            </div>-->
+	    <div class="col-md-5">
+                                <form>
+                                        <button type="button" class="btn btn-info pull-left" data-toggle="collapse" data-target="#searchStringID">Search
+                                        <span class="glyphicon glyphicon-search"></span>
+                                        </button>
+                                        <div id="searchStringID" class="collapse">
+                                                <div class="input-group">
+                                                                <input type="text" class="form-control col-md-5" placeholder="Search String" data-ng-model="searchString">
+                                                        </div>
+                                        </div>
+                                        </form>
             </div>
             <div class="col-md-3">
                 <button class="btn btn-primary" ui-sref="optColumn.bulk" data-ng-click="bulkChange()" data-ng-if="(optColumns | filter:{selected: true}).length != 0">
@@ -80,7 +92,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr class="animate-repeat" data-ng-repeat="optColumn in optColumns | orderBy: 'showOrder'">
+                <tr class="animate-repeat" data-ng-repeat="optColumn in optColumns | orderBy: 'showOrder' | filter:searchString">
                     <!--<td><a ui-sref="optColumn.detail({id:optColumn.id})">{{optColumn.id}}</a></td>-->
                     <td><strong>{{optColumn.name}}</strong></td>
                     <td>{{optColumn.description}}</td>

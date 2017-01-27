@@ -3,6 +3,7 @@
 angular.module('sdlctoolApp')
     .controller('OptColumnController', function ($scope, OptColumn, OptColumnSearch, sharedProperties, $filter) {
         $scope.optColumns = [];
+	$scope.searchString = '';
         $scope.loadAll = function() {
             OptColumn.query(function(result) {
                $scope.optColumns = result;

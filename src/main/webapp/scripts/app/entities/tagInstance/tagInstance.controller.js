@@ -5,6 +5,7 @@ angular.module('sdlctoolApp')
         $scope.tagInstances = [];
         $scope.tagCategories = [];
         $scope.selectedCategory = [];
+	$scope.searchString = '';
         $scope.loadAll = function() {
         	TagInstance.query(function(result) {
                $scope.tagInstances = result;

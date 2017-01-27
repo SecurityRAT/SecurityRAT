@@ -4,6 +4,7 @@ angular.module('sdlctoolApp')
     .controller('CollectionCategoryController', function ($scope, CollectionCategory, CollectionCategorySearch, sharedProperties, $filter) {
         $scope.collectionCategorys = [];
         $scope.nonDeletedCat = [];
+	$scope.searchString = '';
         $scope.loadAll = function() {
             CollectionCategory.query(function(result) {
                $scope.collectionCategorys = result;

@@ -5,7 +5,7 @@ angular.module('sdlctoolApp')
         $scope.alternativeInstances = [];
         $scope.alternativeSets = [];
         $scope.selectedAlternativeSets = [];
-        
+	$scope.searchString = '';        
         $scope.setLabelText = {buttonDefaultText: 'Alternative Set'};
         $scope.selectedSetSettings = {
   			  smartButtonMaxItems: 2,

@@ -5,7 +5,7 @@ angular.module('sdlctoolApp')
         $scope.alternativeSets = [];
         $scope.optColumns = [];
         $scope.selectedOptColumns = [];
-        
+ 	$scope.searchString = '';       
         $scope.optColumnLabelText = {buttonDefaultText: 'Option Column'};
         $scope.selectedOptColumnSettings = {
   			  smartButtonMaxItems: 2,

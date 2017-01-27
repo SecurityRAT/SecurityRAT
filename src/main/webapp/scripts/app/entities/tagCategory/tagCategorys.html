@@ -9,7 +9,7 @@
                     <span class="glyphicon glyphicon-flash"></span> <span>Create a new Tag Category</span>
                 </button>
             </div>
-            <div class="col-md-5">
+            <!--<div class="col-md-5">
                 <form name="searchForm" class="form-inline">
                 	<div class="input-group">
                         <input type="text" class="form-control" data-ng-model="searchQuery" id="searchQuery" placeholder="Search a Tag Category">
@@ -19,6 +19,18 @@
 	                    </span>
                     </div>
                 </form>
+            </div>-->
+	    <div class="col-md-5">
+                                <form>
+                                        <button type="button" class="btn btn-info pull-left" data-toggle="collapse" data-target="#searchStringID">Search
+                                        <span class="glyphicon glyphicon-search"></span>
+                                        </button>
+                                        <div id="searchStringID" class="collapse">
+                                                <div class="input-group">
+                                                                <input type="text" class="form-control col-md-5" placeholder="Search String" data-ng-model="searchString">
+                                                        </div>
+                                        </div>
+                                        </form>
             </div>
             <div class="col-md-3">
                 <button class="btn btn-primary" ui-sref="tagCategory.bulk" data-ng-click="bulkChange()" data-ng-if="(tagCategorys | filter:{selected: true}).length != 0">
@@ -79,7 +91,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr class="animate-repeat" data-ng-repeat="tagCategory in tagCategorys | orderBy : 'showOrder'">
+                <tr class="animate-repeat" data-ng-repeat="tagCategory in tagCategorys | orderBy : 'showOrder' | filter:searchString">
                     <!--<td><a ui-sref="tagCategory.detail({id:tagCategory.id})">{{tagCategory.id}}</a></td>-->
                     <td><strong>{{tagCategory.name}}</strong></td>
                     <td>{{tagCategory.description}}</td>

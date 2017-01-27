@@ -15,6 +15,7 @@ angular.module('sdlctoolApp')
         $scope.selectedTags = [];
         $scope.selectedTypes = [];
         $scope.selectedColls = [];
+	$scope.searchString = '';
 	$scope.length = 1000;
 	$scope.numberToDisplay = 50;
         $scope.categoryLabelText = {buttonDefaultText: 'Category'};

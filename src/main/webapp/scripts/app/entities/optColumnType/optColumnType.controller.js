@@ -3,6 +3,7 @@
 angular.module('sdlctoolApp')
     .controller('OptColumnTypeController', function ($scope, OptColumnType, OptColumnTypeSearch) {
         $scope.optColumnTypes = [];
+	$scope.searchString = '';
         $scope.loadAll = function() {
             OptColumnType.query(function(result) {
                $scope.optColumnTypes = result;

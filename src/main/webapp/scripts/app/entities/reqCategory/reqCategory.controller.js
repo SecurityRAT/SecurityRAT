@@ -3,6 +3,7 @@
 angular.module('sdlctoolApp')
     .controller('ReqCategoryController', function ($scope, ReqCategory, ReqCategorySearch, sharedProperties, $filter) {
         $scope.reqCategorys = [];
+	$scope.searchString = '';
         $scope.loadAll = function() {
             ReqCategory.query(function(result) {
                $scope.reqCategorys = result;

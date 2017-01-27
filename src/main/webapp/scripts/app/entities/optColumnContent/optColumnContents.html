@@ -9,7 +9,7 @@
                     <span class="glyphicon glyphicon-flash"></span> <span>Create a new OptColumnContent</span>
                 </button>
             </div>
-            <div class="col-md-5">
+            <!--<div class="col-md-5">
                 <form name="searchForm" class="form-inline">
                 	<div class="input-group">
                         <input type="text" class="form-control" data-ng-model="searchQuery" id="searchQuery" placeholder="Search a OptColumnContent">
@@ -19,6 +19,18 @@
 	                    </span>
                     </div>
                 </form>
+            </div>-->
+	    <div class="col-md-5">
+                                <form>
+                                        <button type="button" class="btn btn-info pull-left" data-toggle="collapse" data-target="#searchStringID">Search
+                                        <span class="glyphicon glyphicon-search"></span>
+                                        </button>
+                                        <div id="searchStringID" class="collapse">
+                                                <div class="input-group">
+                                                                <input type="text" class="form-control col-md-5" placeholder="Search String" data-ng-model="searchString">
+                                                        </div>
+                                        </div>
+                                        </form>
             </div>
             <div class="col-md-3">
                 <button class="btn btn-primary" ui-sref="optColumnContent.bulk" data-ng-click="bulkChange()" data-ng-if="(optColumnContents | filter:{selected: true}).length != 0">
@@ -87,7 +99,7 @@
             </thead>
             <tbody>
             <!-- | filterCategoryForEntities : selectedReqSkeletons: 'requirementSkeleton' -->
-                <tr class="animate-repeat" data-ng-repeat="optColumnContent in optColumnContents | filterCategoryForEntities : selectedOptColumns : 'optColumn'| orderBy: ['requirementSkeleton.reqCategory.showOrder', 'requirementSkeleton.showOrder', 'optColumn.showOrder'] | limitTo:numberToDisplay">
+                <tr class="animate-repeat" data-ng-repeat="optColumnContent in optColumnContents | filterCategoryForEntities : selectedOptColumns : 'optColumn'| filter:searchString | orderBy: ['requirementSkeleton.reqCategory.showOrder', 'requirementSkeleton.showOrder', 'optColumn.showOrder'] | limitTo:numberToDisplay">
                     <!--<td><a ui-sref="optColumnContent.detail({id:optColumnContent.id})">{{optColumnContent.id}}</a></td>-->
 
                     <td>
