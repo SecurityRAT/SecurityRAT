@@ -7,17 +7,15 @@
 	<br />
 	<br />
 	<br />
-	<p><strong>{{requirementSkeletons.length}}</strong> Requirements found
-			<span data-ng-if="requirementSkeletons.length > (requirementSkeletons | filterByTagForReqSkeletons : selectedTags | filterByCollsForReqSkeletons : selectedColls| filterByTypesForReqSkeletons : selectedTypes 
-                | orderBy : ['reqCategory.showOrder','showOrder'] | filter: searchQuery).length" 
-			   		    >, 
+	<p><strong>{{requirementSkeletons.length}}</strong> Requirements found<span data-ng-if="requirementSkeletons.length > (requirementSkeletons | filterByTagForReqSkeletons : selectedTags | filterByCollsForReqSkeletons : selectedColls| filterByTypesForReqSkeletons : selectedTypes 
+                | orderBy : ['reqCategory.showOrder','showOrder'] | filter: searchQuery).length">, 
 				<span style="color:red;"><strong id="requirementInRed">{{(requirementSkeletons | filterByTagForReqSkeletons : selectedTags | filterByCollsForReqSkeletons : selectedColls| filterByTypesForReqSkeletons : selectedTypes 
                 | orderBy : ['reqCategory.showOrder','showOrder'] | filter: searchQuery).length}}</strong> Requirements shown.
 				</span>
 			</span>
 		</p>
     <div class="table-responsive">
-        <table class="table table-striped">
+        <table class="table table-striped" infinite-scroll="loadMore()" infinite-scroll-distance="1">
             <thead>
                 <tr>
                     <th>Short Name</th>
@@ -66,7 +64,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr class="animate-repeat" data-ng-repeat="requirementSkeleton in requirementSkeletons | filterByTagForReqSkeletons : selectedTags | filterByCollsForReqSkeletons : selectedColls| filterByTypesForReqSkeletons : selectedTypes| orderBy : ['reqCategory.showOrder','showOrder'] | filter: searchQuery  track by requirementSkeleton.id">
+                <tr class="animate-repeat" data-ng-repeat="requirementSkeleton in requirementSkeletons | filterByTagForReqSkeletons : selectedTags | filterByCollsForReqSkeletons : selectedColls| filterByTypesForReqSkeletons : selectedTypes| orderBy : ['reqCategory.showOrder','showOrder'] | filter: searchQuery | limitTo:numberToDisplay track by requirementSkeleton.id">
                     <td>
                     	<strong>{{requirementSkeleton.shortName}}</strong>
                     	<span id="feedbackIcon" data-ng-if="!updatedReqs" uib-tooltip="Give feedback for this requirement." style="cursor:pointer;" data-ng-click="openFeedback(requirementSkeleton)" tooltip-append-to-body>
