@@ -293,7 +293,7 @@ angular.module('sdlctoolApp')
 					  yamlData = event.target.result;
 					  try {
 						  var doc = jsyaml.safeLoad(yamlData, {filename:file.name});
-						  console.log(doc);
+						  //console.log(doc);
 						  $scope.buildSystemSettings(doc);
 						  $scope.buildRequirement(doc.requirementCategories);
 					  }catch(e) {
