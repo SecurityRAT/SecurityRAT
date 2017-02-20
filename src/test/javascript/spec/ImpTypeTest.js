@@ -117,7 +117,10 @@ describe('Protractor Security RAT general testsuite', function() {
 				}
 			})
 		});
-		element(by.buttonText("Bulk change with selected")).click();
+		browser.sleep(1000);
+		selectButton.first().click();
+		selectButton.get(1).click();
+		element(by.partialButtonText("Bulk change with selected")).click();
 		optColumnCheckboxes.get(1).click(); // Motivation checkbox clicked.
 		statColumnCheckboxes.first().click(); // Strategy checkbox clicked.
 		element(by.buttonText("Save")).click();

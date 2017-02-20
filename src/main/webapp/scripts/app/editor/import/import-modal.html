@@ -1,3 +1,4 @@
+<form class="form" role="form" name="importForm" data-ng-submit="upload()">
 <div data-ng-init="init()">
 <div class="modal-header" >
           <button type="button" class="close" data-ng-click="cancel()" aria-hidden="true">×</button>
@@ -24,8 +25,8 @@
 					  <input type="text" data-ng-model="jiraLink.url" placeholder="e.g. https://www.example-jira.com/browse/DUMBQ-12" class="form-control"/>
 					</div>
 				</div>
-				<div data-ng-if="importProperty.showSpinner"class="text-center col-sm-1" >
-					<span id="UsSpinner" spinner-on="importProperty.showSpinner" us-spinner="{radius:5, width:3, length:3, lines:9}"
+				<div data-ng-if="importProperty.spinner.showSpinner"class="text-center col-sm-1" >
+					<span id="UsSpinner" spinner-on="importProperty.spinner.showSpinner" us-spinner="{radius:5, width:3, length:3, lines:9}"
 						uib-popover="JIRA Authentication running..." popover-placement="top" popover-trigger="mouseenter" popover-append-to-body></span>
 				</div>
       		</div>
@@ -46,11 +47,9 @@
       		 <uib-accordion-heading>
         	Import from File <i class="pull-right glyphicon" data-ng-class="{'glyphicon-chevron-down':status.file , 'glyphicon-chevron-right':!status.file}"></i>
       		</uib-accordion-heading>
-      		<form role="form">
 	      		<div class="row">
 	      				<input class="col-sm-11 required-field" id="fileUpload" type="file" multiple="" accept="text/x-yaml; charset=utf-8" />
 	      		</div>
-      		</form>
       		<div>
       			<p>Max. 5MB</p>
       		</div>
@@ -59,10 +58,11 @@
 </div>
 <div class="modal-footer btn-group-sm">
 		<div class="col-sm-offset-2 col-sm-5">
-		    <button class="btn btn-primary form-control" uib-tooltip="Import Artifact" data-ng-click="upload()" data-ng-disabled="!status.jira && !status.file"><strong>Import</strong></button>
+		    <button class="btn btn-primary form-control" uib-tooltip="Import Artifact" type="submit" data-ng-disabled="!status.jira && !status.file"><strong>Import</strong></button>
 		</div>
 		<div class="col-sm-5">
 		    <button class="btn btn-default form-control" data-ng-click="cancel()"><strong>Cancel</strong></button>
 	    </div>
 </div>
 </div>
+</form>

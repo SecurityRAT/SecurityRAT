@@ -1,6 +1,6 @@
 angular.module('sdlctoolApp')
 	.controller('ExportController', function ($scope, apiFactory, sharedProperties, $uibModalStack, $uibModalInstance, $timeout, 
-			appConfig, authenticatorService, $uibModal, $interval, $q, SDLCToolExceptionService, $filter, $confirm, $window, Helper) {
+			appConfig, authenticatorService, $uibModal, $interval, $q, SDLCToolExceptionService, $filter, $confirm, $window, Helper, checkAuthentication) {
 		$scope.jiraUrl = {};
 		$scope.checks = {};
 		$scope.extension = {};
@@ -99,71 +99,35 @@ angular.module('sdlctoolApp')
 		$scope.buildUrlObject = function(list) {
 			$scope.apiUrl = {};
 			$scope.apiUrl.ticketKey = [];
-			angular.extend($scope.apiUrl, Helper.buildUrl(list));
+			angular.extend($scope.apiUrl, Helper.buildJiraUrl(list));
 			if($scope.apiUrl.ticketKey.length === 1) {
 				$scope.checks.isTicket = true;
 			}
 		}
 		
-//		$scope.buildUrl = function(list, checkTicket) {
-//			apiUrl = {};
-//			apiUrl.ticketKey = [];
-//			var hostSet = false;
-//			for(var i = 0; i < list.length; i++) {
-//				if(angular.equals(list[i], "")) {
-//					list.splice(i, 1);
-//					i--;
-//				}
-//				else if(urlpattern.http.test(list[i])) {
-//				//else if((list[i].indexOf("https:") > -1) || (list[i].indexOf("http:") > -1)) {
-//					angular.extend(apiUrl, {http: list[i]});
-//				}
-//				else if(urlpattern.host.test(list[i]) && !hostSet) {
-//				//else if(list[i].indexOf(".") > -1) 
-//					hostSet = true;
-//					angular.extend(apiUrl, {host: list[i]});
-//				} else if(list[i].indexOf("-") > -1) {
-//					apiUrl.ticketKey.push(list[i]); 
-////					angular.extend($scope.apiUrl, {ticketKey: list[i]});
-//				} 
-//			}
-//			var lastElement = list.pop();
-//			if(apiUrl.ticketKey.length === 1 && checkTicket) {
-//				$scope.checks.isTicket = true;
-//			}
-//			//gets the project key.
-//			if(angular.isUndefined(apiUrl.projectKey)  && (list.length >= 4) && !angular.equals(lastElement, "browse")) {
-//				if(lastElement.indexOf("-") >= 0) {
-//					angular.extend(apiUrl, {projectKey : lastElement.slice(0, lastElement.indexOf("-"))})
-//				} else {
-//					angular.extend(apiUrl, {projectKey : lastElement});
-//				}
-//			}
-//			return apiUrl;
-//		}
-		
 		//build the url call need according to the distinguisher. 
 		$scope.buildUrlCall = function(selector) {
-			var baseJiraCall = $scope.apiUrl.http + "//" + $scope.apiUrl.host + appConfig.jiraApiPrefix; 
+			var baseJiraCall = $scope.apiUrl.http + "//" + $scope.apiUrl.host + appConfig.jiraApiPrefix + '/';
+			var origin = $scope.apiUrl.http + "//" + $scope.apiUrl.host;
 			var returnValue = "";
 			switch(selector) {
-				case "ticket":	returnValue =  baseJiraCall;
+				case "ticket":	returnValue =  origin + appConfig.jiraApiPrefix;
 								break;
-				case "attachment":	returnValue = baseJiraCall + "/" + $scope.apiUrl.ticketKey[0] + appConfig.jiraAttachment;
+				case "attachment":	returnValue = baseJiraCall + $scope.apiUrl.ticketKey[0] + appConfig.jiraAttachment;
 									break;
-				case "comment":	returnValue = baseJiraCall + "/" + $scope.apiUrl.ticketKey[0] + appConfig.jiraComment;
+				case "comment":	returnValue = baseJiraCall + $scope.apiUrl.ticketKey[0] + appConfig.jiraComment;
 								break;
-				case "issueType":	returnValue = $scope.apiUrl.http + "//" + $scope.apiUrl.host + appConfig.jiraApiIssueType;
+				case "issueType":	returnValue = origin + appConfig.jiraApiIssueType;
 									break;
-				case "project":	returnValue = $scope.apiUrl.http + "//" + $scope.apiUrl.host + appConfig.jiraApiProject;
+				case "project":	returnValue = origin + appConfig.jiraApiProject;
 								break;
-				case "issueKey":	returnValue =  baseJiraCall + "/" + $scope.apiUrl.ticketKey[0];
+				case "issueKey":	returnValue =  baseJiraCall + $scope.apiUrl.ticketKey[0];
 									break;
-				case "search":	returnValue =  $scope.apiUrl.http + "//" + $scope.apiUrl.host + appConfig.jiraRestApi + "/search";
+				case "search":	returnValue =   origin + appConfig.jiraRestApi + "/search";
 								break;
-				case "issueLink":	returnValue =  $scope.apiUrl.http + "//" + $scope.apiUrl.host + appConfig.jiraRestApi + "/issueLink";
+				case "issueLink":	returnValue =  origin + appConfig.jiraRestApi + "/issueLink";
 									break;
-				case "field":	returnValue =  $scope.apiUrl.http + "//" + $scope.apiUrl.host + appConfig.jiraRestApi + "/field";
+				case "field":	returnValue =  origin + appConfig.jiraRestApi + "/field";
 								break;
 			}
 			return returnValue;
@@ -250,7 +214,7 @@ angular.module('sdlctoolApp')
 		}
 		
 		$scope.createRemoteLink = function(infoObject) {
-			apiFactory.postExport(infoObject.url, infoObject.postData, {'X-Atlassian-Token': 'nocheck', 'Content-Type': 'application/json'}).then(function(data) {
+			apiFactory.postExport(infoObject.url, infoObject.postData, {'X-Atlassian-Token': 'no-check', 'Content-Type': 'application/json'}).then(function(data) {
 			}, function(exception) {
 			});
 		}
@@ -259,7 +223,7 @@ angular.module('sdlctoolApp')
 			var url = $scope.buildUrlCall("issueLink");
 			var urlSplit = $scope.exported.ticket.url.split("/");
 			var apiUrl = {};
-			angular.extend(apiUrl, Helper.buildUrl(urlSplit));
+			angular.extend(apiUrl, Helper.buildJiraUrl(urlSplit));
 			// get the summary of the main JIRA to prepare for remote linking if necessary
 			if(angular.isUndefined($scope.remoteLinking.info)) {
 				apiFactory.getJIRAInfo(apiUrl.http + "//" + apiUrl.host + appConfig.jiraApiPrefix+ "/" + apiUrl.ticketKey[0]).then(function(response) {
@@ -277,7 +241,7 @@ angular.module('sdlctoolApp')
 						key: outwardKey
 					}
 			};
-			apiFactory.postExport(url, postData, {'X-Atlassian-Token': 'nocheck', 'Content-Type': 'application/json'}).then(function() {
+			apiFactory.postExport(url, postData, {'X-Atlassian-Token': 'no-check', 'Content-Type': 'application/json'}).then(function() {
 				
 			}, function(exception) {
 				if(exception.status !== 500) {
@@ -476,6 +440,8 @@ angular.module('sdlctoolApp')
 							//sync makes sure the array is updated when the datas are available.
 							sync.promise.then(function() {
 								var autoCompleteUrl = value.autoCompleteUrl;
+								// console.log(autoCompleteUrl)
+								// exclude autoComplete with issueKey=null. 
 								if(angular.isDefined(autoCompleteUrl) && autoCompleteUrl.indexOf("=null") !== -1) autoCompleteUrl = undefined;
 								$scope.jiraAlternatives.mandatoryFields.push({
 									key: key,
@@ -488,7 +454,7 @@ angular.module('sdlctoolApp')
 									mandatory : $scope.selection.createTickets && key === 'labels' ? true : value.required,
 									autoCompleteUrl: autoCompleteUrl
 								});
-//								console.log($scope.jiraAlternatives.mandatoryFields);
+								console.log($scope.jiraAlternatives.mandatoryFields);
 							});
 						}
 					});
@@ -516,6 +482,7 @@ angular.module('sdlctoolApp')
 			if(angular.isDefined(newVal)) {
 				$scope.getMandatoryFields($scope.manFilterObject, excludedFields, fatalFields);
 			}
+			// console.log($scope.jiraAlternatives.mandatoryFields)
 			
 		})
 		/**
@@ -549,7 +516,7 @@ angular.module('sdlctoolApp')
 			
 			var postData = {};
 			angular.extend(postData, {fields: fieldObject});
-			apiFactory.postExport($scope.buildUrlCall("ticket"), postData, {'X-Atlassian-Token': 'nocheck', 'Content-Type': 'application/json'})
+			apiFactory.postExport($scope.buildUrlCall("ticket"), postData, {'X-Atlassian-Token': 'no-check', 'Content-Type': 'application/json'})
 			.then(function(response){
 				var postUrl = "";
 				if(response != undefined) {
@@ -600,7 +567,7 @@ angular.module('sdlctoolApp')
 					"body": commentBody
 			}
 			//adds comment to ease import
-			apiFactory.postExport($scope.buildUrlCall("comment"), commentData, {'X-Atlassian-Token': 'nocheck', 'Content-Type': 'application/json'}).then(function(){
+			apiFactory.postExport($scope.buildUrlCall("comment"), commentData, {'X-Atlassian-Token': 'no-check', 'Content-Type': 'application/json'}).then(function(){
 			});
 		}
 		
@@ -614,7 +581,7 @@ angular.module('sdlctoolApp')
 				for(var i = 0; i < $scope.ticketsToLink.length; i++) {
 					var urlSplit = $scope.ticketsToLink[i].split('/');
 					var apiUrl = {};
-					angular.extend(apiUrl, Helper.buildUrl(urlSplit));
+					angular.extend(apiUrl, Helper.buildJiraUrl(urlSplit));
 					
 					// this is done to prevent the data from been changed due to the asynchronoous nature of the http calls.
 					linksObject[apiUrl.ticketKey[0]] = {};
@@ -631,7 +598,7 @@ angular.module('sdlctoolApp')
 				var blob = new Blob([doc], {type:'application/x-yaml'})
 				var data = new FormData();
 				data.append('file', blob, filename);
-				apiFactory.postExport($scope.buildUrlCall("attachment"), data, {'X-Atlassian-Token': 'nocheck', 'Content-Type':undefined})
+				apiFactory.postExport($scope.buildUrlCall("attachment"), data, {'X-Atlassian-Token': 'no-check', 'Content-Type':undefined})
 				.then(function(response) {
 					var commentBody = appConfig.ticketComment;
 					commentBody = commentBody.replace('§artifact_name§', $scope.exported.name);
@@ -656,7 +623,7 @@ angular.module('sdlctoolApp')
 					"body": body
 			}
 			//adds comment to ease import
-			apiFactory.postExport($scope.buildUrlCall("comment"), commentData, {'X-Atlassian-Token': 'nocheck', 'Content-Type': 'application/json'}).then(function(){
+			apiFactory.postExport($scope.buildUrlCall("comment"), commentData, {'X-Atlassian-Token': 'no-check', 'Content-Type': 'application/json'}).then(function(){
 				//performs the export successful operation when adding a yaml attachment.
 				if($scope.selection.jira) {
 					$scope.close();
@@ -713,7 +680,7 @@ angular.module('sdlctoolApp')
 				$scope.buildUrlObject(urlSplit);
 				//console.log($scope.apiUrl);
 				$scope.promise.derefer = $q.defer();
-				authenticatorService.checkAuthentication($scope.buildUrlCall("issueType"), authenticatorProperty, $scope.exportProperty, $scope.promise).then(function(data) {
+				checkAuthentication.jiraAuth($scope.buildUrlCall("issueType"), authenticatorProperty, $scope.exportProperty, $scope.promise).then(function(data) {
 					if($scope.checks.isTicket && $scope.selection.jira) {
 						$scope.fields = {};
 						$scope.checkTicket();

@@ -5,7 +5,6 @@ describe('Protractor Security RAT Testsuite', function() {
 	var restoreSession = element(by.id('restoreSession'));
 	var deleteSession = element(by.id('deleteSession'));
 	var moreInfo = "More Information";
-	var poseidon = "Poseidon-based application";
 	var closeButton = "Close";
 	var exportButton = "Export";
 	var SaveButton = "Save";
@@ -26,7 +25,7 @@ describe('Protractor Security RAT Testsuite', function() {
 			expect(handles.length).toBeGreaterThan(1);
 			browser.switchTo().window(handles[2]).then(function() {
 				browser.manage().getCookie("JSESSIONID").then(function(cookie) {
-					browser.manage().deleteCookie(browser.params.jiraCookieNames[1]);
+					browser.manage().deleteCookie("JSESSIONID");
 					browser.switchTo().window(handles[0]).then();
 				});				
 			});
@@ -46,12 +45,16 @@ describe('Protractor Security RAT Testsuite', function() {
 	}
 		
 	beforeEach(function() {
-		browser.get(browser.params.testHost);
+		browser.get(browser.params.testHost).then(function() {}, function(){
+			browser.switchTo().alert().accept();
+		});
+		browser.sleep(1500)
 		defineArtifact.click();
 		var artifactName = element(by.model('starterForm.name'));
 		artifactName.sendKeys("-+.:()[],!#$%'*=?`{}~;@&some artifact");
 
 		element.all(by.buttonText('Select')).last().click();
+		browser.sleep(500);
 		(element(by.linkText('Internal'))).click();
 		element.all(by.buttonText('Select')).each(function(elem, index) {
 			elem.click().then(function() {
@@ -75,7 +78,6 @@ describe('Protractor Security RAT Testsuite', function() {
 	it('new Internal Artifact with High criticality should have more than 50 requirements and alternative sets applies filters.', function() {
 		
 		expect(element(by.binding('requirements.length')).getText()).toBeGreaterThan('50');
-		expect(element.all(by.buttonText(moreInfo)).count()).toBe(1);
 		element(by.buttonText('Category')).click();
 		element(by.linkText('Lifecycle')).click();
 		browser.sleep(3000);
@@ -86,11 +88,9 @@ describe('Protractor Security RAT Testsuite', function() {
 		element(by.buttonText('Category')).click();
 		//clicks on Action with selected and check if the buttons are grey
 		element(by.buttonText("Action with selected")).click();
-		expect(element.all(by.className("disabledButton")).count()).toBe(5)
-		element(by.buttonText(moreInfo)).click();
-		element(by.linkText(poseidon)).click();
+		expect(element.all(by.className("disabledButton")).count()).toBe(6)
 		element(by.buttonText('Search')).click();
-		element(by.model('search')).sendKeys('Poseidon');
+		element(by.model('search')).sendKeys('Clickjacking');
 		browser.sleep(5000);
 		element(by.model('search')).clear();
 		removeRibbon();
@@ -205,9 +205,6 @@ describe('Protractor Security RAT Testsuite', function() {
 	});
 	
 	it('exports to JIRA by creating a ticket in the queue and create ticket with first requirement and checks if when selected after creation the confirms modal pops up', function() {
-		(element(by.buttonText(moreInfo))).click();
-		(element(by.linkText(poseidon))).click();
-
 		(element(by.buttonText(SaveButton))).click();
 		element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraQueue + "-100000");
 		(element(by.buttonText(exportButton))).click();
@@ -299,10 +296,7 @@ describe('Protractor Security RAT Testsuite', function() {
 		    expect(v).toBe(true);
 		});
 		//should filter the requirement set.
-		element(by.buttonText('Status')).click();
-		element.all(by.linkText('Open')).first().click();
-		browser.sleep(5000);
-		element(by.buttonText('Open')).click();
+		expect(element(by.buttonText('Status')).isPresent()).toBe(true);
 		
 		// modal pops up to warn the existence of a ticket for the selected requirement.
 		element(by.buttonText("Action with selected")).click();
@@ -312,9 +306,6 @@ describe('Protractor Security RAT Testsuite', function() {
 	});
 	
 	it('try to export with wrong URL and then enters a non existing project', function() {
-		(element(by.buttonText(moreInfo))).click();
-		(element(by.linkText(poseidon))).click();
-		
 		//non valid URL
 		(element(by.buttonText(SaveButton))).click();
 		element(by.model('jiraUrl.url')).sendKeys("gsfdgsdfgsfgsfdgsdfg");
@@ -331,7 +322,7 @@ describe('Protractor Security RAT Testsuite', function() {
 		browser.sleep(6000);
 		expect(element(by.binding('exportProperty.failed')).getText()).toBe('You have entered a wrong queue. Please select a valid queue and click on Export again.')
 		
-		element(by.model('fields.project.key')).sendKeys('SSDLC');
+		element(by.model('fields.project.key')).sendKeys(browser.params.jiraQueue.split('/').pop());
 		(element(by.buttonText(exportButton))).click();
 		
 		element(by.model('fields.issuetype.name')).sendKeys(browser.params.issuetypes[1]);
@@ -353,12 +344,9 @@ describe('Protractor Security RAT Testsuite', function() {
 	});
 	
 	it('Export a requirement set which has already be exported into a new ticket (by giving the ticket URL or queue). Check if a warning modal pops up', function() {
-		(element(by.buttonText(moreInfo))).click();
-		(element(by.linkText(poseidon))).click();
-		
 		
 		(element(by.buttonText(SaveButton))).click();
-//		browser.sleep(3000);
+		browser.sleep(2000);
 		
 		element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraQueue);
 		(element(by.buttonText(exportButton))).click();
@@ -411,7 +399,7 @@ describe('Protractor Security RAT Testsuite', function() {
 		});
 		
 		(element(by.buttonText(exportButton))).click();
-		element(by.model('fields.issuetype.name')).sendKeys('Test');
+		element(by.model('fields.issuetype.name')).sendKeys(browser.params.issuetypes[0]);
 		element(by.model('fields.summary')).sendKeys("<script>alert(1)</script>");
 		element(by.model('fields.description')).sendKeys("<script>alert(1)</script>");
 		(element(by.buttonText(exportButton))).click();
@@ -422,8 +410,9 @@ describe('Protractor Security RAT Testsuite', function() {
 		browser.sleep(3000);
 		expect(element.all(by.partialLinkText(browser.params.jiraQueue)).count()).toBe(1);
 		(element(by.buttonText("Close"))).click();
-		browser.sleep(2000);
+		browser.sleep(1000);
 		(element(by.buttonText(SaveButton))).click();
+		browser.sleep(1000);
 		element(by.model('jiraUrl.url')).clear().then(function(){
 			element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraQueue + "-" + browser.params.issueNumbers[0]);
 		});
@@ -439,8 +428,6 @@ describe('Protractor Security RAT Testsuite', function() {
 		deleteCookie1();
 		deleteCookie();
 		browser.sleep(3000);
-		(element(by.buttonText(moreInfo))).click();
-		(element(by.linkText(poseidon))).click();
 		element.all(by.buttonText("Task")).first().click();
 		(element(by.linkText('Refused'))).click();
 		(element(by.buttonText(SaveButton))).click();
@@ -492,7 +479,7 @@ describe('Protractor Security RAT Testsuite', function() {
 		browser.sleep(1000);
 		element(by.binding('jira.url')).click();
 		browser.sleep(20000);
-		element(by.id('issueType')).sendKeys('Test');
+		element(by.id('issueType')).sendKeys(browser.params.issuetypes[0]);
 		element(by.model('label.labelValue')).sendKeys('myNew Label');
 		element(by.id('addLabel')).click();
 		(element(by.buttonText("Create tickets"))).click();

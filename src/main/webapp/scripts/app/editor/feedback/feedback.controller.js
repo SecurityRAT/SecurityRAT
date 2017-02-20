@@ -9,7 +9,7 @@
  */
 angular.module('sdlctoolApp')
   .controller('FeedbackController', function ($scope, apiFactory, sharedProperties, $filter, appConfig, authenticatorService, 
-		  $uibModalInstance, $q, SDLCToolExceptionService, Helper) {
+		  $uibModalInstance, $q, SDLCToolExceptionService, Helper, checkAuthentication) {
 	  $scope.requirement = {};
 	  $scope.requirement = sharedProperties.getProperty();
 	  $scope.fields = {};
@@ -61,8 +61,8 @@ angular.module('sdlctoolApp')
 				  fields: $scope.fields
 		  }
 		  $scope.promise.derefer = $q.defer();
-		  authenticatorService.checkAuthentication(apiCall, authenticatorProperty, $scope.feedbackProperty, $scope.promise).then(function() { 
-			  apiFactory.postExport(url, postData, {'X-Atlassian-Token': 'nocheck', 'Content-Type': 'application/json'}).then(function(response) {
+		  checkAuthentication.jiraAuth(apiCall, authenticatorProperty, $scope.feedbackProperty, $scope.promise).then(function() { 
+			  apiFactory.postExport(url, postData, {'X-Atlassian-Token': 'no-check', 'Content-Type': 'application/json'}).then(function(response) {
 				  $uibModalInstance.close();
 				  var ticketUrl = appConfig.reportJIRAHost + "/browse/" + response.key;
 				  SDLCToolExceptionService.showWarning('Submit successful', 'Your suggestion was send. You can check your suggestion here:\n ' + ticketUrl, SDLCToolExceptionService.SUCCESS);

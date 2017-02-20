@@ -82,33 +82,13 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
         						default:
         							appConfig[constant.name] = constant.value;
         							break;
-//        						case "filenamePrefix":
-//        							appConfig.filenamePrefix = constant.value;
-//        							break;
-//        						case "ticketDescription":
-//        							appConfig.ticketDescription = constant.value;
-//        							break;
-//        						case "reportJIRAQueue":
-//        							appConfig.reportJIRAQueue = constant.value;
-//        							break;
-//        						case "reportJIRAHost":
-//        							appConfig.reportJIRAHost = constant.value;
-//        							break;
-//        						case "reportJIRAIssueType":
-//        							appConfig.reportJIRAIssueType = constant.value;
-//        							break;
-//        						case "summaryForSuggestion":
-//        							appConfig.summaryForSuggestion = constant.value;
-//        							break;
-//        						case "ticketComment":
-//        							appConfig.ticketComment = constant.value;
-//        							break;
         						}
         					})
         				}
-        				else{
-//        					constants = this.statusText;
-        				}
+//        				else (this.status >= 400){
+////        					constants = this.statusText;
+//        					
+//        				}
         			}
         		}
         		ajax.send(null);
@@ -379,66 +359,24 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
         				$interval.cancel(promise.interval);
         			if(promise.runningModalPromise !== undefined) {promise.runningModalPromise.close();}
         		},
-        		checkAuthentication : function(apiCall, jira, property, promise) {
-        			var self = this;
-        			/*function myFunction() {
-        				if(angular.isUndefined(promise.interval) || (promise.interval.$$state.status != 0)) {
-    						self.runAuthenticator(jira).then(function(data) {
-    							//run the init method every 10 sec.
-    							  promise.interval = $interval(function() {
-    								  self.checkAuthentication(apiCall, jira, property, promise);
-    							  },10000);
-    							  promise.timeout = self.startCountdown(promise, property, jira);
-    							  if(data === "start") {
-    								  property.showSpinner = true;
-	    							  if(angular.isDefined(promise.runningModalPromise))
-	    								  promise.runningModalPromise = promise.runningModalPromise();
-    							  }
-    						});
-    					}
-            }*/
-	    			apiFactory.getJIRAInfo(apiCall).then(function(response) {
-      				if(response.length === 0){
-      					self.tempCheckAuthentication(apiCall, jira, property, promise, self.checkAuthentication);
-      				} else {
-      					property.showSpinner = false;
-      					promise.derefer.resolve(response);
-      					self.cancelPromises(promise);
-      				}
-	    			}, function(exception){
-  	    				if(exception.status === 401 || exception.status === 403) {
-  		    				if(angular.isDefined(exception.errorException) && exception.errorException.opened.$$state.status === 0) {
-    								exception.errorException.opened.$$state.value = false;
-    								exception.errorException.opened.$$state.status = 1;
-  		            }
-  		    				if(apiCall.indexOf(jiraRestApi) === -1)
-  		    					self.tempCheckAuthentication(apiCall, jira, property, promise, self.checkAuthentication);
-  	    				}else {
-  	    					property.showSpinner = false;
-  	    					promise.derefer.reject(exception);
-  	    					self.cancelPromises(promise);
-  	    				}
-	    			  });
-	    			return promise.derefer.promise;
-	    		},
-          tempCheckAuthentication: function(apiCall, displayProperty, spinnerProperty, promise, recallFunction) {
-            var self = this
-            if(angular.isUndefined(promise.interval) || (promise.interval.$$state.status != 0)) {
-            self.runAuthenticator(displayProperty).then(function(data) {
-              //run the init method every 10 sec.
-                promise.interval = $interval(function() {
-                  recallFunction(apiCall, displayProperty, spinnerProperty, promise);
-                },10000);
-                promise.timeout = self.startCountdown(promise, spinnerProperty, displayProperty);
-                if(data === "start") {
-                  spinnerProperty.showSpinner = true;
-                  if(angular.isDefined(promise.runningModalPromise))
-                    promise.runningModalPromise = promise.runningModalPromise();
-                }
-            });
-          }
+	    		startCheckAuthenticationProcess: function(apiCall, displayProperty, spinnerProperty, promise, recallFunction) {
+		            var self = this
+		            if(angular.isUndefined(promise.interval) || (promise.interval.$$state.status != 0)) {
+			            self.runAuthenticator(displayProperty).then(function(data) {
+			              //run the init method every 10 sec.
+			                promise.interval = $interval(function() {
+			                  recallFunction(apiCall, displayProperty, spinnerProperty, promise);
+			                },10000);
+			                promise.timeout = self.startCountdown(promise, spinnerProperty, displayProperty);
+			                if(data === "start") {
+			                  spinnerProperty.showSpinner = true;
+			                  if(angular.isDefined(promise.runningModalPromise))
+			                    promise.runningModalPromise = promise.runningModalPromise();
+			                }
+			            });
+		            }
+	    		}
         	}
-        }
         })
         .service('helperService', function() {
         	return {

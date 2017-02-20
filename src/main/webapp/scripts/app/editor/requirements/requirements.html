@@ -368,7 +368,7 @@
 			    				<div data-ng-if="reqs.isNew || reqs.isOld" marked="optionColumnContent.content"></div>
 			    			</div>
 			    		</td>
-			    		<td class="text-center"data-ng-repeat="stats in statusColumns | orderBy:'showOrder'"
+			    		<td class="text-center" data-ng-repeat="stats in statusColumns | orderBy:'showOrder'"
 			    		data-ng-style="reqs.isNew && {'background-color':'rgb(204, 255, 204)'} || reqs.isOld && {'background-color':'rgb(255, 204, 204)'}">
 			    			<div data-ng-if="!stats.isEnum">
 			    				<div data-ng-repeat="statusValue in reqs.statusColumns">

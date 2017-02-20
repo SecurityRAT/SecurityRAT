@@ -48,6 +48,7 @@ describe('Protractor Security RAT general testsuite', function() {
 			browser.sleep(3000);
 			expect(element.all(by.repeater("tagCategory in tagCategorys | orderBy : 'showOrder'")).count()).toBe(count);
 		});
+		browser.sleep(1500);
 		element.all(by.buttonText("Edit")).last().click();
 		browser.sleep(2000);
 		element(by.id('field_description')).clear().then(function(){

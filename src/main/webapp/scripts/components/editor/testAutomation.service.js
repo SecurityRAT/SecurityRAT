@@ -13,7 +13,7 @@ angular.module('sdlctoolApp')
       function checkAuthentication(url, displayProperty, spinnerProperty, promise) {
         apiFactory.testRequirementApi('GET', url, "", "", true).then(function(response) {
           if(response.status === 302) {
-            authenticatorService.tempCheckAuthentication(url, displayProperty, spinnerProperty, promise, checkAuthentication);
+            authenticatorService.startCheckAuthenticationProcess(url, displayProperty, spinnerProperty, promise, checkAuthentication);
           } else {
             spinnerProperty.showSpinner = false;
             promise.derefer.resolve(response);
@@ -21,7 +21,7 @@ angular.module('sdlctoolApp')
           }
         }, function(exception) {
           if(exception.status === 401 || exception.status === 302 || exception.status === -1) {
-            authenticatorService.tempCheckAuthentication(url, displayProperty, spinnerProperty, promise, checkAuthentication);
+            authenticatorService.startCheckAuthenticationProcess(url, displayProperty, spinnerProperty, promise, checkAuthentication);
           }
           /*else if(exception.status === -1) {
 

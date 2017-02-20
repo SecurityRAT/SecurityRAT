@@ -1,11 +1,16 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('UserManagementController', function ($scope, UserManagement, Authorities, User, UserManagementSearch, Helper) {
+    .controller('UserManagementController', function ($scope, UserManagement, Authorities, User, 
+        UserManagementSearch, Helper, Account) {
         $scope.authorities = [];
         $scope.userSet = {};
         $scope.usersWithAuthorities = [];
-        
+        $scope.activeUser = {}
+
+        Account.get(function(response) {
+            $scope.activeUser = response.data;
+        })
         function callback(user) {
         	angular.forEach($scope.authorities, function(authority) {
     			if(Helper.searchArrayByValue(authority.name, user.authorities)) {
@@ -29,18 +34,18 @@ angular.module('sdlctoolApp')
                  });
         	});
         }
-        $scope.search = function () {
-        	UserManagementSearch.query({query: $scope.searchQuery}, function(result) {
-        		console.log(result);
-                $scope.usersWithAuthorities = result;
-            }, function(response) {
-                if(response.status === 404) {
-                    $scope.loadAll(callback);
-                }
-            });
-        };
-        
+                
         $scope.loadAll(callback);
+
+         var onSaveFinished = function (result) {
+            $scope.$emit('sdlctoolApp:UserManagementUpdate', result);
+        };
+
+        $scope.updateUserActivation = function(user) {
+            user.activated = !user.activated;
+            User.update(user, onSaveFinished);
+        }
+
         $scope.delete = function (user) {
         	$scope.user = user;
         	$('#deleteUserConfirmation').appendTo("body").modal('show');

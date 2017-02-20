@@ -65,6 +65,7 @@ angular.module('sdlctoolApp')
           var result = $filter('filter')($scope.constants, {name: $scope.testAutomation.name})
           return $scope.activate && result.length === 1 && result.pop().value === '';
         }
+        
         $scope.refresh = function () {
             $scope.loadAll();
             $scope.clear();

@@ -8,7 +8,7 @@
  * Controller of the sdlcFrontendApp
  */
 angular.module('sdlctoolApp')
-  .controller('ImportController', function ($scope, $location, $uibModalStack, sharedProperties, getRequirementsFromImport, Helper,
+  .controller('ImportController', function ($scope, $location, $uibModalStack, sharedProperties, getRequirementsFromImport, Helper, checkAuthentication,
 		  					apiFactory, $filter, authenticatorService, $interval, SDLCToolExceptionService, $timeout, appConfig, $q,$uibModal, localStorageService) {
 	  $scope.status = {file: false, jira:false};
 	  $scope.importObject = {};
@@ -18,33 +18,48 @@ angular.module('sdlctoolApp')
 	  $scope.requirements = [];
 	  $scope.lastRequirementId = 0;
 	  $scope.optionColumns = [];
-	  $scope.promise = {};
+//	  $scope.promise = {};
 	  $scope.filterCategory = []
 	  $scope.statusColumns = [];
 	  $scope.jiraLink = {};
 	  $scope.apiUrl = {};
-	  $scope.isTicket = false;
+	  // $scope.isTicket = false;
 	  $scope.name = '';
-	  $scope.importProperty = {};
+	  $scope.importProperty = {spinner: {}, promise: {}};
 	  $scope.attachmentProperties = {}
-
-	//builds the URL object
-	$scope.buildUrlObject = function(list) {
-		$scope.apiUrl = {};
-		$scope.apiUrl.ticketKey = [];
-		var hostSet = false;
-		angular.extend($scope.apiUrl, Helper.buildUrl(list));
-		if($scope.apiUrl.ticketKey.length === 1) {
-			$scope.checks.isTicket = true;
-		}
-	}
+	  
+	// adds the authenticator moddal to the promise object
+	  function addCheckAuthenticationModal(promise) {
+		  angular.extend(promise, {runningModalPromise : function() {
+			  var modalInstance = $uibModal.open({
+					template : '<div class="modal-body"><div id="UsSpinner1" class=" text-center col-sm-1" id="UsSpinner" spinner-on="true" us-spinner=' +
+						'"{radius:6, width:4, length:6, lines:9}"></div><br/><h4 class="text-center"> JIRA Authentication running...</h4></div>',
+					controller : function(){},
+					size: 'sm',
+					backdrop: false
+				});
+			  return modalInstance;
+		  }});
+	  }
+	  
+	//builds the URL object.
+	  $scope.buildUrlObject = function(list) {
+		  $scope.apiUrl = {};
+		  $scope.apiUrl.ticketKey = [];
+		  var hostSet = false;
+		  angular.extend($scope.apiUrl, Helper.buildJiraUrl(list));
+		// if($scope.apiUrl.ticketKey.length === 1) {
+		// 	$scope.isTicket = true;
+		// }
+	  }
+	  
 	  $scope.init = function() {
 		  function onSuccess(attachment) {
 			  var modalInstance;
 			  if(attachment.self !== undefined) {
-				  $scope.importProperty.showSpinner = false;
+				  $scope.importProperty.spinner.showSpinner = false;
 				//cancels the promises if they are defined to prevent use of resources.
-				  authenticatorService.cancelPromises($scope.promise);
+				  authenticatorService.cancelPromises($scope.importProperty.promise);
 				  apiFactory.getJIRAInfo(attachment.content).then(function(yamlFile) {
 //					  if(modalInstance !== undefined){modalInstance.cancel('');}
 					  var blob = new Blob([yamlFile], {type: attachment.mimeType});
@@ -63,7 +78,7 @@ angular.module('sdlctoolApp')
 			  fileParam = url;
 		  }
 		  if(fileParam == "RESTORE") {
-			  angular.extend($scope.importProperty, {showSpinner: false});
+			  angular.extend($scope.importProperty.spinner, {showSpinner: false});
 
 			  apiFactory.getAll("projectTypes").then(
 					  	function(projectTypes) {
@@ -75,7 +90,7 @@ angular.module('sdlctoolApp')
 					   	function(exception) {
 		   	   });
 		  } else {
-			  angular.extend($scope.importProperty, {showSpinner: false});
+			  angular.extend($scope.importProperty.spinner, {showSpinner: false});
 			  apiFactory.getAll("projectTypes").then(
 					  	function(projectTypes) {
 						   $scope.projectTypes = $filter('orderBy')(projectTypes, 'showOrder');
@@ -97,14 +112,14 @@ angular.module('sdlctoolApp')
 													  $uibModalStack.dismissAll('close exception modal');
 													  var urlSplit = fileUrl.split("/");
 													  $scope.buildUrlObject(urlSplit);
-													  $scope.promise.derefer = $q.defer();
-													  $scope.authenticationrunningModal($scope.promise);
+													  $scope.importProperty.promise.derefer = $q.defer();
+													  addCheckAuthenticationModal($scope.importProperty.promise);
 													  var authenticatorProperty = {
 															  url : $scope.apiUrl.http + "//" + $scope.apiUrl.host,
 															  message : 'Attachment could not be imported because you are not authenticated.' +
 															  'Please click on the following link to authenticate yourself. You will have one minute after a click on the link.'
 													  }
-													  authenticatorService.checkAuthentication(fileUrl, authenticatorProperty, $scope.importProperty, $scope.promise)
+													  checkAuthentication.jiraAuth(fileUrl, authenticatorProperty, $scope.importProperty.spinner, $scope.importProperty.promise)
 													  .then(function(attachment) {
 														  onSuccess(attachment);
 													  });
@@ -131,19 +146,7 @@ angular.module('sdlctoolApp')
 		  }
 
 	  }
-	  // adds the authenticator moddal to the promise
-	  $scope.authenticationrunningModal = function(promise) {
-		  angular.extend(promise, {runningModalPromise : function() {
-			  var modalInstance = $uibModal.open({
-					template : '<div class="modal-body"><div id="UsSpinner1" class=" text-center col-sm-1" id="UsSpinner" spinner-on="true" us-spinner=' +
-						'"{radius:6, width:4, length:6, lines:9}"></div><br/><h4 class="text-center"> JIRA Authentication running...</h4></div>',
-					controller : function(){},
-					size: 'sm',
-					backdrop: false
-				});
-			  return modalInstance;
-		  }});
-	  }
+	  
 
 	  $scope.upload = function() {
 		  $scope.uploadFail = false;
@@ -163,7 +166,7 @@ angular.module('sdlctoolApp')
 				  var urlSplit = $scope.jiraLink.url.split("/");
 				  $scope.buildUrlObject(urlSplit);
 				  var apiCall = $scope.apiUrl.http + "//" + $scope.apiUrl.host + appConfig.jiraApiIssueType;
-				  $scope.promise.derefer = $q.defer();
+				  $scope.importProperty.promise.derefer = $q.defer();
 				  if($scope.apiUrl.ticketKey.length !== 1) {
 					  $scope.uploadFail = true;
 					  $scope.failMessage = "You have entered a queue instead of a ticket. Please provide a ticket.";
@@ -172,7 +175,7 @@ angular.module('sdlctoolApp')
 								url: $scope.jiraLink.url,
 								message: 'You are not authenticated, please click on the following link to authenticate yourself. You will have one minute after a click on the link.'
 						}
-					  authenticatorService.checkAuthentication(apiCall, authenticatorProperty, $scope.importProperty, $scope.promise).then(function() {
+					  checkAuthentication.jiraAuth(apiCall, authenticatorProperty, $scope.importProperty.spinner, $scope.importProperty.promise).then(function() {
 						  if(!angular.equals($scope.jiraLink.backupUrl, $scope.jiraLink.url)) {
 							  $scope.attachmentProperties = {};
 							  angular.extend($scope.attachmentProperties, {attachments: [], hasAttachments: false, selectedAttachment: ""});
@@ -197,7 +200,7 @@ angular.module('sdlctoolApp')
 						if(response.fields.attachment.length === 0) {
 							SDLCToolExceptionService.showWarning('Import unsuccessful', "There were no attachments found in this ticket.", SDLCToolExceptionService.DANGER);
 						} else if(response.fields.attachment.length > 0) {
-							$scope.isTicket = true;
+							// $scope.isTicket = true;
 	//						$scope.getNewestAttachment(response.fields.attachment);
 							$scope.attachmentProperties.attachments = $filter('orderBy')($scope.buildAttachmentsArray(response.fields.attachment), 'showOrder', true);
 	//						console.log($scope.attachmentProperties.attachments);
@@ -272,7 +275,7 @@ angular.module('sdlctoolApp')
 		  }
 	  }
 
-	  //reads the yaml file and builds the systemsettings and the requirements. Takes a file or a blob.
+	  //reads the yaml file and builds the system settings and the requirements. Takes a file or a blob.
 	  $scope.readYamlFile = function(file) {
 		  var yamlData = "";
 		  var r = new FileReader();
@@ -441,11 +444,13 @@ angular.module('sdlctoolApp')
 							}
 							 if(hosts.indexOf($scope.apiUrl.host) === -1){
 								 hosts.push($scope.apiUrl.host);
-								 $scope.authenticationrunningModal($scope[$scope.apiUrl.ticketKey[0]]);
+								 // adds the check authentication Modal in case the issue tracking's system session has expired
+								 // and the status of the ticket cannot be fetched.
+								 addCheckAuthenticationModal($scope[$scope.apiUrl.ticketKey[0]]);
 							 }
-							 authenticatorService.checkAuthentication(urlCall, authenticatorProperty, $scope.importProperty, $scope[$scope.apiUrl.ticketKey[0]]).then(function(data) {
+							 checkAuthentication.jiraAuth(urlCall, authenticatorProperty, $scope.importProperty.spinner, $scope[$scope.apiUrl.ticketKey[0]]).then(function(data) {
 								 $scope.updateLinkStatus(data, jiraStatus, requirement, category, values, statusColumnsValues);
-//								 if($scope.promise.runningModalPromise !== undefined) {$scope.promise.runningModalPromise.close();}
+//								 if($scope.importProperty.promise.runningModalPromise !== undefined) {$scope.importProperty.promise.runningModalPromise.close();}
 							  }, function(error) {
 								  if(error.status === 403) 
 									  SDLCToolExceptionService.showWarning('Issue call failed', "You do not have the permission to view the ticket "+ jiraLink, SDLCToolExceptionService.DANGER);
@@ -528,7 +533,7 @@ angular.module('sdlctoolApp')
 				  values: collValues
 			  });
 		  });
-		  // fill the system settings with the project Type and its corresponding optsColumn und statsColumn
+		  // fill the system settings with the project Type and its corresponding optionColumns and statusColumns
 		  angular.forEach(system.projectType, function(projectType) {
 			  var optsColumn = [];
 			  var statsColumn = [];
@@ -559,8 +564,10 @@ angular.module('sdlctoolApp')
 	  }
 
 	  $scope.cancel = function() {
-		  $scope.importProperty.showSpinner = false;
-		  authenticatorService.cancelPromises($scope.promise);
+		  $scope.importProperty.spinner.showSpinner = false;
+		  
+		  // cleans the check authenticator promise if this one is running.
+		  authenticatorService.cancelPromises($scope.importProperty.promise);
 		  $uibModalStack.dismissAll("cancel");
 	  }
 	   $scope.close = function() {

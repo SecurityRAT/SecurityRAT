@@ -37,8 +37,8 @@ angular.module('sdlctoolApp')
 	        	}
 				return changedContent;
 	        },
-	        buildUrl: function(list) {
-				apiUrl = {};
+	        buildJiraUrl: function(list) {
+				var apiUrl = {};
 				apiUrl.ticketKey = [];
 				apiUrl.path = [];
 				var hostSet = false;

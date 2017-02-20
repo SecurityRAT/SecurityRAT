@@ -33,8 +33,8 @@ angular.module('sdlctoolApp')
         $scope.loadAll = function() {
         	apiFactory.getAll("requirementSkeletons").then(
         		  	function(result) {
-        		  		$scope.requirementSkeletons = result;
-					$scope.length = $scope.requirementSkeletons.length;
+        		    	$scope.requirementSkeletons = result;
+				    	$scope.length = $scope.requirementSkeletons.length;
         		  	});
             apiFactory.getAll("projectTypes").then(
         		  	function(result) {
@@ -52,7 +52,6 @@ angular.module('sdlctoolApp')
             $scope.dropdowns.coll = {buttonText: 'Collections', open: false, defaultText: 'Collections'};
         };
         $scope.loadAll();
-
 	$scope.loadMore = function() {
            if ($scope.numberToDisplay + 50 < $scope.length) {
                 $scope.numberToDisplay += 50;
