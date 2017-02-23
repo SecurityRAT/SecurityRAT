@@ -380,7 +380,7 @@
 			    		 	<div data-ng-if="stats.isEnum" uib-dropdown>
 			    		 		<button id="fulfilled" class="btn btn-default" uib-dropdown-toggle >{{getStatusValue(reqs.id, stats.id)}}  <span class="caret"></span></button>
 			    		 		<ul class="uib-dropdown-menu" aria-labelledby="statDropdown">
-			    		 			<li data-ng-repeat="value in stats.values | orderBy:'showOrder'"><a href="" data-ng-click="selectStatusValue(reqs.id, stats.id, value)">{{value.name}}</a></li>
+			    		 			<li data-ng-repeat="value in stats.values | orderBy:'showOrder'"><a href="" data-ng-click="selectStatusValue(reqs.id, stats.id, value)"><span data-ng-bind="value.name"></span></a></li>
 			    		 		</ul>
 			    			</div>
 			    		</td>
