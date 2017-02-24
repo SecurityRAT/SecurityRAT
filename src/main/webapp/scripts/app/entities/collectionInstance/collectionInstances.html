@@ -9,7 +9,7 @@
                     <span class="glyphicon glyphicon-flash"></span> <span>Create a new Collection Instance</span>
                 </button>
             </div>
-            <div class="col-md-4">
+            <!--<div class="col-md-4">
                 <form name="searchForm" class="form-inline">
                 	<div class="input-group">
                         <input type="text" class="form-control" data-ng-model="searchQuery" id="searchQuery" placeholder="Search a Collection Instance">
@@ -19,6 +19,18 @@
 	                    </span>
                     </div>
                 </form>
+            </div>-->
+	    <div class="col-md-4">
+                                <form>
+                                        <button type="button" class="btn btn-info pull-left" data-toggle="collapse" data-target="#searchStringID">Search
+                                        <span class="glyphicon glyphicon-search"></span>
+                                        </button>
+                                        <div id="searchStringID" class="collapse">
+                                                <div class="input-group">
+                                                                <input type="text" class="form-control col-md-5" placeholder="Search String" data-ng-model="searchString">
+                                                        </div>
+                                        </div>
+                                        </form>
             </div>
             <div class="col-md-4">
                 <button class="btn btn-primary" ui-sref="collectionInstance.bulk" data-ng-click="bulkChange()" data-ng-if="(collectionInstances| filter:{selected: true}).length != 0">
@@ -84,7 +96,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr class="animate-repeat" data-ng-repeat="collectionInstance in collectionInstances | filterCategoryForEntities: selectedCategory: 'collectionCategory' | orderBy: ['collectionCategory.showOrder','showOrder']">
+                <tr class="animate-repeat" data-ng-repeat="collectionInstance in collectionInstances | filterCategoryForEntities: selectedCategory: 'collectionCategory' | orderBy: ['collectionCategory.showOrder','showOrder'] | filter:searchString">
                     <!--<td><a ui-sref="collectionInstance.detail({id:collectionInstance.id})">{{collectionInstance.id}}</a></td>-->
                     <td>
                         <a ui-sref="collectionCategory.detail({id:collectionInstance.collectionCategory.id})">{{collectionInstance.collectionCategory.name}}</a>

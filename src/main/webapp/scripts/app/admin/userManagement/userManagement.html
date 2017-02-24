@@ -14,7 +14,7 @@
                     <div class="input-group">
                         <input type="text" class="form-control" data-ng-model="searchQuery" id="searchQuery" placeholder="Search for a user">
 	                    <span class="input-group-btn">
-		                    <button class="btn btn-info" data-ng-click="search()" id="searchButton"><span class="glyphicon glyphicon-search"></span>
+		                    <button class="btn btn-info" id="searchButton"><span class="glyphicon glyphicon-search"></span>
 							</button>
 						</span>
 					</div>
@@ -72,37 +72,46 @@
                 </tr>
             </thead>
             <tbody>
-                <tr class="animate-repeat" data-ng-repeat="user in usersWithAuthorities  | orderBy :['firstname', 'lastname']">
+                <tr class="animate-repeat" data-ng-repeat="user in usersWithAuthorities  | orderBy :['firstname', 'lastname'] | filter: searchQuery">
                 	<td class="col-sm-3"><strong>{{user.login}}</strong></td>
                     <td class="col-sm-3">{{user.firstName}}</td>
                     <td class="col-sm-3">{{user.lastName}}</td>
                     <td class="col-sm-3">{{user.email}}</td>
-                    <td class=" col-sm-1 text-center">
+                    <td class="text-center">
+                        <button type="button" class="btn btn-sm" data-ng-click="updateUserActivation(user)" data-ng-class="{'btn-success': user.activated, 'btn-danger': !user.activated}">{{user.activated ? 'Yes' : 'No'}}</button>
+                        <!-- <button data-ng-if="!user.activated" class="btn btn-danger btn-sm">No</button> -->
+                    </td>
+                    <!-- <td class=" col-sm-1 text-center">
                     	<span data-ng-if="user.activated" class="glyphicon glyphicon-ok ng-style:{'color':'green'};"></span>
                     	<span data-ng-if="!user.activated" class="glyphicon glyphicon-remove ng-style:{'color':'red'};"></span>
-                    </td>
+                    </td> -->
                     <td class="text-center" data-ng-repeat="authority in authorities  | orderBy: 'name'">
                     	<span data-ng-if="userSet[user.login][authority.name]" class="glyphicon glyphicon-ok ng-style:{'color':'green'};"></span>
-                    	<span data-ng-if="!userSet[user.login][authority.name]" class="glyphicon glyphicon-remove ng-style:{'color':'red'};"></span>
+                    	<span data-ng-if="!userSet[user.login][authority.name]" class="glyphicon glyphicon-remove ng-style:{'color':'#d43f3a'};"></span>
                     </td>
+                    <!-- <td class="text-center" data-ng-repeat="authority in authorities  | orderBy: 'name'">
+                        <button data-ng-if="userSet[user.login][authority.name]" class="btn btn-success btn-sm">Yes</button>
+                        <button data-ng-if="!userSet[user.login][authority.name]" class="btn btn-danger btn-sm">No</button>
+                    </td> -->
+
                     <td class="col-sm-2">
                         <button type="submit"
                                 ui-sref="userManagement.detail({id:user.id})"
-                                class="btn btn-info btn-md">
+                                class="btn btn-info btn-sm">
                             <span class="glyphicon glyphicon-eye-open"></span>&nbsp;<span> View</span>
                         </button>
                     </td>
                     <td class="col-sm-2">
                         <button type="submit"
                                 ui-sref="userManagement.edit({id:user.id})"
-                                class="btn btn-warning btn-md">
+                                class="btn btn-warning btn-sm">
                             <span class="glyphicon glyphicon-pencil"></span>&nbsp;<span> Edit</span>
                         </button>
                     </td>
                     <td class="col-sm-2">
                         <button type="submit"
                                 data-ng-click="delete(user)"
-                                class="btn btn-danger btn-md">
+                                class="btn btn-danger btn-sm" data-ng-disabled="user.login == activeUser.login">
                             <span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span> Delete</span>
                         </button>
                     </td>

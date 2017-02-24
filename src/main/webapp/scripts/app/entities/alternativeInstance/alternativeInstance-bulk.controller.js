@@ -46,6 +46,7 @@ angular.module('sdlctoolApp')
         };
 
         $scope.save = function () {
+		var count = 1;
     		angular.forEach($scope.alternativeInstances, function(instance) {
     			if($scope.selectedAlternativeSet.value !== null) {
     				angular.forEach($scope.alternativeSets, function(set) {
@@ -61,10 +62,34 @@ angular.module('sdlctoolApp')
     	        		}
     	        	});
     			}
-    			AlternativeInstance.update(instance, onSaveFinished);
+			if (count == $scope.alternativeInstances.length) {
+    				AlternativeInstance.update(instance, onSaveFinished);
+			} else {
+				AlternativeInstance.update(instance);
+			}
+			count++;
     		});
         };
         
+        $scope.delete = function () {
+          $('#deleteAlternativeInstancesConfirmation').appendTo("body").modal('show');
+        };
+
+        $scope.confirmDeleteAll = function (instances) {
+            var count = 1;
+            angular.forEach(instances, function(instance) {            
+		if (count == instances.length) {
+                  AlternativeInstance.delete({id: instance.id}, function(result) {
+                       $('#deleteAlternativeInstancesConfirmation').modal('hide');
+                       onSaveFinished(result);
+                  });
+                } else {
+                  AlternativeInstance.delete({id: instance.id}, function() {});
+                }
+                count++;
+            });
+        };
+
         $scope.clear = function() {
         	$uibModalInstance.dismiss('cancel');
         };

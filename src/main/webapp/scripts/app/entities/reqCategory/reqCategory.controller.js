@@ -1,8 +1,10 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('ReqCategoryController', function ($scope, ReqCategory, ReqCategorySearch, sharedProperties, $filter) {
+    .controller('ReqCategoryController', function ($scope, ReqCategory, ReqCategorySearch, sharedProperties, 
+        $filter, EntityHelper) {
         $scope.reqCategorys = [];
+	$scope.searchString = '';
         $scope.loadAll = function() {
             ReqCategory.query(function(result) {
                $scope.reqCategorys = result;
@@ -29,14 +31,12 @@ angular.module('sdlctoolApp')
                 });
         };
         $scope.selectAllTypes = function() {
-        	angular.forEach($scope.reqCategorys, function(category) {
+        	angular.forEach($filter('filter')($filter('filter')($scope.reqCategorys, $scope.searchString), $scope.searchString), function(category) {
         		category.selected = true;
         	});
 	  	}
         $scope.deselectAllTypes = function() {
-        	angular.forEach($scope.reqCategorys, function(category) {
-        		category.selected = false;
-        	});
+            EntityHelper.deselectElements($filter('filter')($scope.reqCategorys, {selected: true}))
         }
       
         $scope.bulkChange = function() {

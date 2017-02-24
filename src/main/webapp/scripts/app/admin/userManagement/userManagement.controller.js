@@ -1,26 +1,19 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('UserManagementController', function ($scope, UserManagement, Authorities, User, UserManagementSearch) {
+    .controller('UserManagementController', function ($scope, UserManagement, Authorities, User, 
+        UserManagementSearch, Helper, Account) {
         $scope.authorities = [];
         $scope.userSet = {};
         $scope.usersWithAuthorities = [];
-        
-        $scope.searchArrayByValue = function(search, object) {
-        	var bool = false;
-        	angular.forEach(object, function(obj) {
-        		angular.forEach(obj, function(value, key) {
-        			if(value === search){
-        				bool = true;
-        			}
-        		});
-        	});
-        	return bool;
-        }
-        
+        $scope.activeUser = {}
+
+        Account.get(function(response) {
+            $scope.activeUser = response.data;
+        })
         function callback(user) {
         	angular.forEach($scope.authorities, function(authority) {
-    			if($scope.searchArrayByValue(authority.name, user.authorities)) {
+    			if(Helper.searchArrayByValue(authority.name, user.authorities)) {
     				$scope.userSet[user.login][authority.name] = true;
        			} else {
        				$scope.userSet[user.login][authority.name] = false;
@@ -41,18 +34,18 @@ angular.module('sdlctoolApp')
                  });
         	});
         }
-        $scope.search = function () {
-        	UserManagementSearch.query({query: $scope.searchQuery}, function(result) {
-        		console.log(result);
-                $scope.usersWithAuthorities = result;
-            }, function(response) {
-                if(response.status === 404) {
-                    $scope.loadAll(callback);
-                }
-            });
-        };
-        
+                
         $scope.loadAll(callback);
+
+         var onSaveFinished = function (result) {
+            $scope.$emit('sdlctoolApp:UserManagementUpdate', result);
+        };
+
+        $scope.updateUserActivation = function(user) {
+            user.activated = !user.activated;
+            User.update(user, onSaveFinished);
+        }
+
         $scope.delete = function (user) {
         	$scope.user = user;
         	$('#deleteUserConfirmation').appendTo("body").modal('show');
@@ -61,8 +54,8 @@ angular.module('sdlctoolApp')
         $scope.confirmDelete = function (id) {
             User.delete({login: id},
                 function () {
-                    $scope.loadAll(callback);
                     $('#deleteUserConfirmation').modal('hide');
+                    $scope.loadAll(callback);
                     $scope.clear();
                 });
         };

@@ -25,6 +25,11 @@ angular.module('sdlctoolApp')
         			link.rel = 'stylesheet';
         			link.type = 'text/css';
         			link.href = 'bower_components/revealjs/css/theme/' + $stateParams.theme;
+        			var link1 = document.createElement( 'link' );
+        			link1.id = 'pdf';
+        			link1.rel = 'stylesheet';
+        			link1.type = 'text/css';
+        			link1.href = 'bower_components/revealjs/css/print/paper.css';
         			var link2 = document.createElement( 'link' );
         			link2.id = 'reveal';
         			link2.rel = 'stylesheet';
@@ -32,6 +37,7 @@ angular.module('sdlctoolApp')
         			link2.href = 'bower_components/revealjs/css/reveal.css';
         			document.getElementsByTagName( 'head' )[0].appendChild( link2 );
         			document.getElementsByTagName( 'head' )[0].appendChild( link );
+        			document.getElementsByTagName( 'head' )[0].appendChild( link1 );
         			
         			var links = document.getElementsByTagName('link');
         			for(var i = 0; i < links.length; i++) {
@@ -51,8 +57,10 @@ angular.module('sdlctoolApp')
         			document.getElementsByTagName( 'head' )[0].appendChild( maincss );
         			var theme = document.getElementById('theme');
         			var reveal = document.getElementById('reveal');
+        			var pdf = document.getElementById('pdf');
         			document.head.removeChild(theme);
         			document.head.removeChild(reveal);
+        			document.head.removeChild(pdf);
                 },
                 resolve: {
                     

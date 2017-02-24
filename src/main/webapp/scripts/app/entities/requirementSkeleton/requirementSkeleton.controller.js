@@ -2,7 +2,7 @@
 
 angular.module('sdlctoolApp')
     .controller('RequirementSkeletonController', function ($scope, $filter, sharedProperties, RequirementSkeleton, RequirementSkeletonSearch, ReqCategory, TagInstance
-    		, ProjectType, CollectionInstance, TagCategory, CollectionCategory, $document) {
+    		, ProjectType, CollectionInstance, TagCategory, CollectionCategory, $document, EntityHelper) {
         $scope.requirementSkeletons = [];
         $scope.filterCategory = [];
         $scope.tagCategories = [];
@@ -15,6 +15,9 @@ angular.module('sdlctoolApp')
         $scope.selectedTags = [];
         $scope.selectedTypes = [];
         $scope.selectedColls = [];
+	$scope.searchString = '';
+	$scope.length = 1000;
+	$scope.numberToDisplay = 50;
         $scope.categoryLabelText = {buttonDefaultText: 'Category'};
         $scope.selectedCategorySettings = {
   			  smartButtonMaxItems: 2,
@@ -40,6 +43,7 @@ angular.module('sdlctoolApp')
                angular.forEach($scope.requirementSkeletons, function(requirement) {
             	   angular.extend(requirement, {selected: false});
                });
+	       $scope.length = $scope.requirementSkeletons.length;
             });
             ReqCategory.query(function(result) {
             	$scope.filterCategory = result;
@@ -69,6 +73,14 @@ angular.module('sdlctoolApp')
             $scope.dropdowns.coll = {buttonText: 'Collections', open: false, defaultText: 'Collections'};
         };
         $scope.loadAll();
+        
+	$scope.loadMore = function() {
+	   if ($scope.numberToDisplay + 50 < $scope.length) {
+           	$scope.numberToDisplay += 50;
+	   } else {
+		$scope.numberToDisplay = $scope.length;
+	   }
+       };
         
         $scope.toggleDropdown = function(selector, $event) {
         	var dropdowns = ['tag', 'coll'];
@@ -144,19 +156,6 @@ angular.module('sdlctoolApp')
         		return true;
         	}
         }
-        $scope.searchArrayByValue = function(search, object) {
-        	var bool = false;
-        	angular.forEach(object, function(obj) {
-        		angular.forEach(obj, function(value, key) {
-        			if(key === 'id') {
-	        			if(value === search){
-	        				bool = true;
-	        			}
-        			}
-        		});
-        	});
-        	return bool;
-        }
         
         $scope.selectAllReqs = function() {
         	var requirements = $filter('filterCategoryForEntities')($scope.requirementSkeletons, $scope.selectedCategory, 'reqCategory');
@@ -164,16 +163,14 @@ angular.module('sdlctoolApp')
         	requirements = $filter('filterByCollsForReqSkeletons')(requirements, $scope.selectedColls);
         	requirements = $filter('filterByTypesForReqSkeletons')(requirements, $scope.selectedTypes);
         	requirements = $filter('orderBy')(requirements, ['reqCategory.showOrder','showOrder']);
-        	
+        	requirements = $filter('filter')(requirements, $scope.searchString)
   		  angular.forEach(requirements, function(requirement) {
   			  requirement.selected = true;
   		  });
 	  	}
 	  	
 	  	$scope.deselectAllReqs = function() {
-	  		  angular.forEach($scope.requirementSkeletons, function(requirement) {
-	  			  requirement.selected = false;
-	  		  });
+            EntityHelper.deselectElements($filter('filter')($scope.requirementSkeletons, {selected: true}))
 	  	}
 	  	
 	  	$scope.bulkChange = function() {

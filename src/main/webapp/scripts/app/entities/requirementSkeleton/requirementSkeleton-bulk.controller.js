@@ -154,16 +154,6 @@ angular.module('sdlctoolApp')
         	$scope[selector][propertyId].isKnown = false;
         }
         
-        $scope.searchArrayByValue = function(array, value) {
-  		  var bool = false;
-  		  angular.forEach(array, function(obj) {
-			    if(value === obj){
-			      bool = true;
-			    }
-  		  });
-  		  return bool;
-  	  	}
-        
         $scope.toggleShowHide = function() {
         	$scope.show = !$scope.show;
         	if($scope.show) {
@@ -181,6 +171,7 @@ angular.module('sdlctoolApp')
         };
 
         $scope.save = function () {
+                var count = 1;
         	angular.forEach($scope.requirements, function(requirement) {
     			angular.forEach($scope.tagInstances, function(tag) {
     				var hasInstance = false;
@@ -243,8 +234,32 @@ angular.module('sdlctoolApp')
     			}
         		if(angular.isDefined($scope.state.active))
         			requirement.active = $scope.state.active;
-        		RequirementSkeleton.update(requirement, onSaveFinished);
+        		if (count == $scope.requirements.length) {
+                            RequirementSkeleton.update(requirement, onSaveFinished);
+                        } else {
+                            RequirementSkeleton.update(requirement);
+                        }
+                        count++;
         	});
+        };
+
+         $scope.delete = function () {
+          $('#deleteRequirementSkeletonsConfirmation').appendTo("body").modal('show');
+        };
+
+        $scope.confirmDeleteAll = function (requirements) {
+            var count = 1;
+            angular.forEach(requirements, function(req) {
+                if (count == requirements.length) {
+                  RequirementSkeleton.delete({id: req.id}, function(result) {
+                       $('#deleteRequirementSkeletonsConfirmation').modal('hide');
+                       onSaveFinished(result);
+                  });
+                } else {
+                  RequirementSkeleton.delete({id: req.id}, function() {});
+                }
+                count++;
+            });
         };
         
         $scope.clear = function() {

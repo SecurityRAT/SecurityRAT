@@ -9,7 +9,7 @@
                     <span class="glyphicon glyphicon-flash"></span> <span>Create a new Alternative Instance</span>
                 </button>
             </div>
-            <div class="col-md-5">
+            <!--<div class="col-md-5">
                 <form name="searchForm" class="form-inline">
                     <div class="input-group">
                         <input type="text" class="form-control" data-ng-model="searchQuery" id="searchQuery" placeholder="Search an Alternative Instance">
@@ -19,6 +19,18 @@
                     	</span>   
                     </div>
                 </form>
+            </div>-->
+	    <div class="col-md-5">
+                                <form>
+                                        <button type="button" class="btn btn-info pull-left" data-toggle="collapse" data-target="#searchStringID">Search
+                                        <span class="glyphicon glyphicon-search"></span>
+                                        </button>
+                                        <div id="searchStringID" class="collapse">
+                                                <div class="input-group">
+                                                                <input type="text" class="form-control col-md-5" placeholder="Search String" data-ng-model="searchString">
+                                                        </div>
+                                        </div>
+                                        </form>
             </div>
             <div class="col-md-3">
                 <button class="btn btn-primary" ui-sref="alternativeInstance.bulk" data-ng-click="bulkChange()" data-ng-if="(alternativeInstances | filter:{selected: true}).length != 0">
@@ -83,7 +95,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr class="animate-repeat" data-ng-repeat="alternativeInstance in alternativeInstances | filterCategoryForEntities: selectedAlternativeSets : 'alternativeSet'| orderBy: ['alternativeSet.showOrder', 'requirementSkeleton.reqCategory.showOrder', 'requirementSkeleton.showOrder']">
+                <tr class="animate-repeat" data-ng-repeat="alternativeInstance in alternativeInstances | filterCategoryForEntities: selectedAlternativeSets : 'alternativeSet'| filter:searchString | orderBy: ['alternativeSet.showOrder', 'requirementSkeleton.reqCategory.showOrder', 'requirementSkeleton.showOrder']">
                     <!--<td><a ui-sref="alternativeInstance.detail({id:alternativeInstance.id})">{{alternativeInstance.id}}</a></td>-->
                     <td>
                         <a ui-sref="alternativeSet.detail({id:alternativeInstance.alternativeSet.id})">{{alternativeInstance.alternativeSet.name}}</a>

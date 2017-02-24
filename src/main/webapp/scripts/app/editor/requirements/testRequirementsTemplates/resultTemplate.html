@@ -1,0 +1,41 @@
+<div class="modal-body">
+  <p>Alternatively is the result available at <a href="{{testResults.self}}" target="_blank">{{testResults.self}}</a> for a week as from now.</p>
+  <div class="table-responsive">
+    <table class='table table-hover'>
+      <thead>
+        <tr>
+          <th>Short Name</th>
+          <th>Description</th>
+          <th>Tested</th>
+          <th>Result</th>
+          <th>Confidentiality</th>
+          <th>Message</th>
+          <th>Tool</th>
+        </tr>
+      </thead>
+      <tbody data-ng-repeat="test in testResults.reqs | orderBy : 'showOrder'">
+        <tr data-ng-repeat="result in test.results">
+          <td rowspan="{{test.results.length}}" data-ng-if="$first"><strong>{{test.shortName}}</strong></td>
+          <td rowspan="{{test.results.length}}" data-ng-if="$first">{{test.description}}</td>
+            <td>{{result.resolution}}</td>
+            <td>
+              <button class="btn btn-circle" data-ng-class="{'btn-success':result.result == 'PASSED', 'btn-danger': result.result == 'FAILED'}"
+                uib-tooltib="result.result" tooltip-placement="top" tooltip-trigger="mouseenter" data-ng-if="result.result != ''">
+                <span class="glyphicon"
+                  data-ng-class="{'glyphicon-ok':result.result == 'PASSED', 'glyphicon-remove': result.result == 'FAILED'}"></span>
+              </button>
+              <span data-ng-if="result.result == ''"> N/A</span>
+            </td>
+            <td>
+              <uib-progressbar class="progress-striped" value="result.confidentiality" type="{{getProgressbarType(result.confidentiality)}}">
+                <span style="color:white; white-space:nowrap;" data-ng-if="result.confidentiality >= 0">{{result.confidentiality}}%</span>
+                <span style="color:black; white-space:nowrap;" data-ng-if="result.confidentiality < 0">{{result.confidentiality}}%</span>
+              </uib-progressbar>
+            </td>
+            <td>{{result.message}}</td>
+            <td>{{result.tool}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

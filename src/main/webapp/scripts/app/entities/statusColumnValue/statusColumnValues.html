@@ -9,7 +9,7 @@
                     <span class="glyphicon glyphicon-flash"></span> <span>Create a new Status Column Value</span>
                 </button>
             </div>
-            <div class="col-md-5">
+            <!--<div class="col-md-5">
                 <form name="searchForm" class="form-inline">
                 	<div class="input-group">
                         <input type="text" class="form-control" data-ng-model="searchQuery" id="searchQuery" placeholder="Search a Status column value">
@@ -19,6 +19,18 @@
 	                    </span>
                     </div>
                 </form>
+            </div>-->
+	    <div class="col-md-5">
+                                <form>
+                                        <button type="button" class="btn btn-info pull-left" data-toggle="collapse" data-target="#searchStringID">Search
+                                        <span class="glyphicon glyphicon-search"></span>
+                                        </button>
+                                        <div id="searchStringID" class="collapse">
+                                                <div class="input-group">
+                                                                <input type="text" class="form-control col-md-5" placeholder="Search String" data-ng-model="searchString">
+                                                        </div>
+                                        </div>
+                                        </form>
             </div>
             <div class="col-md-3">
                 <button class="btn btn-primary" ui-sref="statusColumnValue.bulk" data-ng-click="bulkChange()" data-ng-if="(statusColumnValues | filter:{selected: true}).length != 0">
@@ -84,7 +96,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr class="animate-repeat" data-ng-repeat="statusColumnValue in statusColumnValues | filterCategoryForEntities: selectedColumns: 'statusColumn'| orderBy: ['statusColumn.showOrder','showOrder']">
+                <tr class="animate-repeat" data-ng-repeat="statusColumnValue in statusColumnValues | filterCategoryForEntities: selectedColumns: 'statusColumn'| filter:searchString | orderBy: ['statusColumn.showOrder','showOrder']">
                     <!--<td><a ui-sref="statusColumnValue.detail({id:statusColumnValue.id})">{{statusColumnValue.id}}</a></td>-->
                     <td>
                         <a ui-sref="statusColumn.detail({id:statusColumnValue.statusColumn.id})">{{statusColumnValue.statusColumn.name}}</a>

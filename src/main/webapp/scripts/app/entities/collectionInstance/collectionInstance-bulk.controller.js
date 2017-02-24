@@ -53,6 +53,7 @@ angular.module('sdlctoolApp')
         }
         
         $scope.save = function () {
+                var count = 1;
     		angular.forEach($scope.collectionInstance, function(instance) {
     			if(angular.isDefined($scope.state.active))
     				instance.active = $scope.state.active;
@@ -63,8 +64,32 @@ angular.module('sdlctoolApp')
     	        		}
     	        	});
     			}
-    			CollectionInstance.update(instance, onSaveFinished);
+                        if (count == $scope.collectionInstance.length) {
+    			       CollectionInstance.update(instance, onSaveFinished);
+                        } else {
+                               CollectionInstance.update(instance);
+                        }
+                        count++;
     		});
+        };
+
+        $scope.delete = function () {
+          $('#deleteCollectionInstancesConfirmation').appendTo("body").modal('show');
+        };
+
+        $scope.confirmDeleteAll = function (collInstances) {
+            var count = 1;
+            angular.forEach(collInstances, function(instance) {
+                if (count == collInstances.length) {
+                  CollectionInstance.delete({id: instance.id}, function(result) {
+                       $('#deleteCollectionInstancesConfirmation').modal('hide');
+                       onSaveFinished(result);
+                  });
+                } else {
+                  CollectionInstance.delete({id: instance.id}, function() {});
+                }
+                count++;
+            });
         };
         
         $scope.clear = function() {

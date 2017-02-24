@@ -104,6 +104,7 @@ angular.module('sdlctoolApp')
         }
         
         $scope.save = function () {
+		var count = 1;
     		angular.forEach($scope.projectTypes, function(type) {
     			if(angular.isDefined($scope.state.active))
     				type.active = $scope.state.active;
@@ -141,10 +142,34 @@ angular.module('sdlctoolApp')
 						}
 					}
 				});
-    			ProjectType.update(type, onSaveFinished);
+			if (count == $scope.projectTypes.length) {
+    				ProjectType.update(type, onSaveFinished);
+			} else {
+				ProjectType.update(type);
+			}
+			count++;
     		});
         };
-        
+       
+        $scope.delete = function () {
+          $('#deleteProjectTypesConfirmation').appendTo("body").modal('show');
+        };
+
+        $scope.confirmDeleteAll = function (types) {
+            var count = 1;
+            angular.forEach(types, function(type) {
+                if (count == types.length) {
+                  ProjectType.delete({id: type.id}, function(result) {
+                       $('#deleteProjectTypesConfirmation').modal('hide');
+                       onSaveFinished(result);
+                  });
+                } else {
+                  ProjectType.delete({id: type.id}, function() {});
+                }
+                count++;
+            });
+        };   
+ 
         $scope.clear = function() {
         	$uibModalInstance.dismiss('cancel');
         };

@@ -13,6 +13,8 @@ angular.module('sdlctoolApp')
         $scope.selectedTags = [];
         $scope.selectedTypes = [];
         $scope.selectedColls = [];
+	$scope.numberToDisplay = 10;
+	$scope.length = 1000;
         $scope.selectedCategorySettings = {
     			  smartButtonMaxItems: 2,
     			  showCheckAll: false, showUncheckAll: false,
@@ -31,7 +33,8 @@ angular.module('sdlctoolApp')
         $scope.loadAll = function() {
         	apiFactory.getAll("requirementSkeletons").then(
         		  	function(result) {
-        		  		$scope.requirementSkeletons = result;
+        		    	$scope.requirementSkeletons = result;
+				    	$scope.length = $scope.requirementSkeletons.length;
         		  	});
             apiFactory.getAll("projectTypes").then(
         		  	function(result) {
@@ -49,6 +52,13 @@ angular.module('sdlctoolApp')
             $scope.dropdowns.coll = {buttonText: 'Collections', open: false, defaultText: 'Collections'};
         };
         $scope.loadAll();
+	$scope.loadMore = function() {
+           if ($scope.numberToDisplay + 50 < $scope.length) {
+                $scope.numberToDisplay += 50;
+           } else {
+                $scope.numberToDisplay = $scope.length;
+           }
+       };
         
         $scope.openFeedback = function(requirement) {
   		  //console.log(requirement);
@@ -136,19 +146,6 @@ angular.module('sdlctoolApp')
         	}else {
         		return true;
         	}
-        }
-        $scope.searchArrayByValue = function(search, object) {
-        	var bool = false;
-        	angular.forEach(object, function(obj) {
-        		angular.forEach(obj, function(value, key) {
-        			if(key === 'id') {
-	        			if(value === search){
-	        				bool = true;
-	        			}
-        			}
-        		});
-        	});
-        	return bool;
         }
 
         $scope.refresh = function () {

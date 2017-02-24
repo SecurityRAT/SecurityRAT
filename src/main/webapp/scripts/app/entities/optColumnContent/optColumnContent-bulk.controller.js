@@ -46,6 +46,7 @@ angular.module('sdlctoolApp')
         };
 
         $scope.save = function () {
+                var count = 1;
     		angular.forEach($scope.optColumnContents, function(content) {
     			if($scope.selectedOptColumn.value !== null) {
     				angular.forEach($scope.optColumns, function(opt) {
@@ -61,9 +62,34 @@ angular.module('sdlctoolApp')
     	        		}
     	        	});
     			}
-    			OptColumnContent.update(content, onSaveFinished);
+ 			if (count == $scope.optColumnContents.length) {
+    				OptColumnContent.update(content, onSaveFinished);
+ 			} else {
+				OptColumnContent.update(content);
+			}
+			count++;
     		});
         };
+
+        $scope.delete = function () {
+          $('#deleteOptColumnContentsConfirmation').appendTo("body").modal('show');
+        };
+
+        $scope.confirmDeleteAll = function (optColumnContents) {
+            var count = 1;
+            angular.forEach(optColumnContents, function(columnContent) {
+                if (count == optColumnContents.length) {
+                  OptColumnContent.delete({id: columnContent.id}, function(result) {
+                       $('#deleteOptColumnContentsConfirmation').modal('hide');
+                       onSaveFinished(result);
+                  });
+                } else {
+                  OptColumnContent.delete({id: columnContent.id}, function() {});
+                }
+                count++;
+            });
+        };
+
         
         $scope.clear = function() {
         	$uibModalInstance.dismiss('cancel');

@@ -90,7 +90,7 @@ Browser Upgrade Prompt
     padding: 0.2em 0;
 }
 /* ==========================================================================
-Shadows 
+Shadows
 ========================================================================== */
 #mainContent:before {
 	content:" ";
@@ -162,7 +162,7 @@ styles to jira labels input field
     border-color: #cccccc;
     border-radius: 3px;
     color: #3b73af;
-   
+
 }
 .value-text {
     max-width: 100%;
@@ -200,7 +200,7 @@ styles to jira labels input field
 
 }
 .item-delete::after {
-    top: 3px;
+    top: 1px;
     left: 3px;
     content: "×";
     display: inline;
@@ -374,7 +374,7 @@ background:#f5f5f5;
 }
 
 .vertical {
-  border-right: solid 1px #D1D0CE; 
+  border-right: solid 1px #D1D0CE;
   border-left: solid 1px #D1D0CE;
 }
 
@@ -463,8 +463,8 @@ background:#f5f5f5;
 }
 
 @-webkit-keyframes fadeIn {
-	0% { 
-		opacity:0; 
+	0% {
+		opacity:0;
 		transform: scale(0.6);
 	}
 
@@ -631,7 +631,7 @@ Animation for export to excel
     animation: myTransparent 0.2s;
 }
 .animate-show, .animate-hide {
-	
+
 }
 .animate-show.ng-hide-remove {
 	position:relative;
@@ -661,7 +661,7 @@ Animation for export to excel
     -webkit-animation-timing-function: linear;
 	animation-timing-function: linear;
 }
-/* ==========================================================================
+/* =======================================================================
 Animation
 ========================================================================== */
 .animate-repeat {
@@ -688,5 +688,42 @@ Animation
   opacity:1;
   max-height:30px;
 }
-
-
+/* =======================================================================
+Template animation
+========================================================================== */
+.slide-animate.ng-enter {
+	transition: all linear 0.5s;
+	position:absolute;
+  top:0;
+ 	left:0;
+  right:-900px;
+  bottom:0;
+  display:block;
+}
+.slide-animate.ng-enter.ng-enter.active {
+	right:0;
+}
+.slide-animate.ng-leave {
+	transition: all linear 0.5;
+	position:absolute;
+  top:0;
+ 	left:0;
+  right:0;
+  bottom:0;
+  display:block;
+}
+.slide-animate.ng-leave.ng-leave-active {
+	right: 900px;
+}
+/* =======================================================================
+    Test results template
+========================================================================== */
+.btn-circle {
+  border-radius: 60px;
+}
+.glyphicon-exclamation {
+  background-image: url("../images/glyphicons-exclamation-sign.png");
+  background-color: #f0ad4e;
+  background-position: center center;
+  background-repeat: no-repeat;
+}

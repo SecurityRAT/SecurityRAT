@@ -36,14 +36,18 @@ angular.module('sdlctoolApp')
         };
 
         $scope.save = function () {
-        	var count = 0;
+        	var count = 1;
     		angular.forEach($scope.collectionCategorys, function(category) {
-    			count++;
-        		category.active = $scope.state.active;
-        		CollectionCategory.update(category);
+                    if(count === $scope.collectionCategorys.length) {
+                        category.active = $scope.state.active;
+                        CollectionCategory.update(category);
+                        onSaveFinished('done');
+    		    } else {
+                        category.active = $scope.state.active;
+                        CollectionCategory.update(category);
+                    }	
+                   count++;
         	});
-    		if(count === $scope.collectionCategorys.length)
-    			onSaveFinished('done');
         };
         $scope.toggleShowHide = function() {
         	$scope.show = !$scope.show;
@@ -55,6 +59,25 @@ angular.module('sdlctoolApp')
         		$scope.glyphicon = "glyphicon glyphicon-minus";
         	}
         }
+
+        $scope.delete = function () {
+          $('#deleteCollectionCategoriesConfirmation').appendTo("body").modal('show');
+        };
+
+        $scope.confirmDeleteAll = function (collCategories) {
+            var count = 1;
+            angular.forEach(collCategories, function(collCat) {
+                if (count == collCategories.length) {
+                  CollectionCategory.delete({id: collCat.id}, function(result) {
+                       $('#deleteCollectionCategoriesConfirmation').modal('hide');
+                       onSaveFinished(result);
+                  });
+                } else {
+                  CollectionCategory.delete({id: collCat.id}, function() {});
+                }
+                count++;
+            });
+        };
         
         $scope.clear = function() {
         	$uibModalInstance.dismiss('cancel');

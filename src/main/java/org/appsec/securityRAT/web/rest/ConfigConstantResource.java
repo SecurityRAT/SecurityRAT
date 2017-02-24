@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
@@ -45,21 +46,21 @@ public class ConfigConstantResource {
     /**
      * POST  /configConstants -> Create a new constant.
      */
-//    @RequestMapping(value = "/configConstants",
-//            method = RequestMethod.POST,
-//            produces = MediaType.APPLICATION_JSON_VALUE)
-//    @Timed
-//    public ResponseEntity<ConfigConstant> create(@RequestBody ConfigConstant configConstant) throws URISyntaxException {
-//        log.debug("REST request to save configConstant : {}", configConstant);
-//        if (configConstant.getId() != null) {
-//            return ResponseEntity.badRequest().header("Failure", "A new constant cannot already have an ID").body(null);
-//        }
-//        ConfigConstant result = configConstantRepository.save(configConstant);
-//        configConstantSearchRepository.save(result);
-//        return ResponseEntity.created(new URI("/api/configConstants/" + result.getId()))
-//                .headers(HeaderUtil.createEntityCreationAlert("configConstant", result.getId().toString()))
-//                .body(result);
-//    }
+    @RequestMapping(value = "/configConstants",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<ConfigConstant> create(@RequestBody ConfigConstant configConstant) throws URISyntaxException {
+        log.debug("REST request to save configConstant : {}", configConstant);
+        if (configConstant.getId() != null) {
+            return ResponseEntity.badRequest().header("Failure", "A new constant cannot already have an ID").body(null);
+        }
+        ConfigConstant result = configConstantRepository.save(configConstant);
+        configConstantSearchRepository.save(result);
+        return ResponseEntity.created(new URI("/api/configConstants/" + result.getId()))
+                .headers(HeaderUtil.createEntityCreationAlert("configConstant", result.getId().toString()))
+                .body(result);
+    }
 
     /**
      * PUT  /configConstants -> Updates an existing constant.
@@ -114,19 +115,19 @@ public class ConfigConstantResource {
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-//    /**
-//     * DELETE  /configConstants/:id -> delete the "id" constant.
-//     */
-//    @RequestMapping(value = "/configConstants/{id}",
-//            method = RequestMethod.DELETE,
-//            produces = MediaType.APPLICATION_JSON_VALUE)
-//    @Timed
-//    public ResponseEntity<Void> delete(@PathVariable Long id) {
-//        log.debug("REST request to delete constant : {}", id);
-//        configConstantRepository.delete(id);
-//        configConstantSearchRepository.delete(id);
-//        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("configConstant", id.toString())).build();
-//    }
+    /**
+     * DELETE  /configConstants/:id -> delete the "id" constant.
+     */
+    @RequestMapping(value = "/configConstants/{id}",
+            method = RequestMethod.DELETE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        log.debug("REST request to delete constant : {}", id);
+        configConstantRepository.delete(id);
+        configConstantSearchRepository.delete(id);
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("configConstant", id.toString())).build();
+    }
 
     /**
      * SEARCH  /_search/configConstants/:query -> search for the constant corresponding

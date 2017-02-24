@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('sdlctoolApp', ['LocalStorageModule', 
+angular.module('sdlctoolApp', ['LocalStorageModule',
                'ui.bootstrap', // for modal dialogs
     'ngResource', 'ui.router', 'ngCookies', 'ngCacheBuster', 'ngFileUpload', 'infinite-scroll',
     'ngAnimate', // editor stuff from here on...
@@ -27,7 +27,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
         	$rootScope.REGISTRATIONTYPE = result.data.registration;
         	if(result.data.type === "CAS") $rootScope.CASLOGOUTURL = result.data.casLogout;
         });
-        
+
         $rootScope.back = function() {
         	var notValidState = ["activate", "logout", "finishReset", "requestReset"]
             // If previous state is 'activate' or do not exist go to 'editor'
@@ -37,18 +37,18 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
             		$state.go($rootScope.previousStateName, $rootScope.previousStateParams);
             }
         };
-        
+
         $rootScope.$on('$stateChangeStart', function (event, toState, toStateParams) {
             $rootScope.toState = toState;
             $rootScope.toStateParams = toStateParams;
-            var a = document.getElementById('redirect'); 
+            var a = document.getElementById('redirect');
             if(a != null) {
             	document.body.removeChild(a);
             }
             if (Principal.isIdentityResolved()) {
                 Auth.authorize();
             }
-            
+
         });
 
         $rootScope.$on('$stateChangeSuccess',  function(event, toState, toParams, fromState, fromParams) {
@@ -62,7 +62,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
             $window.document.title = titleKey;
         });
     })
-    
+
     .config(function ($stateProvider, $urlRouterProvider, $httpProvider,$locationProvider,  httpRequestInterceptorCacheBusterProvider,
     		$provide, markedProvider, localStorageServiceProvider, appConfig) {
     	function getConstants (){
@@ -76,36 +76,19 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
         					constants = JSON.parse(this.responseText);
         					angular.forEach(constants, function(constant) {
         						switch(constant.name) {
-        						case "customRequirementName": 
+        						case "customRequirementName":
         							appConfig.customRequirement = constant.value;
         							break;
-        						case "filenamePrefix":
-        							appConfig.filenamePrefix = constant.value;
-        							break;
-        						case "ticketDescription": 
-        							appConfig.ticketDescription = constant.value;
-        							break;
-        						case "reportJIRAQueue": 
-        							appConfig.reportJIRAQueue = constant.value;
-        							break;
-        						case "reportJIRAHost": 
-        							appConfig.reportJIRAHost = constant.value;
-        							break;
-        						case "reportJIRAIssueType": 
-        							appConfig.reportJIRAIssueType = constant.value;
-        							break;
-        						case "summaryForSuggestion": 
-        							appConfig.summaryForSuggestion = constant.value;
-        							break;
-        						case "ticketComment": 
-        							appConfig.ticketComment = constant.value;
+        						default:
+        							appConfig[constant.name] = constant.value;
         							break;
         						}
         					})
         				}
-        				else{
-//        					constants = this.statusText;
-        				}
+//        				else (this.status >= 400){
+////        					constants = this.statusText;
+//        					
+//        				}
         			}
         		}
         		ajax.send(null);
@@ -118,7 +101,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
         //enable CSRF
         $httpProvider.defaults.xsrfCookieName = 'CSRF-TOKEN';
         $httpProvider.defaults.xsrfHeaderName = 'X-CSRF-TOKEN';
-        
+
         //Cache everything except rest api requests
         httpRequestInterceptorCacheBusterProvider.setMatchlist([/.*api.*/, /.*protected.*/], true);
 
@@ -143,7 +126,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
         $httpProvider.interceptors.push('errorHandlerInterceptor');
         $httpProvider.interceptors.push('authExpiredInterceptor');
         $httpProvider.interceptors.push('notificationInterceptor');
-        
+
         $provide.decorator('$state', function($delegate, $stateParams) {
             $delegate.forceReload = function() {
                 return $delegate.go($delegate.current, $stateParams, {
@@ -154,7 +137,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
             };
             return $delegate;
         });
-        
+
         markedProvider.setOptions({
             gfm: true,
             highlight: function (code, lang) {
@@ -171,12 +154,20 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
             }
           });
     })
-    
+
         //factory purely for communication with the Rest API
         .factory('apiFactory', function($http, $q, SDLCToolExceptionService, $timeout, appConfig) {
 
         	var apiFactory = {};
        		var api_prefix="/frontend-api/";
+          var responseHeadersNeeded = false;
+
+          apiFactory.testRequirementApi = function(method, restcall, data, headerConfig, headersNeeded) {
+            var uri = appConfig.securityCAT.endsWith('/') ? appConfig.securityCAT.substr(0, appConfig.securityCAT.length - 1) : appConfig.securityCAT
+
+            responseHeadersNeeded = headersNeeded;
+            return this.execute(method, uri + restcall, data, headerConfig);
+          }
        		apiFactory.getJIRAInfo = function(url) {
        			return this.execute('GET', url);
        		}
@@ -189,7 +180,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
         	apiFactory.getAll = function(api) {
         		return this.execute('GET', api_prefix+api);
         	}
-     	
+
         	apiFactory.getDetails = function(api, id1, id2) {
         		return this.execute('GET', api_prefix+api+"/"+id1+"/"+id2);
         	}
@@ -201,7 +192,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
         	apiFactory.getByQuery = function(api, query, requestParam) {
         		return this.execute('GET', api_prefix+api+"/"+query+"?"+requestParam);
         	}
-        	
+
         	apiFactory.execute = function (method, path, data, headerConfig) {
                 return $http({
                     'method': method,
@@ -213,21 +204,28 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                     .then(
                     // 200 OK
                     function (response) {
+                        if(responseHeadersNeeded){
+                          return response;
+                        }
                         return response.data;
                     },
                     // Error
                     function (response) {
-                    	
+
                         if (400 === parseInt(response.status, 10)) {
                         	response.errorException =  SDLCToolExceptionService.showWarning('Bad Request', 'The request could not be understood by the server due to malformed syntax.', SDLCToolExceptionService.DANGER);
                             return $q.reject(response);
                         }
-                        
+
                         if (401 === parseInt(response.status, 10)) {
 //                        	SDLCToolExceptionService.showPersistentWarning('Unauthorized', 'Login session has expired. Please reload the page in order to login again.', SDLCToolExceptionService.DANGER);
-        					self.blockRequests = true;
-        					return $q.reject(response);
-        				}
+                          self.blockRequests = true;
+                          return $q.reject(response);
+              				}
+                      if (-1 === response.status) {
+                        self.blockRequests = true;
+                        return $q.reject(response);
+                      }
 
                         if (403 === parseInt(response.status, 10)) {
 //                        	$location.url("/noaccess");
@@ -235,13 +233,13 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                             self.blockRequests = true;
                             return $q.reject(response);
                         }
-                        
+
                         if (404 === parseInt(response.status, 10)) {
                         	response.errorException = SDLCToolExceptionService.showWarning('404 Not Found', 'The ressource you have entered was not found on the server. Please change the ressource to a valid one.', SDLCToolExceptionService.DANGER);
-                        	
+
                             return $q.reject(response);
                         }
-                        
+
                         if (408 === parseInt(response.status, 10)) {
                         	response.errorException = SDLCToolExceptionService.showWarning('Connection Timed Out', 'Server timed out waiting for the request. Please repeat the request without modifications at any later time.', SDLCToolExceptionService.DANGER);
                              return $q.reject(response);
@@ -277,7 +275,10 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
             reportJIRAQueue: reportJIRAQueue,
             reportJIRAHost: reportJIRAHost,
             summaryForSuggestion: summaryForSuggestion,
-            reportJIRAIssueType : reportJIRAIssueType
+            reportJIRAIssueType : reportJIRAIssueType,
+            securityCAT : securityCAT,
+            securityCATStartTest : securityCATStartTest,
+            securityCATStopTest : securityCATStopTest
         })
 
         .service('sharedProperties', function () {
@@ -300,9 +301,9 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
         		},
         		setProperty: function(importObject) {
                 	var dereferred = $q.defer();
-                	
+
         			requirements = importObject;
-        			
+
         			dereferred.resolve("Requirements imported.");
         			return dereferred.promise;
         		}
@@ -332,7 +333,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
 	        		}
 					return returnValue.promise;
 	        	},
-	        	
+
         	//cancel the interval promise want the time is up.
         		startCountdown : function(promise, property, jira) {
         			if(jira.url !== "") {
@@ -358,47 +359,22 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
         				$interval.cancel(promise.interval);
         			if(promise.runningModalPromise !== undefined) {promise.runningModalPromise.close();}
         		},
-        		checkAuthentication : function(apiCall, jira, property, promise) {  
-        			var self = this;
-        			function myFunction() {
-        				if(angular.isUndefined(promise.interval) || (promise.interval.$$state.status != 0)) {
-    						self.runAuthenticator(jira).then(function(data) {
-    							//run the init method every 10 sec.   
-    							  promise.interval = $interval(function() {
-    								  self.checkAuthentication(apiCall, jira, property, promise);
-    							  },10000);
-    							  promise.timeout = self.startCountdown(promise, property, jira);
-    							  if(data === "start") {
-    								  property.showSpinner = true;
-	    							  if(angular.isDefined(promise.runningModalPromise))
-	    								  promise.runningModalPromise = promise.runningModalPromise();
-    							  }
-    						});
-    					}
-        			}
-	    			apiFactory.getJIRAInfo(apiCall).then(function(response) {
-	    				if(response.length === 0){
-	    					myFunction();
-	    				} else {
-	    					property.showSpinner = false;
-	    					promise.derefer.resolve(response);
-	    					self.cancelPromises(promise);
-	    				}
-	    			}, function(exception){
-	    				if(exception.status === 401 || exception.status === 403) {
-		    				if(angular.isDefined(exception.errorException) && exception.errorException.opened.$$state.status === 0) {
-								exception.errorException.opened.$$state.value = false;
-								exception.errorException.opened.$$state.status = 1;
-		                	}
-		    				if(apiCall.indexOf(jiraRestApi) === -1)
-		    					myFunction();
-	    				}else {
-	    					property.showSpinner = false;
-	    					promise.derefer.reject(exception);
-	    					self.cancelPromises(promise);
-	    				}
-	    			});
-	    			return promise.derefer.promise;
+	    		startCheckAuthenticationProcess: function(apiCall, displayProperty, spinnerProperty, promise, recallFunction) {
+		            var self = this
+		            if(angular.isUndefined(promise.interval) || (promise.interval.$$state.status != 0)) {
+			            self.runAuthenticator(displayProperty).then(function(data) {
+			              //run the init method every 10 sec.
+			                promise.interval = $interval(function() {
+			                  recallFunction(apiCall, displayProperty, spinnerProperty, promise);
+			                },10000);
+			                promise.timeout = self.startCountdown(promise, spinnerProperty, displayProperty);
+			                if(data === "start") {
+			                  spinnerProperty.showSpinner = true;
+			                  if(angular.isDefined(promise.runningModalPromise))
+			                    promise.runningModalPromise = promise.runningModalPromise();
+			                }
+			            });
+		            }
 	    		}
         	}
         })
@@ -461,7 +437,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
 					}
 				}
         })
-        
+
         .filter('filterByTags', function() {
         		return function(array, requirements) {
         			if (requirements.length === 0) {
@@ -475,14 +451,14 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
         					return requirements;
         				}
         			}
-        			
+
         		}
         })
-        
+
         .filter('filterByCategories', function() {
     		return function(array, categories) {
     			if (categories.length === 0) {
-    				
+
     				return array;
     			} else {
     				var newView = [];
@@ -500,7 +476,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
         .filter('filterByCategoriesForReqSkeletons', function() {
     		return function(array, categories) {
     			if (categories.length === 0) {
-    				
+
     				return array;
     			} else {
     				var newView = [];
@@ -518,7 +494,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
         .filter('filterByTagForReqSkeletons', function() {
     		return function(array, tagInstances) {
     			if (tagInstances.length === 0) {
-    				
+
     				return array;
     			} else {
     				var newView = [];
@@ -535,11 +511,11 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
     				return newView;
     			}
     		}
-        })  
+        })
         .filter('filterByCollsForReqSkeletons', function() {
     		return function(array, collsInstances) {
     			if (collsInstances.length === 0) {
-    				
+
     				return array;
     			} else {
     				var newView = [];
@@ -560,7 +536,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
         .filter('filterByTypesForReqSkeletons', function() {
     		return function(array, projectTypes) {
     			if (projectTypes.length === 0) {
-    				
+
     				return array;
     			} else {
     				var newView = [];
@@ -577,12 +553,12 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
     				return newView;
     			}
     		}
-        })  
+        })
         .filter('filterByStatus', function() {
         	return function(array, selectedStatus) {
         		if(selectedStatus.length === 0) {
         			return array;
-        		} 
+        		}
         		else {
         			var newView = [];
         			angular.forEach(array, function (requirement) {
@@ -599,12 +575,12 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
         			return newView;
         		}
         	}
-        	
+
         }).filter('filterTicketStatus', function() {
         	return function(array, selectedTicketStatus) {
         		if(selectedTicketStatus.length === 0) {
         			return array;
-        		} 
+        		}
         		else {
         			var newView = [];
         			angular.forEach(array, function (requirement) {
@@ -618,12 +594,12 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
         		}
         	}
         })
-        
+
         .filter('filterUpdates', function() {
         	return function(array, updateReqs) {
         		if(array.length === 0) {
         			return array;
-        		} 
+        		}
         		else if (!updateReqs) {
         			return array;
         		} else {
@@ -633,19 +609,19 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
     						if(requirement.needsUpdate) {
     							newView.push(requirement);
     						}
-    						
+
     					}
     				});
         			return newView;
         		}
         	}
         })
-        
+
         .filter('filterCategoryByCategory', function() {
         	return function(array, categories) {
         		if(categories.length === 0) {
         			return array;
-        		} 
+        		}
         		else {
         			var newView = [];
         			angular.forEach(array, function(category) {
@@ -663,7 +639,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
         	return function(array, categories, selector) {
         		if(categories.length === 0) {
         			return array;
-        		} 
+        		}
         		else {
         			var newView = [];
         			angular.forEach(array, function(requirement) {
@@ -681,7 +657,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
         	return function(array, categories, selector) {
         		if(categories.length === 0) {
         			return array;
-        		} 
+        		}
         		else {
         			var newView = [];
         			angular.forEach(array, function(requirement) {

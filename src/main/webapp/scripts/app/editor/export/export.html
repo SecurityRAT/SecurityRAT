@@ -23,7 +23,7 @@
 						<span id="UsSpinner" spinner-on="exportProperty.showSpinner" us-spinner="{radius:5, width:3, length:3, lines:9}"uib-popover="JIRA Authentication running..." popover-placement="top" popover-trigger="mouseenter" 
 						popover-append-to-body></span>
 					</div>
-					<div class="col-sm-offset-1" uib-dropdown auto-close="disabled" data-ng-if="((jiraAlternatives.mandatoryFields | filter : {configurable : true}).length > 0) && fields.issuetype.name">
+					<div class="col-sm-offset-1" uib-dropdown auto-close="disabled" data-ng-if="((jiraAlternatives.mandatoryFields | filter : {configurable : true}).length > 0) && fields.issuetype.name && !checks.isTicket">
 						<button type="button" class="btn btn-default" uib-dropdown-toggle id="dropdown-fields" data-ng-click="getHeight('dropdown-fields')">
 	                   		<span class="glyphicon glyphicon-wrench"></span> Configure fields <span class="caret">
 	                   	</button>
@@ -54,8 +54,8 @@
 						<div class="col-sm-9">
 							<input type="text" class="col-sm-2 " data-ng-model="filterProject" placeholder="search Project"/>
 							<select id="ProjectKey" data-ng-model="fields.project.key" class="form-control">
-								<option data-ng-repeat="project in jiraAlternatives.projects | orderBy: 'name' | filter: filterProject" data-ng-if="project.name != ''" value="{{project.key}}">{{project.name}}</option>
-								<option data-ng-repeat="project in jiraAlternatives.projects | orderBy: 'name' | filter: filterProject" data-ng-if="project.name == ''" value="{{project.key}}">{{project.key}}</option>
+								<option data-ng-repeat="project in jiraAlternatives.projects | orderBy: 'name' | filter: filterProject" data-ng-if="project.name != ''" value="{{project.key}}"><img src="{{project.avatarUrls.16x16}}"> {{project.name}}</option>
+								<option data-ng-repeat="project in jiraAlternatives.projects | orderBy: 'name' | filter: filterProject" data-ng-if="project.name == ''" value="{{project.key}}"><img src="{{project.avatarUrls.16x16}}"> {{project.key}}</option>
 							</select>
 						</div>
 					</div>

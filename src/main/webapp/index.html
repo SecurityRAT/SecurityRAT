@@ -21,7 +21,7 @@
         <!-- endbuild -->
 		<base href="/">
     </head>
-    
+
     <body data-ng-app="sdlctoolApp">
         <!--[if lt IE 9]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
@@ -45,7 +45,7 @@
             r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
             ga('create','UA-XXXXX-X');ga('send','pageview');
         </script>-->
-		
+
         <!-- build:js scripts/vendor.js -->
         <!-- bower:js -->
         <script src="bower_components/modernizr/modernizr.js"></script>
@@ -96,6 +96,9 @@
     <script src="scripts/app/config.js"></script>
     <script src="scripts/app/app.js"></script>
     <script src="scripts/app/app.constants.js"></script>
+    <script src="scripts/components/editor/util.service.js"></script>
+    <script src="scripts/components/editor/testAutomation.service.js"></script>
+    <script src="scripts/components/editor/checkAuthentication.service.js"></script>
     <script src="scripts/components/auth/auth.service.js"></script>
     <script src="scripts/components/auth/principal.service.js"></script>
     <script src="scripts/components/auth/authority.directive.js"></script>
@@ -173,7 +176,7 @@
     <script src="scripts/app/admin/userManagement/userManagement.controller.js"></script>
     <script src="scripts/app/admin/userManagement/userManagement-dialog.controller.js"></script>
     <script src="scripts/app/admin/userManagement/userManagement-detail.controller.js"></script>
-	
+
     <script src="scripts/app/entities/entity.js"></script>
     <script src="scripts/app/error/error.js"></script>
     <script src="scripts/app/main/main.js"></script>
@@ -182,6 +185,7 @@
     <script src="scripts/components/auth/provider/auth.session.service.js"></script>
     <script src="scripts/app/account/sessions/sessions.js"></script>
     <script src="scripts/app/account/sessions/sessions.controller.js"></script>
+    <script src="scripts/components/entities/entityUtil.service.js"></script>
     <script src="scripts/app/entities/collectionCategory/collectionCategory.js"></script>
     <script src="scripts/app/entities/collectionCategory/collectionCategory.controller.js"></script>
     <script src="scripts/app/entities/collectionCategory/collectionCategory-dialog.controller.js"></script>
@@ -286,6 +290,7 @@
     <script src="scripts/app/editor/starter/starter.controller.js"></script>
     <script src="scripts/app/editor/requirements/requirements.js"></script>
     <script src="scripts/app/editor/requirements/requirements.controller.js"></script>
+    <script src="scripts/app/editor/requirements/requirements-test.controller.js"></script>
     <script src="scripts/app/editor/presentation/configuration/config-modal.controller.js"></script>
     <script src="scripts/app/editor/presentation/presentation.js"></script>
     <script src="scripts/app/editor/presentation/presentation.controller.js"></script>

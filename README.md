@@ -7,6 +7,7 @@
 - create JIRA tickets for particular requirements in a batch mode in developer queues
 - import the main JIRA ticket into the tool anytime in order to see progress of the particular tickets
 
+<<<<<<< HEAD
 # Quick and easy start
 - if you want to play around with the SecurityRAT tool, you can pull the our docker image [securityrat/all_in_one](https://hub.docker.com/r/securityrat/all_in_one/).
 - of course for that you will need to install [docker](https://docs.docker.com/engine/installation/) on your system.
@@ -106,6 +107,10 @@ Access-Control-Allow-Methods: GET,HEAD,OPTIONS,POST
 Access-Control-Allow-Headers: Content-Type, X-Atlassian-Token
 Access-Control-Allow-Credentials: true
 ```
+=======
+# Documentation
+Please go to https://securityrat.github.io
+>>>>>>> dev
 
 # License
 This project is distributed under the Apache license, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0

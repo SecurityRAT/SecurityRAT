@@ -20,7 +20,7 @@
     "bootstrap": "3.3.5",
     "jquery": "2.1.4",
     "jquery-ui": "~1.11.4",
-    "js-yaml": "~3.4.6",
+    "js-yaml": "^3.7.0",
     "json3": "3.3.2",
     "modernizr": "2.8.3",
     "ng-file-upload": "5.0.9",

@@ -25,7 +25,7 @@
 		</section>
 		<section data-ng-repeat="statColumn in requirement.statusColumns | orderBy : 'showOrder'" data-ng-if="statColumn.value !== ''">
 			<h6>{{statColumn.name}}</h6>
-			<p style="font-size: 55%" data-ng-bind-html="statColumn.value"></p>
+			<p style="font-size: 55%" data-markdown>{{statColumn.value}}</p>
 		</section>
 	</section>
 	<div  data-ng-repeat-end></div>

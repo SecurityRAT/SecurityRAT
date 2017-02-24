@@ -212,6 +212,8 @@ describe('Protractor Security RAT general testsuite', function() {
 						}
 					})
 				});
+		selectButton.first().click();
+		selectButton.get(1).click();
 		element(by.buttonText("Bulk change with selected")).click();
 		element(by.buttonText("Fulfilled")).click();
 		element(by.buttonText("Save")).click();
