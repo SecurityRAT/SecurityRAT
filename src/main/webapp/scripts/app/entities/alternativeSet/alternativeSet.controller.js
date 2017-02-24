@@ -1,11 +1,12 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('AlternativeSetController', function ($scope, AlternativeSet, AlternativeSetSearch, OptColumn, sharedProperties, $filter) {
+    .controller('AlternativeSetController', function ($scope, AlternativeSet, AlternativeSetSearch, OptColumn, 
+        sharedProperties, $filter, EntityHelper) {
         $scope.alternativeSets = [];
         $scope.optColumns = [];
         $scope.selectedOptColumns = [];
- 	$scope.searchString = '';       
+        $scope.searchString = '';       
         $scope.optColumnLabelText = {buttonDefaultText: 'Option Column'};
         $scope.selectedOptColumnSettings = {
   			  smartButtonMaxItems: 2,
@@ -52,14 +53,13 @@ angular.module('sdlctoolApp')
             });
         };
         $scope.selectAllTypes = function() {
-  		  angular.forEach($filter('filterCategoryForEntities')($scope.alternativeSets, $scope.selectedOptColumns, 'optColumn'), function(set) {
-  			set.selected = true;
-  		  });
+            var setFilteredByOptColumns = $filter('filterCategoryForEntities')($scope.alternativeSets, $scope.selectedOptColumns, 'optColumn')
+            angular.forEach($filter('filter')(setFilteredByOptColumns, $scope.searchString), function(set) {
+            set.selected = true;
+            });
 	  	}
         $scope.deselectAllTypes = function() {
-        	angular.forEach($scope.alternativeSets, function(set) {
-        		set.selected = false;
-        	});
+            EntityHelper.deselectElements($filter('filter')($scope.alternativeSets, {selected: true}))
         }
       
         $scope.bulkChange = function() {

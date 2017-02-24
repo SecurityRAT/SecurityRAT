@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('CollectionInstanceController', function ($scope, CollectionInstance, CollectionInstanceSearch, sharedProperties, $filter, CollectionCategory) {
+    .controller('CollectionInstanceController', function ($scope, CollectionInstance, CollectionInstanceSearch, 
+        sharedProperties, $filter, CollectionCategory, EntityHelper) {
         $scope.collectionInstances = [];
         $scope.collectionCategories = [];
         $scope.selectedCategory = [];
@@ -41,14 +42,13 @@ angular.module('sdlctoolApp')
                 });
         };
         $scope.selectAllTypes = function() {
-  		  angular.forEach($filter('filterCategoryForEntities')($scope.collectionInstances, $scope.selectedCategory, 'collectionCategory'), function(instance) {
-  			instance.selected = true;
-  		  });
+            var instanceFilteredByCategory = $filter('filterCategoryForEntities')($scope.collectionInstances, $scope.selectedCategory, 'collectionCategory')
+            angular.forEach($filter('filter')(instanceFilteredByCategory, $scope.searchString), function(instance) {
+            instance.selected = true;
+            });
 	  	}
         $scope.deselectAllTypes = function() {
-        	angular.forEach($scope.collectionInstances, function(instance) {
-        		instance.selected = false;
-        	});
+            EntityHelper.deselectElements($filter('filter')($scope.collectionInstances, {selected: true}))
         }
       
         $scope.bulkChange = function() {

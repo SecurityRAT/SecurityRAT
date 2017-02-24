@@ -27,16 +27,6 @@ angular.module('sdlctoolApp')
                 });
         };
 
-        $scope.search = function () {
-            OptColumnTypeSearch.query({query: $scope.searchQuery}, function(result) {
-                $scope.optColumnTypes = result;
-            }, function(response) {
-                if(response.status === 404) {
-                    $scope.loadAll();
-                }
-            });
-        };
-
         $scope.refresh = function () {
             $scope.loadAll();
             $scope.clear();

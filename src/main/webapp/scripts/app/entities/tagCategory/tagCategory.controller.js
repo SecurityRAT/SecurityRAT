@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('TagCategoryController', function ($scope, TagCategory, TagCategorySearch, sharedProperties, $filter) {
+    .controller('TagCategoryController', function ($scope, TagCategory, TagCategorySearch, sharedProperties, 
+        $filter, EntityHelper) {
         $scope.tagCategorys = [];
 	$scope.searchString = '';
         $scope.loadAll = function() {
@@ -30,14 +31,12 @@ angular.module('sdlctoolApp')
                 });
         };
         $scope.selectAllTypes = function() {
-        	angular.forEach($scope.tagCategorys, function(category) {
+        	angular.forEach($filter('filter')($scope.tagCategorys, $scope.searchString), function(category) {
         		category.selected = true;
         	});
 	  	}
         $scope.deselectAllTypes = function() {
-        	angular.forEach($scope.tagCategorys, function(category) {
-        		category.selected = false;
-        	});
+            EntityHelper.deselectElements($filter('filter')($scope.tagCategorys, {selected: true}))
         }
       
         $scope.bulkChange = function() {

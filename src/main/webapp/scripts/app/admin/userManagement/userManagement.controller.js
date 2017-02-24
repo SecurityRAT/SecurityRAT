@@ -54,8 +54,8 @@ angular.module('sdlctoolApp')
         $scope.confirmDelete = function (id) {
             User.delete({login: id},
                 function () {
-                    $scope.loadAll(callback);
                     $('#deleteUserConfirmation').modal('hide');
+                    $scope.loadAll(callback);
                     $scope.clear();
                 });
         };

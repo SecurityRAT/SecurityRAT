@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('ProjectTypeController', function ($scope, ProjectType, ProjectTypeSearch, $filter, sharedProperties) {
+    .controller('ProjectTypeController', function ($scope, ProjectType, ProjectTypeSearch, $filter, 
+        sharedProperties, EntityHelper) {
         $scope.projectTypes = [];
 	$scope.searchString = '';
         $scope.loadAll = function() {
@@ -30,14 +31,12 @@ angular.module('sdlctoolApp')
                 });
         };
         $scope.selectAllTypes = function() {
-    		  angular.forEach($scope.projectTypes, function(type) {
-    			  type.selected = true;
-    		  });
+            angular.forEach($filter('filter')($scope.projectTypes, $scope.searchString), function(type) {
+              type.selected = true;
+            });
   	  	}
         $scope.deselectAllTypes = function() {
-  		  angular.forEach($scope.projectTypes, function(type) {
-  			  type.selected = false;
-  		  });
+            EntityHelper.deselectElements($filter('filter')($scope.projectTypes, {selected: true}))
 	  	}
         
         $scope.bulkChange = function() {

@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('StatusColumnValueController', function ($scope, StatusColumn, StatusColumnValue, StatusColumnValueSearch, sharedProperties, $filter) {
+    .controller('StatusColumnValueController', function ($scope, StatusColumn, StatusColumnValue, 
+        StatusColumnValueSearch, sharedProperties, $filter, EntityHelper) {
         $scope.statusColumnValues = [];
         $scope.statusColumns = [];
         $scope.selectedColumns = [];
@@ -41,14 +42,13 @@ angular.module('sdlctoolApp')
                 });
         };
         $scope.selectAllValues = function() {
-    		  angular.forEach($filter('filterCategoryForEntities')($scope.statusColumnValues, $scope.selectedColumns, 'statusColumn'), function(value) {
-    			  value.selected = true;
-    		  });
+            var filterByStatColumns = $filter('filterCategoryForEntities')($scope.statusColumnValues, $scope.selectedColumns, 'statusColumn');
+            angular.forEach($filter('filter')(filterByStatColumns, $scope.searchString), function(value) {
+              value.selected = true;
+            });
   	  	}
         $scope.deselectAllValues = function() {
-        	angular.forEach($scope.statusColumnValues, function(value) {
-        		value.selected = false;
-        	});
+            EntityHelper.deselectElements($filter('filter')($scope.statusColumnValues, {selected: true}))
         }
         
         $scope.bulkChange = function() {

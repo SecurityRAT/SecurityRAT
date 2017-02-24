@@ -422,7 +422,8 @@ angular.module('sdlctoolApp')
 						var itemType = "";
 						var  sync = $q.defer();
 						if((fatalFields.indexOf(key) === -1) && (excludedFields.indexOf(key) === -1)
-							&& !(angular.equals(value.schema.type, "array") && (value.operations.length === 1) && value.operations.indexOf("set") !== -1)) {
+							&& !(angular.equals(value.schema.type, "array") && (value.operations.length === 1) && value.operations.indexOf("set") !== -1)
+							&& !angular.equals(value.schema.type, "any")) {
 							if(angular.isDefined(value.allowedValues)) {
 								if(value.allowedValues.length > 0)allowedValues = value.allowedValues;
 								else sync.reject(false); // slice out field without values in the allowedValues property.

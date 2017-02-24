@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('AlternativeInstanceController', function ($scope, AlternativeInstance, AlternativeInstanceSearch, AlternativeSet, sharedProperties, $filter, marked) {
+    .controller('AlternativeInstanceController', function ($scope, AlternativeInstance, AlternativeInstanceSearch, 
+        AlternativeSet, sharedProperties, $filter, marked, EntityHelper) {
         $scope.alternativeInstances = [];
         $scope.alternativeSets = [];
         $scope.selectedAlternativeSets = [];
@@ -53,16 +54,15 @@ angular.module('sdlctoolApp')
             });
         };
         $scope.selectAllTypes = function() {
-        	var instances = $filter('filterCategoryForEntities')($scope.alternativeInstances, $scope.selectedAlternativeSets, 'alternativeSet');
-//        	instances = $filter('filterCategoryForEntities')(instances, $scope.selectedAlternativeSets, 'alternativeSet')
-    		  angular.forEach(instances, function(instance) {
+        	var instancesFilterByAlternativeSet = $filter('filterCategoryForEntities')($scope.alternativeInstances, $scope.selectedAlternativeSets, 'alternativeSet');
+            var filterSelectString = $filter('filter')(instancesFilterByAlternativeSet, $scope.searchString)
+            
+    		  angular.forEach(instances, function(filterSelectString) {
     			  instance.selected = true;
     		  });
   	  	}
         $scope.deselectAllTypes = function() {
-        	angular.forEach($scope.alternativeInstances, function(instance) {
-          		instance.selected = false;
-          	});
+            EntityHelper.deselectElements($filter('filter')($scope.alternativeInstances, {selected: true}))
         }
         
         $scope.bulkChange = function() {

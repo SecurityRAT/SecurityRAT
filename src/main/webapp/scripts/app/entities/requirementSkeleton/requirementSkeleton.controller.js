@@ -2,7 +2,7 @@
 
 angular.module('sdlctoolApp')
     .controller('RequirementSkeletonController', function ($scope, $filter, sharedProperties, RequirementSkeleton, RequirementSkeletonSearch, ReqCategory, TagInstance
-    		, ProjectType, CollectionInstance, TagCategory, CollectionCategory, $document) {
+    		, ProjectType, CollectionInstance, TagCategory, CollectionCategory, $document, EntityHelper) {
         $scope.requirementSkeletons = [];
         $scope.filterCategory = [];
         $scope.tagCategories = [];
@@ -163,16 +163,14 @@ angular.module('sdlctoolApp')
         	requirements = $filter('filterByCollsForReqSkeletons')(requirements, $scope.selectedColls);
         	requirements = $filter('filterByTypesForReqSkeletons')(requirements, $scope.selectedTypes);
         	requirements = $filter('orderBy')(requirements, ['reqCategory.showOrder','showOrder']);
-        	
+        	requirements = $filter('filter')(requirements, $scope.searchString)
   		  angular.forEach(requirements, function(requirement) {
   			  requirement.selected = true;
   		  });
 	  	}
 	  	
 	  	$scope.deselectAllReqs = function() {
-	  		  angular.forEach($scope.requirementSkeletons, function(requirement) {
-	  			  requirement.selected = false;
-	  		  });
+            EntityHelper.deselectElements($filter('filter')($scope.requirementSkeletons, {selected: true}))
 	  	}
 	  	
 	  	$scope.bulkChange = function() {

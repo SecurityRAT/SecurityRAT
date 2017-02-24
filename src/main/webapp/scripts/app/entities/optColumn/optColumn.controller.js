@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('OptColumnController', function ($scope, OptColumn, OptColumnSearch, sharedProperties, $filter) {
+    .controller('OptColumnController', function ($scope, OptColumn, OptColumnSearch, sharedProperties, $filter, EntityHelper) {
         $scope.optColumns = [];
 	$scope.searchString = '';
         $scope.loadAll = function() {
@@ -30,14 +30,12 @@ angular.module('sdlctoolApp')
                 });
         };
         $scope.selectAllTypes = function() {
-    		  angular.forEach($scope.optColumns, function(opt) {
+    		  angular.forEach($filter('filter')($scope.optColumns, $scope.searchString), function(opt) {
     			  opt.selected = true;
     		  });
   	  	}
         $scope.deselectAllTypes = function() {
-        	angular.forEach($scope.optColumns, function(opt) {
-        		opt.selected = false;
-        	});
+        	EntityHelper.deselectElements($filter('filter')($scope.optColumns, {selected: true}));
         }
         
         $scope.bulkChange = function() {

@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('StatusColumnController', function ($scope, StatusColumn, StatusColumnSearch, sharedProperties, $filter) {
+    .controller('StatusColumnController', function ($scope, StatusColumn, StatusColumnSearch, sharedProperties, 
+        $filter, EntityHelper) {
         $scope.statusColumns = [];
 	$scope.searchString = '';
         $scope.loadAll = function() {
@@ -31,14 +32,12 @@ angular.module('sdlctoolApp')
         };
         
         $scope.selectAllTypes = function() {
-        	angular.forEach($scope.statusColumns, function(stat) {
+        	angular.forEach($filter('filter')($scope.statusColumns, $scope.searchString), function(stat) {
         		stat.selected = true;
         	});
         }
         $scope.deselectAllTypes = function() {
-        	angular.forEach($scope.statusColumns, function(stat) {
-        		stat.selected = false;
-        	});
+            EntityHelper.deselectElements($filter('filter')($scope.statusColumns, {selected: true}))
         }
         
         $scope.bulkChange = function() {

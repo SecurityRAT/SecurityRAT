@@ -254,7 +254,7 @@ angular.module('sdlctoolApp')
 	  $scope.startProgressbar = function() {
 			$scope.endProgressbar = false;
 			$scope.showRequirements = false;
-			$scope.promise = $interval(function() {$scope.barValue += 1;}, 300, 95);
+			$scope.promise = $interval(function() {$scope.barValue += 1;}, 200, 95);
 		}
 
 	  $scope.finishProgressbar = function(){
@@ -1076,11 +1076,21 @@ angular.module('sdlctoolApp')
 		  $scope.newRequirements = [];
 		  $scope.oldRequirements = [];
 		  angular.forEach(updatedRequirements, function(newRequirement) {
+		  	if(($filter('filter')($scope.filterCategory, {id: newRequirement.categoryId}, true)).length == 0) {
+			  	$scope.filterCategory.push(
+							  {
+								  id: newRequirement.categoryId,
+								  showOrder: newRequirement.categoryOrder,
+								  label: newRequirement.category,
+								  isNew: true
+							  }
+					  );
+		  	}
 			 var requirementToInsert = {};
 			 var foundOne = false;
 			 angular.forEach($scope.requirements, function(oldRequirement) {
 				 // search for new changes in description
-				 if((newRequirement.description.replace(/[^\x20-\x7E]|\s+/gmi, "") !== oldRequirement.description.replace(/[^\x20-\x7E]|\s+/gmi, "")) && (newRequirement.id === oldRequirement.id)) {
+				 if((newRequirement.id === oldRequirement.id) && (newRequirement.description.replace(/[^\x20-\x7E]|\s+/gmi, "") !== oldRequirement.description.replace(/[^\x20-\x7E]|\s+/gmi, ""))) {
 					 var changes = diffString2(oldRequirement.description, newRequirement.description);
 					// saves the hightlighted old changes in oldDescription property to prevent this from been shown when not needed.
 					 oldRequirement.oldDescription = changes.o;
@@ -1222,6 +1232,10 @@ angular.module('sdlctoolApp')
 	  }
 
 	  $scope.updatesAvailableClicked = function() {
+	  	console.log($scope.filterCategory)
+	  	angular.forEach($filter('filter')($scope.filterCategory, {isNew : true}), function(category) {
+	  		delete category.isNew;
+	  	})
 		  //add the new requirements to the main array
 		  if($scope.newRequirements.length > 0) {
 			  angular.forEach($scope.newRequirements, function(newRequirement) {
@@ -1261,7 +1275,7 @@ angular.module('sdlctoolApp')
 		  if ($scope.updatesCounter === 0 && $scope.newCounter === 0 && $scope.deletedCounter === 0) {
 			  var message = "No Updates were found. All your requirements are up to date.";
 			  SDLCToolExceptionService.showWarning('Update requirements successful', message, SDLCToolExceptionService.SUCCESS);
-		  } else if ($scope.updateCounter === 0 && $scope.newCounter === 0) {
+		  } else if ($scope.updateCounter === 0 && $scope.newCounter === 0) { // newCounter compare with 0 removed to resolve github issue #44
 			  var message = "Summary:<ul><li>" + $scope.updateCounter + " requirement(s) were updated</li><li> " + $scope.newCounter + " new requirement(s) were added</li><li>" + $scope.deletedCounter + " requirement(s) were removed</li></ul>";
 			  if($scope.deletedReqs.length > 0) {
 				  message += "<BR>The following requirement(s) were removed:<BR><BR><table class='table table-responsive'><tr><th>Short Name</th><th>Description</th></tr>";
@@ -1288,6 +1302,7 @@ angular.module('sdlctoolApp')
 			  }
 			  SDLCToolExceptionService.showWarning('Update requirements successful', message, SDLCToolExceptionService.INFO);
 		  }
+		  console.log($scope.updateCounter);
 	  }
 
 	  $scope.applyChanges = function(reqId, keepNewOne) {

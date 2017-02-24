@@ -1,13 +1,14 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('OptColumnContentController', function ($scope, OptColumnContent, OptColumnContentSearch, RequirementSkeleton, OptColumn, sharedProperties, $filter) {
+    .controller('OptColumnContentController', function ($scope, OptColumnContent, OptColumnContentSearch, 
+        RequirementSkeleton, OptColumn, sharedProperties, $filter, EntityHelper) {
         $scope.optColumnContents = [];
         $scope.requirementSkeletons = [];
         $scope.optColumns = [];
         $scope.selectedOptColumns = [];
-	$scope.searchString = '';
-	$scope.length = 1000;
+    	$scope.searchString = '';
+    	$scope.length = 1000;
         $scope.numberToDisplay = 100;
 //        $scope.selectedReqSkeletons = [];
         
@@ -43,13 +44,13 @@ angular.module('sdlctoolApp')
         };
         $scope.loadAll();
 
-	$scope.loadMore = function() {
-           if ($scope.numberToDisplay + 100 < $scope.length) {
+        $scope.loadMore = function() {
+            if ($scope.numberToDisplay + 100 < $scope.length) {
                 $scope.numberToDisplay += 100;
-           } else {
+            } else {
                 $scope.numberToDisplay = $scope.length;
-           }
-       };
+            }
+        };
 
         $scope.delete = function (id) {
             OptColumnContent.get({id: id}, function(result) {
@@ -79,31 +80,29 @@ angular.module('sdlctoolApp')
         $scope.selectAllContents = function() {
         	var contents = $filter('filterCategoryForEntities')($scope.optColumnContents, $scope.selectedOptColumns, 'optColumn');
         	contents = $filter('orderBy')(contents, ['requirementSkeleton.reqCategory.showOrder', 'requirementSkeleton.showOrder', 'optColumn.showOrder']);
-        	
-  		  angular.forEach(contents, function(content) {
-  			  content.selected = true;
-  		  });
+        	contents = $filter('filter')(contents, $scope.searchString)
+            angular.forEach(contents, function(content) {
+              content.selected = true;
+            });
 	  	}
 	  	
 	  	$scope.deselectAllContents = function() {
-	  		  angular.forEach($scope.optColumnContents, function(content) {
-	  			  content.selected = false;
-	  		  });
+            EntityHelper.deselectElements($filter('filter')($scope.optColumnContents, {selected: true}))
 	  	}
 	  	
-        $scope.selectAllTypes = function() {
-//        	var contents = $filter('filterCategoryForEntities')($scope.optColumnContents, $scope.selectedReqSkeletons, 'requirementSkeleton');
-        	var contents = $filter('filterCategoryForEntities')(contents, $scope.selectedOptColumns, 'OptColumn');
-//        	instances = $filter('filterCategoryForEntities')(instances, $scope.selectedAlternativeSets, 'alternativeSet')
-    		  angular.forEach(contents, function(content) {
-    			  content.selected = true;
-    		  });
-  	  	}
-        $scope.deselectAllTypes = function() {
-        	angular.forEach($scope.optColumnContents, function(content) {
-        		content.selected = false;
-          	});
-        }
+//         $scope.selectAllTypes = function() {
+// //        	var contents = $filter('filterCategoryForEntities')($scope.optColumnContents, $scope.selectedReqSkeletons, 'requirementSkeleton');
+//         	var contents = $filter('filterCategoryForEntities')(contents, $scope.selectedOptColumns, 'OptColumn');
+// //        	instances = $filter('filterCategoryForEntities')(instances, $scope.selectedAlternativeSets, 'alternativeSet')
+//     		  angular.forEach(contents, function(content) {
+//     			  content.selected = true;
+//     		  });
+//   	  	}
+//         $scope.deselectAllTypes = function() {
+//         	angular.forEach($scope.optColumnContents, function(content) {
+//         		content.selected = false;
+//           	});
+//         }
         
         $scope.bulkChange = function() {
           	sharedProperties.setProperty($filter('orderBy')($filter('filter')($scope.optColumnContents, {selected: true}), ['requirementSkeleton.reqCategory.showOrder', 'requirementSkeleton.showOrder', 'optColumn.showOrder']));
