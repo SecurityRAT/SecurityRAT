@@ -1,5 +1,4 @@
 <div>
-
     <h2 class="page-header">Status Columns</h2>
     <jh-alert></jh-alert>
     <div class="container">
@@ -11,26 +10,26 @@
             </div>
             <!--<div class="col-md-5">
                 <form name="searchForm" class="form-inline">
-                	<div class="input-group">
+                    <div class="input-group">
                         <input type="text" class="form-control" data-ng-model="searchQuery" id="searchQuery" placeholder="Search a Status Column">
                         <span class="input-group-btn">
-		                    <button class="btn btn-info" data-ng-click="search()" id="searchButton"><span class="glyphicon glyphicon-search"></span>
-		                    </button>
-	                    </span>
+                            <button class="btn btn-info" data-ng-click="search()" id="searchButton"><span class="glyphicon glyphicon-search"></span>
+                            </button>
+                        </span>
                     </div>
                 </form>
             </div>-->
-	    <div class="col-md-5">
-                                <form>
-                                        <button type="button" class="btn btn-info pull-left" data-toggle="collapse" data-target="#searchStringID">Search
-                                        <span class="glyphicon glyphicon-search"></span>
-                                        </button>
-                                        <div id="searchStringID" class="collapse">
-                                                <div class="input-group">
-                                                                <input type="text" class="form-control col-md-5" placeholder="Search String" data-ng-model="searchString">
-                                                        </div>
-                                        </div>
-                                        </form>
+            <div class="col-md-5">
+                <form>
+                    <button type="button" class="btn btn-info pull-left" data-toggle="collapse" data-target="#searchStringID">Search
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                    <div id="searchStringID" class="collapse">
+                        <div class="input-group">
+                            <input type="text" class="form-control col-md-5" placeholder="Search String" data-ng-model="searchString">
+                        </div>
+                    </div>
+                </form>
             </div>
             <div class="col-md-3">
                 <button class="btn btn-primary" ui-sref="statusColumn.bulk" data-ng-click="bulkChange()" data-ng-if="(statusColumns | filter:{selected: true}).length != 0">
@@ -39,14 +38,12 @@
             </div>
         </div>
     </div>
-
     <div class="modal fade" id="deleteStatusColumnConfirmation">
         <div class="modal-dialog">
             <div class="modal-content">
                 <form name="deleteForm" data-ng-submit="confirmDelete(statusColumn.id)">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-                                data-ng-click="clear()">&times;</button>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="clear()">&times;</button>
                         <h4 class="modal-title">Confirm delete operation</h4>
                     </div>
                     <div class="modal-body">
@@ -64,7 +61,6 @@
             </div>
         </div>
     </div>
-
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>
@@ -77,18 +73,8 @@
                     <th class="text-center">Active</th>
                     <th></th>
                     <th class="text-center">
-	    				<div class="btn-group selectDropdown" uib-dropdown>
-	    					<button class="btn btn-default" uib-dropdown-toggle>Select <span class="caret"></span></button>
-		    		 		<ul class="uib-dropdown-menu myListResize" role="menu" aria-labelledby="selectDropdown">
-		    		 			<li role="menuitem">
-		    		 				<a href="" data-ng-click="selectAllTypes()">Select all</a>
-		    		 			</li>
-		    		 			<li role="menuitem">
-		    		 				<a href="" data-ng-click="deselectAllTypes()">Deselect all</a>
-		    		 			</li>
-		    		 		</ul>
-		    		 	</div>
-		    		</th>
+                        <select-all filter-length="{{filterEntity().length}}" on-change="performSelection(selectionValue)" selected-length="{{(filterEntity() | filter: {selected: true}).length}}"></select-all>
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -100,23 +86,19 @@
                     <td class="text-center">{{statusColumn.showOrder}}</td>
                     <td class="text-center">{{statusColumn.active}}</td>
                     <td>
-                        <button type="submit"
-                                ui-sref="statusColumn.detail({id:statusColumn.id})"
-                                class="btn btn-info btn-sm">
+                        <button type="submit" ui-sref="statusColumn.detail({id:statusColumn.id})" class="btn btn-info btn-sm">
                             <span class="glyphicon glyphicon-eye-open"></span>&nbsp;<span> View</span>
                         </button>
-                        <button type="submit"
-                                ui-sref="statusColumn.edit({id:statusColumn.id})"
-                                class="btn btn-primary btn-sm">
+                        <button type="submit" ui-sref="statusColumn.edit({id:statusColumn.id})" class="btn btn-primary btn-sm">
                             <span class="glyphicon glyphicon-pencil"></span>&nbsp;<span> Edit</span>
                         </button>
-                        <button type="submit"
-                                ng-click="delete(statusColumn.id)"
-                                class="btn btn-danger btn-sm">
+                        <button type="submit" ng-click="delete(statusColumn.id)" class="btn btn-danger btn-sm">
                             <span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span> Delete</span>
                         </button>
                     </td>
-                    <td class="text-center"><input type="checkbox" data-ng-model="statusColumn.selected"/></td>
+                    <td class="text-center">
+                        <input type="checkbox" data-ng-model="statusColumn.selected" />
+                    </td>
                 </tr>
             </tbody>
         </table>

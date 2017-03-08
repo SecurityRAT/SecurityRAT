@@ -4,7 +4,8 @@ angular.module('sdlctoolApp')
     .controller('ReqCategoryController', function ($scope, ReqCategory, ReqCategorySearch, sharedProperties, 
         $filter, EntityHelper) {
         $scope.reqCategorys = [];
-	$scope.searchString = '';
+        $scope.searchString = '';
+
         $scope.loadAll = function() {
             ReqCategory.query(function(result) {
                $scope.reqCategorys = result;
@@ -30,15 +31,25 @@ angular.module('sdlctoolApp')
                     $scope.clear();
                 });
         };
-        $scope.selectAllTypes = function() {
-        	angular.forEach($filter('filter')($filter('filter')($scope.reqCategorys, $scope.searchString), $scope.searchString), function(category) {
+
+        $scope.filterEntity = function() {
+            return $filter('filter')($filter('filter')($scope.reqCategorys, $scope.searchString), $scope.searchString);
+        }
+
+        function selectAllCats () {
+        	angular.forEach($scope.filterEntity(), function(category) {
         		category.selected = true;
         	});
 	  	}
-        $scope.deselectAllTypes = function() {
-            EntityHelper.deselectElements($filter('filter')($scope.reqCategorys, {selected: true}))
+
+        function deselectAllCats () {
+            EntityHelper.deselectElements($filter('filter')($scope.filterEntity(), {selected: true}))
         }
-      
+        
+        $scope.performSelection = function(selectionValue) {
+            EntityHelper.performSelection(selectionValue, selectAllCats, deselectAllCats);
+        }
+
         $scope.bulkChange = function() {
         	sharedProperties.setProperty($filter('orderBy')($filter('filter')($scope.reqCategorys, {selected: true}), ['showOrder']));
         }

@@ -16,7 +16,9 @@
 							    		<h4>Created on: <strong>{{generatedOn}}</strong></h4>
 							    	</div>
 							        <div class="col-sm-3">
-							            <button class="btn btn-primary pull-right" data-ng-click="changeSettings()" confirm="By changing the settings and automatic update of the requirements will be done. You can review the updates afterwards. No data will be lost." data-ng-disabled="systemSettings.name == null">
+							            <button class="btn btn-primary pull-right" data-ng-click="changeSettings()"
+                                                confirm="By changing the settings and automatic update of the requirements will be done. You can review the updates afterwards. No data will be lost."
+                                                data-ng-disabled="systemSettings.name == null">
 							            	<strong>Change Settings</strong>
 							            </button>
 							        </div>
@@ -228,7 +230,7 @@
 						uib-tooltip="Please select requirements first and make sure this one is testable by filtering with TAG TESTABILITY."
 						tooltip-trigger="mouseenter" tooltip-placement="top" tooltip-append-to-body data-ng-if="withselectedDropdown.testAutomation">
 							<span  data-ng-click="startAutomatedTest()" data-ng-class = "{'disabledButton': (requirements | filter:{selected: true}).length == 0}">
-								<!-- <img src="assets/images/powerpoint-icon.png"/> --> Test requirements
+								<img src="assets/images/seccat.png"/> Test requirements (BETA)
 							</span>
 						</a>
 					</li>
@@ -310,17 +312,7 @@
 				    			</div>
 			    		</th>
 		    			<th class="text-center">
-		    				<div class="btn-group selectDropdown" uib-dropdown>
-		    					<button class="btn btn-default" uib-dropdown-toggle>Select <span class="caret"></span></button>
-			    		 		<ul class="uib-dropdown-menu myListResize" role="menu" aria-labelledby="selectDropdown">
-			    		 			<li role="menuitem">
-			    		 				<a href="" data-ng-click="selectAllReqs()">Select all</a>
-			    		 			</li>
-			    		 			<li role="menuitem">
-			    		 				<a href="" data-ng-click="deselectAllReqs()">Deselect all</a>
-			    		 			</li>
-			    		 		</ul>
-			    		 	</div>
+		    				<select-all filter-length="{{filterRequirements().length}}" on-change="performSelection(selectionValue)" selected-length="{{(filterRequirements() | filter: {selected: true}).length}}"></select-all>
 			    		</th>
 		    		</tr>
 		    	</thead>

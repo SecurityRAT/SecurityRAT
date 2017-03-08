@@ -1,5 +1,4 @@
 <div>
-
     <h2 class="page-header">OptColumnContents</h2>
     <jh-alert></jh-alert>
     <div class="container">
@@ -11,26 +10,26 @@
             </div>
             <!--<div class="col-md-5">
                 <form name="searchForm" class="form-inline">
-                	<div class="input-group">
+                    <div class="input-group">
                         <input type="text" class="form-control" data-ng-model="searchQuery" id="searchQuery" placeholder="Search a OptColumnContent">
                         <span class="input-group-btn">
-		                    <button class="btn btn-info" data-ng-click="search()" id="searchButton"><span class="glyphicon glyphicon-search"></span>
-		                    </button>
-	                    </span>
+                            <button class="btn btn-info" data-ng-click="search()" id="searchButton"><span class="glyphicon glyphicon-search"></span>
+                            </button>
+                        </span>
                     </div>
                 </form>
             </div>-->
-	    <div class="col-md-5">
-                                <form>
-                                        <button type="button" class="btn btn-info pull-left" data-toggle="collapse" data-target="#searchStringID">Search
-                                        <span class="glyphicon glyphicon-search"></span>
-                                        </button>
-                                        <div id="searchStringID" class="collapse">
-                                                <div class="input-group">
-                                                                <input type="text" class="form-control col-md-5" placeholder="Search String" data-ng-model="searchString">
-                                                        </div>
-                                        </div>
-                                        </form>
+            <div class="col-md-5">
+                <form>
+                    <button type="button" class="btn btn-info pull-left" data-toggle="collapse" data-target="#searchStringID">Search
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                    <div id="searchStringID" class="collapse">
+                        <div class="input-group">
+                            <input type="text" class="form-control col-md-5" placeholder="Search String" data-ng-model="searchString">
+                        </div>
+                    </div>
+                </form>
             </div>
             <div class="col-md-3">
                 <button class="btn btn-primary" ui-sref="optColumnContent.bulk" data-ng-click="bulkChange()" data-ng-if="(optColumnContents | filter:{selected: true}).length != 0">
@@ -39,14 +38,12 @@
             </div>
         </div>
     </div>
-
     <div class="modal fade" id="deleteOptColumnContentConfirmation">
         <div class="modal-dialog">
             <div class="modal-content">
                 <form name="deleteForm" data-ng-submit="confirmDelete(optColumnContent.id)">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-                                data-ng-click="clear()">&times;</button>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="clear()">&times;</button>
                         <h4 class="modal-title">Confirm delete operation</h4>
                     </div>
                     <div class="modal-body">
@@ -64,71 +61,52 @@
             </div>
         </div>
     </div>
-
     <div class="table-responsive">
         <table class="table table-striped" infinite-scroll="loadMore()" infinite-scroll-distance="1">
             <thead>
                 <tr>
                     <!--<th>ID</th>-->
                     <th>Requirement Skeleton</th>
-                   <!-- <th><span ng-dropdown-multiselect="" options="requirementSkeletons" selected-model="selectedReqSkeletons" translation-texts="reqLabelText" 
-                    	extra-settings="selectedReqSettings">
-						</span>
-					</th> -->
+                    <!-- <th><span ng-dropdown-multiselect="" options="requirementSkeletons" selected-model="selectedReqSkeletons" translation-texts="reqLabelText" 
+                        extra-settings="selectedReqSettings">
+                        </span>
+                    </th> -->
                     <!-- <th>Option Column</th> -->
-                    <th><span ng-dropdown-multiselect="" options="optColumns" selected-model="selectedOptColumns" translation-texts="optColumnLabelText" 
-                    	extra-settings="selectedOptSettings">
-						</span>
-					</th>
+                    <th><span ng-dropdown-multiselect="" options="optColumns" selected-model="selectedOptColumns" translation-texts="optColumnLabelText" extra-settings="selectedOptSettings">
+                        </span>
+                    </th>
                     <th>Content</th>
                     <th></th>
                     <th class="text-center">
-	    				<div class="btn-group selectDropdown" uib-dropdown>
-	    					<button class="btn btn-default" uib-dropdown-toggle>Select <span class="caret"></span></button>
-		    		 		<ul class="uib-dropdown-menu myListResize" role="menu" aria-labelledby="selectDropdown">
-		    		 			<li role="menuitem">
-		    		 				<a href="" data-ng-click="selectAllContents()">Select all</a>
-		    		 			</li>
-		    		 			<li role="menuitem">
-		    		 				<a href="" data-ng-click="deselectAllContents()">Deselect all</a>
-		    		 			</li>
-		    		 		</ul>
-		    		 	</div>
-		    		</th>
+                        <select-all filter-length="{{filterEntity().length}}" on-change="performSelection(selectionValue)" selected-length="{{(filterEntity() | filter: {selected: true}).length}}"></select-all>
+                    </th>
                 </tr>
             </thead>
             <tbody>
-            <!-- | filterCategoryForEntities : selectedReqSkeletons: 'requirementSkeleton' -->
+                <!-- | filterCategoryForEntities : selectedReqSkeletons: 'requirementSkeleton' -->
                 <tr class="animate-repeat" data-ng-repeat="optColumnContent in optColumnContents | filterCategoryForEntities : selectedOptColumns : 'optColumn'| filter:searchString | orderBy: ['requirementSkeleton.reqCategory.showOrder', 'requirementSkeleton.showOrder', 'optColumn.showOrder'] | limitTo:numberToDisplay">
                     <!--<td><a ui-sref="optColumnContent.detail({id:optColumnContent.id})">{{optColumnContent.id}}</a></td>-->
-
                     <td>
                         <a ui-sref="requirementSkeleton.detail({id:optColumnContent.requirementSkeleton.id})" title="{{optColumnContent.requirementSkeleton.description}}">{{optColumnContent.requirementSkeleton.shortName}}</a>
                     </td>
-
                     <td>
                         <a ui-sref="optColumn.detail({id:optColumnContent.optColumn.id})">{{optColumnContent.optColumn.name}}</a>
                     </td>
                     <td id="content" data-ng-bind-html="optColumnContent.content | trusted"></td>
-
                     <td>
-                        <button type="submit"
-                                ui-sref="optColumnContent.detail({id:optColumnContent.id})"
-                                class="btn btn-info btn-sm">
+                        <button type="submit" ui-sref="optColumnContent.detail({id:optColumnContent.id})" class="btn btn-info btn-sm">
                             <span class="glyphicon glyphicon-eye-open"></span>&nbsp;<span> View</span>
                         </button>
-                        <button type="submit"
-                                ui-sref="optColumnContent.edit({id:optColumnContent.id})"
-                                class="btn btn-primary btn-sm">
+                        <button type="submit" ui-sref="optColumnContent.edit({id:optColumnContent.id})" class="btn btn-primary btn-sm">
                             <span class="glyphicon glyphicon-pencil"></span>&nbsp;<span> Edit</span>
                         </button>
-                        <button type="submit"
-                                data-ng-click="delete(optColumnContent.id)"
-                                class="btn btn-danger btn-sm">
+                        <button type="submit" data-ng-click="delete(optColumnContent.id)" class="btn btn-danger btn-sm">
                             <span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span> Delete</span>
                         </button>
                     </td>
-                    <td class="text-center"><input type="checkbox" data-ng-model="optColumnContent.selected"/></td>
+                    <td class="text-center">
+                        <input type="checkbox" data-ng-model="optColumnContent.selected" />
+                    </td>
                 </tr>
             </tbody>
         </table>

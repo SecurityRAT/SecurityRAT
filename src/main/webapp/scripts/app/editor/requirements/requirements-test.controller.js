@@ -37,11 +37,11 @@ angular.module('sdlctoolApp')
 	$scope.templates = [
 		{name: 'info', url: 'scripts/app/editor/requirements/testRequirementsTemplates/infoTemplate.html', title: 'Test requirements'},
 		{name: 'loading', url: 'scripts/app/editor/requirements/testRequirementsTemplates/loadingTemplate.html', title: 'Test requirements'},
-		{name: 'result', url: 'scripts/app/editor/requirements/testRequirementsTemplates/resultTemplate.html', title: 'Test resutls'},
+		{name: 'result', url: 'scripts/app/editor/requirements/testRequirementsTemplates/resultTemplate.html', title: 'Test results'},
 		{name: 'error', url: 'scripts/app/editor/requirements/testRequirementsTemplates/errorTemplate.html', title: 'Test requirements'}
 	]
 
-	$scope.actualTemplate = 'scripts/app/editor/requirements/testRequirementsTemplates/infoTemplate.html';
+	$scope.templateInScope = {title: 'Test requirements', url: 'scripts/app/editor/requirements/testRequirementsTemplates/infoTemplate.html'};
 
 	$scope.toggleShowHide = function() {
   	$scope.displayProperties.show = !$scope.displayProperties.show;
@@ -69,8 +69,9 @@ angular.module('sdlctoolApp')
 
 	function configureDisplay(actualTemplateName, showCloseButton, errorAlertType, errorMessage) {
 		$scope.displayProperties.showCloseButton = showCloseButton;
-		var template = $filter('filter')($scope.templates, {name: actualTemplateName})
-		$scope.actualTemplate = template.pop().url;
+		var template = $filter('filter')($scope.templates, {name: actualTemplateName}).pop()
+		$scope.templateInScope.url = template.url;
+		$scope.templateInScope.title = template.title;
 		$scope.error.class = errorAlertType;
 		$scope.error.message = errorMessage;
 	}
@@ -90,8 +91,8 @@ angular.module('sdlctoolApp')
 
 			$scope.authenticationProperties.spinnerProperty.showSpinner = true;
 			$scope.testResults.reqs = tempResults;
-		}, function() {
-			configureDisplay('error', true, 'alert alert-danger', "An error occured when fetching the results.")
+		}).catch(function() {
+			configureDisplay('error', true, 'alert alert-danger', "An error occurred when fetching the results.")
 			cleanIntervalPromise();
 		});
 	}
@@ -113,7 +114,7 @@ angular.module('sdlctoolApp')
 						$interval.cancel($scope.interval);
 					}
 				},2000);
-		}, function(response) {
+		}).catch(function(response) {
 				if(response.status === 400 && response.data.state === "NONEXISTENT") {
 					cleanIntervalPromise()
 					$timeout(function(){$uibModalStack.dismissAll();})
@@ -133,22 +134,24 @@ angular.module('sdlctoolApp')
 						testAutomation.startTest($scope.testObject).then(function(checkURI){
 							checkState(checkURI);
 						}, function(exception) {
-							configureDisplay('error', true, "alert alert-danger", "An error occured when executing the test.")
+							configureDisplay('error', true, "alert alert-danger", "An error occurred when executing the test.")
 						});
-		},function(exception) { // onRejected checker function
-			var errorMessage = "The authentication to the securityCAT tool was unsucessful."
+		})
+		.catch(function(exception) { // onRejected checker function
+			var errorMessage = "The authentication to the securityCAT tool was unsuccessful."
 			if(exception === "CORS") {
-				errorMessage = "Communication with the SecurrityCAT Server was not possible due to Cross origin policy."
+				errorMessage = "Communication with the SecurityCAT Server was not possible due to Cross origin policy."
 			}
 			configureDisplay('error', true, "alert alert-danger", errorMessage)
 		});
 	}
 
 	$scope.stopTest = function() {
+	    cleanIntervalPromise();
 		testAutomation.stopTest($scope.checkStatePromise, $scope.testId).then(function() {
 			//configureDisplay('error', true, "alert alert-success", "The test automation was successfully cancelled")
 			$scope.clear();
-		},function(){})
+		}).catch(function(){})
 
 	}
 

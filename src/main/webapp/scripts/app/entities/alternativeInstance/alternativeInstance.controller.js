@@ -1,18 +1,19 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('AlternativeInstanceController', function ($scope, AlternativeInstance, AlternativeInstanceSearch, 
+    .controller('AlternativeInstanceController', function ($scope, AlternativeInstance, AlternativeInstanceSearch,
         AlternativeSet, sharedProperties, $filter, marked, EntityHelper) {
         $scope.alternativeInstances = [];
         $scope.alternativeSets = [];
         $scope.selectedAlternativeSets = [];
-	$scope.searchString = '';        
+        $scope.searchString = '';
         $scope.setLabelText = {buttonDefaultText: 'Alternative Set'};
         $scope.selectedSetSettings = {
   			  smartButtonMaxItems: 2,
   			  showCheckAll: false, showUncheckAll: false,
   			  displayProp: 'name', idProp: 'id', externalIdProp: ''
   	    };
+
         $scope.loadAll = function() {
             AlternativeInstance.query(function(result) {
                $scope.alternativeInstances = result;
@@ -24,7 +25,7 @@ angular.module('sdlctoolApp')
             AlternativeSet.query(function(result) {
             	$scope.alternativeSets = result;
             })
-            
+
         };
         $scope.loadAll();
 
@@ -44,27 +45,26 @@ angular.module('sdlctoolApp')
                 });
         };
 
-        $scope.search = function () {
-            AlternativeInstanceSearch.query({query: $scope.searchQuery}, function(result) {
-                $scope.alternativeInstances = result;
-            }, function(response) {
-                if(response.status === 404) {
-                    $scope.loadAll();
-                }
-            });
-        };
-        $scope.selectAllTypes = function() {
-        	var instancesFilterByAlternativeSet = $filter('filterCategoryForEntities')($scope.alternativeInstances, $scope.selectedAlternativeSets, 'alternativeSet');
-            var filterSelectString = $filter('filter')(instancesFilterByAlternativeSet, $scope.searchString)
-            
-    		  angular.forEach(instances, function(filterSelectString) {
+        $scope.filterEntity = function() {
+            var instancesFilterByAlternativeSet = $filter('filterCategoryForEntities')($scope.alternativeInstances, $scope.selectedAlternativeSets, 'alternativeSet');
+            instancesFilterByAlternativeSet = $filter('filter')(instancesFilterByAlternativeSet, $scope.searchString);
+            return instancesFilterByAlternativeSet;
+        }
+
+        function selectAllTypes () {
+    		  angular.forEach($scope.filterEntity(), function(instance) {
     			  instance.selected = true;
     		  });
   	  	}
-        $scope.deselectAllTypes = function() {
-            EntityHelper.deselectElements($filter('filter')($scope.alternativeInstances, {selected: true}))
+
+        function deselectAllTypes () {
+            EntityHelper.deselectElements($filter('filter')($scope.filterEntity(), {selected: true}))
         }
-        
+
+        $scope.performSelection = function(selectionValue) {
+            EntityHelper.performSelection(selectionValue, selectAllTypes, deselectAllTypes);
+        }
+
         $scope.bulkChange = function() {
           	sharedProperties.setProperty($filter('orderBy')($filter('filter')($scope.alternativeInstances, {selected: true}), ['alternativeSet.showOrder','requirementSkeleton.reqCategory.showOrder', 'requirementSkeleton.showOrder']));
         }

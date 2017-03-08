@@ -1,6 +1,6 @@
-<form class="form-horizontal" name="testForm" role="form" data-ng-submit="startTest()">
+<form class="form-horizontal" name="startTestForm" role="form" data-ng-submit="startTest()">
 	<div class="modal-body">
-	<div class="alert alert-warning">Please verify that the selected requirements are testable. Depending on how the a requirement is tested, make sure to fill the necessary fields.</div>
+	<div class="alert alert-warning">Please make sure that the selected requirements are testable. Depending on how a requirement is tested, make sure to fill the necessary fields.</div>
 	<div class="container">
          <div class="row">
        	<div class="col-md-4">
@@ -85,7 +85,7 @@
 		<button type="button" class="btn btn-default" data-dismiss="modal" data-ng-click="clear()">
             <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span>
         </button>
-        <button type="submit" data-ng-disabled="testForm.$invalid" class="btn btn-primary">
+        <button type="submit" data-ng-disabled="startTestForm.$invalid || startTestForm.$submitted" class="btn btn-primary">
             <span class="glyphicon glyphicon-play"></span>&nbsp;<span>Start</span>
         </button>
 	</div>

@@ -13,7 +13,7 @@ angular.module('sdlctoolApp')
   			  showCheckAll: false, showUncheckAll: false,
   			  displayProp: 'name', idProp: 'id', externalIdProp: ''
   	    };
-        
+
         $scope.loadAll = function() {
             AlternativeSet.query(function(result) {
                $scope.alternativeSets = result;
@@ -43,25 +43,25 @@ angular.module('sdlctoolApp')
                 });
         };
 
-        $scope.search = function () {
-            AlternativeSetSearch.query({query: $scope.searchQuery}, function(result) {
-                $scope.alternativeSets = result;
-            }, function(response) {
-                if(response.status === 404) {
-                    $scope.loadAll();
-                }
-            });
-        };
-        $scope.selectAllTypes = function() {
+        $scope.filterEntity = function() {
             var setFilteredByOptColumns = $filter('filterCategoryForEntities')($scope.alternativeSets, $scope.selectedOptColumns, 'optColumn')
-            angular.forEach($filter('filter')(setFilteredByOptColumns, $scope.searchString), function(set) {
-            set.selected = true;
+            return $filter('filter')(setFilteredByOptColumns, $scope.searchString);
+        }
+
+        function selectAllTypes () {
+            
+            angular.forEach($scope.filterEntity(), function(set) {
+                set.selected = true;
             });
 	  	}
-        $scope.deselectAllTypes = function() {
-            EntityHelper.deselectElements($filter('filter')($scope.alternativeSets, {selected: true}))
+        function deselectAllTypes () {
+            EntityHelper.deselectElements($filter('filter')($scope.filterEntity(), {selected: true}))
         }
-      
+        
+        $scope.performSelection = function(selectionValue) {
+            EntityHelper.performSelection(selectionValue, selectAllTypes, deselectAllTypes);
+        }
+
         $scope.bulkChange = function() {
         	sharedProperties.setProperty($filter('orderBy')($filter('filter')($scope.alternativeSets, {selected: true}), ['optColumn.showOrder','showOrder']));
         }

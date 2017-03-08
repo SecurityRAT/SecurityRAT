@@ -24,7 +24,8 @@ angular.module('sdlctoolApp')
     			  smartButtonMaxItems: 2,
     			  showCheckAll: false, showUncheckAll: false,
     			  displayProp: 'name', idProp: 'id', externalIdProp: ''
-    	    };
+    	};
+
         $scope.loadAll = function() {
             OptColumnContent.query(function(result) {
                $scope.optColumnContents = result;
@@ -68,42 +69,29 @@ angular.module('sdlctoolApp')
                 });
         };
 
-        $scope.search = function () {
-            OptColumnContentSearch.query({query: $scope.searchQuery}, function(result) {
-                $scope.optColumnContents = result;
-            }, function(response) {
-                if(response.status === 404) {
-                    $scope.loadAll();
-                }
-            });
-        };
-        $scope.selectAllContents = function() {
-        	var contents = $filter('filterCategoryForEntities')($scope.optColumnContents, $scope.selectedOptColumns, 'optColumn');
-        	contents = $filter('orderBy')(contents, ['requirementSkeleton.reqCategory.showOrder', 'requirementSkeleton.showOrder', 'optColumn.showOrder']);
-        	contents = $filter('filter')(contents, $scope.searchString)
-            angular.forEach(contents, function(content) {
+
+        $scope.filterEntity = function() {
+            var contents = $filter('filterCategoryForEntities')($scope.optColumnContents, $scope.selectedOptColumns, 'optColumn');
+            contents = $filter('orderBy')(contents, ['requirementSkeleton.reqCategory.showOrder', 'requirementSkeleton.showOrder', 'optColumn.showOrder']);
+            contents = $filter('filter')(contents, $scope.searchString);
+            return contents;
+        }
+
+        function selectAllContents () {
+        	
+            angular.forEach($scope.filterEntity(), function(content) {
               content.selected = true;
             });
 	  	}
 	  	
-	  	$scope.deselectAllContents = function() {
-            EntityHelper.deselectElements($filter('filter')($scope.optColumnContents, {selected: true}))
+	  	function deselectAllContents () {
+            EntityHelper.deselectElements($filter('filter')($scope.filterEntity(), {selected: true}))
 	  	}
 	  	
-//         $scope.selectAllTypes = function() {
-// //        	var contents = $filter('filterCategoryForEntities')($scope.optColumnContents, $scope.selectedReqSkeletons, 'requirementSkeleton');
-//         	var contents = $filter('filterCategoryForEntities')(contents, $scope.selectedOptColumns, 'OptColumn');
-// //        	instances = $filter('filterCategoryForEntities')(instances, $scope.selectedAlternativeSets, 'alternativeSet')
-//     		  angular.forEach(contents, function(content) {
-//     			  content.selected = true;
-//     		  });
-//   	  	}
-//         $scope.deselectAllTypes = function() {
-//         	angular.forEach($scope.optColumnContents, function(content) {
-//         		content.selected = false;
-//           	});
-//         }
-        
+        $scope.performSelection = function(selectionValue) {
+            EntityHelper.performSelection(selectionValue, selectAllContents, deselectAllContents);
+        }
+
         $scope.bulkChange = function() {
           	sharedProperties.setProperty($filter('orderBy')($filter('filter')($scope.optColumnContents, {selected: true}), ['requirementSkeleton.reqCategory.showOrder', 'requirementSkeleton.showOrder', 'optColumn.showOrder']));
         }

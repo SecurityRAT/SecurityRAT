@@ -15,9 +15,10 @@ angular.module('sdlctoolApp')
             	return bool;
             },
 	        removeMarkdown : function(changedContent, controller) {
-	        	changedContent = changedContent.replace(/(\*)/g, "");
+	        	// console.log(changedContent);
 	        	switch(controller) {
-	        	case "export":	changedContent = changedContent.replace(/(\s+-\s)/g, "\n");
+	        	case "export":	changedContent = changedContent.replace(/(\*)/g, "");
+	        					changedContent = changedContent.replace(/(\s+-\s)/g, "\n");
 								changedContent = changedContent.replace(/(-\s)/g, "");
 								changedContent = changedContent.replace(/(\s+1\.\s)/g, "\n");
 								changedContent = changedContent.replace(/(1\.\s)/g, "");
@@ -27,7 +28,9 @@ angular.module('sdlctoolApp')
 								changedContent = changedContent.replace(/(mailto:)/g, "");
 								changedContent = changedContent.replace(/([\n])+/g, "\n");
 								break;
-				default:	changedContent = changedContent.replace(/(1\.\s)/g, "- ");
+				default:	changedContent = changedContent.replace(/(\*\s)/g, "- ");
+							changedContent = changedContent.replace(/(\*)/g, "");
+							changedContent = changedContent.replace(/(1\.\s)/g, "- ");
 							changedContent = changedContent.replace(/#/g, "");
 							changedContent = changedContent.replace(/`/g, "");
 							changedContent = changedContent.replace(/(\s{3,})/g, "\n");

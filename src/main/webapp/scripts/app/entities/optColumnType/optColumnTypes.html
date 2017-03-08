@@ -1,5 +1,4 @@
 <div>
-
     <h2 class="page-header">Option Column Types</h2>
     <jh-alert></jh-alert>
     <div class="container">
@@ -11,37 +10,35 @@
             </div>
             <!--<div class="col-md-8">
                 <form name="searchForm" class="form-inline">
-                	<div class="input-group">
+                    <div class="input-group">
                         <input type="text" class="form-control" data-ng-model="searchQuery" id="searchQuery" placeholder="Search a Option Column Type">
                         <span class="input-group-btn">
-		                    <button class="btn btn-info" data-ng-click="search()" id="searchButton"><span class="glyphicon glyphicon-search"></span>
-		                    </button>
-	                    </span>
+                            <button class="btn btn-info" data-ng-click="search()" id="searchButton"><span class="glyphicon glyphicon-search"></span>
+                            </button>
+                        </span>
                     </div>
                 </form>
             </div>-->
-	    <div class="col-md-5">
-                                <form>
-                                        <button type="button" class="btn btn-info pull-left" data-toggle="collapse" data-target="#searchStringID">Search
-                                        <span class="glyphicon glyphicon-search"></span>
-                                        </button>
-                                        <div id="searchStringID" class="collapse">
-                                                <div class="input-group">
-                                                                <input type="text" class="form-control col-md-5" placeholder="Search String" data-ng-model="searchString">
-                                                        </div>
-                                        </div>
-                                        </form>
+            <div class="col-md-5">
+                <form>
+                    <button type="button" class="btn btn-info pull-left" data-toggle="collapse" data-target="#searchStringID">Search
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                    <div id="searchStringID" class="collapse">
+                        <div class="input-group">
+                            <input type="text" class="form-control col-md-5" placeholder="Search String" data-ng-model="searchString">
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-
     <div class="modal fade" id="deleteOptColumnTypeConfirmation">
         <div class="modal-dialog">
             <div class="modal-content">
                 <form name="deleteForm" data-ng-submit="confirmDelete(optColumnType.id)">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-                                data-ng-click="clear()">&times;</button>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="clear()">&times;</button>
                         <h4 class="modal-title">Confirm delete operation</h4>
                     </div>
                     <div class="modal-body">
@@ -59,7 +56,6 @@
             </div>
         </div>
     </div>
-
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>
@@ -76,19 +72,13 @@
                     <td><strong>{{optColumnType.name}}</strong></td>
                     <td>{{optColumnType.description}}</td>
                     <td>
-                        <button type="submit"
-                                ui-sref="optColumnType.detail({id:optColumnType.id})"
-                                class="btn btn-info btn-sm">
+                        <button type="submit" ui-sref="optColumnType.detail({id:optColumnType.id})" class="btn btn-info btn-sm">
                             <span class="glyphicon glyphicon-eye-open"></span>&nbsp;<span> View</span>
                         </button>
-                        <button type="submit"
-                                ui-sref="optColumnType.edit({id:optColumnType.id})"
-                                class="btn btn-primary btn-sm">
+                        <button type="submit" ui-sref="optColumnType.edit({id:optColumnType.id})" class="btn btn-primary btn-sm">
                             <span class="glyphicon glyphicon-pencil"></span>&nbsp;<span> Edit</span>
                         </button>
-                        <button type="submit"
-                                data-ng-click="delete(optColumnType.id)"
-                                class="btn btn-danger btn-sm">
+                        <button type="submit" data-ng-click="delete(optColumnType.id)" class="btn btn-danger btn-sm">
                             <span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span> Delete</span>
                         </button>
                     </td>

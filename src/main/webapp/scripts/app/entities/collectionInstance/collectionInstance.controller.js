@@ -6,7 +6,9 @@ angular.module('sdlctoolApp')
         $scope.collectionInstances = [];
         $scope.collectionCategories = [];
         $scope.selectedCategory = [];
-	$scope.searchString = '';
+        $scope.searchString = '';
+        // $scope.selectionObject = {value: false, indeterminate: false};
+        
         $scope.loadAll = function() {
             CollectionInstance.query(function(result) {
                $scope.collectionInstances = result;
@@ -41,16 +43,25 @@ angular.module('sdlctoolApp')
                     $scope.clear();
                 });
         };
-        $scope.selectAllTypes = function() {
-            var instanceFilteredByCategory = $filter('filterCategoryForEntities')($scope.collectionInstances, $scope.selectedCategory, 'collectionCategory')
-            angular.forEach($filter('filter')(instanceFilteredByCategory, $scope.searchString), function(instance) {
-            instance.selected = true;
+
+        $scope.filterEntity = function() {
+            var instanceFilteredByCategory = $filter('filterCategoryForEntities')($scope.collectionInstances, $scope.selectedCategory, 'collectionCategory');
+            return $filter('filter')(instanceFilteredByCategory, $scope.searchString);
+        }
+
+        function selectAllTypes() {
+            angular.forEach($scope.filterEntity(), function(instance) {
+                instance.selected = true;
             });
 	  	}
-        $scope.deselectAllTypes = function() {
-            EntityHelper.deselectElements($filter('filter')($scope.collectionInstances, {selected: true}))
+        function deselectAllTypes() {
+            EntityHelper.deselectElements($scope.filterEntity())
         }
-      
+
+        $scope.performSelection = function(selectionValue) {
+            EntityHelper.performSelection(selectionValue, selectAllTypes, deselectAllTypes);
+        }
+
         $scope.bulkChange = function() {
         	sharedProperties.setProperty($filter('orderBy')($filter('filter')($scope.collectionInstances, {selected: true}), ['collectionCategory.showOrder','showOrder']));
         }

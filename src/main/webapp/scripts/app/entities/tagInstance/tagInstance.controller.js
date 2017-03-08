@@ -6,7 +6,8 @@ angular.module('sdlctoolApp')
         $scope.tagInstances = [];
         $scope.tagCategories = [];
         $scope.selectedCategory = [];
-	$scope.searchString = '';
+        $scope.searchString = '';
+        
         $scope.loadAll = function() {
         	TagInstance.query(function(result) {
                $scope.tagInstances = result;
@@ -42,23 +43,22 @@ angular.module('sdlctoolApp')
                 });
         };
 
-        $scope.search = function () {
-            TagInstanceSearch.query({query: $scope.searchQuery}, function(result) {
-                $scope.tagInstances = result;
-            }, function(response) {
-                if(response.status === 404) {
-                    $scope.loadAll();
-                }
-            });
-        };
-        $scope.selectAllTypes = function() {
+        $scope.filterEntity = function() {
             var filterByCategories = $filter('filterCategoryForEntities')($scope.tagInstances, $scope.selectedCategory, 'tagCategory');
-            angular.forEach($filter('filter')(filterByCategories, $scope.searchString), function(instance) {
+            return $filter('filter')(filterByCategories, $scope.searchString);
+        }
+
+        function selectAllTypes () {
+            angular.forEach($scope.filterEntity(), function(instance) {
                 instance.selected = true;
             });
   	  	}
-        $scope.deselectAllTypes = function() {
-            EntityHelper.deselectElements($filter('filter')($scope.tagInstances, {selected: true}))
+        function deselectAllTypes () {
+            EntityHelper.deselectElements($filter('filter')($scope.filterEntity(), {selected: true}))
+        }
+
+        $scope.performSelection = function(selectionValue) {
+            EntityHelper.performSelection(selectionValue, selectAllTypes, deselectAllTypes);
         }
         
         $scope.bulkChange = function() {

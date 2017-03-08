@@ -6,13 +6,14 @@ angular.module('sdlctoolApp')
         $scope.statusColumnValues = [];
         $scope.statusColumns = [];
         $scope.selectedColumns = [];
-	$scope.searchString = '';
+        $scope.searchString = '';
         $scope.statusColumnLabelText = {buttonDefaultText: 'Status Column'};
         $scope.selectedColumnSettings = {
   			  smartButtonMaxItems: 2,
   			  showCheckAll: false, showUncheckAll: false,
   			  displayProp: 'name', idProp: 'id', externalIdProp: ''
   	    };
+
         $scope.loadAll = function() {
             StatusColumnValue.query(function(result) {
                $scope.statusColumnValues = result;
@@ -41,16 +42,26 @@ angular.module('sdlctoolApp')
                     $scope.clear();
                 });
         };
-        $scope.selectAllValues = function() {
+
+        $scope.filterEntity = function() {
             var filterByStatColumns = $filter('filterCategoryForEntities')($scope.statusColumnValues, $scope.selectedColumns, 'statusColumn');
-            angular.forEach($filter('filter')(filterByStatColumns, $scope.searchString), function(value) {
+            return $filter('filter')(filterByStatColumns, $scope.searchString);
+        }
+
+        function selectAllValues () {
+            
+            angular.forEach($scope.filterEntity(), function(value) {
               value.selected = true;
             });
   	  	}
-        $scope.deselectAllValues = function() {
-            EntityHelper.deselectElements($filter('filter')($scope.statusColumnValues, {selected: true}))
+        function deselectAllValues () {
+            EntityHelper.deselectElements($filter('filter')($scope.filterEntity(), {selected: true}))
         }
         
+        $scope.performSelection = function(selectionValue) {
+            EntityHelper.performSelection(selectionValue, selectAllValues, deselectAllValues);
+        }
+
         $scope.bulkChange = function() {
         	sharedProperties.setProperty($filter('orderBy')($filter('filter')($scope.statusColumnValues, {selected: true}), ['statusColumn.showOrder','showOrder']));
         }

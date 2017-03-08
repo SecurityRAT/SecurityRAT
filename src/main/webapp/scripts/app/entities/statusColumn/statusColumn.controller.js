@@ -4,7 +4,8 @@ angular.module('sdlctoolApp')
     .controller('StatusColumnController', function ($scope, StatusColumn, StatusColumnSearch, sharedProperties, 
         $filter, EntityHelper) {
         $scope.statusColumns = [];
-	$scope.searchString = '';
+        $scope.searchString = '';
+
         $scope.loadAll = function() {
             StatusColumn.query(function(result) {
                $scope.statusColumns = result;
@@ -31,15 +32,23 @@ angular.module('sdlctoolApp')
                 });
         };
         
-        $scope.selectAllTypes = function() {
-        	angular.forEach($filter('filter')($scope.statusColumns, $scope.searchString), function(stat) {
+        $scope.filterEntity = function() {
+            return $filter('filter')($scope.statusColumns, $scope.searchString);
+        }
+
+        function selectAllTypes () {
+        	angular.forEach($scope.filterEntity(), function(stat) {
         		stat.selected = true;
         	});
         }
-        $scope.deselectAllTypes = function() {
-            EntityHelper.deselectElements($filter('filter')($scope.statusColumns, {selected: true}))
+        function deselectAllTypes () {
+            EntityHelper.deselectElements($filter('filter')($scope.filterEntity(), {selected: true}))
         }
         
+        $scope.performSelection = function(selectionValue) {
+            EntityHelper.performSelection(selectionValue, selectAllTypes, deselectAllTypes);
+        }
+
         $scope.bulkChange = function() {
         	sharedProperties.setProperty($filter('orderBy')($filter('filter')($scope.statusColumns, {selected: true}), ['showOrder']));
         }

@@ -19,7 +19,7 @@ angular.module('sdlctoolApp')
             promise.derefer.resolve(response);
             authenticatorService.cancelPromises(promise);
           }
-        }, function(exception) {
+        }).catch(function(exception) {
           if(exception.status === 401 || exception.status === 302 || exception.status === -1) {
             authenticatorService.startCheckAuthenticationProcess(url, displayProperty, spinnerProperty, promise, checkAuthentication);
           }
@@ -53,10 +53,10 @@ angular.module('sdlctoolApp')
               return checkState(restcall, checkStatePromise)
             }
           }
-        }, function(response) {
+        }).catch(function(response) {
 
           checkStatePromise.reject(response)
-        })
+        });
         return checkStatePromise.promise;
       }
 
@@ -64,37 +64,32 @@ angular.module('sdlctoolApp')
       * Checks the state of the a running securityCAT test.
       */
       function fetchResult(restcall) {
-        var promise = $q.defer();
-        apiFactory.testRequirementApi('GET', restcall, '', headerConfig, false).then(function(data) {
-          promise.resolve(data);
-        }, function() {
-          promise.reject("error")
+        return new Promise((resolve, reject) => {
+            apiFactory.testRequirementApi('GET', restcall, '', headerConfig, false).then(function(data) {
+              resolve(data);
+            }).catch(function() {
+              reject("error")
+            })
         })
-        return promise.promise;
+
       }
 
       /**
       * Start the securityCAT automated test.
       */
       function startTest(data) {
-        var resultPromise = $q.defer();
-        var checkStatePromise = $q.defer();
-        apiFactory.testRequirementApi('POST', appConfig.securityCATStartTest, data, headerConfig, true).then(function(response) {
-          var headers = response.headers();
-          if(angular.isDefined(headers.location)) {
-            resultPromise.resolve(headers.location);
-//              checkState(headers.location, checkStatePromise).then(function(resourceURI) {
-//                fetchResult(resourceURI).then(function(testResults) {
-//                  resultPromise.resolve(testResults);
-//                })
-//              })
-          } else {
-            resultPromise.reject("error")
-          }
-        }, function(response) {
-            resultPromise.reject(response)
+        return new Promise((resolve, reject) => {
+            apiFactory.testRequirementApi('POST', appConfig.securityCATStartTest, data, headerConfig, true).then(function(response) {
+              var headers = response.headers();
+              if(angular.isDefined(headers.location)) {
+                resolve(headers.location);
+              } else {
+                reject("error")
+              }
+            }).catch(function(response) {
+                reject(response)
+            });
         });
-        return resultPromise.promise;
       }
 
       /**

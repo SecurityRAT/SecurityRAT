@@ -956,11 +956,7 @@ angular.module('sdlctoolApp')
 				  }
 		  );
 	  }
-	  $scope.selectAllReqs = function() {
-		  angular.forEach($scope.filterRequirements(), function(requirement) {
-			  requirement.selected = true;
-		  });
-	  }
+
 	  $scope.filterRequirements = function() {
 		  return $filter('filterByStatus')(
 				  $filter('filterByCategories')(
@@ -970,10 +966,26 @@ angular.module('sdlctoolApp')
 						  ,$scope.selectedCategory)
 				  ,$scope.selectedStatus);
 	  }
-	  $scope.deselectAllReqs = function() {
+	  
+	  function selectAllReqs() {
+		  angular.forEach($scope.filterRequirements(), function(requirement) {
+			  requirement.selected = true;
+		  });
+	  }
+	  
+	  function deselectAllReqs () {
 		  angular.forEach($scope.filterRequirements(), function(requirement) {
 			  requirement.selected = false;
 		  });
+	  }
+
+	  $scope.performSelection = function(selectionValue) {
+        if(selectionValue) {
+            selectAllReqs();
+        }
+        else {
+            deselectAllReqs();
+        }
 	  }
 
 	  $scope.updateRequirements = function() {

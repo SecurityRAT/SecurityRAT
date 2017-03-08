@@ -4,7 +4,8 @@ angular.module('sdlctoolApp')
     .controller('ProjectTypeController', function ($scope, ProjectType, ProjectTypeSearch, $filter, 
         sharedProperties, EntityHelper) {
         $scope.projectTypes = [];
-	$scope.searchString = '';
+        $scope.searchString = '';
+
         $scope.loadAll = function() {
             ProjectType.query(function(result) {
                $scope.projectTypes = result;
@@ -30,15 +31,24 @@ angular.module('sdlctoolApp')
                     $scope.clear();
                 });
         };
-        $scope.selectAllTypes = function() {
-            angular.forEach($filter('filter')($scope.projectTypes, $scope.searchString), function(type) {
+
+        $scope.filterEntity = function() {
+            return $filter('filter')($scope.projectTypes, $scope.searchString);
+        }
+
+        function selectAllTypes () {
+            angular.forEach($scope.filterEntity(), function(type) {
               type.selected = true;
             });
   	  	}
-        $scope.deselectAllTypes = function() {
-            EntityHelper.deselectElements($filter('filter')($scope.projectTypes, {selected: true}))
+        function deselectAllTypes () {
+            EntityHelper.deselectElements($filter('filter')($scope.filterEntity(), {selected: true}))
 	  	}
         
+        $scope.performSelection = function(selectionValue) {
+            EntityHelper.performSelection(selectionValue, selectAllTypes, deselectAllTypes);
+        }
+
         $scope.bulkChange = function() {
         	sharedProperties.setProperty($filter('orderBy')($filter('filter')($scope.projectTypes, {selected: true}), ['showOrder']));
         }
