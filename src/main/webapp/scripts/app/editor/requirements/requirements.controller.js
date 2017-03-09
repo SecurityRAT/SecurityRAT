@@ -12,8 +12,7 @@ angular.module('sdlctoolApp')
         $timeout, $uibModal, $filter, getRequirementsFromImport, $confirm, $location, localStorageService, appConfig, $sce, SDLCToolExceptionService, $rootScope, marked, Helper, $state) {
         $scope.failed = "";
         $scope.fail = false;
-        $scope.endProgressbar = true;
-        $scope.barValue = 0;
+        $scope.progressbar =  {hide: true, barValue: 0, intervalPromise: undefined};
         $scope.showRequirements = false;
         $scope.withselectedDropdown = { toggleExcel: false, testAutomation: appConfig.securityCAT !== undefined && appConfig.securityCAT !== "" ? true : false };
         $scope.outputStatus = "";
@@ -103,6 +102,25 @@ angular.module('sdlctoolApp')
             }
         };
 
+        function startProgressbar() {
+            $scope.progressbar.intervalPromise = $interval(function() { $scope.progressbar.barValue += 1; }, 100, 95);
+            $scope.progressbar.hide = false;
+            $scope.showRequirements = false;
+        }
+
+        function finishProgressbar () {
+            if(angular.isDefined($scope.progressbar.intervalPromise)) {
+                $interval.cancel($scope.progressbar.intervalPromise);
+                $scope.progressbar.intervalPromise = undefined;
+            }
+            $scope.progressbar.barValue = 100;
+            $timeout(function() {
+                $scope.progressbar.barValue = 0;
+                $scope.progressbar.hide = true;
+                $scope.showRequirements = true;
+            }, 2500);
+        }
+
         $scope.init = function() {
             $scope.hasIssueLinks = false;
             $scope.onRouteChangeOff = $scope.$on('$locationChangeStart', $scope.routeChange);
@@ -140,7 +158,6 @@ angular.module('sdlctoolApp')
                     $scope.updateRequirements();
                 } else {
                     $scope.generatedOn = $scope.getCurrentDate();
-                    $scope.startProgressbar();
                     $scope.buildSettings();
                     $scope.getRequirements();
                     //if($scope.systemSettings.oldRequirements === undefined) {
@@ -263,23 +280,8 @@ angular.module('sdlctoolApp')
             //console.log($scope.requirementProperties.selectedOptColumns);
         });
 
-        $scope.startProgressbar = function() {
-            $scope.endProgressbar = false;
-            $scope.showRequirements = false;
-            $scope.promise = $interval(function() { $scope.barValue += 1; }, 200, 95);
-        }
-
-        $scope.finishProgressbar = function() {
-            $interval.cancel($scope.promise);
-            $scope.barValue = 100;
-            $timeout(function() {
-                $scope.barValue = 0;
-                $scope.endProgressbar = true;
-                $scope.showRequirements = true;
-            }, 2500);
-        }
-
         $scope.getRequirements = function() {
+            startProgressbar();
             var requestString = '';
             angular.forEach($scope.requirementsSettings, function(value, key) {
                 requestString += key + '=' + value + '&';
@@ -795,10 +797,10 @@ angular.module('sdlctoolApp')
                 $scope.requirements = retOld;
                 $scope.mergeUpdatedRequirements(retNew, true, false);
                 //$scope.mergeOldAndNewRequirements();
-                $scope.finishProgressbar();
-            } else {
-                $scope.finishProgressbar();
             }
+
+            finishProgressbar();
+            
             //do a initial localBackup
             $scope.onTimeout();
             $scope.promiseForStorage = $interval($scope.onTimeout, 60000);

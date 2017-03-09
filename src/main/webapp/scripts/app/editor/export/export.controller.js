@@ -230,132 +230,97 @@ angular.module('sdlctoolApp')
 
         }
 
-        $scope.createRemoteLink = function(infoObject) {
-            apiFactory.postExport(infoObject.url, infoObject.postData, { 'X-Atlassian-Token': 'no-check', 'Content-Type': 'application/json' }).then(function(data) {}, function(exception) {});
+        function OnIssueLinkFailure(exception) {
+            if (exception.status !== 500) {
+                if (exception.errorException.opened.$$state.status === 0) {
+                    exception.errorException.opened.$$state.value = false;
+                    exception.errorException.opened.$$state.status = 1;
+                }
+                if (parseInt(exception.status) === 404) {
+                    var project = $scope.jiraUrl.url.split("/").pop();
+                    $scope.exportProperty.issuelink = "disabled";
+                    message = "The issues could not be linked. This can occur when the issue linking between " + $scope.exported.ticket.url + " and " +
+                        $scope.jiraUrl.url.slice(0, $scope.jiraUrl.url.indexOf(project)) + outwardKey + " is disabled.";
+                    SDLCToolExceptionService.showWarning('Issue link unsuccessful', message, SDLCToolExceptionService.DANGER);
+                } else if (exception.status === 401) {
+                    $scope.exportProperty.issuelink = "permission";
+                    message = "The issues could not be linked. You do not have the permission to link issues.";
+                    SDLCToolExceptionService.showWarning('Issue link unsuccessful', message, SDLCToolExceptionService.DANGER);
+                }
+            }
+        }
+
+        // links a tracker instance to another one.
+        $scope.createRemoteLink = function(apiCall, issueKey, issueInfo) {
+            var postData = {
+                "object": {
+                    "url": issueInfo.url,
+                    "title": issueKey,
+                    "summary": issueInfo.fields.summary,
+                    "icon": {
+                        "url16x16": issueInfo.fields.issuetype.iconUrl,
+                        "title": issueInfo.fields.issuetype.description
+                    },
+                    "status": {
+                        "icon": {
+                            "url16x16": issueInfo.fields.status.iconUrl,
+                            "title": issueInfo.fields.status.name
+                        }
+                    }
+                },
+                "relationship": "relates to"
+            }
+            apiFactory.postExport(apiCall, postData, { 'X-Atlassian-Token': 'nocheck', 'Content-Type': 'application/json' })
+            .then(function(data) {})
+            .catch(OnIssueLinkFailure);
         }
 
         $scope.addIssueLinks = function(inwardKey, outwardKey, remoteIssueInfo) {
-                var url = $scope.buildUrlCall("issueLink");
-                var urlSplit = $scope.exported.ticket.url.split("/");
-                var apiUrl = {};
-                angular.extend(apiUrl, Helper.buildJiraUrl(urlSplit));
+            var apiCall = $scope.buildUrlCall("issueLink");
+            var urlSplit = $scope.exported.ticket.url.split("/");
+            var apiUrl = {};
+            angular.extend(apiUrl, Helper.buildJiraUrl(urlSplit));
+
+            // console.log(remoteIssueInfo);
+            var postData = {
+                type: {
+                    name: "Relates"
+                },
+                inwardIssue: {
+                    key: inwardKey
+                },
+                outwardIssue: {
+                    key: outwardKey
+                }
+            };
+
+            if(angular.equals(apiUrl.host, remoteIssueInfo.apiUrl.host)) {
+                // links tickets are from the same JIRA instance
+                apiFactory.postExport(apiCall, postData, { 'X-Atlassian-Token': 'nocheck', 'Content-Type': 'application/json' })
+                .then().catch(OnIssueLinkFailure);
+            } else {
+                // links tickets from different JIRA instances.
+                
+                // links ticket from main JIRA ticket to ticket in different JIRA instance
+                var inwardApiCall = apiUrl.http + "//" + apiUrl.host + appConfig.jiraApiPrefix + '/' + inwardKey + "/remotelink";
+                $scope.createRemoteLink(inwardApiCall, outwardKey, remoteIssueInfo);
+                var object = {};
+                var outwardApiCall = remoteIssueInfo.apiUrl.http + "//" + remoteIssueInfo.apiUrl.host + appConfig.jiraApiPrefix + '/' + outwardKey + "/remotelink";
                 // get the summary of the main JIRA to prepare for remote linking if necessary
                 if (angular.isUndefined($scope.remoteLinking.info)) {
                     apiFactory.getJIRAInfo(apiUrl.http + "//" + apiUrl.host + appConfig.jiraApiPrefix + "/" + apiUrl.ticketKey[0]).then(function(response) {
-                        $scope.remoteLinking.info = response;
+                        object = response;
+                        object.url = $scope.exported.ticket.url;
+                        $scope.createRemoteLink(outwardApiCall, inwardKey, object);
                     })
+                } else {
+                    object = $scope.remoteLinking.info;
+                    object.url = $scope.exported.ticket.url;
+                    $scope.createRemoteLink(outwardApiCall, inwardKey, object);
                 }
-                var postData = {
-                    type: {
-                        name: "Relates"
-                    },
-                    inwardIssue: {
-                        key: inwardKey
-                    },
-                    outwardIssue: {
-                        key: outwardKey
-                    }
-                };
-                apiFactory.postExport(url, postData, { 'X-Atlassian-Token': 'no-check', 'Content-Type': 'application/json' }).then(function() {
-
-                }, function(exception) {
-                    if (exception.status !== 500) {
-                        if (exception.errorException.opened.$$state.status === 0) {
-                            exception.errorException.opened.$$state.value = false;
-                            exception.errorException.opened.$$state.status = 1;
-                        }
-                        // creates remote link to the different JIRA.
-                        if ((parseInt(exception.status) === 404) && (exception.data.errorMessages.indexOf("Issue Does Not Exist") !== -1)) {
-                            var object1 = {};
-                            object1.postData = {
-                                "object": {
-                                    "url": remoteIssueInfo.url,
-                                    "title": outwardKey,
-                                    "summary": remoteIssueInfo.fields.summary,
-                                    "icon": {
-                                        "url16x16": remoteIssueInfo.fields.issuetype.iconUrl,
-                                        "title": remoteIssueInfo.fields.issuetype.description
-                                    },
-                                    "status": {
-                                        "resolved": remoteIssueInfo.fields.status.name === "Closed" ? true : false,
-                                        "icon": {
-                                            "url16x16": remoteIssueInfo.fields.status.iconUrl,
-                                            "title": remoteIssueInfo.fields.status.name
-                                        }
-                                    }
-                                },
-                                "relationship": "relates to"
-                            }
-
-                            object1.url = apiUrl.http + "//" + apiUrl.host + appConfig.jiraApiPrefix + '/' + inwardKey + "/remotelink";
-                            // links ticket from main JIRA to ticket in different JIRA
-                            $scope.createRemoteLink(object1);
-                            var object2 = {};
-                            // get the summary of the main JIRA to prepare for remote linking if necessary
-                            if (angular.isUndefined($scope.remoteLinking.info)) {
-                                apiFactory.getJIRAInfo(apiUrl.http + "//" + apiUrl.host + appConfig.jiraApiPrefix + "/" + apiUrl.ticketKey[0]).then(function(response) {
-                                    $scope.remoteLinking.info = response;
-                                    object2.postData = {
-                                        "object": {
-                                            "url": $scope.exported.ticket.url,
-                                            "title": inwardKey,
-                                            "summary": $scope.remoteLinking.info.fields.summary,
-                                            "icon": {
-                                                "url16x16": $scope.remoteLinking.info.fields.issuetype.iconUrl,
-                                                "title": $scope.remoteLinking.info.fields.issuetype.description
-                                            },
-                                            "status": {
-                                                "resolved": $scope.remoteLinking.info.fields.status.name === "Closed" ? true : false,
-                                                "icon": {
-                                                    "url16x16": $scope.remoteLinking.info.fields.status.iconUrl,
-                                                    "title": $scope.remoteLinking.info.fields.status.name
-                                                }
-                                            }
-                                        },
-                                        "relationship": "relates to"
-                                    }
-                                    object2.url = remoteIssueInfo.apiUrl.http + "//" + remoteIssueInfo.apiUrl.host + appConfig.jiraApiPrefix + '/' + outwardKey + "/remotelink";
-                                    // links ticket from different JIRA to ticket in main JIRA
-                                    $scope.createRemoteLink(object2);
-                                })
-                            } else {
-                                object2.postData = {
-                                    "object": {
-                                        "url": $scope.exported.ticket.url,
-                                        "title": inwardKey,
-                                        "summary": $scope.remoteLinking.info.fields.summary,
-                                        "icon": {
-                                            "url16x16": $scope.remoteLinking.info.fields.issuetype.iconUrl,
-                                            "title": $scope.remoteLinking.info.fields.issuetype.description
-                                        },
-                                        "status": {
-                                            "resolved": $scope.remoteLinking.info.fields.status.name === "Closed" ? true : false,
-                                            "icon": {
-                                                "url16x16": $scope.remoteLinking.info.fields.status.iconUrl,
-                                                "title": $scope.remoteLinking.info.fields.status.name
-                                            }
-                                        }
-                                    },
-                                    "relationship": "relates to"
-                                }
-                                object2.url = remoteIssueInfo.apiUrl.http + "//" + remoteIssueInfo.apiUrl.host + appConfig.jiraApiPrefix + '/' + outwardKey + "/remotelink";
-                                // links ticket from different JIRA to ticket in main JIRA
-                                $scope.createRemoteLink(object2);
-                            }
-                        } else if (parseInt(exception.status) === 404) {
-                            var project = $scope.jiraUrl.url.split("/").pop();
-                            $scope.exportProperty.issuelink = "disabled";
-                            message = "The issues could not be linked. This can occur when the issue linking between " + $scope.exported.ticket.url + " and " +
-                                $scope.jiraUrl.url.slice(0, $scope.jiraUrl.url.indexOf(project)) + outwardKey + " is disabled.";
-                            SDLCToolExceptionService.showWarning('Issue link unsuccessful', message, SDLCToolExceptionService.DANGER);
-                        } else if (exception.status === 401) {
-                            $scope.exportProperty.issuelink = "permission";
-                            message = "The issues could not be linked. You do not have the permission to link issues.";
-                            SDLCToolExceptionService.showWarning('Issue link unsuccessful', message, SDLCToolExceptionService.DANGER);
-                        }
-                    }
-                });
             }
+        }
+                 
             /**
              * Queries the autoCompleteUrl with the entered text to help autocomplete
              */
@@ -475,7 +440,7 @@ angular.module('sdlctoolApp')
                                     mandatory: $scope.selection.createTickets && key === 'labels' ? true : value.required,
                                     autoCompleteUrl: autoCompleteUrl
                                 });
-                                console.log($scope.jiraAlternatives.mandatoryFields);
+                                // console.log($scope.jiraAlternatives.mandatoryFields);
                             });
                         }
                     });
@@ -551,7 +516,7 @@ angular.module('sdlctoolApp')
                             $scope.sendAttachment();
                         }
                     }
-                }, function(error) {
+                }).catch(function(error) {
                     if (error.status === 400) {
                         angular.forEach(error.data.errors, function(value, key) {
                             var values = value.split(' ');
@@ -596,14 +561,14 @@ angular.module('sdlctoolApp')
                 var linksObject = {};
                 //			console.log(file);
                 try {
-                    // links the newly created ticket to the existing ticket (created in batch mode) from the yaml file. 
+                    // links the newly created ticket to the existing tickets (created in batch mode) from the yaml file. 
                     // This happens when the requirement set has already been saved in a ticket and the user save it into a new one.
                     for (var i = 0; i < $scope.ticketsToLink.length; i++) {
                         var urlSplit = $scope.ticketsToLink[i].split('/');
                         var apiUrl = {};
                         angular.extend(apiUrl, Helper.buildJiraUrl(urlSplit));
 
-                        // this is done to prevent the data from been changed due to the asynchronoous nature of the http calls.
+                        // this is done to prevent the data from been changed due to the asynchronous nature of the http calls.
                         linksObject[apiUrl.ticketKey[0]] = {};
                         linksObject[apiUrl.ticketKey[0]].apiUrl = apiUrl;
                         linksObject[apiUrl.ticketKey[0]].url = $scope.ticketsToLink[i];
@@ -618,7 +583,7 @@ angular.module('sdlctoolApp')
                     var blob = new Blob([doc], { type: 'application/x-yaml' })
                     var data = new FormData();
                     data.append('file', blob, filename);
-                    apiFactory.postExport($scope.buildUrlCall("attachment"), data, { 'X-Atlassian-Token': 'no-check', 'Content-Type': undefined })
+                    apiFactory.postExport($scope.buildUrlCall("attachment"), data, { 'X-Atlassian-Token': 'nocheck', 'Content-Type': undefined })
                         .then(function(response) {
                             var commentBody = appConfig.ticketComment;
                             commentBody = commentBody.replace('§artifact_name§', $scope.exported.name);
@@ -643,7 +608,7 @@ angular.module('sdlctoolApp')
                     "body": body
                 }
                 //adds comment to ease import
-            apiFactory.postExport($scope.buildUrlCall("comment"), commentData, { 'X-Atlassian-Token': 'no-check', 'Content-Type': 'application/json' }).then(function() {
+            apiFactory.postExport($scope.buildUrlCall("comment"), commentData, { 'X-Atlassian-Token': 'nocheck', 'Content-Type': 'application/json' }).then(function() {
                 //performs the export successful operation when adding a yaml attachment.
                 if ($scope.selection.jira) {
                     $scope.close();
