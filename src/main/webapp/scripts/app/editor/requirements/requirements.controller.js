@@ -102,13 +102,13 @@ angular.module('sdlctoolApp')
             }
         };
 
-        function startProgressbar() {
+        $scope.startProgressbar = function() {
             $scope.progressbar.intervalPromise = $interval(function() { $scope.progressbar.barValue += 1; }, 100, 95);
             $scope.progressbar.hide = false;
             $scope.showRequirements = false;
         }
 
-        function finishProgressbar () {
+        $scope.finishProgressbar = function() {
             if(angular.isDefined($scope.progressbar.intervalPromise)) {
                 $interval.cancel($scope.progressbar.intervalPromise);
                 $scope.progressbar.intervalPromise = undefined;
@@ -157,6 +157,7 @@ angular.module('sdlctoolApp')
                     $scope.promiseForStorage = $interval($scope.onTimeout, 60000);
                     $scope.updateRequirements();
                 } else {
+                    $scope.startProgressbar();
                     $scope.generatedOn = $scope.getCurrentDate();
                     $scope.buildSettings();
                     $scope.getRequirements();
@@ -281,7 +282,6 @@ angular.module('sdlctoolApp')
         });
 
         $scope.getRequirements = function() {
-            startProgressbar();
             var requestString = '';
             angular.forEach($scope.requirementsSettings, function(value, key) {
                 requestString += key + '=' + value + '&';
@@ -799,7 +799,7 @@ angular.module('sdlctoolApp')
                 //$scope.mergeOldAndNewRequirements();
             }
 
-            finishProgressbar();
+            $scope.finishProgressbar();
             
             //do a initial localBackup
             $scope.onTimeout();

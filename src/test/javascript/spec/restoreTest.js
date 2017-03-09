@@ -57,8 +57,7 @@ describe('Protractor Security RAT general testsuite', function() {
 		var list = element.all(by.tagName('textarea'));
 		// checks for the restored session according to the comment written before.
 		expect(list.first().getText()).toBe("restore session test.");
-		element(by.buttonText('Select')).click();
-		element(by.partialLinkText('Select all')).click();
+		element(by.id("SelectAll")).click();
 		element(by.buttonText('Action with selected')).click();
 		element(by.partialLinkText('Create slides')).click();
 		browser.sleep(3000);

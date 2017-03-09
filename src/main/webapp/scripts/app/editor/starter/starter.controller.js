@@ -22,11 +22,6 @@ angular.module('sdlctoolApp')
 	  $scope.disabled = false;
 	  $scope.regex = new XRegExp("^[\\p{Latin}\\pN+\\s\\-\\.\\:\\+\\(\\)\\[\\]\\,\\!\\#\\$\\%\\'\\*\\=\\?\\^\\`\\{\\}\\|\\~\\;\\@\\&]+$");
 	  getRequirementsFromImport.setProperty({});
-
-	  $('document').ready(function() {
-	  	$('#artifact').focus();
-	  });
-
 	  $scope.selectedCollectionSettings = {
 			  smartButtonMaxItems: 7,
 			  closeOnSelect: true, closeOnDeselect: true,
@@ -236,5 +231,3 @@ angular.module('sdlctoolApp')
 			$uibModalInstance.close();
 		}
   });
-
-

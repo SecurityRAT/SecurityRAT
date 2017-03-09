@@ -94,16 +94,14 @@ describe('Protractor Security RAT general testsuite', function() {
 	it('bulk change for status column', function() {
 		entities.click();
 		element(by.partialLinkText('Status Columns')).click();
-		element(by.buttonText("Select")).click();
-		element(by.linkText("Select all")).click();
+		element(by.id("selectAll")).click();
 		browser.sleep(1000);
 		expect(element(by.buttonText("Bulk change with selected")).isPresent()).toBe(true);
 		element(by.buttonText("Bulk change with selected")).click();
 		element.all(by.css('span[class="bootstrap-switch-label"]')).first().click();
 		element(by.buttonText("Save")).click();
 		browser.sleep(6000);
-		element(by.buttonText("Select")).click();
-		element(by.linkText("Select all")).click();
+		element(by.id("selectAll")).click();
 		browser.sleep(1000);
 		expect(element(by.buttonText("Bulk change with selected")).isPresent()).toBe(true);
 		element(by.buttonText("Bulk change with selected")).click();
@@ -181,16 +179,14 @@ describe('Protractor Security RAT general testsuite', function() {
 		var selectButton = element.all(by.model('statusColumnValue.selected'));
 		var statusColumn = element.all(by.repeater(statValueRepeater)
 		.column('statusColumnValue.statusColumn.name'));
-		element(by.buttonText("Select")).click();
-		element(by.linkText("Select all")).click();
+		element(by.id("selectAll")).click();
 		browser.sleep(1000);
 		expect(element(by.buttonText("Bulk change with selected")).isPresent()).toBe(true);
 		element(by.buttonText("Bulk change with selected")).click();
 		element(by.css('span[class="bootstrap-switch-label"]')).click();
 		element(by.buttonText("Save")).click();
 		browser.sleep(6000);
-		element(by.buttonText("Select")).click();
-		element(by.linkText("Select all")).click();
+		element(by.id("selectAll")).click();
 		browser.sleep(1000);
 		expect(element(by.buttonText("Bulk change with selected")).isPresent()).toBe(true);
 		element(by.buttonText("Bulk change with selected")).click();

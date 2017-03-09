@@ -155,16 +155,14 @@ describe('Protractor Security RAT general testsuite', function() {
 		element.all(by.buttonText('Edit')).get(2).click();
 		element(by.cssContainingText('option', 'OnDemandText')).click();
 		element(by.buttonText('Save')).click();
-		element(by.buttonText("Select")).click();
-		element(by.linkText("Select all")).click();
+		element(by.id("selectAll")).click();
 		browser.sleep(1000);
 		expect(element(by.buttonText("Bulk change with selected")).isPresent()).toBe(true);
 		element(by.buttonText("Bulk change with selected")).click();
 		element(by.css('span[class="bootstrap-switch-label"]')).click();
 		element(by.buttonText("Save")).click();
 		browser.sleep(6000);
-		element(by.buttonText("Select")).click();
-		element(by.linkText("Select all")).click();
+		element(by.id("selectAll")).click();
 		browser.sleep(1000);
 		expect(element(by.buttonText("Bulk change with selected")).isPresent()).toBe(true);
 		element(by.buttonText("Bulk change with selected")).click();

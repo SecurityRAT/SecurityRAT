@@ -241,8 +241,7 @@ describe('Protractor Security RAT Testsuite', function() {
 		browser.sleep(3000);
 		
 		//export to excel with status values.
-		element(by.buttonText("Select")).click();
-		element(by.linkText("Select all")).click();
+		element(by.id("selectAll")).click();
 		element(by.buttonText("Action with selected")).click();
 		element(by.linkText("Create spreadsheet")).click();
 		browser.sleep(2000);
@@ -250,8 +249,7 @@ describe('Protractor Security RAT Testsuite', function() {
 		browser.sleep(2000);
 		
 		//export to excel without status values.
-		element(by.buttonText("Select")).click();
-		element(by.linkText("Select all")).click();
+		element(by.id("selectAll")).click();
 		element(by.buttonText("Action with selected")).click();
 		element(by.linkText("Create spreadsheet")).click();
 		browser.sleep(2000);
@@ -260,8 +258,7 @@ describe('Protractor Security RAT Testsuite', function() {
 		element(by.buttonText('Create')).click();
 		browser.sleep(2000);
 		//deselects all
-		element(by.buttonText("Select")).click();
-		element(by.linkText("Deselect all")).click();
+		element(by.id("selectAll")).click();
 		var requirements = element.all(by.model("reqs.selected"));
 		
 		requirements.first().click();
@@ -323,6 +320,7 @@ describe('Protractor Security RAT Testsuite', function() {
 		expect(element(by.binding('exportProperty.failed')).getText()).toBe('You have entered a wrong queue. Please select a valid queue and click on Export again.')
 		
 		element(by.model('fields.project.key')).sendKeys(browser.params.jiraQueue.split('/').pop());
+		browser.sleep(5000)
 		(element(by.buttonText(exportButton))).click();
 		
 		element(by.model('fields.issuetype.name')).sendKeys(browser.params.issuetypes[1]);
