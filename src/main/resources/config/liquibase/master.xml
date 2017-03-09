@@ -30,4 +30,5 @@
 	<include file="classpath:config/liquibase/changelog/20160329_add_constant_configuration.xml" relativeToChangelogFile="false" />
 	<include file="classpath:config/liquibase/changelog/20160329_update_constant_configuration.xml" relativeToChangelogFile="false" />
 	<include file="classpath:config/liquibase/changelog/20160421_add_constant_value.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170308_add_summaryconstant.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>

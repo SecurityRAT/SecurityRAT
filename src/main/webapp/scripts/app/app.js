@@ -260,10 +260,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
             return apiFactory;
         })
         .constant('appConfig', {
-        	customRequirement : customRequirementName,
         	jiraApiPrefix : jiraApiPrefix,
-            ticketComment : ticketComment,
-            ticketDescription : ticketDescription,
             jiraAttachment : jiraAttachment,
             jiraApiIssueType : jiraApiIssueType,
             importPrefix : importPrefix,
@@ -271,12 +268,6 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
             jiraApiProject : jiraApiProject,
             jiraRestApi : jiraRestApi,
             localStorageKey : localStorageKey,
-            filenamePrefix : filenamePrefix,
-            reportJIRAQueue: reportJIRAQueue,
-            reportJIRAHost: reportJIRAHost,
-            summaryForSuggestion: summaryForSuggestion,
-            reportJIRAIssueType : reportJIRAIssueType,
-            securityCAT : securityCAT,
             securityCATStartTest : securityCATStartTest,
             securityCATStopTest : securityCATStopTest
         })

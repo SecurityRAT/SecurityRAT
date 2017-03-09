@@ -88,7 +88,7 @@ angular.module('sdlctoolApp')
             	var projectTypeNameValue = '';
 
             	// this is done this way to prevent exception if the settings.project is empty
-                angular.forEach(settings.project, function(projectType) {
+                angular.forEach(settings.projectType, function(projectType) {
                     projectTypeIdValue = projectType.projectTypeId;
                     projectTypeNameValue = projectType.name;
                 });

@@ -1735,7 +1735,7 @@ angular.module('sdlctoolApp')
             var objectToExport = {
                 name: $scope.systemSettings.name,
                 ticket : $scope.ticket,
-                project: $scope.systemSettings.project,
+                projectType: $scope.systemSettings.project,
                 collections : $scope.systemSettings.colls,
                 generatedOn : $scope.generatedOn,
                 lastChanged : $scope.getCurrentDate(),

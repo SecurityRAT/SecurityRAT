@@ -64,7 +64,7 @@ angular.module('sdlctoolApp')
       * Checks the state of the a running securityCAT test.
       */
       function fetchResult(restcall) {
-        return new Promise((resolve, reject) => {
+        return new Promise(function(resolve, reject) {
             apiFactory.testRequirementApi('GET', restcall, '', headerConfig, false).then(function(data) {
               resolve(data);
             }).catch(function() {
@@ -78,7 +78,7 @@ angular.module('sdlctoolApp')
       * Start the securityCAT automated test.
       */
       function startTest(data) {
-        return new Promise((resolve, reject) => {
+        return new Promise(function(resolve, reject) {
             apiFactory.testRequirementApi('POST', appConfig.securityCATStartTest, data, headerConfig, true).then(function(response) {
               var headers = response.headers();
               if(angular.isDefined(headers.location)) {
