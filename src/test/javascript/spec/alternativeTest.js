@@ -1,8 +1,8 @@
 describe('Protractor Security RAT general testsuite', function() {
 	var entities = element(by.partialLinkText('Entities'));
 	var confirmDelete = element(by.css('button[ng-disabled="deleteForm.$invalid"]'));
-	var AltSetRepeater = "alternativeSet in alternativeSets | filterCategoryForEntities : selectedOptColumns : 'optColumn' | orderBy: ['optColumn.showOrder','showOrder']";
-	var AltInsRepeater = "alternativeInstance in alternativeInstances | filterCategoryForEntities: selectedAlternativeSets : 'alternativeSet'| orderBy: ['alternativeSet.showOrder', 'requirementSkeleton.reqCategory.showOrder', 'requirementSkeleton.showOrder']";
+	var AltSetRepeater = "alternativeSet in alternativeSets | filterCategoryForEntities : selectedOptColumns : 'optColumn' | filter:searchString | orderBy: ['optColumn.showOrder','showOrder']";
+	var AltInsRepeater = "alternativeInstance in alternativeInstances | filterCategoryForEntities: selectedAlternativeSets : 'alternativeSet'| filter:searchString | orderBy: ['alternativeSet.showOrder', 'requirementSkeleton.reqCategory.showOrder', 'requirementSkeleton.showOrder']";
 	beforeEach(function() {
 		browser.get(browser.params.testHost);
 		

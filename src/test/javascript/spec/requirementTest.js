@@ -1,7 +1,7 @@
 describe('Protractor Security RAT general testsuite', function() {
 	var entities = element(by.partialLinkText('Entities'));
 	var confirmDelete = element(by.css('button[ng-disabled="deleteForm.$invalid"]'));
-	var skeletonRepeater = "requirementSkeleton in requirementSkeletons | filterCategoryForEntities : selectedCategory:'reqCategory'| filterByTagForReqSkeletons : selectedTags | filterByCollsForReqSkeletons : selectedColls| filterByTypesForReqSkeletons : selectedTypes | orderBy : ['reqCategory.showOrder','showOrder'] track by requirementSkeleton.id"; 
+	var skeletonRepeater = "requirementSkeleton in requirementSkeletons | filterCategoryForEntities : selectedCategory:'reqCategory'| filterByTagForReqSkeletons : selectedTags | filterByCollsForReqSkeletons : selectedColls| filterByTypesForReqSkeletons : selectedTypes | filter:searchString | orderBy : ['reqCategory.showOrder','showOrder'] | limitTo:numberToDisplay track by requirementSkeleton.id"; 
 	
 	beforeEach(function() {
 		browser.get(browser.params.testHost);
@@ -32,55 +32,55 @@ describe('Protractor Security RAT general testsuite', function() {
 //		
 //	});
 	
-	it('administering requirement category', function() {
-		entities.click();
-		element(by.partialLinkText('Requirement Categories')).click();
-		element.all(by.repeater("reqCategory in reqCategorys | orderBy:'showOrder'"))
-		.then(function(categoryArray) {
-			var count = categoryArray.length;
-			count++;
-			element(by.buttonText('Create a new Requirement Category')).click();
-			browser.sleep(2000);
-			expect(element(by.buttonText("Save")).isEnabled()).toBe(false);
-			element(by.id('field_shortcut')).sendKeys('TEST');
-			element(by.id('field_name')).sendKeys('test category name <script>alert(1)</script>');
-			element(by.id('field_description')).sendKeys('test Category description <script>alert(1)</script>');
-			element(by.id('field_showOrder')).sendKeys('1000');
-			element(by.buttonText("Save")).click();
-			browser.sleep(3000);
-			expect(element.all(by.repeater("reqCategory in reqCategorys | orderBy:'showOrder'")).count()).toBe(count);
-		});
-		element.all(by.buttonText("Edit")).last().click();
-		browser.sleep(2000);
-		element(by.id('field_description')).clear().then(function(){
-			element(by.id('field_description')).sendKeys("test Category description modification <script>alert(1)</script>");
-		});
-		element(by.css('span[class="bootstrap-switch-label"]')).click();
+	// it('administering requirement category', function() {
+	// 	entities.click();
+	// 	element(by.partialLinkText('Requirement Categories')).click();
+	// 	element.all(by.repeater("reqCategory in reqCategorys | orderBy:'showOrder'"))
+	// 	.then(function(categoryArray) {
+	// 		var count = categoryArray.length;
+	// 		count++;
+	// 		element(by.buttonText('Create a new Requirement Category')).click();
+	// 		browser.sleep(2000);
+	// 		expect(element(by.buttonText("Save")).isEnabled()).toBe(false);
+	// 		element(by.id('field_shortcut')).sendKeys('TEST');
+	// 		element(by.id('field_name')).sendKeys('test category name <script>alert(1)</script>');
+	// 		element(by.id('field_description')).sendKeys('test Category description <script>alert(1)</script>');
+	// 		element(by.id('field_showOrder')).sendKeys('1000');
+	// 		element(by.buttonText("Save")).click();
+	// 		browser.sleep(3000);
+	// 		expect(element.all(by.repeater("reqCategory in reqCategorys | orderBy:'showOrder'")).count()).toBe(count);
+	// 	});
+	// 	element.all(by.buttonText("Edit")).last().click();
+	// 	browser.sleep(2000);
+	// 	element(by.id('field_description')).clear().then(function(){
+	// 		element(by.id('field_description')).sendKeys("test Category description modification <script>alert(1)</script>");
+	// 	});
+	// 	element(by.css('span[class="bootstrap-switch-label"]')).click();
 		
-		element(by.buttonText("Save")).click();
-		browser.sleep(2000);
-		element.all(by.buttonText("Delete")).last().click();
-		browser.sleep(2000);
-		element.all(by.buttonText("Delete")).last().click();
-	});
+	// 	element(by.buttonText("Save")).click();
+	// 	browser.sleep(2000);
+	// 	element.all(by.buttonText("Delete")).last().click();
+	// 	browser.sleep(2000);
+	// 	element.all(by.buttonText("Delete")).last().click();
+	// });
 	
-	it('bulk change collection category', function() {
-		entities.click();
-		element(by.partialLinkText('Requirement Categories')).click();
-		element(by.id("selectAll")).click();
-		browser.sleep(1000);
-		expect(element(by.buttonText("Bulk change with selected")).isPresent()).toBe(true);
-		element(by.buttonText("Bulk change with selected")).click();
-		element(by.css('span[class="bootstrap-switch-label"]')).click();
-		element(by.buttonText("Save")).click();
-		browser.sleep(5000);
-		element(by.id("selectAll")).click();
-		browser.sleep(1000);
-		expect(element(by.buttonText("Bulk change with selected")).isPresent()).toBe(true);
-		element(by.buttonText("Bulk change with selected")).click();
-		element(by.css('span[class="bootstrap-switch-label"]')).click();
-		element(by.buttonText("Save")).click();
-	});
+	// it('bulk change requirement category', function() {
+	// 	entities.click();
+	// 	element(by.partialLinkText('Requirement Categories')).click();
+	// 	element(by.id("selectAll")).click();
+	// 	browser.sleep(1000);
+	// 	expect(element(by.buttonText("Bulk change with selected")).isPresent()).toBe(true);
+	// 	element(by.buttonText("Bulk change with selected")).click();
+	// 	element(by.css('span[class="bootstrap-switch-label"]')).click();
+	// 	element(by.buttonText("Save")).click();
+	// 	browser.sleep(5000);
+	// 	element(by.id("selectAll")).click();
+	// 	browser.sleep(1000);
+	// 	expect(element(by.buttonText("Bulk change with selected")).isPresent()).toBe(true);
+	// 	element(by.buttonText("Bulk change with selected")).click();
+	// 	element(by.css('span[class="bootstrap-switch-label"]')).click();
+	// 	element(by.buttonText("Save")).click();
+	// });
 	
 //	it('searching a requirement skeleton', function() {
 //		entities.click();
@@ -105,7 +105,7 @@ describe('Protractor Security RAT general testsuite', function() {
 //		element(by.linkText("Requirement Owner")).click();
 //	});
 	
-	it('administring a tag Instances', function() {
+	it('administring a requirement skeleton', function() {
 		entities.click();
 		element(by.partialLinkText('Requirement Skeletons')).click();
 		browser.sleep(2000);

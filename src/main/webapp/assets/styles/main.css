@@ -126,13 +126,11 @@ Shadows
 /* ==========================================================================
 Spinner
 ========================================================================== */
-#UsSpinner {
-	position: relative;
-}
 
 #UsSpinner > span {
-    position: absolute;
-    top: 50%
+    position: relative;
+    top: 22px;
+    right:16px;
 }
 
 #UsSpinner1 {

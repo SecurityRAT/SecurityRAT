@@ -12,58 +12,60 @@
                 <uib-accordion-heading>
                     Export to JIRA <i class="pull-right glyphicon" data-ng-class="{'glyphicon-chevron-down':selection.jira, 'glyphicon-chevron-right': !selection.jira}"></i>
                 </uib-accordion-heading>
-                <div class="row form-group">
-                    <div class="text-center col-sm-9">
-                        <div class="input-group">
-                            <span class="input-group-addon required-field">URL:</span>
-                            <input type="text" placeholder="e.g. https://www.example-jira.com/browse/DUMBQ-20" data-ng-model="jiraUrl.url" class="form-control" data-ng-pattern="checks.url.pattern" name="url" required/>
+                <div data-ng-if="selection.jira">
+                    <div class="row form-group">
+                        <div class="text-center col-sm-9">
+                            <div class="input-group">
+                                <span class="input-group-addon required-field">URL:</span>
+                                <input type="text" placeholder="e.g. https://www.example-jira.com/browse/DUMBQ-20" data-ng-model="jiraUrl.url" class="form-control" data-ng-pattern="checks.url.pattern" name="url" required/>
+                            </div>
+                            <div id="failUrlMessage" data-ng-show="exportForm.url.$invalid">
+                                <p class="help-block" data-ng-show="exportForm.url.$error.pattern">
+                                    {{checks.url.errorMessage}}
+                                </p>
+                            </div>
                         </div>
-                        <div data-ng-show="exportForm.url.$invalid">
-                            <p class="help-block" data-ng-show="exportForm.url.$error.pattern">
-                                {{checks.url.errorMessage}}
+                        <div id="UsSpinner" data-ng-if="exportProperty.showSpinner" class="text-center col-sm-1">
+                            <span spinner-on="exportProperty.showSpinner" us-spinner="{radius:5, width:3, length:3, lines:9}" uib-popover="JIRA Authentication running..." popover-placement="top" popover-trigger="mouseenter" popover-append-to-body></span>
+                        </div>
+                        <div class="col-sm-offset-1" uib-dropdown auto-close="disabled" data-ng-if="((jiraAlternatives.mandatoryFields | filter : {configurable : true}).length > 0) && fields.issuetype.name && !checks.isTicket">
+                            <button type="button" class="btn btn-default" uib-dropdown-toggle id="dropdown-fields" data-ng-click="getHeight('dropdown-fields')">
+                                <span class="glyphicon glyphicon-wrench"></span> Configure fields <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right newspaper" uib-dropdown-menu role="menu" aria-labelledby="dropdown-fields" data-ng-style="{'max-height':maxHeight}">
+                                <li role="menuitem" data-ng-repeat="field in jiraAlternatives.mandatoryFields | filter : {configurable : true}">
+                                    <span class="customFields"><input type="checkbox" data-ng-model="field.mandatory">
+                                {{field.name}}
+                                </span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row col-sm-12">
+                        <div class="pull-left">
+                            <p>Please enter a ticket or a queue.
+                                <br/>
+                                <b>Queue:</b> a ticket will be created and a new version of the Artifact will be attached.
+                                <br/>
+                                <b>Ticket:</b> a new version of the Artifact will be attached to the ticket.
+                                <br />
+                                <span data-ng-if="(jiraAlternatives.mandatoryFields | filter : {configurable : true}).length > 0">
+                        <b>Configure fields:</b> select an issue type before configuring fields in order to avoid set data from being discarded.
+                    </span>
                             </p>
                         </div>
                     </div>
-                    <div id="UsSpinner" data-ng-if="exportProperty.showSpinner" class="text-center col-sm-1">
-                        <span spinner-on="exportProperty.showSpinner" us-spinner="{radius:5, width:3, length:3, lines:9}" uib-popover="JIRA Authentication running..." popover-placement="top" popover-trigger="mouseenter" popover-append-to-body></span>
-                    </div>
-                    <div class="col-sm-offset-1" uib-dropdown auto-close="disabled" data-ng-if="((jiraAlternatives.mandatoryFields | filter : {configurable : true}).length > 0) && fields.issuetype.name && !checks.isTicket">
-                        <button type="button" class="btn btn-default" uib-dropdown-toggle id="dropdown-fields" data-ng-click="getHeight('dropdown-fields')">
-                            <span class="glyphicon glyphicon-wrench"></span> Configure fields <span class="caret">
-	                   	</button>
-	                   	<ul class="dropdown-menu dropdown-menu-right newspaper" uib-dropdown-menu role="menu" aria-labelledby="dropdown-fields" data-ng-style="{'max-height':maxHeight}">
-	         				<li role="menuitem" data-ng-repeat="field in jiraAlternatives.mandatoryFields | filter : {configurable : true}" >
-	         					<span class="customFields"><input type="checkbox" data-ng-model="field.mandatory">
-	         					{{field.name}}
-	         					</span>
-                            </li>
-                            </ul>
-                    </div>
-                </div>
-                <div class="row col-sm-12">
-                    <div class="pull-left">
-                        <p>Please enter a ticket or a queue.
-                            <br/>
-                            <b>Queue:</b> a ticket will be created and a new version of the Artifact will be attached.
-                            <br/>
-                            <b>Ticket:</b> a new version of the Artifact will be attached to the ticket.
-                            <br />
-                            <span data-ng-if="(jiraAlternatives.mandatoryFields | filter : {configurable : true}).length > 0">
-						<b>Configure fields:</b> select an issue type before configuring fields in order to avoid set data from being discarded.
-					</span>
-                        </p>
-                    </div>
-                </div>
-                <div class="row" data-ng-show="checks.isNotProject">
-                    <div class="form-group">
-                        <label for="ProjectKey" class="col-sm-2 control-label">Project:</label>
-                        <div class="col-sm-9">
-                            <input type="text" list="projectKey" class="form-control" data-ng-model="fields.project.key" placeholder="search project by key" />
-                            <datalist id="projectKey">
-                                <option data-ng-repeat="project in jiraAlternatives.projects | orderBy: 'name'" value="{{project.key}}">
-                                    <span data-ng-if="project.name != ''">{{project.name}} - </span>{{project.key}}
-                                </option>
-                            </datalist>
+                    <div class="row" data-ng-show="checks.isNotProject">
+                        <div class="form-group">
+                            <label for="ProjectKey" class="col-sm-2 control-label">Project:</label>
+                            <div class="col-sm-9">
+                                <input type="text" list="projectKey" class="form-control" data-ng-model="fields.project.key" placeholder="search project by key" />
+                                <datalist id="projectKey">
+                                    <option data-ng-repeat="project in jiraAlternatives.projects | orderBy: 'name'" value="{{project.key}}">
+                                        <span data-ng-if="project.name != ''">{{project.name}} - </span>{{project.key}}
+                                    </option>
+                                </datalist>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -91,7 +93,7 @@
                 <uib-accordion-heading>
                     Export into File <i class="pull-right glyphicon" data-ng-class="{'glyphicon-chevron-down':selection.file, 'glyphicon-chevron-right':!selection.file}"></i>
                 </uib-accordion-heading>
-                <div>
+                <div data-ng-if="selection.file">
                     <div class="btn-group panel-info" data-toggle="buttons">
                         <label class="btn panel-heading" uib-btn-radio="'yaml'" data-ng-model="extension">
                             YAML

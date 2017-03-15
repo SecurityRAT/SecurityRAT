@@ -1,8 +1,8 @@
 describe('Protractor Security RAT general testsuite', function() {
 	var entities = element(by.partialLinkText('Entities'));
 	var confirmDelete = element(by.css('button[ng-disabled="deleteForm.$invalid"]'));
-	var statValueRepeater = "statusColumnValue in statusColumnValues | filterCategoryForEntities: selectedColumns: 'statusColumn'| orderBy: ['statusColumn.showOrder','showOrder']";
-	var statusColumRepeater = "statusColumn in statusColumns | orderBy: 'showOrder'";
+	var statValueRepeater = "statusColumnValue in statusColumnValues | filterCategoryForEntities: selectedColumns: 'statusColumn'| filter:searchString | orderBy: ['statusColumn.showOrder','showOrder']";
+	var statusColumRepeater = "statusColumn in statusColumns | orderBy: 'showOrder' | filter:searchString";
 	beforeEach(function() {
 		browser.get(browser.params.testHost);
 		

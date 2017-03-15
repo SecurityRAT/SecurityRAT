@@ -8,7 +8,7 @@ describe('Protractor Security RAT general testsuite', function() {
 	});
 	var deleteTagInstance = function() {
 		var deletes = element.all(by.css('button[class="btn btn-danger btn-sm"]'));
-		var instanceOrders = element.all(by.repeater("tagInstance in tagInstances | filterCategoryForEntities: selectedCategory: 'tagCategory' | orderBy: ['tagCategory.showOrder','showOrder']")
+		var instanceOrders = element.all(by.repeater("tagInstance in tagInstances | filterCategoryForEntities: selectedCategory: 'tagCategory' | orderBy: ['tagCategory.showOrder','showOrder'] | filter:searchString")
 				.column('tagInstance.showOrder'));
 		instanceOrders.each(function(elem, indexElem) {
 			elem.getText().then(function(elemText) {

@@ -1218,7 +1218,7 @@ angular.module('sdlctoolApp')
         }
 
         $scope.updatesAvailableClicked = function() {
-            console.log($scope.filterCategory)
+            // console.log($scope.filterCategory)
             angular.forEach($filter('filter')($scope.filterCategory, { isNew: true }), function(category) {
                     delete category.isNew;
                 })
@@ -1288,7 +1288,7 @@ angular.module('sdlctoolApp')
                 }
                 SDLCToolExceptionService.showWarning('Update requirements successful', message, SDLCToolExceptionService.INFO);
             }
-            console.log($scope.updateCounter);
+            // console.log($scope.updateCounter);
         }
 
         $scope.applyChanges = function(reqId, keepNewOne) {

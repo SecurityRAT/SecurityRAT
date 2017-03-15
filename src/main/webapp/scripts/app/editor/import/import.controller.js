@@ -167,15 +167,16 @@ angular.module('sdlctoolApp')
                 var urlSplit = $scope.jiraLink.url.split("/");
                 $scope.buildUrlObject(urlSplit);
                 var apiCall = $scope.apiUrl.http + "//" + $scope.apiUrl.host + appConfig.jiraApiIssueType;
-                $scope.importProperty.promise.derefer = $q.defer();
                 if ($scope.apiUrl.ticketKey.length !== 1) {
                     $scope.uploadFail = true;
                     $scope.failMessage = "You have entered an invalid ticket URL.";
                 } else {
+                    $scope.importProperty.promise.derefer = $q.defer();
                     var authenticatorProperty = {
                         url: $scope.jiraLink.url,
                         message: 'You are not authenticated, please click on the following link to authenticate yourself. You will have one minute after a click on the link.'
                     }
+                    console.log("CALLED")
                     checkAuthentication.jiraAuth(apiCall, authenticatorProperty, $scope.importProperty.spinner, $scope.importProperty.promise).then(function() {
                         if (!angular.equals($scope.jiraLink.backupUrl, $scope.jiraLink.url)) {
                             $scope.attachmentProperties = {};
@@ -563,12 +564,12 @@ angular.module('sdlctoolApp')
         }
 
         $scope.cancel = function() {
-            $scope.importProperty.spinner.showSpinner = false;
-
             // cleans the check authenticator promise if this one is running.
             authenticatorService.cancelPromises($scope.importProperty.promise);
+            $scope.importProperty.spinner.showSpinner = false;
             $uibModalStack.dismissAll("cancel");
         }
+
         $scope.close = function() {
             $location.path('/requirements');
             SDLCToolExceptionService.showWarning('Import successful', 'The Secure SDLC artifact ' + $scope.name + ' was successfully imported.', SDLCToolExceptionService.SUCCESS);

@@ -1,8 +1,8 @@
 describe('Protractor Security RAT general testsuite', function() {
 	var entities = element(by.partialLinkText('Entities'));
 	var confirmDelete = element(by.css('button[ng-disabled="deleteForm.$invalid"]'));
-	var collRepeater = "collectionCategory in collectionCategorys | orderBy: 'showOrder'";
-	var collInsRepeater = "collectionInstance in collectionInstances | filterCategoryForEntities: selectedCategory: 'collectionCategory' | orderBy: ['collectionCategory.showOrder','showOrder']"; 
+	var collRepeater = "collectionCategory in collectionCategorys | orderBy: 'showOrder' | filter:searchString";
+	var collInsRepeater = "collectionInstance in collectionInstances | filterCategoryForEntities: selectedCategory: 'collectionCategory' | orderBy: ['collectionCategory.showOrder','showOrder'] | filter:searchString"; 
 	
 	beforeEach(function() {
 		browser.get(browser.params.testHost);
@@ -151,14 +151,14 @@ describe('Protractor Security RAT general testsuite', function() {
 		var selectButton = element.all(by.model('collectionInstance.selected'));
 		var categories = element.all(by.repeater(collInsRepeater)
 		.column('collectionInstance.collectionCategory.name'));
-		element(by.id("SelectAll")).click();
+		element(by.id("selectAll")).click();
 		browser.sleep(1000);
 		expect(element(by.buttonText("Bulk change with selected")).isPresent()).toBe(true);
 		element(by.buttonText("Bulk change with selected")).click();
 		element(by.css('span[class="bootstrap-switch-label"]')).click();
 		element(by.buttonText("Save")).click();
 		browser.sleep(6000);
-		element(by.id("SelectAll")).click();
+		element(by.id("selectAll")).click();
 		browser.sleep(1000);
 		expect(element(by.buttonText("Bulk change with selected")).isPresent()).toBe(true);
 		element(by.buttonText("Bulk change with selected")).click();

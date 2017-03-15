@@ -249,7 +249,6 @@ describe('Protractor Security RAT Testsuite', function() {
 		browser.sleep(2000);
 		
 		//export to excel without status values.
-		element(by.id("selectAll")).click();
 		element(by.buttonText("Action with selected")).click();
 		element(by.linkText("Create spreadsheet")).click();
 		browser.sleep(2000);
@@ -308,7 +307,7 @@ describe('Protractor Security RAT Testsuite', function() {
 		element(by.model('jiraUrl.url')).sendKeys("gsfdgsdfgsfgsfdgsdfg");
 		(element(by.buttonText(exportButton))).click();
 		browser.sleep(2000);
-		expect(element(by.binding('exportProperty.failed')).getText()).toBe('Invalid Url. Please specify URL like https://www.example-jira.com/browse/DUMBQ');
+		expect(element(by.id('failUrlMessage')).getText()).toBe('Invalid url. Please specify URL like https://www.example-jira.com/browse/DUMBQ');
 		
 		//wrong project
 		element(by.model('jiraUrl.url')).clear().then(function(){
@@ -320,7 +319,7 @@ describe('Protractor Security RAT Testsuite', function() {
 		expect(element(by.binding('exportProperty.failed')).getText()).toBe('You have entered a wrong queue. Please select a valid queue and click on Export again.')
 		
 		element(by.model('fields.project.key')).sendKeys(browser.params.jiraQueue.split('/').pop());
-		browser.sleep(5000)
+		browser.sleep(5000);
 		(element(by.buttonText(exportButton))).click();
 		
 		element(by.model('fields.issuetype.name')).sendKeys(browser.params.issuetypes[1]);
@@ -457,6 +456,7 @@ describe('Protractor Security RAT Testsuite', function() {
 		element(by.buttonText('Close')).click();
 		browser.sleep(3000);
 		element.all(by.model("reqs.selected")).get(1).click();
+		deleteCookie1();
 		deleteCookie();
 		browser.sleep(3000);
 		element(by.buttonText("Action with selected")).click();
@@ -464,7 +464,7 @@ describe('Protractor Security RAT Testsuite', function() {
 		
 		element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraQueue);
 		(element(by.buttonText("Create tickets"))).click();
-		browser.sleep(1000);
+		browser.sleep(3000);
 		element(by.binding('jira.url')).click();
 		browser.getAllWindowHandles().then(function(handles) {
 			browser.switchTo().window(handles[0]).then();
@@ -487,6 +487,7 @@ describe('Protractor Security RAT Testsuite', function() {
 	});	
 	
 	it('Test for the feedback feature', function() {
+		deleteCookie1();
 		deleteCookie();
 		element.all(by.id('feedbackIcon')).get(1).click();
 		element(by.model('comment')).sendKeys('Feedback test submitted by automatic test. <script>alert(1)</script>');

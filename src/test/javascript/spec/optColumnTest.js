@@ -1,8 +1,8 @@
 describe('Protractor Security RAT general testsuite', function() {
 	var entities = element(by.partialLinkText('Entities'));
 	var confirmDelete = element(by.css('button[ng-disabled="deleteForm.$invalid"]'));
-	var optColumnRepeater = "optColumn in optColumns | orderBy: 'showOrder'";
-	var optColumnContentRepeater = "optColumnContent in optColumnContents | filterCategoryForEntities : selectedOptColumns : 'optColumn'| orderBy: ['requirementSkeleton.reqCategory.showOrder', 'requirementSkeleton.showOrder', 'optColumn.showOrder']";
+	var optColumnRepeater = "optColumn in optColumns | orderBy: 'showOrder' | filter:searchString";
+	var optColumnContentRepeater = "optColumnContent in optColumnContents | filterCategoryForEntities : selectedOptColumns : 'optColumn'| filter:searchString | orderBy: ['requirementSkeleton.reqCategory.showOrder', 'requirementSkeleton.showOrder', 'optColumn.showOrder'] | limitTo:numberToDisplay";
 	
 	beforeEach(function() {
 		browser.get(browser.params.testHost);
@@ -10,7 +10,7 @@ describe('Protractor Security RAT general testsuite', function() {
 	});
 	var deleteCollectionInstance = function() {
 		var deletes = element.all(by.css('button[class="btn btn-danger btn-sm"]'));
-		var instanceOrders = element.all(by.repeater("optColumn in optColumns | orderBy: 'showOrder'")
+		var instanceOrders = element.all(by.repeater("optColumn in optColumns | orderBy: 'showOrder' | filter:searchString")
 				.column('optColumn.showOrder'));
 		instanceOrders.each(function(elem, indexElem) {
 			elem.getText().then(function(elemText) {
@@ -92,7 +92,6 @@ describe('Protractor Security RAT general testsuite', function() {
 		entities.click();
 		element(by.partialLinkText('Option Columns')).click();
 		browser.sleep(2000);
-		deleteCollectionInstance();
 		element.all(by.repeater(optColumnRepeater))
 		.then(function(instanceArray) {
 			var count = instanceArray.length;
@@ -245,8 +244,17 @@ describe('Protractor Security RAT general testsuite', function() {
 							.column('optColumnContent.optColumn.name'));
 		var requirements = element.all(by.repeater(optColumnContentRepeater)
         					.column('optColumnContent.requirementSkeleton.shortName'));
-		selectButton.first().click();
-		selectButton.get(1).click();
+		var firstCount = 0;
+		requirements.each(function(elem, index) {
+			elem.getText().then(function(elemText) {
+				if(elemText ===  'LC-01') {
+					firstCount++;
+					selectButton.get(index).click();
+				}
+			})
+			
+		});
+		
 		element(by.buttonText("Bulk change with selected")).click();
 		element(by.buttonText('More Information')).click();
 		element(by.buttonText("Save")).click();
@@ -259,14 +267,13 @@ describe('Protractor Security RAT general testsuite', function() {
 					count++;
 					if(count === 2) {
 						selectButton.get(index).click();
-						expect(count).toBe(2);
 					}
 						
 				}
 			})
 			
 		});
-		
+		expect(count).toBe(firstCount);
 		element(by.buttonText("Bulk change with selected")).click();
 		element(by.buttonText('Motivation')).click();
 		element(by.buttonText('Save')).click();

@@ -213,7 +213,7 @@ angular.module('sdlctoolApp')
                             .then(function() {
                                 $scope.checkForTicketInReqSet();
                                 //                          $scope.sendAttachment();
-                            })
+                            }, function() {$scope.checks.exporting = false;})
                     } else {
                         $scope.sendAttachment();
                     }
@@ -227,7 +227,7 @@ angular.module('sdlctoolApp')
                             }, { templateUrl: 'scripts/app/editor/confirm-modal.html' })
                             .then(function() {
                                 $scope.sendAttachment();
-                            })
+                            }, function() {$scope.checks.exporting = false;})
                     } else {
                         $scope.sendAttachment();
                     }
@@ -759,6 +759,8 @@ angular.module('sdlctoolApp')
                                             .then(function(data) {
                                                 // check for the tickets in requirement set to be aber to link these ones to the newly created ticket.
                                                 $scope.checkForTicketInReqSet();
+                                            }, function(){
+                                                $scope.checks.exporting = false;
                                             })
                                     } else if (angular.isUndefined($scope.exported.ticket.url) || angular.equals($scope.exported.ticket.url, "")) {
                                         $scope.createTicket($scope.fields, true).then();

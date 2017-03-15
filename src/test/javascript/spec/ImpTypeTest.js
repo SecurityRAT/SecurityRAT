@@ -1,7 +1,7 @@
 describe('Protractor Security RAT general testsuite', function() {
 	var entities = element(by.partialLinkText('Entities'));
 	var confirmDelete = element(by.css('button[ng-disabled="deleteForm.$invalid"]'));
-	var projectTypeRepeater = "projectType in projectTypes | orderBy:'showOrder'";
+	var projectTypeRepeater = "projectType in projectTypes | filter:searchString | orderBy:'showOrder'";
 	beforeEach(function() {
 		browser.get(browser.params.testHost);
 		

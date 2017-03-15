@@ -345,10 +345,10 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
         			}
         		},
         		cancelPromises : function(promise) {
+                    if(angular.isDefined(promise.interval))
+                        $interval.cancel(promise.interval);
         			if(angular.isDefined(promise.timeout))
         				$timeout.cancel(promise.timeout);
-        			if(angular.isDefined(promise.interval))
-        				$interval.cancel(promise.interval);
         			if(promise.runningModalPromise !== undefined) {promise.runningModalPromise.close();}
         		},
 	    		startCheckAuthenticationProcess: function(apiCall, displayProperty, spinnerProperty, promise, callback) {

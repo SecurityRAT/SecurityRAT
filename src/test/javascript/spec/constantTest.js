@@ -1,6 +1,6 @@
 describe('Protractor Security RAT general testsuite', function() {
 	var admin = element(by.partialLinkText('Administration'));
-	var constantRepeater = "constant in constants";
+	var constantRepeater = "constant in constants | filter: searchQuery";
 	
 	beforeEach(function() {
 		browser.get(browser.params.testHost);

@@ -1,6 +1,6 @@
 describe('Protractor Security RAT general testsuite', function() {
 	var admin = element(by.partialLinkText('Administration'));
-	var userRepeater = "user in usersWithAuthorities  | orderBy :['firstname', 'lastname']";
+	var userRepeater = "user in usersWithAuthorities  | orderBy :['firstname', 'lastname'] | filter: searchQuery";
 	
 	beforeEach(function() {
 		browser.get(browser.params.testHost);
@@ -17,7 +17,7 @@ describe('Protractor Security RAT general testsuite', function() {
 		element.all(by.repeater(userRepeater)).then(function(usersArray) {
 			var count = usersArray.length;
 			count++;
-			element(by.partialButtonText('Add a new User')).click();
+			element(by.partialButtonText('Create a new User')).click();
 			browser.sleep(2000);
 			expect(element(by.partialButtonText('Save')).isEnabled()).toBe(false);
 			element(by.id('username')).clear().then(function(){
@@ -43,7 +43,7 @@ describe('Protractor Security RAT general testsuite', function() {
 			roles.get(0).click();
 			roles.get(1).click();
 			element(by.partialButtonText('Save')).click();
-			browser.sleep(2000);
+			browser.sleep(5000);
 			expect(element.all(by.repeater(userRepeater)).count()).toBe(count);
 		})
 		element.all(by.buttonText("Edit")).last().click();

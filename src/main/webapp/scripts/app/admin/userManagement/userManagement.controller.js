@@ -1,47 +1,27 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('UserManagementController', function ($scope, UserManagement, Authorities, User, 
-        UserManagementSearch, Helper, Account) {
-        $scope.authorities = [];
-        $scope.userSet = {};
+    .controller('UserManagementController', function($scope, UserManagement, User, UserManagementSearch, Helper, Account) {
         $scope.usersWithAuthorities = [];
         $scope.activeUser = {}
 
         Account.get(function(response) {
             $scope.activeUser = response.data;
         })
-        function callback(user) {
-        	angular.forEach($scope.authorities, function(authority) {
-    			if(Helper.searchArrayByValue(authority.name, user.authorities)) {
-    				$scope.userSet[user.login][authority.name] = true;
-       			} else {
-       				$scope.userSet[user.login][authority.name] = false;
-       			}
-        	});
-        }
-        
-        $scope.loadAll = function(callback) {
-        	Authorities.query(function(authorities) {
-        		$scope.authorities = authorities;
-        		UserManagement.query(function(users) {
-                    $scope.usersWithAuthorities = users;
-                    angular.forEach(users, function(user) {
-                 	   $scope.userSet[user.login] = {};
-                 	   callback(user);
-            			})
-                    
-                 });
-        	});
+
+        $scope.loadAll = function() {
+            UserManagement.query(function(users) {
+                $scope.usersWithAuthorities = users;
+            });
         }
 
         $scope.removeRolePrefix = function(value) {
             return value.replace('ROLE_', '');
         }
-                
-        $scope.loadAll(callback);
 
-         var onSaveFinished = function (result) {
+        $scope.loadAll();
+
+        var onSaveFinished = function(result) {
             $scope.$emit('sdlctoolApp:UserManagementUpdate', result);
         };
 
@@ -50,22 +30,22 @@ angular.module('sdlctoolApp')
             User.update(user, onSaveFinished);
         }
 
-        $scope.delete = function (user) {
-        	$scope.user = user;
-        	$('#deleteUserConfirmation').appendTo("body").modal('show');
+        $scope.delete = function(user) {
+            $scope.user = user;
+            $('#deleteUserConfirmation').appendTo("body").modal('show');
         };
 
-        $scope.confirmDelete = function (id) {
-            User.delete({login: id},
-                function () {
+        $scope.confirmDelete = function(id) {
+            User.delete({ login: id },
+                function() {
                     $('#deleteUserConfirmation').modal('hide');
-                    $scope.loadAll(callback);
+                    $scope.loadAll();
                     $scope.clear();
                 });
         };
         $scope.clear = function() {
-        	$scope.user = {};
+            $scope.user = {};
         }
-        
+
 
     });
