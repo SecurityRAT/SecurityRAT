@@ -326,21 +326,22 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
 	        	},
 
         	//cancel the interval promise want the time is up.
-        		startCountdown : function(promise, property, jira) {
+        		startCountdown : function(promise, spinnerProperty, jira) {
         			if(jira.url !== "") {
 	        			return $timeout(function() {
 	        				var header = "Authentication timeout";
 	        				var message = "You could not authenticate yourself within the time interval! Please try later.";
 	//						  $uibModalStack.dismissAll('close authentication modal');
 	        				$interval.cancel(promise.interval);
-	        				if(property.showSpinner) {
-	        					property.showSpinner = false;
-	        				}
+	        				spinnerProperty.showSpinner = false;
+                            if(angular.isDefined(spinnerProperty.authenticating)){spinnerProperty.authenticating = false;}
 	        				if(promise.runningModalPromise !== undefined) {promise.runningModalPromise.close();}
 	        				SDLCToolExceptionService.showWarning(header, message, SDLCToolExceptionService.DANGER);
 						  }, 61000);
         			} else {
-        				return $timeout(function() {$interval.cancel(promise.interval);}, 90000)
+        				return $timeout(function() {
+                            $interval.cancel(promise.interval);
+                        }, 90000)
         			}
         		},
         		cancelPromises : function(promise) {
@@ -350,13 +351,14 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
         				$interval.cancel(promise.interval);
         			if(promise.runningModalPromise !== undefined) {promise.runningModalPromise.close();}
         		},
-	    		startCheckAuthenticationProcess: function(apiCall, displayProperty, spinnerProperty, promise, recallFunction) {
+	    		startCheckAuthenticationProcess: function(apiCall, displayProperty, spinnerProperty, promise, callback) {
 		            var self = this
 		            if(angular.isUndefined(promise.interval) || (promise.interval.$$state.status != 0)) {
 			            self.runAuthenticator(displayProperty).then(function(data) {
+                        if (angular.isDefined(spinnerProperty.authenticating)) { spinnerProperty.authenticating = true; }
 			              //run the init method every 10 sec.
 			                promise.interval = $interval(function() {
-			                  recallFunction(apiCall, displayProperty, spinnerProperty, promise);
+			                  callback(apiCall, displayProperty, spinnerProperty, promise);
 			                },10000);
 			                promise.timeout = self.startCountdown(promise, spinnerProperty, displayProperty);
 			                if(data === "start") {

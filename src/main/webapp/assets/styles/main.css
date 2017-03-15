@@ -128,9 +128,13 @@ Spinner
 ========================================================================== */
 #UsSpinner {
 	position: relative;
-	top: 22px;
-	right:16px;
 }
+
+#UsSpinner > span {
+    position: absolute;
+    top: 50%
+}
+
 #UsSpinner1 {
 	position: relative;
 	top: 7px;
@@ -483,8 +487,8 @@ background:#f5f5f5;
     color: #d00;
     content: "*";
     position: absolute;
-    margin-left: 3px;
-    top: 10px;
+    /*margin-left: 3px;
+    top: 10px;*/
 }
 
 

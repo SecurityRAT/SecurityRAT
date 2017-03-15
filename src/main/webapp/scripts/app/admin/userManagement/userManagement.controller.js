@@ -34,6 +34,10 @@ angular.module('sdlctoolApp')
                  });
         	});
         }
+
+        $scope.removeRolePrefix = function(value) {
+            return value.replace('ROLE_', '');
+        }
                 
         $scope.loadAll(callback);
 

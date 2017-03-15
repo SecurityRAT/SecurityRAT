@@ -23,22 +23,33 @@ angular.module('sdlctoolApp')
         $scope.remoteLinking = {};
 
         $scope.init = function() {
-                $scope.manFilterObject = {};
-                $scope.extension = 'yaml';
-                $scope.exported = sharedProperties.getProperty();
-                $scope.jiraAlternatives.issueTypes = [];
-                $scope.jiraAlternatives.projects = [];
-                $scope.jiraAlternatives.mandatoryFields = [];
-                $scope.jiraStatus.allStatus = [];
-                $scope.ticketURLs = [];
-                angular.extend($scope.exportProperty, { fail: false, showSpinner: false, failed: '' });
-                angular.extend($scope.checks, { isNotProject: false, issueKey: false, isQueue: false, isTicket: false });
-                // only assigns the url when exporting to a jira ticket.
-                if ($scope.exported.ticket.url !== undefined && !$scope.selection.createTickets) {
-                    $scope.jiraUrl.url = $scope.exported.ticket.url;
-                }
+            $scope.manFilterObject = {};
+            $scope.extension = 'yaml';
+            $scope.exported = sharedProperties.getProperty();
+            $scope.jiraAlternatives.issueTypes = [];
+            $scope.jiraAlternatives.projects = [];
+            $scope.jiraAlternatives.mandatoryFields = [];
+            $scope.jiraStatus.allStatus = [];
+            $scope.ticketURLs = [];
+            angular.extend($scope.exportProperty, { fail: false, showSpinner: false, failed: '', authenticating: false });
+            $scope.checks.url = {
+                    pattern: urlpattern.javascriptStringRegex, 
+                    errorMessage: "Invalid url. Please specify URL like https://www.example-jira.com/browse/DUMBQ"
             }
-            //initial method for the create ticket use case.
+            angular.extend($scope.checks, {
+                isNotProject: false,
+                issueKey: false,
+                isQueue: false,
+                isTicket: false,
+                exporting: false
+            });
+            // only assigns the url when exporting to a jira ticket.
+            if ($scope.exported.ticket.url !== undefined && !$scope.selection.createTickets) {
+                $scope.jiraUrl.url = $scope.exported.ticket.url;
+            }
+        }
+
+        //initial method for the create ticket use case.
         $scope.initcreateTicket = function() {
             $scope.selection.jira = false;
             $scope.selection.createTickets = true;
@@ -186,9 +197,10 @@ angular.module('sdlctoolApp')
         }
 
         // checks if the given ticket exist
-        $scope.checkTicket = function() {
+        $scope.checkTicketAndSendAttachment = function() {
             apiFactory.getJIRAInfo($scope.buildUrlCall("issueKey")).then(function(response) {
                 $scope.checks.isTicket = true;
+                $scope.checks.exporting = true;
                 $scope.ticketURL = $scope.apiUrl.http + "//" + $scope.apiUrl.host + "/browse/" + $scope.apiUrl.ticketKey[0];
                 if (angular.isDefined($scope.exported.ticket.url)) {
                     if (!angular.equals($scope.exported.ticket.url, $scope.ticketURL)) {
@@ -200,7 +212,7 @@ angular.module('sdlctoolApp')
                             }, { templateUrl: 'scripts/app/editor/confirm-modal.html' })
                             .then(function() {
                                 $scope.checkForTicketInReqSet();
-                                //							$scope.sendAttachment();
+                                //                          $scope.sendAttachment();
                             })
                     } else {
                         $scope.sendAttachment();
@@ -271,8 +283,8 @@ angular.module('sdlctoolApp')
                 "relationship": "relates to"
             }
             apiFactory.postExport(apiCall, postData, { 'X-Atlassian-Token': 'nocheck', 'Content-Type': 'application/json' })
-            .then(function(data) {})
-            .catch(OnIssueLinkFailure);
+                .then(function(data) {})
+                .catch(OnIssueLinkFailure);
         }
 
         $scope.addIssueLinks = function(inwardKey, outwardKey, remoteIssueInfo) {
@@ -294,13 +306,13 @@ angular.module('sdlctoolApp')
                 }
             };
 
-            if(angular.equals(apiUrl.host, remoteIssueInfo.apiUrl.host)) {
+            if (angular.equals(apiUrl.host, remoteIssueInfo.apiUrl.host)) {
                 // links tickets are from the same JIRA instance
                 apiFactory.postExport(apiCall, postData, { 'X-Atlassian-Token': 'nocheck', 'Content-Type': 'application/json' })
-                .then().catch(OnIssueLinkFailure);
+                    .then().catch(OnIssueLinkFailure);
             } else {
                 // links tickets from different JIRA instances.
-                
+
                 // links ticket from main JIRA ticket to ticket in different JIRA instance
                 var inwardApiCall = apiUrl.http + "//" + apiUrl.host + appConfig.jiraApiPrefix + '/' + inwardKey + "/remotelink";
                 $scope.createRemoteLink(inwardApiCall, outwardKey, remoteIssueInfo);
@@ -320,10 +332,10 @@ angular.module('sdlctoolApp')
                 }
             }
         }
-                 
-            /**
-             * Queries the autoCompleteUrl with the entered text to help autocomplete
-             */
+
+        /**
+         * Queries the autoCompleteUrl with the entered text to help autocomplete
+         */
         $scope.requestAutoComplete = function(field) {
             $scope.autoComplete[field.key] = [];
             //renders identification by jquery id possible.
@@ -345,7 +357,7 @@ angular.module('sdlctoolApp')
                 }
                 if (lastValue.length > 1) {
                     apiFactory.getJIRAInfo(field.autoCompleteUrl.replace('/null/', '/') + lastValue).then(function(response) {
-                        //						console.log(response)
+                        //                      console.log(response)
                         switch (field.type) {
                             case 'array':
                                 switch (field.itemType) {
@@ -489,7 +501,7 @@ angular.module('sdlctoolApp')
             // create a new ticket
         $scope.createTicket = function(fieldObject, withAttachment) {
             var derefer = $q.defer();
-            //			var excludedFields = ['summary', 'issuetype', 'labels', 'reporter', 'project', 'description'];
+            //          var excludedFields = ['summary', 'issuetype', 'labels', 'reporter', 'project', 'description'];
             for (var i = 0; i < $scope.jiraAlternatives.mandatoryFields.length && $scope.jiraAlternatives.mandatoryFields.length > 0; i++) {
                 if (!$scope.jiraAlternatives.mandatoryFields[i].mandatory) {
                     delete fieldObject[$scope.jiraAlternatives.mandatoryFields[i].key];
@@ -559,7 +571,7 @@ angular.module('sdlctoolApp')
         $scope.sendAttachment = function() {
                 var file = $scope.buildYAMLFile();
                 var linksObject = {};
-                //			console.log(file);
+                //          console.log(file);
                 try {
                     // links the newly created ticket to the existing tickets (created in batch mode) from the yaml file. 
                     // This happens when the requirement set has already been saved in a ticket and the user save it into a new one.
@@ -645,15 +657,12 @@ angular.module('sdlctoolApp')
             $scope.checks.isTicket = false;
             var fieldNotfulfilled = false;
             //console.log($scope.jiraUrl);
-            if (($scope.selection.jira || $scope.selection.createTickets) && ($scope.jiraUrl.url == undefined)) {
-                $scope.exportProperty.fail = true;
-                $scope.exportProperty.failed = "Please specify the Jira URL";
-                $scope.checks.isQueue = false;
-            } else if (($scope.selection.jira || $scope.selection.createTickets) && !re_weburl.test($scope.jiraUrl.url)) {
-                $scope.exportProperty.fail = true;
-                $scope.exportProperty.failed = "Invalid Url. Please specify URL like https://www.example-jira.com/browse/DUMBQ";
-                $scope.checks.isQueue = false;
-            } else if ($scope.selection.jira || $scope.selection.createTickets) {
+            // if (($scope.selection.jira || $scope.selection.createTickets) && !re_weburl.test($scope.jiraUrl.url)) {
+            //     $scope.exportProperty.fail = true;
+            //     $scope.exportProperty.failed = "Invalid Url. Please specify URL like https://www.example-jira.com/browse/DUMBQ";
+            //     $scope.checks.isQueue = false;
+            // } else 
+            if ($scope.selection.jira || $scope.selection.createTickets) {
                 //export to JIRA
                 var authenticatorProperty = {
                     url: $scope.jiraUrl.url,
@@ -667,7 +676,7 @@ angular.module('sdlctoolApp')
                 checkAuthentication.jiraAuth($scope.buildUrlCall("issueType"), authenticatorProperty, $scope.exportProperty, $scope.promise).then(function(data) {
                     if ($scope.checks.isTicket && $scope.selection.jira) {
                         $scope.fields = {};
-                        $scope.checkTicket();
+                        $scope.checkTicketAndSendAttachment();
                     } else if ($scope.checks.isTicket && $scope.selection.createTickets) {
                         $scope.exportProperty.fail = true;
                         $scope.exportProperty.failed = "You have entered a ticket. Please provide a queue.";
@@ -685,7 +694,7 @@ angular.module('sdlctoolApp')
                             $scope.fields = {};
                         }
                         //checks for the project key only once. 
-                        if (angular.isUndefined($scope.fields.project)) {
+                        if (angular.isUndefined($scope.fields.project) || $scope.checks.isNotProject) {
                             $scope.checks.isQueue = false;
                             $scope.checkQueue($scope.apiUrl.projectKey, excludedFields, fatalFields);
                         } else {
@@ -693,50 +702,51 @@ angular.module('sdlctoolApp')
                             $scope.manFilterObject.projectKey = $scope.fields.project.key;
                             $scope.manFilterObject.issuetypeName = undefined;
                             // gets the mandatory fields of the project selected
-                            if ($scope.checks.isNotProject) {
-                                $scope.checks.isNotProject = false;
+                            // if ($scope.checks.isNotProject) {
+                            //     $scope.checks.isNotProject = false;
+                            //     $scope.getMandatoryFields($scope.manFilterObject, excludedFields, fatalFields);
+                            //     $scope.getIssueTypes($scope.fields.project.key);
+                            //     fieldNotfulfilled = true;
+                            // } else {
+                            $scope.checks.isNotProject = false;
+                            if ($scope.jiraAlternatives.mandatoryFields.length == 0) {
                                 $scope.getMandatoryFields($scope.manFilterObject, excludedFields, fatalFields);
+                            }
+                            if ($scope.jiraAlternatives.issueTypes.length == 0) {
                                 $scope.getIssueTypes($scope.fields.project.key);
-                                fieldNotfulfilled = true;
-                            } else {
-                                $scope.checks.isNotProject = false;
-                                if ($scope.jiraAlternatives.mandatoryFields.length == 0) {
-                                    $scope.getMandatoryFields($scope.manFilterObject, excludedFields, fatalFields);
-                                }
-                                if ($scope.jiraAlternatives.issueTypes.length == 0) {
-                                    $scope.getIssueTypes($scope.fields.project.key);
-                                }
-                                //verifies the existence and format of the mandatory fields.
-                                for (var i = 0; i < $scope.jiraAlternatives.mandatoryFields.length; i++) {
-                                    if (!$scope.jiraAlternatives.mandatoryFields[i].mandatory) {
-                                        delete $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key];
-                                    } else {
-                                        if (angular.isUndefined($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key]) || (angular.isDefined($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key]) && $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key].length <= 0)) {
-                                            fieldNotfulfilled = true;
-                                            SDLCToolExceptionService.showWarning('Ticket creation failed',
-                                                'The field <strong>' + $scope.jiraAlternatives.mandatoryFields[i].name + '</strong> has no value or wrong format. Please fill this out.',
-                                                SDLCToolExceptionService.DANGER);
-                                            break;
-                                        } else if ($scope.jiraAlternatives.mandatoryFields[i].type === "array" && !$scope.jiraAlternatives.mandatoryFields[i].values) {
-                                            // properly sets the data Structure for fields os schema type array in the scope.fields object.
-                                            if ($scope.jiraAlternatives.mandatoryFields[i].itemType !== "string") {
-                                                var j = 0;
-                                                var tempValue = $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key];
-                                                $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = [];
-                                                while (tempValue[j]) {
-                                                    $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key].push(JSON.parse(tempValue[j]));
-                                                    j++;
-                                                }
+                            }
+                            //verifies the existence and format of the mandatory fields.
+                            for (var i = 0; i < $scope.jiraAlternatives.mandatoryFields.length; i++) {
+                                if (!$scope.jiraAlternatives.mandatoryFields[i].mandatory) {
+                                    delete $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key];
+                                } else {
+                                    if (angular.isUndefined($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key]) || (angular.isDefined($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key]) && $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key].length <= 0)) {
+                                        fieldNotfulfilled = true;
+                                        SDLCToolExceptionService.showWarning('Ticket creation failed',
+                                            'The field <strong>' + $scope.jiraAlternatives.mandatoryFields[i].name + '</strong> has no value or wrong format. Please fill this out.',
+                                            SDLCToolExceptionService.DANGER);
+                                        break;
+                                    } else if ($scope.jiraAlternatives.mandatoryFields[i].type === "array" && !$scope.jiraAlternatives.mandatoryFields[i].values) {
+                                        // properly sets the data Structure for fields os schema type array in the scope.fields object.
+                                        if ($scope.jiraAlternatives.mandatoryFields[i].itemType !== "string") {
+                                            var j = 0;
+                                            var tempValue = $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key];
+                                            $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = [];
+                                            while (tempValue[j]) {
+                                                $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key].push(JSON.parse(tempValue[j]));
+                                                j++;
                                             }
-                                        } else if ($scope.jiraAlternatives.mandatoryFields[i].type === 'datetime') {
-                                            // creates the date format for the datetime type.
-                                            $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = $filter('date')($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key], "yyyy-MM-dd'T'hh:mm:ss'.000'Z");
                                         }
+                                    } else if ($scope.jiraAlternatives.mandatoryFields[i].type === 'datetime') {
+                                        // creates the date format for the datetime type.
+                                        $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key] = $filter('date')($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key], "yyyy-MM-dd'T'hh:mm:ss'.000'Z");
                                     }
                                 }
                             }
+                            // }
                             // create a ticket only when the required fields have been properly set.
                             if (!fieldNotfulfilled) {
+                                $scope.checks.exporting = true;
                                 if ($scope.selection.jira) {
                                     if (angular.isDefined($scope.exported.ticket.url)) {
                                         $confirm({
@@ -761,6 +771,8 @@ angular.module('sdlctoolApp')
                         }
 
                     }
+                }, function(authentication) {
+                    if (angular.isDefined($scope.exportProperty.authenticating)) $scope.exportProperty.authenticating = false;
                 });
             } else if ($scope.selection.file) {
                 if ($scope.extension === 'yaml') {
