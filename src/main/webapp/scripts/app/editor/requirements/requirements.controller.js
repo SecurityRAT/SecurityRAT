@@ -12,7 +12,7 @@ angular.module('sdlctoolApp')
         $timeout, $uibModal, $filter, getRequirementsFromImport, $confirm, $location, localStorageService, appConfig, $sce, SDLCToolExceptionService, $rootScope, marked, Helper, $state) {
         $scope.failed = "";
         $scope.fail = false;
-        $scope.progressbar =  {hide: true, barValue: 0, intervalPromise: undefined};
+        $scope.progressbar = { hide: true, barValue: 0, intervalPromise: undefined };
         $scope.showRequirements = false;
         $scope.withselectedDropdown = { toggleExcel: false, testAutomation: appConfig.securityCAT !== undefined && appConfig.securityCAT !== "" ? true : false };
         $scope.outputStatus = "";
@@ -109,7 +109,7 @@ angular.module('sdlctoolApp')
         }
 
         $scope.finishProgressbar = function() {
-            if(angular.isDefined($scope.progressbar.intervalPromise)) {
+            if (angular.isDefined($scope.progressbar.intervalPromise)) {
                 $interval.cancel($scope.progressbar.intervalPromise);
                 $scope.progressbar.intervalPromise = undefined;
             }
@@ -145,7 +145,7 @@ angular.module('sdlctoolApp')
                     $scope.filterCategory = $filter('orderBy')($scope.filterCategory, 'showOrder');
                     $scope.selectedAlternativeSets = imports.selectedAlternativeSets;
                     $scope.jiraStatus.allStatus = imports.jiraStatus.allStatus;
-                    //				  $scope.newRequirementParam.id = imports.lastId++; // gets the id of the last Custom requirements save
+                    //                $scope.newRequirementParam.id = imports.lastId++; // gets the id of the last Custom requirements save
                     $scope.getAlternativeSets();
                     $scope.getCustomRequirements();
                     $scope.showRequirements = true;
@@ -162,7 +162,7 @@ angular.module('sdlctoolApp')
                     $scope.buildSettings();
                     $scope.getRequirements();
                     //if($scope.systemSettings.oldRequirements === undefined) {
-                    //	  $scope.getAlternativeSets();
+                    //    $scope.getAlternativeSets();
                     //} else {
                     $scope.getAlternativeSets();
                     $scope.alternativeSets = $scope.systemSettings.alternativeSets;
@@ -172,8 +172,8 @@ angular.module('sdlctoolApp')
                 $scope.getOptandStatusColumns();
                 $scope.getTagCategories();
             }
-            //		  console.log($scope.customRequirements);
-            //		  console.log($scope.requirements);
+            //        console.log($scope.customRequirements);
+            //        console.log($scope.requirements);
         }
 
         $scope.loadMore = function() {
@@ -271,7 +271,8 @@ angular.module('sdlctoolApp')
                 var notFoundId;
                 for (var i = 0; i < $scope.selectOptCompare.ids.length; i++) {
                     if ($scope.requirementProperties.selectedOptColumns.ids.indexOf($scope.selectOptCompare.ids[i]) === -1) {
-                        var notFoundId = true; }
+                        var notFoundId = true;
+                    }
                 }
                 if (!notFoundId) $scope.disableSave(false);
                 else $scope.enableSave(false);
@@ -381,7 +382,7 @@ angular.module('sdlctoolApp')
                         //orders the alternativeSets by showOrder
                         optColumn.alternativeSets = $filter('orderBy')(optColumn.alternativeSets, 'showOrder');
                     });
-                    //			  console.log($scope.optColumns);
+                    //            console.log($scope.optColumns);
                     angular.forEach(selectedAltSets, function(altSet) {
                         $scope.selectAlternatives(altSet);
                     });
@@ -516,7 +517,7 @@ angular.module('sdlctoolApp')
                 });
                 //adds the categoryOrder, id of the item and updates the filterCategory library for the filter nach category.
                 modalInstance.result.then(function(item) {
-                    //			  console.log(item);
+                    //            console.log(item);
                     item.requirement.id = $scope.newRequirementParam.id;
                     //update the order of the last element in the category filter.
                     $scope.newRequirementParam.id++;
@@ -531,7 +532,7 @@ angular.module('sdlctoolApp')
                     })
                     $scope.customRequirements.push(item.requirement);
                     $scope.requirements.push(item.requirement);
-                    //			  $scope.exported = false;
+                    //            $scope.exported = false;
                 });
             }
             // edit custom requirement.
@@ -656,9 +657,9 @@ angular.module('sdlctoolApp')
             var idIndex = $scope.selectOptCompare.ids.indexOf(item.id);
             if (idIndex >= 0) { $scope.selectOptCompare.ids.splice(idIndex, 1); }
             $scope.selectOptCompare.counts--;
-            //		  console.log("deselect");
-            //		  console.log($scope.selectOptCompare);
-            //		  console.log($scope.requirementProperties.selectedOptColumns);
+            //        console.log("deselect");
+            //        console.log($scope.selectOptCompare);
+            //        console.log($scope.requirementProperties.selectedOptColumns);
         }
 
         $scope.enableSave = function(withStatColumn) {
@@ -674,8 +675,8 @@ angular.module('sdlctoolApp')
                 $scope.requirementProperties.selectedOptColumns = (JSON.parse(JSON.stringify($scope.selectOptCompare)));
                 $scope.requirementProperties.requirementsEdited = false;
                 $scope.requirementProperties.exported = true;
-                //			  console.log($scope.selectOptCompare);
-                //			  console.log($scope.requirementProperties.selectedOptColumns);
+                //            console.log($scope.selectOptCompare);
+                //            console.log($scope.requirementProperties.selectedOptColumns);
             }
         }
 
@@ -702,7 +703,7 @@ angular.module('sdlctoolApp')
                         if (statusColumnId === statusColumn.id) {
                             statusColumn.value = value.name;
                             statusColumn.valueId = value.id;
-                            //						 $scope.exported = false;
+                            //                       $scope.exported = false;
                         }
                     });
                 }
@@ -710,49 +711,76 @@ angular.module('sdlctoolApp')
             $scope.enableSave(true);
         }
 
+        var buildReqOptContents = function(reqOptContents) {
+            var values = []
+            var lastOptContentId = {};
+            angular.forEach(reqOptContents, function(optColumn) {
+                if (values.length > 0 && $filter('filter')(values, { showOrder: optColumn.optionColumnId }).length === 1) {
+                    for (var i = 0; i < values.length; i++) {
+                        if (values[i].showOrder === optColumn.optionColumnId) {
+                            lastOptContentId[optColumn.optionColumnId]++;
+                            values[i].content.push({
+                                id: lastOptContentId[optColumn.optionColumnId],
+                                content: optColumn.content.trim()
+                            })
+                        }
+                    }
+                } else {
+                    lastOptContentId[optColumn.optionColumnId] = 0;
+                    values.push({
+                        content: [{ id: 0, content: optColumn.content.trim() }],
+                        name: optColumn.optionColumnName,
+                        showOrder: optColumn.optionColumnId
+                    });
+                }
+            });
+            return values;
+        }
+
+        var buildStatusColumns = function(statusColumns) {
+            var statusColumnsValues = [];
+            angular.forEach($filter('orderBy')(statusColumns, 'showOrder'), function(statusColumn) {
+                //check if statusColumn isEnum or not
+                if (statusColumn.isEnum) {
+                    var showOrder = 1000;
+                    var name;
+                    var valueId;
+                    //initialise with the one also displayed in the UI as first element
+                    angular.forEach(statusColumn.values, function(value) {
+                        if (value.showOrder < showOrder) {
+                            showOrder = value.showOrder;
+                            name = value.name;
+                            valueId = value.id
+                        }
+
+                    });
+                    statusColumnsValues.push({
+                        id: statusColumn.id,
+                        value: name,
+                        valueId: valueId,
+                        isEnum: statusColumn.isEnum
+                    });
+                } else {
+                    statusColumnsValues.push({
+                        id: statusColumn.id,
+                        value: "",
+                        isEnum: statusColumn.isEnum
+                    });
+                }
+
+            });
+
+            return statusColumnsValues;
+        }
+
         $scope.buildRequirements = function() {
             angular.forEach($scope.requirementSkeletons, function(requirementCategory) {
                 var lastElementOrder = 0;
                 angular.forEach(requirementCategory.requirements, function(requirement) {
-                    var values = [];
-                    angular.forEach(requirement.optionColumnContents, function(optColumn) {
-                        values.push({
-                            content: [{ id: 0, content: optColumn.content.trim() }],
-                            name: optColumn.optionColumnName,
-                            showOrder: optColumn.optionColumnId
-                        });
-                    });
-                    var statusColumnsValues = [];
-                    angular.forEach($filter('orderBy')($scope.statusColumns, 'showOrder'), function(statusColumn) {
-                        //check if statusColumn isEnum or not
-                        if (statusColumn.isEnum) {
-                            var showOrder = 1000;
-                            var name;
-                            var valueId;
-                            //initialise with the one also displayed in the UI as first element
-                            angular.forEach(statusColumn.values, function(value) {
-                                if (value.showOrder < showOrder) {
-                                    showOrder = value.showOrder;
-                                    name = value.name;
-                                    valueId = value.id
-                                }
+                    var values = buildReqOptContents(requirement.optionColumnContents);
 
-                            });
-                            statusColumnsValues.push({
-                                id: statusColumn.id,
-                                value: name,
-                                valueId: valueId,
-                                isEnum: statusColumn.isEnum
-                            });
-                        } else {
-                            statusColumnsValues.push({
-                                id: statusColumn.id,
-                                value: "",
-                                isEnum: statusColumn.isEnum
-                            });
-                        }
+                    var statusColumnsValues = buildStatusColumns($scope.statusColumns);
 
-                    });
                     $scope.fillEmptyOpts(values, $scope.optColumns);
                     $scope.requirements.push({
                         id: requirement.id,
@@ -800,7 +828,7 @@ angular.module('sdlctoolApp')
             }
 
             $scope.finishProgressbar();
-            
+
             //do a initial localBackup
             $scope.onTimeout();
             $scope.promiseForStorage = $interval($scope.onTimeout, 60000);
@@ -993,45 +1021,8 @@ angular.module('sdlctoolApp')
             angular.forEach(skeletons, function(requirementCategory) {
                 var lastElementOrder = 0;
                 angular.forEach(requirementCategory.requirements, function(requirement) {
-                    var values = [];
-                    angular.forEach(requirement.optionColumnContents, function(optColumn) {
-                        values.push({
-                            content: [{ id: 0, content: optColumn.content }],
-                            name: optColumn.optionColumnName,
-                            showOrder: optColumn.optionColumnId
-                        });
-                    });
-                    var statusColumnsValues = [];
-                    angular.forEach($filter('orderBy')($scope.statusColumns, 'showOrder'), function(statusColumn) {
-                        //check if statusColumn isEnum or not
-                        if (statusColumn.isEnum) {
-                            var showOrder = 1000;
-                            var name;
-                            var valueId;
-                            //initialise with the one also displayed in the UI as first element
-                            angular.forEach(statusColumn.values, function(value) {
-                                if (value.showOrder < showOrder) {
-                                    showOrder = value.showOrder;
-                                    name = value.name;
-                                    valueId = value.id
-                                }
-
-                            });
-                            statusColumnsValues.push({
-                                id: statusColumn.id,
-                                value: name,
-                                valueId: valueId,
-                                isEnum: statusColumn.isEnum
-                            });
-                        } else {
-                            statusColumnsValues.push({
-                                id: statusColumn.id,
-                                value: "",
-                                isEnum: statusColumn.isEnum
-                            });
-                        }
-
-                    });
+                    var values = buildReqOptContents(requirement.optionColumnContents);
+                    var statusColumnsValues = buildStatusColumns($scope.statusColumns);
                     $scope.fillEmptyOpts(values, $scope.optColumns);
                     updatedRequirements.push({
                         id: requirement.id,
@@ -1428,7 +1419,7 @@ angular.module('sdlctoolApp')
                     { wch: 12 }, // width of column Short name
                     { wch: 45 }
                 ] // width of column description
-                //		  var wsrows = [{}]
+                //        var wsrows = [{}]
             angular.forEach($scope.optColumns, function(optColumn) {
                 wscols.push({ wch: 50 });
             });
@@ -1736,12 +1727,12 @@ angular.module('sdlctoolApp')
         $scope.buildYAMLFile = function() {
             var objectToExport = {
                 name: $scope.systemSettings.name,
-                ticket : $scope.ticket,
+                ticket: $scope.ticket,
                 projectType: $scope.systemSettings.project,
-                collections : $scope.systemSettings.colls,
-                generatedOn : $scope.generatedOn,
-                lastChanged : $scope.getCurrentDate(),
-                requirements : $scope.requirements
+                collections: $scope.systemSettings.colls,
+                generatedOn: $scope.generatedOn,
+                lastChanged: $scope.getCurrentDate(),
+                requirements: $scope.requirements
 
             };
             return Helper.buildYAMLFile(objectToExport);
