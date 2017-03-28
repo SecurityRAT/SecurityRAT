@@ -70,7 +70,7 @@
                     </div>
                 </div>
                 <div>&nbsp;</div>
-                <div data-ng-if="checks.isQueue" data-ng-init="fillDefaultValues()">
+                <div data-ng-if="checks.isQueue && selection.jira" data-ng-init="fillDefaultValues()">
                     <!-- <uib-alert  type="alert alert-{{alertType}}"><span class="text-center">{{exportProperty.failed}}</span></uib-alert> -->
                     <p class="text-center">Another click on the <strong>Export</strong> button will create a ticket with the following <strong>required fields</strong></p>
                     <div class="form-group">
@@ -93,7 +93,7 @@
                 <uib-accordion-heading>
                     Export into File <i class="pull-right glyphicon" data-ng-class="{'glyphicon-chevron-down':selection.file, 'glyphicon-chevron-right':!selection.file}"></i>
                 </uib-accordion-heading>
-                <div data-ng-if="selection.file">
+                <div data-ng-if="selection.file" >
                     <div class="btn-group panel-info" data-toggle="buttons">
                         <label class="btn panel-heading" uib-btn-radio="'yaml'" data-ng-model="extension">
                             YAML
@@ -105,7 +105,7 @@
     </div>
     <div class="modal-footer btn-group-sm">
         <div class="col-sm-offset-2 col-sm-5">
-            <button class="btn btn-primary form-control" uib-tooltip="Export Artifact" data-ng-click="confirm()" data-ng-disabled="(!selection.jira && !selection.file) || exportForm.$invalid || checks.exporting || exportProperty.authenticating"><strong>Export</strong></button>
+            <button type="submit" class="btn btn-primary form-control" uib-tooltip="Export Artifact" data-ng-disabled="(!selection.jira && !selection.file) || exportForm.$invalid || checks.exporting || exportProperty.authenticating" data-ng-click="confirm()"><strong>Export</strong></button>
         </div>
         <div class="col-sm-5">
             <button class="btn btn-default form-control" data-ng-click="cancel()"><strong>Cancel</strong></button>

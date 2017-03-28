@@ -485,6 +485,22 @@ describe('Protractor Security RAT Testsuite', function() {
 		browser.sleep(3000);
 		element(by.buttonText('Close')).click();
 	});	
+
+	it('Test invalid export form', function() {
+		browser.sleep(1000);
+		(element(by.buttonText(SaveButton))).click();
+		browser.sleep(1000)
+		expect(element(by.buttonText(exportButton)).isEnabled()).toBe(false);
+		(element(by.linkText('Export into File'))).click();
+		expect(element(by.buttonText(exportButton)).isEnabled()).toBe(true);
+		(element(by.linkText('Export into JIRA'))).click();
+		browser.sleep(1000);
+		element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraQueue);
+		expect(element(by.buttonText(exportButton)).isEnabled()).toBe(true);
+		(element(by.buttonText(exportButton))).click();
+		browser.sleep(2500);
+		expect(element(by.buttonText(exportButton)).isEnabled()).toBe(false);
+	})
 	
 	it('Test for the feedback feature', function() {
 		deleteCookie1();

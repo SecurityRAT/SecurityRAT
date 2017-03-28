@@ -22,7 +22,7 @@
                         <div class="text-center col-sm-11">
                             <div class="input-group">
                                 <span class="input-group-addon required-field">URL:</span>
-                                <input type="text" data-ng-model="jiraLink.url" placeholder="e.g. https://www.example-jira.com/browse/DUMBQ-12" class="form-control" name="url" data-ng-pattern="checks.url.pattern" required/>
+                                <input type="text" id="jiraLink" data-ng-model="jiraLink.url" placeholder="e.g. https://www.example-jira.com/browse/DUMBQ-12" class="form-control" name="url" data-ng-pattern="checks.url.pattern" required/>
                             </div>
                             <div data-ng-show="importForm.url.$invalid">
                                 <p id="failUrlMessage" class="help-block" data-ng-show="importForm.url.$error.pattern">
@@ -55,8 +55,8 @@
                 <uib-accordion-heading>
                     Import from File <i class="pull-right glyphicon" data-ng-class="{'glyphicon-chevron-down':status.file , 'glyphicon-chevron-right':!status.file}"></i>
                 </uib-accordion-heading>
-                <div>
-                    <div class="row" data-ng-if="status.file">
+                <div data-ng-if="status.file">
+                    <div class="row" >
                         <input class="col-sm-11 required-field" id="fileUpload" type="file" multiple="" accept="text/x-yaml; charset=utf-8" required />
                     </div>
                     <div>
@@ -68,7 +68,7 @@
     </div>
     <div class="modal-footer btn-group-sm">
         <div class="col-sm-offset-2 col-sm-5">
-            <button class="btn btn-primary form-control" uib-tooltip="Import Artifact" data-ng-click="upload()" data-ng-disabled="(!status.jira && !status.file) || importForm.$invalid"><strong>Import</strong></button>
+            <button type="submit" class="btn btn-primary form-control" uib-tooltip="Import Artifact" data-ng-click="upload()" data-ng-disabled="(!status.jira && !status.file) || importForm.$invalid"><strong>Import</strong></button>
         </div>
         <div class="col-sm-5">
             <button class="btn btn-default form-control" data-dismiss="modal" data-ng-click="cancel()"><strong>Cancel</strong></button>

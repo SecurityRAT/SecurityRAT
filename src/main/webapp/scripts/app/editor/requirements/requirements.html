@@ -134,10 +134,8 @@
     </div>
     <div>
         <p><strong>{{requirements.length}}</strong> Requirements found
-            <span data-ng-if="requirements.length > (requirements | orderBy:['categoryOrder','order'] | filterByTags : filteredRequirementsByTags
-			   		    | filterByCategories : selectedCategory  | filterByStatus : selectedStatus | filterTicketStatus : jiraStatus.selectedStatus| filter:search).length">,
-				<span style="color:red;"><strong id="requirementInRed">{{(requirements | orderBy:['categoryOrder','order'] | filterByTags : filteredRequirementsByTags
-			   		    | filterByCategories : selectedCategory  | filterByStatus : selectedStatus | filterTicketStatus : jiraStatus.selectedStatus| filter:search).length}}</strong> Requirements shown
+            <span data-ng-if="requirements.length > (filterRequirements()).length">,
+				<span style="color:red;"><strong id="requirementInRed">{{(filterRequirements()).length}}</strong> Requirements shown
 				</span>
             </span>
             <span data-ng-if="(requirements | filter: {selected:true}).length">and
@@ -334,8 +332,9 @@
                             <div data-ng-if="!(reqs.isNew || reqs.isOld)" data-ng-bind-html="reqs.description | trusted"></div>
                             <div data-ng-if="reqs.isNew || reqs.isOld" marked="reqs.description"></div>
                         </td>
-                        <td data-ng-repeat="optionColumn in reqs.optionColumns | orderBy:'showOrder'" data-ng-style="(reqs.isNew && {'background-color':'rgb(204, 255, 204)'}) || reqs.isOld && {'background-color':'rgb(255, 204, 204)'}">
-                            <div data-ng-repeat="optionColumnContent in optionColumn.content" data-ng-show="optToHide.indexOf(optionColumn.showOrder) == -1">
+                        <td data-ng-repeat="opt in optColumns | orderBy:'showOrder'" data-ng-style="(reqs.isNew && {'background-color':'rgb(204, 255, 204)'}) || reqs.isOld && {'background-color':'rgb(255, 204, 204)'}">
+                            <span data-ng-repeat-start="optionColumn in reqs.optionColumns | filter: {showOrder : opt.id}" data-ng-hide="true"></span>
+                            <div data-ng-repeat-end data-ng-repeat="optionColumnContent in optionColumn.content" data-ng-show="optToHide.indexOf(optionColumn.showOrder) == -1">
                                 <div data-ng-if="!(reqs.isNew || reqs.isOld)" data-ng-bind-html="optionColumnContent.content | trusted"></div>
                                 <div data-ng-if="reqs.isNew || reqs.isOld" marked="optionColumnContent.content"></div>
                             </div>

@@ -450,6 +450,7 @@ angular.module('sdlctoolApp')
                                     values: allowedValues,
                                     configurable: $scope.selection.createTickets && key === 'labels' ? false : !value.required,
                                     mandatory: $scope.selection.createTickets && key === 'labels' ? true : value.required,
+                                    required: value.required,
                                     autoCompleteUrl: autoCompleteUrl
                                 });
                                 // console.log($scope.jiraAlternatives.mandatoryFields);

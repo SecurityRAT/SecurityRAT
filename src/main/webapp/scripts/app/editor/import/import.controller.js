@@ -18,7 +18,7 @@ angular.module('sdlctoolApp')
         $scope.requirements = [];
         $scope.lastRequirementId = 0;
         $scope.optionColumns = [];
-        //	  $scope.promise = {};
+        //    $scope.promise = {};
         $scope.filterCategory = []
         $scope.statusColumns = [];
         $scope.jiraLink = {};
@@ -27,10 +27,10 @@ angular.module('sdlctoolApp')
         $scope.name = '';
         $scope.importProperty = { spinner: {}, promise: {} };
         $scope.checks = {
-        	url: {
-        		pattern : urlpattern.javascriptStringRegex,
-        		errorMessage: "The entered URL is invalid. Please provide a valid URL"
-        	}
+            url: {
+                pattern: urlpattern.javascriptStringRegex,
+                errorMessage: "The entered URL is invalid. Please provide a valid URL"
+            }
         }
         $scope.attachmentProperties = {}
 
@@ -57,7 +57,7 @@ angular.module('sdlctoolApp')
             var hostSet = false;
             angular.extend($scope.apiUrl, Helper.buildJiraUrl(list));
             // if($scope.apiUrl.ticketKey.length === 1) {
-            // 	$scope.isTicket = true;
+            //  $scope.isTicket = true;
             // }
         }
 
@@ -69,7 +69,7 @@ angular.module('sdlctoolApp')
                     //cancels the promises if they are defined to prevent use of resources.
                     authenticatorService.cancelPromises($scope.importProperty.promise);
                     apiFactory.getJIRAInfo(attachment.content).then(function(yamlFile) {
-                        //					  if(modalInstance !== undefined){modalInstance.cancel('');}
+                        //                    if(modalInstance !== undefined){modalInstance.cancel('');}
                         var blob = new Blob([yamlFile], { type: attachment.mimeType });
                         $scope.readYamlFile(blob);
                     }, function(exception) {});
@@ -108,34 +108,27 @@ angular.module('sdlctoolApp')
                                 fileUrl = decodeURIComponent($location.search().file);
                             }
                             if (re_weburl.test(fileUrl)) {
-
-                                apiFactory.getJIRAInfo(fileUrl).then(
-                                    function(attachment) {
+                                $uibModalStack.dismissAll('close exception modal');
+                                var urlSplit = fileUrl.split("/");
+                                $scope.buildUrlObject(urlSplit);
+                                $scope.importProperty.promise.derefer = $q.defer();
+                                addCheckAuthenticationModal($scope.importProperty.promise);
+                                var authenticatorProperty = {
+                                    url: $scope.apiUrl.http + "//" + $scope.apiUrl.host,
+                                    message: 'Attachment could not be imported because you are not authenticated.' +
+                                        'Please click on the following link to authenticate yourself. You will have one minute after a click on the link.'
+                                }
+                                checkAuthentication.jiraAuth(fileUrl, authenticatorProperty, $scope.importProperty.spinner, $scope.importProperty.promise)
+                                    .then(function(attachment) {
                                         onSuccess(attachment);
-                                    },
-                                    function(exception) {
-                                        if (exception.status == 403) {
-                                            $uibModalStack.dismissAll('close exception modal');
-                                            var urlSplit = fileUrl.split("/");
-                                            $scope.buildUrlObject(urlSplit);
-                                            $scope.importProperty.promise.derefer = $q.defer();
-                                            addCheckAuthenticationModal($scope.importProperty.promise);
-                                            var authenticatorProperty = {
-                                                url: $scope.apiUrl.http + "//" + $scope.apiUrl.host,
-                                                message: 'Attachment could not be imported because you are not authenticated.' +
-                                                    'Please click on the following link to authenticate yourself. You will have one minute after a click on the link.'
-                                            }
-                                            checkAuthentication.jiraAuth(fileUrl, authenticatorProperty, $scope.importProperty.spinner, $scope.importProperty.promise)
-                                                .then(function(attachment) {
-                                                    onSuccess(attachment);
-                                                });
-                                        } else if (exception.status === 404) {
-                                            //													  $uibModalStack.dismissAll('cancel');
+                                    }).catch(function() {
+                                        if (exception.status === 404) {
+                                            // $uibModalStack.dismissAll('cancel');
                                             SDLCToolExceptionService.showWarning('Import unsuccessful', "No attachment with this id was found.", SDLCToolExceptionService.DANGER);
                                         }
                                     });
                             } else {
-                                //									  $uibModalStack.dismissAll('cancel');
+                                //                                    $uibModalStack.dismissAll('cancel');
                                 SDLCToolExceptionService.showWarning('Import unsuccessful', "Invalid url in query parameter file.", SDLCToolExceptionService.DANGER);
                             }
                         } else {
@@ -144,6 +137,7 @@ angular.module('sdlctoolApp')
                                 $scope.status.jira = true;
                                 $scope.uploadJira();
                             }
+                            $('#jiraLink').focus();
                             $scope.status.jira = true;
                         }
                     },
@@ -164,28 +158,27 @@ angular.module('sdlctoolApp')
 
         $scope.uploadJira = function() {
             // if (re_weburl.test($scope.jiraLink.url.trim())) {
-                var urlSplit = $scope.jiraLink.url.split("/");
-                $scope.buildUrlObject(urlSplit);
-                var apiCall = $scope.apiUrl.http + "//" + $scope.apiUrl.host + appConfig.jiraApiIssueType;
-                if ($scope.apiUrl.ticketKey.length !== 1) {
-                    $scope.uploadFail = true;
-                    $scope.failMessage = "You have entered an invalid ticket URL.";
-                } else {
-                    $scope.importProperty.promise.derefer = $q.defer();
-                    var authenticatorProperty = {
-                        url: $scope.jiraLink.url,
-                        message: 'You are not authenticated, please click on the following link to authenticate yourself. You will have one minute after a click on the link.'
-                    }
-                    console.log("CALLED")
-                    checkAuthentication.jiraAuth(apiCall, authenticatorProperty, $scope.importProperty.spinner, $scope.importProperty.promise).then(function() {
-                        if (!angular.equals($scope.jiraLink.backupUrl, $scope.jiraLink.url)) {
-                            $scope.attachmentProperties = {};
-                            angular.extend($scope.attachmentProperties, { attachments: [], hasAttachments: false, selectedAttachment: "" });
-                            $scope.jiraLink.backupUrl = $scope.jiraLink.url.trim();
-                        }
-                        $scope.checkTicket();
-                    });
+            var urlSplit = $scope.jiraLink.url.split("/");
+            $scope.buildUrlObject(urlSplit);
+            var apiCall = $scope.apiUrl.http + "//" + $scope.apiUrl.host + appConfig.jiraApiIssueType;
+            if ($scope.apiUrl.ticketKey.length !== 1) {
+                $scope.uploadFail = true;
+                $scope.failMessage = "You have entered an invalid ticket URL.";
+            } else {
+                $scope.importProperty.promise.derefer = $q.defer();
+                var authenticatorProperty = {
+                    url: $scope.jiraLink.url,
+                    message: 'You are not authenticated, please click on the following link to authenticate yourself. You will have one minute after a click on the link.'
                 }
+                checkAuthentication.jiraAuth(apiCall, authenticatorProperty, $scope.importProperty.spinner, $scope.importProperty.promise).then(function() {
+                    if (!angular.equals($scope.jiraLink.backupUrl, $scope.jiraLink.url)) {
+                        $scope.attachmentProperties = {};
+                        angular.extend($scope.attachmentProperties, { attachments: [], hasAttachments: false, selectedAttachment: "" });
+                        $scope.jiraLink.backupUrl = $scope.jiraLink.url.trim();
+                    }
+                    $scope.checkTicket();
+                });
+            }
             // } else {
             //     $scope.uploadFail = true;
             //     $scope.failMessage = "The entered URL is invalid. Please provide a valid URL";
@@ -202,9 +195,9 @@ angular.module('sdlctoolApp')
                             SDLCToolExceptionService.showWarning('Import unsuccessful', "There were no attachments found in this ticket.", SDLCToolExceptionService.DANGER);
                         } else if (response.fields.attachment.length > 0) {
                             // $scope.isTicket = true;
-                            //						$scope.getNewestAttachment(response.fields.attachment);
+                            //                      $scope.getNewestAttachment(response.fields.attachment);
                             $scope.attachmentProperties.attachments = $filter('orderBy')($scope.buildAttachmentsArray(response.fields.attachment), 'showOrder', true);
-                            //						console.log($scope.attachmentProperties.attachments);
+                            //                      console.log($scope.attachmentProperties.attachments);
                             if ($scope.attachmentProperties.attachments.length === 1) {
                                 $scope.getAttachment($scope.attachmentProperties.attachments[0].downloadUrl);
                             } else if ($scope.attachmentProperties.attachments.length > 1) {
@@ -244,7 +237,7 @@ angular.module('sdlctoolApp')
         $scope.buildAttachmentsArray = function(attachments) {
             var attachmentArray = [];
             angular.forEach(attachments, function(attachment) {
-                //				
+                //              
                 if ((attachment.mimeType === 'application/x-yaml' && attachment.size <= 5000000)) {
                     var date = $filter('date')((new Date(attachment.created)).getTime(), 'medium');
                     var names = attachment.filename.split("_");
@@ -280,17 +273,17 @@ angular.module('sdlctoolApp')
         $scope.readYamlFile = function(file) {
             var yamlData = "";
             var r = new FileReader();
-            //		  console.log(file.type);
+            //        console.log(file.type);
             if (file.size > 5000000) {
                 $scope.failMessage = "File limit 5MB exceeded.";
                 $scope.uploadFail = true;
-                //			  if(status.file && status.jira){SDLCToolExceptionService.showWarning('Import unsuccessful', "File limit was exceeded.", SDLCToolExceptionService.DANGER);}
+                //            if(status.file && status.jira){SDLCToolExceptionService.showWarning('Import unsuccessful', "File limit was exceeded.", SDLCToolExceptionService.DANGER);}
             }
-            //		  else if(!angular.equals(file.type, "application/x-yaml")){
-            //			  $scope.failMessage = "Wrong file format. Only  *.yml  are allowed.";
-            //			  $scope.uploadFail = true;
-            //			  SDLCToolExceptionService.showWarning('Import unsuccessful', "Wrong file format. Only  *.yml  are allowed.", SDLCToolExceptionService.DANGER);
-            //		  }
+            //        else if(!angular.equals(file.type, "application/x-yaml")){
+            //            $scope.failMessage = "Wrong file format. Only  *.yml  are allowed.";
+            //            $scope.uploadFail = true;
+            //            SDLCToolExceptionService.showWarning('Import unsuccessful', "Wrong file format. Only  *.yml  are allowed.", SDLCToolExceptionService.DANGER);
+            //        }
             else {
                 //executes this function once the file is successfully read.
                 r.onload = function(event) {
@@ -315,7 +308,7 @@ angular.module('sdlctoolApp')
             if (file.size > 5000000) {
                 $scope.failMessage = "File limit exceeded.";
                 $scope.uploadFail = true;
-                //			  if(status.file && status.jira){SDLCToolExceptionService.showWarning('Import unsuccessful', "File limit was exceeded.", SDLCToolExceptionService.DANGER);}
+                //            if(status.file && status.jira){SDLCToolExceptionService.showWarning('Import unsuccessful', "File limit was exceeded.", SDLCToolExceptionService.DANGER);}
             } else {
                 //executes this function once the file is successfully read.
                 r.onload = function(event) {
@@ -452,7 +445,7 @@ angular.module('sdlctoolApp')
                                 }
                                 checkAuthentication.jiraAuth(urlCall, authenticatorProperty, $scope.importProperty.spinner, $scope[$scope.apiUrl.ticketKey[0]]).then(function(data) {
                                     $scope.updateLinkStatus(data, jiraStatus, requirement, category, values, statusColumnsValues);
-                                    //								 if($scope.importProperty.promise.runningModalPromise !== undefined) {$scope.importProperty.promise.runningModalPromise.close();}
+                                    //                               if($scope.importProperty.promise.runningModalPromise !== undefined) {$scope.importProperty.promise.runningModalPromise.close();}
                                 }, function(error) {
                                     if (error.status === 403)
                                         SDLCToolExceptionService.showWarning('Issue call failed', "You do not have the permission to view the ticket " + jiraLink, SDLCToolExceptionService.DANGER);
