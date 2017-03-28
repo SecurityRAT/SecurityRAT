@@ -1,6 +1,6 @@
 This is an image enabling a quick&easy start if you want to play around with the SecurityRAT tool (otherwise available at [https://github.com/SecurityRAT](https://github.com/SecurityRAT)). Hope it works.
 
-*Important: the setup is not suitable for a production environment!*
+**Important: the setup is not suitable for a production environment!**
 
 # How To
 - run docker `run -i-t -p 9002:9002 securityrat/all_in_one`
