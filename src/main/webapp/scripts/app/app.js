@@ -349,7 +349,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                     $interval.cancel(promise.interval);
                 if (angular.isDefined(promise.timeout))
                     $timeout.cancel(promise.timeout);
-                if (promise.runningModalPromise !== undefined) { promise.runningModalPromise.close(); }
+                if (promise.runningModalPromise !== undefined && promise.runningModalPromise.close !== undefined) { promise.runningModalPromise.close(); }
             },
             startCheckAuthenticationProcess: function(apiCall, displayProperty, spinnerProperty, promise, callback) {
                 var self = this

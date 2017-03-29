@@ -157,8 +157,16 @@ describe('Protractor Security RAT Testsuite', function() {
 		
 		// set the value in custom requirement modal.
 		(element(by.model('requirement.description'))).sendKeys("custom description");
-		element(by.id('content1')).sendKeys("custom More Information");
-		element(by.id('content2')).sendKeys("custom motivation");
+		element(by.id('content1')).isPresent().then(function(content) {
+			if(content) {
+				element(by.id('content1')).sendKeys("custom More Information");
+			}
+		})
+		element(by.id('content2')).isPresent().then(function(content) {
+			if(content) {
+				element(by.id('content2')).sendKeys("custom motivation");
+			}
+		})
 		
 		element(by.model('reqStat.value')).sendKeys("Custom comment");
 		element.all(by.options("value as value.name for value in statusColumn.values | orderBy: 'showOrder'")).get(3).click();
@@ -170,8 +178,16 @@ describe('Protractor Security RAT Testsuite', function() {
 		
 		// set the value in custom requirement modal.
 		(element(by.model('requirement.description'))).sendKeys("custom description");
-		element(by.id('content1')).sendKeys("custom some More Information");
-		element(by.id('content2')).sendKeys("custom some motivation");
+		element(by.id('content1')).isPresent().then(function(content) {
+			if(content) {
+				element(by.id('content1')).sendKeys("custom More Information");
+			}
+		})
+		element(by.id('content2')).isPresent().then(function(content) {
+			if(content) {
+				element(by.id('content2')).sendKeys("custom motivation");
+			}
+		})
 		
 		element(by.model('reqStat.value')).sendKeys("Custom some comment");
 		element.all(by.options("value as value.name for value in statusColumn.values | orderBy: 'showOrder'")).get(2).click();
@@ -402,7 +418,7 @@ describe('Protractor Security RAT Testsuite', function() {
 		(element(by.buttonText(exportButton))).click();
 		browser.sleep(3000);
 		element(by.buttonText("OK")).click();
-		browser.sleep(2000);
+		browser.sleep(3000);
 		element(by.buttonText("Yes")).click();
 		browser.sleep(3000);
 		expect(element.all(by.partialLinkText(browser.params.jiraQueue)).count()).toBe(1);
@@ -493,12 +509,13 @@ describe('Protractor Security RAT Testsuite', function() {
 		expect(element(by.buttonText(exportButton)).isEnabled()).toBe(false);
 		(element(by.linkText('Export into File'))).click();
 		expect(element(by.buttonText(exportButton)).isEnabled()).toBe(true);
-		(element(by.linkText('Export into JIRA'))).click();
+		(element(by.linkText('Export to JIRA'))).click();
 		browser.sleep(1000);
 		element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraQueue);
+		browser.sleep(1000)
 		expect(element(by.buttonText(exportButton)).isEnabled()).toBe(true);
 		(element(by.buttonText(exportButton))).click();
-		browser.sleep(2500);
+		browser.sleep(4000);
 		expect(element(by.buttonText(exportButton)).isEnabled()).toBe(false);
 	})
 	

@@ -121,7 +121,7 @@ angular.module('sdlctoolApp')
                                 checkAuthentication.jiraAuth(fileUrl, authenticatorProperty, $scope.importProperty.spinner, $scope.importProperty.promise)
                                     .then(function(attachment) {
                                         onSuccess(attachment);
-                                    }).catch(function() {
+                                    }).catch(function(exception) {
                                         if (exception.status === 404) {
                                             // $uibModalStack.dismissAll('cancel');
                                             SDLCToolExceptionService.showWarning('Import unsuccessful', "No attachment with this id was found.", SDLCToolExceptionService.DANGER);
