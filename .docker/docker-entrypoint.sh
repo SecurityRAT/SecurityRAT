@@ -8,9 +8,13 @@ KEYSTORE_SECURITYRAT_PASSWORD="$(< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1
 
 DATABASE_NAME="securityrat"
 
+COMPRESSFILE="securityRAT*.tar.gz"
+
 target="/home/securityrat/SecurityRATProd"
 
 cd $target
+
+tar -xzf $COMPRESSFILE
 
 keytool -genkey -alias tomcat -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore keystore.p12 -validity 3650 -storepass "$(echo $KEYSTORE_SECURITYRAT_PASSWORD)" -dname "CN=localhost, OU=unknown, O=unknown, L=unknown, S=unknown, C=unknown" -keypass "$(echo $KEYSTORE_SECURITYRAT_PASSWORD)"
 certLocation="$(find / -name "cacerts" | grep java-8)"
@@ -56,8 +60,6 @@ do
 	echo -n '.'
 	sleep 1
 done &
-
-rm -rf $target/Security-Requirements/
 
 cd $target
 su -m -c "java -jar $(ls | egrep .*\.war$) --spring.profiles.active=dev --1> app.log" securityrat

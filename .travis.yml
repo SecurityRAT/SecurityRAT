@@ -1,32 +1,50 @@
 language: java
+
+services:
+  - docker
+cache:
+  directories:
+  - "$HOME/.m2"
+  - "$TRAVIS_BUILD_DIR/node_modules"
+  
 jdk:
 - oraclejdk8
+env:
+  global:
+  - secure: YXbqIAyUe0CrhmmP7ElgXRz3ejgLL6r8KaqqK9t83TU3S57mYnKkdBKXfbcMhr9JizYDspJN5mbYJqtZN28ntPSFpcUjZ7X8et65nhPkmb6mGh8LW6CSmQXn12zEK2JObUIOZcFEt5GHFmtLgDDTCxAPtgeJ6tq28fMaq2WTbcTLMVqw2VTuU0Gx/zBqRP2p40UsOAM3J8+H+B/L+tU11cFpn/hAypXpmIFmXPAqH8MXtFgyxHpayuTuQnDvPuY+i90stW37JO582bR8Skhd6kToa36UZnyCBpeJnsYlch65ts9rEfysKf2NkRDfTvbIVKDb10fTvq4GQs1oyq+QBA5RNS2wJsR2UCAucZmH5jQXIndSIwryg7P9hLubG/TyAtLgorcIK/tGOGutAJ8izq9s6R8DMBJo0SjdoNF1pPjlr+LuGK1bgjWpdbkHvgB/u9OVRTFa121DgFX+wtqCyUkiSLdlM5qA5YfBQI7K+Sb2Hk0Wt8pXGF3DYbVZnQyV8hDTOoBVzBkLAUKUdzTLjlPNnENLDtJ7GhoJlxUuy6j3+rv6AT5m4BfbY7vTXg8I9vMJnt8PY2cH1j73HcCjq5kt2s6pstQGTvcBI1uNUv1c6jW7BQomvI6NKLUrGJUr08x813+v2C+m4U1lAM2Fr4Cin27A5A8Q+4Uszkl+lDY=
+  - secure: PJ0RzhoMK9h48XsMmbw7ceTlmOzcJZc6yYNGHp9TXBt3J4Rjfgf5HcaAqkIKm3m9ph1/iB0W+rB055ZXy7eenGbFgqxCkElTGvYtara1TIM4PrLiSX21mSAVFtfEpR8zCiBcOiMon7k9B9mvGWpdQU4fu891sgdvo7QXOa2+DlO/iBy5LP4SZL9OGO+kNeWV3DeTVhxU52uiaELaOWDxPyepZm6o91txGkbOVfAnhpFg6Gca40iNzUkaXQdPX1WuHirnN/dPwGb6uN72pMcGqX8l0gMUPTfrN7MGGahTCtowW2jxgZT1gkG4JaCCNBk2bhkl6s3Lv5q/8hK+FLOsTrAt7WQVqueDg8MBYLV/gKzJawwIztBALXvGnn6Ql+eVmD260uU4kq5/BLDFX0m0nbbbZE7t3cK6F05NYEBSlHkE5wMRcRm8cmUPZztzrdiL4/rOu998UefiOIlnamI27OyKWkv6L5Kx7xgom531xBIUW3zar+0ftgnthSSig/XIeW8/d90TUuRwmDZ4GFUSN/GQp0HN/sVqw9RXE7vyYxlq21lh7o+YOWhgy9qowCiZStfJav77H04JTlKotZ1oO+p4mvx35HHCrqWaqdhLURvnFFEXFpVRr7IH3VeaqDOIOZr/mVkJE8D2UfwxukQUtYJraRTAYygFdOcJ+u0Dxkw=
 before_install:
 - sudo apt-get update
-- sudo apt-get install -y nodejs
-- curl -L https://www.npmjs.com/install.sh | sh
-- npm install bower
-- npm install grunt-cli
+- sudo curl -sL https://deb.nodesource.com/setup_4.x | sudo bash
+- sudo apt-get install nodejs
+- sudo apt-get install build-essential
+- sudo npm install -g bower grunt-cli
 script:
 - mvn -Pprod package
+- export WAR_FILE="$(ls target/ | egrep .*\.war$)"
+- export NAME="$(echo $WAR_FILE | egrep -oh '(.*)[^\.war]')"
+- export TAG_NAME=$(git describe --exact-match)
 - chmod +x createArchive.sh
 - "./createArchive.sh"
 branches:
   only:
   - master
 before_deploy:
-  - export RELEASE_ZIP_FILE=$(ls target/*.zip)
-  - export RELEASE_TAR_FILE=$(ls target/*.tar.gz)
+- export RELEASE_ZIP_FILE=$(ls target/*.zip)
+- export RELEASE_TAR_FILE=$(ls target/*.tar.gz)
 deploy:
   provider: releases
   api_key:
     secure: T2Blmetw45MKwt9nmERqfjw9XwKeZVRXXg/JeW1mHOwr9UDn7L93MAItGEmMq0UdGB+mj49JyNys2Gz2PO5D8fnFVAqcXolbjJ7DprGW8Ha7ghUSHPYuHaJRZC+87f08+tRoNP4bYVpFG/HOr2km7lfuTxnpK+fnEdY+tkTBvMYsNMwyKUzHezXXpeiY8nULfsj2Mxgpuj6J0e7Wv/tYgXaGME6jn3czko5Zpu/7fVTFz5xuXc7C+ULx8WTEBm3XKBYOT4bM3j4qV2VyNXeTdcLi2tj1XOLswch2U73NBGaBnAlLkch/Hp2uSkY25+ajQzyBid5bM5bCI8xISta7cUNdxQQ83ER1xele1y3m5PlC9rGxgz1VEjBkn3rgf0797l11z6xohre54MpZYsCtjKXFy1qs8bURmmxyufMXmBamJMWYH+Ven6gAqIZudo8nF0iSATzvffvTEZ2/7Gm3kQ2RFYUsqpXgxxi7LikuDnyvsOBb4mU/HTzYyDKmnxYU/cazDJw9pPryUZerFJg48IpP4dKtievafFxPVJbf/KE3MZCwp6oqB8E1g7BJg72IdmWWGP3XINkTb72l5vL70aR7YvxfRDwRb6tnu0V6xyCkNXxy/6RHNuCwKrHFdXamK/U3Q9hjfDRE6W9GRp/8kagh6TKGx0Spu5rOJU7NQ5U=
   skip_cleanup: true
   file_glob: true
-  file: 
-    - "${RELEASE_ZIP_FILE}"
-    - "${RELEASE_TAR_FILE}"
+  file:
+  - "${RELEASE_ZIP_FILE}"
+  - "${RELEASE_TAR_FILE}"
   on:
     repo: SecurityRAT/SecurityRAT
     branch: master
-    tag: true
+    condition: "-n $TAG_NAME"
+after_deploy:
+- chmod +x afterDeploy.sh
+- "./afterDeploy.sh"
