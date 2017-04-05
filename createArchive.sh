@@ -13,4 +13,3 @@ cd target/
 
 zip $(echo $NAME).zip $(echo $WAR_FILE) config/*
 tar -czf $(echo $NAME).tar.gz $(echo $WAR_FILE) config/*
-

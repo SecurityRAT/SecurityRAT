@@ -56,7 +56,7 @@ RUN \
 
 COPY docker-entrypoint.sh /usr/local/bin/
 COPY 000-default.conf /etc/apache2/sites-available/
-COPY securityRAT*.tar.gz /home/securityrat/SecurityRATProd
+COPY securityRAT*.tar.gz /home/securityrat/SecurityRATProd/
 
 # exposes ports 
 EXPOSE 9002
