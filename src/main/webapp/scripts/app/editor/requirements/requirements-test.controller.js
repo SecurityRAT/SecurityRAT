@@ -4,7 +4,9 @@ angular.module('sdlctoolApp')
 		.controller('TestRequirements', function(entity, $scope, $uibModalInstance, $filter, appConfig, $window, testAutomation, $q,
 			authenticatorService, $uibModalStack, $timeout, $interval) {
 	$scope.entity = entity;
-	$scope.testObject = {};
+	$scope.testObject = {
+		testProperties: {}
+	};
 	$scope.testResults = {};
 	$scope.urlPattern = urlpattern.javascriptStringRegex;
 
