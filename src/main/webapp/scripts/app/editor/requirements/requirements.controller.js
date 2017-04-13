@@ -1049,6 +1049,23 @@ angular.module('sdlctoolApp')
             $scope.mergeUpdatedRequirements(updatedRequirements, false, true);
         }
 
+        function markChangeInRequirement (requirementToInsert, oldRequirement, changedSettings, afterImport) {
+            angular.extend(requirementToInsert, { isNew: true, isOld: false, needsUpdate: true });
+            angular.extend(oldRequirement, { needsUpdate: true });
+            requirementToInsert.statusColumns = oldRequirement.statusColumns;
+            requirementToInsert.ticket = oldRequirement.ticket;
+            requirementToInsert.linkStatus = oldRequirement.linkStatus;
+            $scope.updatesCounter++;
+            $scope.updateCounter++;
+            if (afterImport) {
+                $scope.updatesAvailable = true;
+                $scope.oldRequirements.push(oldRequirement);
+            } else if (changedSettings) {
+                $scope.updatedReqs = true;
+                oldRequirement.isOld = true;
+            }
+        }
+
         $scope.mergeUpdatedRequirements = function(updatedRequirements, changedSettings, afterImport) {
             $scope.updateCounter = 0;
             $scope.newCounter = 0;
@@ -1066,11 +1083,12 @@ angular.module('sdlctoolApp')
                 }
                 var requirementToInsert = {};
                 var foundOne = false;
-                // var oldRequirementArray = $filter('filter')($scope.requirements, {id: newRequirement.id});
-                // angular.forEach($scope.requirements, function(oldRequirement) {
-                // if(oldRequirementArray.length === 1) {
                 for(var i = 0; i < $scope.requirements.length; i++) {
                     if($scope.requirements[i].id === newRequirement.id) {
+                        // updates category name is this was changed
+                        // $scope.requirements[i].category = newRequirement.category;
+                        // adds the taginstance ids
+                        $scope.requirements[i].tagInstances = newRequirement.tagInstances;
                         var oldRequirement = $scope.requirements[i];
                         // search for new changes in description
                         if ((newRequirement.description.replace(/[^\x20-\x7E]|\s+/gmi, "") !== oldRequirement.description.replace(/[^\x20-\x7E]|\s+/gmi, ""))) {
@@ -1080,35 +1098,16 @@ angular.module('sdlctoolApp')
                             newRequirement.oldDescription = newRequirement.description;
                             newRequirement.description = changes.n;
                             requirementToInsert = newRequirement;
-                            angular.extend(requirementToInsert, { isNew: true, isOld: false, needsUpdate: true });
-                            angular.extend(oldRequirement, { needsUpdate: true });
-                            requirementToInsert.statusColumns = oldRequirement.statusColumns;
-                            requirementToInsert.ticket = oldRequirement.ticket;
-                            requirementToInsert.linkStatus = oldRequirement.linkStatus;
-                            $scope.updatesCounter++;
-                            $scope.updateCounter++;
+                            markChangeInRequirement(requirementToInsert, oldRequirement, changedSettings, afterImport);
                             foundOne = true;
-                            if (afterImport) {
-                                $scope.updatesAvailable = true;
-                                $scope.oldRequirements.push(oldRequirement);
-                            } else if (changedSettings) {
-                                $scope.updatedReqs = true;
-                                oldRequirement.isOld = true;
-                            }
                         }
                         //search for new changes in optionColumns
-                        // if (newRequirement.id === oldRequirement.id) {
                         angular.forEach(newRequirement.optionColumns, function(newRequirementOptColumns) {
-                            // var oldRequirementOptColumnsArray = $filter('filter')(oldRequirement.optionColumns, {showOrder : newRequirementOptColumns.showOrder})
                             for(var j = 0; j < oldRequirement.optionColumns.length; j++) {
                                 if(oldRequirement.optionColumns[j].showOrder === newRequirementOptColumns.showOrder) {
-                                    // if(oldRequirementOptColumnsArray.length === 1) {
                                     var oldRequirementOptColumns = oldRequirement.optionColumns[j];
-                                    // angular.forEach(oldRequirement.optionColumns, function(oldRequirementOptColumns) {
-                                        // if (newRequirementOptColumns.showOrder === oldRequirementOptColumns.showOrder) {
                                     angular.forEach(newRequirementOptColumns.content, function(newRequirementContent) {
                                         angular.forEach(oldRequirementOptColumns.content, function(oldRequirementContent) {
-                                            //var newRequirementcontentmodified =
                                             if ((newRequirementContent.content.replace(/[^\x20-\x7E]|\s+/gmi, "") !== oldRequirementContent.content.replace(/[^\x20-\x7E]|\s+/gmi, "")) && (newRequirementContent.id === oldRequirementContent.id)) {
                                                 var changes = diffString2(oldRequirementContent.content, newRequirementContent.content);
                                                 oldRequirementContent.oldContent = changes.o.replace(/\x60/gmi, "");
@@ -1116,21 +1115,8 @@ angular.module('sdlctoolApp')
                                                 newRequirementContent.content = changes.n.replace(/\x60/gmi, "");
                                                 requirementToInsert = newRequirement;
                                                 if (!foundOne) {
-                                                    angular.extend(requirementToInsert, { isNew: true, isOld: false, needsUpdate: true });
-                                                    angular.extend(oldRequirement, { needsUpdate: true });
-                                                    requirementToInsert.statusColumns = oldRequirement.statusColumns;
-                                                    requirementToInsert.ticket = oldRequirement.ticket;
-                                                    requirementToInsert.linkStatus = oldRequirement.linkStatus;
-                                                    $scope.updatesCounter++;
-                                                    $scope.updateCounter++;
+                                                    markChangeInRequirement(requirementToInsert, oldRequirement, changedSettings, afterImport);
                                                     foundOne = true;
-                                                    if (afterImport) {
-                                                        $scope.updatesAvailable = true;
-                                                        $scope.oldRequirements.push(oldRequirement);
-                                                    } else if (changedSettings) {
-                                                        $scope.updatedReqs = true;
-                                                        oldRequirement.isOld = true;
-                                                    }
                                                 }
                                                 //the old requirement has alternative Sets, so we need to push them into the new one
                                                 if (oldRequirementOptColumns.content.length > 1) {

@@ -216,22 +216,6 @@
 							</span>
                         </a>
                     </li>
-                    <!-- <li role="menuitem" class="animate-show" data-ng-show="withselectedDropdown.toggleExcel">
-						<a href=""><span id="backFromExcel" data-ng-click="excelToggle(false, true)"><span class="glyphicon glyphicon-chevron-left"></span>Back</span></a>
-					</li>
-					<li class="divider animate-show" data-ng-show="withselectedDropdown.toggleExcel"></li>
-					<li role="menuitem" class="animate-show" data-ng-show="withselectedDropdown.toggleExcel">
-						<a href="">
-							<span data-ng-click="exportExcel(true)" data-ng-if="(requirements | filter:{selected: true}).length">
-								With status values
-							</span>
-						</a>
-						<a href="">
-							<span data-ng-click="exportExcel(false)" data-ng-if="(requirements | filter:{selected: true}).length">
-								Without status values
-							</span>
-						</a>
-					</li> -->
                 </ul>
             </div>
         </div>
@@ -242,9 +226,6 @@
         <uib-progressbar class="progress-striped active" value="progressbar.barValue" type="success" data-ng-hide="progressbar.hide">{{progressbar.barValue}}%</uib-progressbar>
     </div>
     <div>&nbsp;</div>
-    <!-- <div class="container-fluid" data-ng-show="showRequirements" data-ng-repeat="category in filterCategory | orderBy: 'showOrder' | filterCategoryByCategory : selectedCategory">
-	<p class="titleSize"><b>{{category.label}}</b></p>
-	<BR> -->
     <div class="container-fluid" data-ng-show="showRequirements">
         <div class="table-responsive myMinHeight">
             <table id="requirementTable" class="table table-hover" infinite-scroll="loadMore()" infinite-scroll-distance="1">
