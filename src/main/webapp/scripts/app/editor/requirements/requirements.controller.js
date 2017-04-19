@@ -1108,7 +1108,7 @@ angular.module('sdlctoolApp')
                                     var oldRequirementOptColumns = oldRequirement.optionColumns[j];
                                     angular.forEach(newRequirementOptColumns.content, function(newRequirementContent) {
                                         angular.forEach(oldRequirementOptColumns.content, function(oldRequirementContent) {
-                                            if ((newRequirementContent.content.replace(/[^\x20-\x7E]|\s+/gmi, "") !== oldRequirementContent.content.replace(/[^\x20-\x7E]|\s+/gmi, "")) && (newRequirementContent.id === oldRequirementContent.id)) {
+                                            if ((newRequirementContent.id === oldRequirementContent.id) && (newRequirementContent.content.replace(/[^\x20-\x7E]|\s+/gmi, "") !== oldRequirementContent.content.replace(/[^\x20-\x7E]|\s+/gmi, ""))) {
                                                 var changes = diffString2(oldRequirementContent.content, newRequirementContent.content);
                                                 oldRequirementContent.oldContent = changes.o.replace(/\x60/gmi, "");
                                                 newRequirementContent.oldContent = newRequirementContent.content;

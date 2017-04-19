@@ -23,64 +23,64 @@ describe('Protractor Security RAT general testsuite', function() {
 		});
 	}
 	 
-//	it('searching a requirement category', function() {
-//		entities.click();
-//		element(by.partialLinkText('Requirement Categories')).click();
-//		element(by.id('searchQuery')).sendKeys('Lifecycle');
-//		element(by.id('searchButton')).click();
-//		expect(element.all(by.repeater("reqCategory in reqCategorys | orderBy:'showOrder'")).count()).toBe(1);
-//		
-//	});
-	
-	// it('administering requirement category', function() {
-	// 	entities.click();
-	// 	element(by.partialLinkText('Requirement Categories')).click();
-	// 	element.all(by.repeater("reqCategory in reqCategorys | orderBy:'showOrder'"))
-	// 	.then(function(categoryArray) {
-	// 		var count = categoryArray.length;
-	// 		count++;
-	// 		element(by.buttonText('Create a new Requirement Category')).click();
-	// 		browser.sleep(2000);
-	// 		expect(element(by.buttonText("Save")).isEnabled()).toBe(false);
-	// 		element(by.id('field_shortcut')).sendKeys('TEST');
-	// 		element(by.id('field_name')).sendKeys('test category name <script>alert(1)</script>');
-	// 		element(by.id('field_description')).sendKeys('test Category description <script>alert(1)</script>');
-	// 		element(by.id('field_showOrder')).sendKeys('1000');
-	// 		element(by.buttonText("Save")).click();
-	// 		browser.sleep(3000);
-	// 		expect(element.all(by.repeater("reqCategory in reqCategorys | orderBy:'showOrder'")).count()).toBe(count);
-	// 	});
-	// 	element.all(by.buttonText("Edit")).last().click();
-	// 	browser.sleep(2000);
-	// 	element(by.id('field_description')).clear().then(function(){
-	// 		element(by.id('field_description')).sendKeys("test Category description modification <script>alert(1)</script>");
-	// 	});
-	// 	element(by.css('span[class="bootstrap-switch-label"]')).click();
+	it('searching a requirement category', function() {
+		entities.click();
+		element(by.partialLinkText('Requirement Categories')).click();
+		element(by.id('searchQuery')).sendKeys('Lifecycle');
+		element(by.id('searchButton')).click();
+		expect(element.all(by.repeater("reqCategory in reqCategorys | orderBy:'showOrder'")).count()).toBe(1);
 		
-	// 	element(by.buttonText("Save")).click();
-	// 	browser.sleep(2000);
-	// 	element.all(by.buttonText("Delete")).last().click();
-	// 	browser.sleep(2000);
-	// 	element.all(by.buttonText("Delete")).last().click();
-	// });
+	});
 	
-	// it('bulk change requirement category', function() {
-	// 	entities.click();
-	// 	element(by.partialLinkText('Requirement Categories')).click();
-	// 	element(by.id("selectAll")).click();
-	// 	browser.sleep(1000);
-	// 	expect(element(by.buttonText("Bulk change with selected")).isPresent()).toBe(true);
-	// 	element(by.buttonText("Bulk change with selected")).click();
-	// 	element(by.css('span[class="bootstrap-switch-label"]')).click();
-	// 	element(by.buttonText("Save")).click();
-	// 	browser.sleep(5000);
-	// 	element(by.id("selectAll")).click();
-	// 	browser.sleep(1000);
-	// 	expect(element(by.buttonText("Bulk change with selected")).isPresent()).toBe(true);
-	// 	element(by.buttonText("Bulk change with selected")).click();
-	// 	element(by.css('span[class="bootstrap-switch-label"]')).click();
-	// 	element(by.buttonText("Save")).click();
-	// });
+	it('administering requirement category', function() {
+		entities.click();
+		element(by.partialLinkText('Requirement Categories')).click();
+		element.all(by.repeater("reqCategory in reqCategorys | orderBy:'showOrder'"))
+		.then(function(categoryArray) {
+			var count = categoryArray.length;
+			count++;
+			element(by.buttonText('Create a new Requirement Category')).click();
+			browser.sleep(2000);
+			expect(element(by.buttonText("Save")).isEnabled()).toBe(false);
+			element(by.id('field_shortcut')).sendKeys('TEST');
+			element(by.id('field_name')).sendKeys('test category name <script>alert(1)</script>');
+			element(by.id('field_description')).sendKeys('test Category description <script>alert(1)</script>');
+			element(by.id('field_showOrder')).sendKeys('1000');
+			element(by.buttonText("Save")).click();
+			browser.sleep(3000);
+			expect(element.all(by.repeater("reqCategory in reqCategorys | orderBy:'showOrder'")).count()).toBe(count);
+		});
+		element.all(by.buttonText("Edit")).last().click();
+		browser.sleep(2000);
+		element(by.id('field_description')).clear().then(function(){
+			element(by.id('field_description')).sendKeys("test Category description modification <script>alert(1)</script>");
+		});
+		element(by.css('span[class="bootstrap-switch-label"]')).click();
+		
+		element(by.buttonText("Save")).click();
+		browser.sleep(2000);
+		element.all(by.buttonText("Delete")).last().click();
+		browser.sleep(2000);
+		element.all(by.buttonText("Delete")).last().click();
+	});
+	
+	it('bulk change requirement category', function() {
+		entities.click();
+		element(by.partialLinkText('Requirement Categories')).click();
+		element(by.id("selectAll")).click();
+		browser.sleep(1000);
+		expect(element(by.buttonText("Bulk change with selected")).isPresent()).toBe(true);
+		element(by.buttonText("Bulk change with selected")).click();
+		element(by.css('span[class="bootstrap-switch-label"]')).click();
+		element(by.buttonText("Save")).click();
+		browser.sleep(5000);
+		element(by.id("selectAll")).click();
+		browser.sleep(1000);
+		expect(element(by.buttonText("Bulk change with selected")).isPresent()).toBe(true);
+		element(by.buttonText("Bulk change with selected")).click();
+		element(by.css('span[class="bootstrap-switch-label"]')).click();
+		element(by.buttonText("Save")).click();
+	});
 	
 //	it('searching a requirement skeleton', function() {
 //		entities.click();
