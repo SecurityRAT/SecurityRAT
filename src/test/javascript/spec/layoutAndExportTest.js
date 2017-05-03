@@ -5,6 +5,7 @@ describe('Protractor Security RAT Testsuite', function() {
 	var restoreSession = element(by.id('restoreSession'));
 	var deleteSession = element(by.id('deleteSession'));
 	var moreInfo = "More Information";
+	var javaApp = "JAVA Application";
 	var closeButton = "Close";
 	var exportButton = "Export";
 	var SaveButton = "Save";
@@ -89,6 +90,17 @@ describe('Protractor Security RAT Testsuite', function() {
 		//clicks on Action with selected and check if the buttons are grey
 		element(by.buttonText("Action with selected")).click();
 		expect(element.all(by.className("disabledButton")).count()).toBe(6)
+		element(by.partialButtonText(moreInfo)).isPresent().then(function(moreInfo) {
+			if(moreInfo) {
+				element(by.partialButtonText(moreInfo)).click();
+				element(by.buttonPartialText(javaApp)).isPresent().then(function(javaApp) {
+					if(javaApp) {
+						element(by.partialLinkText(javaApp)).click();
+					}
+				})
+			}
+		})
+		browser.sleep(5000);
 		element(by.buttonText('Search')).click();
 		element(by.model('search')).sendKeys('Clickjacking');
 		browser.sleep(5000);

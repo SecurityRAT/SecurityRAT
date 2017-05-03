@@ -93,6 +93,26 @@ angular.module('sdlctoolApp')
             }
         };
 
+        function selectAllReqs() {
+            angular.forEach($scope.filterRequirements(), function(requirement) {
+                requirement.selected = true;
+            });
+        }
+
+        function deselectAllReqs() {
+            angular.forEach($scope.filterRequirements(), function(requirement) {
+                requirement.selected = false;
+            });
+        }
+
+        $scope.performSelection = function(selectionValue) {
+            if (selectionValue) {
+                selectAllReqs();
+            } else {
+                deselectAllReqs();
+            }
+        }
+
         //display a modal if the user hasn't exported the system and wants to close the tab
         window.onbeforeunload = function(e) {
             if ($scope.requirementProperties.requirementsEdited) {
@@ -231,6 +251,7 @@ angular.module('sdlctoolApp')
         }
 
         $scope.changeSettings = function() {
+            deselectAllReqs();
             var oldSettings = {};
             angular.extend(oldSettings, {
                 name: $scope.systemSettings.name,
@@ -982,26 +1003,6 @@ angular.module('sdlctoolApp')
             return requirements;
         }
 
-        function selectAllReqs() {
-            angular.forEach($scope.filterRequirements(), function(requirement) {
-                requirement.selected = true;
-            });
-        }
-
-        function deselectAllReqs() {
-            angular.forEach($scope.filterRequirements(), function(requirement) {
-                requirement.selected = false;
-            });
-        }
-
-        $scope.performSelection = function(selectionValue) {
-            if (selectionValue) {
-                selectAllReqs();
-            } else {
-                deselectAllReqs();
-            }
-        }
-
         $scope.updateRequirements = function() {
             var requestString = '';
             angular.forEach($scope.requirementsSettings, function(value, key) {
@@ -1414,6 +1415,8 @@ angular.module('sdlctoolApp')
                     statusCounter++;
                 }
             }
+            // console.log(dropdownList);
+
             var colspan = $scope.optColumns.length + $scope.statusColumns.length + 3;
             var ws = $scope.buildExcelFile(colspan, withStatusColumns);
             var wscols = [{ wch: 20 }, // width of column category
@@ -1457,7 +1460,7 @@ angular.module('sdlctoolApp')
                     str = str.replace(syntaxSymbol[i], "'" + syntaxSymbol[i]);
                 }
                 return str;
-            }
+        }
             // workbook object
         function Workbook() {
             if (!(this instanceof Workbook)) return new Workbook();
@@ -1554,8 +1557,8 @@ angular.module('sdlctoolApp')
         $scope.buildDropdownList = function(table) {
                 var excelFile = {};
                 var range = { s: { c: 10000000, r: 10000000 }, e: { c: 0, r: 0 } };
-                for (var R = 0; R < table.length; R++) {
-                    for (var C = 0; C < table[R].values.length; C++) {
+                for (var R = 0; R < table.length; R++) { // number of column
+                    for (var C = 0; C < table[R].values.length; C++) { //number of rows
                         if (range.s.r > C) range.s.r = C;
                         if (range.s.c > R) range.s.c = R;
                         if (range.e.r < C) range.e.r = C;
@@ -1581,6 +1584,7 @@ angular.module('sdlctoolApp')
                         excelFile[cell_ref] = cell;
                     }
                 }
+
                 if (range.s.c < 10000000) excelFile['!ref'] = XLSX.utils.encode_range(range);
                 return excelFile;
             }

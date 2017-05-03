@@ -315,7 +315,7 @@
                         </td>
                         <td data-ng-repeat="opt in optColumns | orderBy:'showOrder'" data-ng-style="(reqs.isNew && {'background-color':'rgb(204, 255, 204)'}) || reqs.isOld && {'background-color':'rgb(255, 204, 204)'}">
                             <span data-ng-repeat-start="optionColumn in reqs.optionColumns | filter: {showOrder : opt.id}" data-ng-hide="true"></span>
-                            <div data-ng-repeat-end data-ng-repeat="optionColumnContent in optionColumn.content track by optionColumn.id" data-ng-show="optToHide.indexOf(optionColumn.showOrder) == -1">
+                            <div data-ng-repeat-end data-ng-repeat="optionColumnContent in optionColumn.content" data-ng-show="optToHide.indexOf(optionColumn.showOrder) == -1">
                                 <div data-ng-if="!(reqs.isNew || reqs.isOld)" data-ng-bind-html="optionColumnContent.content | trusted"></div>
                                 <div data-ng-if="reqs.isNew || reqs.isOld" marked="optionColumnContent.content"></div>
                             </div>
