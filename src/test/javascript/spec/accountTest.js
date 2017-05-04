@@ -96,6 +96,8 @@ describe('Protractor Security RAT account testsuite', function() {
 	it('Test for account settings', function() {
 		confirmPassword('Settings');
 		element(by.model('settingsAccount.lastName')).sendKeys(' modify');
+		element(by.model('settingsAccount.email')).clear()
+		element(by.model('settingsAccount.email')).sendKeys('testuser@localhost.de');
 		element(by.buttonText('Save')).click();
 		browser.sleep(3000);
 		expect(element(by.className('alert-success')).getText()).toEqual('Settings saved!');
@@ -118,8 +120,10 @@ describe('Protractor Security RAT account testsuite', function() {
 		expect(element(by.partialLinkText('Log out')).isPresent()).toBe(false);
 		account.click();
 		element(by.partialLinkText('Authenticate')).click();
+		browser.sleep(2000);
 	});
-	it('Test log out function', function() {
+
+	it('Authenticate as admin', function() {
 		element(by.id('username')).clear().then(function(){
 			element(by.id('username')).sendKeys(browser.params.admin.user);
 		});
@@ -127,6 +131,7 @@ describe('Protractor Security RAT account testsuite', function() {
 			element(by.id('password')).sendKeys(browser.params.admin.password);
 		});
 		element(by.partialButtonText('Authenticate')).click();
+		browser.sleep(2000);
 	});
 	
 });

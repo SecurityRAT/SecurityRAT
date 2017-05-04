@@ -1,4 +1,4 @@
-describe('Protractor Security RAT general testsuite', function() {
+describe('Protractor Security RAT browse requirements view testsuite', function() {
 	var browseLink = element(by.partialLinkText('Browse'));
 	var constantRepeater = "requirementSkeleton in requirementSkeletons | filterByTagForReqSkeletons : selectedTags | filterByCollsForReqSkeletons : selectedColls| filterByTypesForReqSkeletons : selectedTypes| orderBy : ['reqCategory.showOrder','showOrder'] | filter: searchQuery  track by requirementSkeleton.id";
 	var deleteCookie = function() {

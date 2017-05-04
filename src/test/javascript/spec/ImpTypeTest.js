@@ -1,4 +1,4 @@
-describe('Protractor Security RAT general testsuite', function() {
+describe('Protractor Security RAT implementation type entity testsuite', function() {
 	var entities = element(by.partialLinkText('Entities'));
 	var confirmDelete = element(by.css('button[ng-disabled="deleteForm.$invalid"]'));
 	var projectTypeRepeater = "projectType in projectTypes | filter:searchString | orderBy:'showOrder'";
@@ -96,6 +96,7 @@ describe('Protractor Security RAT general testsuite', function() {
 		element(by.buttonText("Bulk change with selected")).click();
 		element(by.css('span[class="bootstrap-switch-label"]')).click();
 		element(by.buttonText("Save")).click();
+		browser.sleep(1500);
 		selectButton.first().click();
 		selectButton.get(1).click();
 		var internalStatus = ['Strategy', 'Comment'];
@@ -122,6 +123,7 @@ describe('Protractor Security RAT general testsuite', function() {
 		optColumnCheckboxes.get(1).click(); // Motivation checkbox clicked.
 		statColumnCheckboxes.first().click(); // Strategy checkbox clicked.
 		element(by.buttonText("Save")).click();
+		browser.sleep(1500);
 	});
 	
 });

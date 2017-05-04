@@ -1,4 +1,4 @@
-describe('Protractor Security RAT general testsuite', function() {
+describe('Protractor Security RAT logout CAS testsuite', function() {
 	var defineArtifact = element(by.id('defineArtifact'));
 	var restoreSession = element(by.id('restoreSession'));
 	var deleteSession = element(by.id('deleteSession'));

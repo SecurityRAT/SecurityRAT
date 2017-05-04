@@ -1,12 +1,15 @@
 // spec.js
-describe('Protractor Security RAT Testsuite', function() {
+describe('Protractor Security RAT bug Scenarios Testsuite', function() {
 	var entities = element(by.partialLinkText('Entities'));
 	var defineArtifact = element(by.id('defineArtifact'));
 	var importArtifact = element(by.id('importArtifact'));
 	var restoreSession = element(by.id('restoreSession'));
 	var deleteSession = element(by.id('deleteSession'));
-	var restoreSession = element(by.id('restoreSession'));
-	var tagsRepeater = element.all(by.repeater("instances in categories.tagInstances | orderBy:'showOrder'");
+	var tagsRepeater = element.all(by.repeater("instances in categories.tagInstances | orderBy:'showOrder'").column("instances.name"));
+	var tagCategory = element.all(by.repeater("tagCategory in tagCategories | orderBy:'showOrder'").column("tagCategory.name"))
+	var skeletonRepeater = "requirementSkeleton in requirementSkeletons | filterCategoryForEntities : selectedCategory:'reqCategory'| filterByTagForReqSkeletons : selectedTags | filterByCollsForReqSkeletons : selectedColls| filterByTypesForReqSkeletons : selectedTypes | filter:searchString | orderBy : ['reqCategory.showOrder','showOrder'] | limitTo:numberToDisplay track by requirementSkeleton.id"; 
+	var optColumnContentRepeater = "optColumnContent in optColumnContents | filterCategoryForEntities : selectedOptColumns : 'optColumn'| filter:searchString | orderBy: ['requirementSkeleton.reqCategory.showOrder', 'requirementSkeleton.showOrder', 'optColumn.showOrder'] | limitTo:numberToDisplay";
+	var optColumnRepeater = "optColumn in optColumns | orderBy: 'showOrder' | filter:searchString";
 	var moreInfo = "More Information";
 	var closeButton = "Close";
 	var exportButton = "Export";
@@ -23,12 +26,51 @@ describe('Protractor Security RAT Testsuite', function() {
 			browser.switchTo().window(handles[0]).then();
 		});
 	}
+	
+	var refreshBrowser = function()	 {
+		browser.refresh().then(function() {}, function(){
+			browser.sleep(3000);
+			browser.switchTo().alert().accept();
+		})
+	}
+
+	var generateRequirementSet = function(artifactName, impType) {
+		defineArtifact.click();
+		element(by.model('starterForm.name')).sendKeys(artifactName);
+		element.all(by.buttonText('Select')).last().click();
+		browser.sleep(500);
+		(element(by.linkText(impType))).click();
 		
+		(element(by.buttonText("Generate"))).click();
+		browser.sleep(5000);
+	}
+
+	var switchActiveButtonForOptColumn = function(name) {
+		browser.get(browser.params.testHost);
+		entities.click();
+		element(by.partialLinkText('Option Columns')).click();
+		browser.sleep(1000);
+		var instanceOrders = element.all(by.repeater(optColumnRepeater)
+				.column('optColumn.name'));
+		var edits = element.all(by.buttonText('Edit'));
+		instanceOrders.each(function(element, index) {
+			element.getText().then(function(elemText) {
+				if(elemText === name) {
+					edits.get(index).click();
+				}
+			})
+		});
+		element(by.css('span[class="bootstrap-switch-label"]')).click();
+	}
+
 	beforeEach(function() {
+		browser.get(browser.params.testHost);
+	});
+
+	it('Issue where taginstance ids are not locally updated on import.', function() {
 		entities.click();
 		element(by.partialLinkText('Requirement Skeletons')).click();
 		browser.sleep(2000);
-		deleteSkeleton();
 		element.all(by.repeater(skeletonRepeater))
 		.then(function(instanceArray) {
 			var count = instanceArray.length;
@@ -38,8 +80,9 @@ describe('Protractor Security RAT Testsuite', function() {
 			expect(element(by.buttonText("Save")).isEnabled()).toBe(false);
 			element(by.cssContainingText('option', 'Lifecycle')).click();
 			element(by.id('field_shortName')).sendKeys('BUGTAGAID-01');
-			element(by.id('field_description')).sendKeys('test skeleton description <script>alert(1)</script>');
+			element(by.id('field_description')).sendKeys('test skeleton description');
 			element(by.id('field_showOrder')).sendKeys('10000');
+			element(by.css('span[class="bootstrap-switch-label"]')).click();
 			var tagInstanceCheckboxes = element.all(by.css('input[ng-click="toggleSelection(requirementSkeleton.tagInstances, tagInstance)"]'));
 			var collInstanceCheckboxes = element.all(by.css('input[ng-click="toggleSelection(requirementSkeleton.collectionInstances, collectionInstance)"]'));
 			var typeCheckboxes = element.all(by.css('input[ng-click="toggleSelection(requirementSkeleton.projectTypes, projectType)"]'));
@@ -47,31 +90,17 @@ describe('Protractor Security RAT Testsuite', function() {
 			tagInstanceCheckboxes.get(3).click();
 			collInstanceCheckboxes.first().click();
 			collInstanceCheckboxes.get(3).click();
-			typeCheckboxes.first().click();
+			typeCheckboxes.each(function(element, index) {
+				element.click();
+			})
+			// typeCheckboxes.first().click();
 			element(by.buttonText("Save")).click();
 			browser.sleep(3000);
 		});
-
-		browser.get(browser.params.testHost).then(function() {}, function(){
-			browser.switchTo().alert().accept();
-		});
-		browser.sleep(1500)
-		defineArtifact.click();
-		var artifactName = element(by.model('starterForm.name'));
-		artifactName.sendKeys("-+.:()[],!#$%'*=?`{}~;@&some artifact");
-
-		element.all(by.buttonText('Select')).last().click();
-		browser.sleep(500);
-		(element(by.linkText('Internal'))).click();
-		
-		(element(by.buttonText("Generate"))).click();
-		browser.sleep(3000);
-	});
-	
-	it('Issue where taginstance ids are not locally updated on import.', function() {
-		browser.refresh().then(function(){}, function() {
-			browser.switchTo().alert().accept();
-		});
+		browser.get(browser.params.testHost);
+		generateRequirementSet("-+.:()[],!#$%'*=?`{}~;@&some artifact", 'Internal')
+		refreshBrowser();
+		browser.get(browser.params.testHost);
 		//create new tag instance
 		entities.click();
 		element(by.partialLinkText('Tag Instances')).click();
@@ -85,18 +114,19 @@ describe('Protractor Security RAT Testsuite', function() {
 			expect(element(by.buttonText("Save")).isEnabled()).toBe(false);
 			element(by.id('field_name')).sendKeys('Tag id bug');
 			element(by.id('field_description')).sendKeys('test Instance description bug issue');
-			element(by.id('field_showOrder')).sendKeys('1000');
+			element(by.id('field_showOrder')).sendKeys('0');
+			element(by.css('span[class="bootstrap-switch-label"]')).click();
 			element(by.cssContainingText('option', 'Requirement Owner')).click();
 			element(by.buttonText("Save")).click();
 			browser.sleep(3000);
 			expect(element.all(by.repeater("tagInstance in tagInstances | filterCategoryForEntities: selectedCategory: 'tagCategory' | orderBy: ['tagCategory.showOrder','showOrder']"))
 					.count()).toBe(count);
 		});
+		browser.get(browser.params.testHost);
 		entities.click();
 		element(by.partialLinkText('Requirement Skeletons')).click();
 		browser.sleep(2000);
-		var instanceOrders = element.all(by.repeater(skeletonRepeater)
-				.column('requirementSkeleton.shortName'));
+		var instanceOrders = element.all(by.repeater(skeletonRepeater).column('requirementSkeleton.shortName'));
 		var edits = element.all(by.buttonText('Edit'));
 		instanceOrders.each(function(element, index) {
 			element.getText().then(function(elemText) {
@@ -106,17 +136,9 @@ describe('Protractor Security RAT Testsuite', function() {
 			})
 		});
 		browser.sleep(2000);
-		var tagInstanceCheckboxes = element.all(by.css('input[ng-click="toggleSelection(requirementSkeleton.tagInstances, tagInstance)"]'));
-		tagInstanceCheckboxes.each(function(element, index) {
-			element.getText().then(function(elemText) {
-				if(elemText === "Tag id bug") {
-					tagInstanceCheckboxes.get(index).click();
-				}
-			})
-		});
-		element(by.css('span[class="bootstrap-switch-label"]')).click();
+		element.all(by.css('input[ng-click="toggleSelection(requirementSkeleton.tagInstances, tagInstance)"]')).first().click();
 		element(by.buttonText("Save")).click();
-
+		browser.sleep(2000);
 		// restoring locally stored session
 		browser.get(browser.params.testHost);
 		restoreSession.click();
@@ -125,12 +147,79 @@ describe('Protractor Security RAT Testsuite', function() {
 		element(by.buttonText("Close")).click();
 		browser.sleep(3000);
 		element(by.linkText("Tags")).click();
-		tagsRepeater.each(function(elemText, index) {
-			if(elemText === "Tag id bug") {
-				tagsRepeater.get(index).click()
-			}
-		})
+		element.all(by.name("tagInstances")).first().click();
 		browser.sleep(6000);
 		
+ 	});
+
+	it("Dropdown list in exported file is filled with empty values.", function() {
+		generateRequirementSet("test artifact", "External");
+		element(by.id("selectAll")).click();
+		element(by.partialButtonText("Action with selected")).click();
+		element(by.linkText("Create spreadsheet")).click();
+		browser.sleep(2000);
+		element(by.buttonText('Create')).click();
+		browser.sleep(2000);
 	});
+
+	it("Test bug where view in editor is broken due to optColumn contents", function() {
+		entities.click();
+		element(by.partialLinkText('Option Column Contents')).click();
+		browser.sleep(2000);
+		element.all(by.repeater(optColumnContentRepeater))
+		.then(function(instanceArray) {
+			var count = instanceArray.length;
+			count++;
+			var allOptions = element.all(by.tagName('option'));
+			element(by.buttonText('Create a new OptColumnContent')).click();
+			browser.sleep(2000);
+			element(by.id('field_content')).sendKeys('test broken view in editor');
+			element(by.cssContainingText('option', 'More Information')).click();
+			allOptions.each(function(elem, index) {
+				elem.getText().then(function(text) {
+					if(text.indexOf('LC-01') !== -1) {
+						element(by.model('optColumnContent.requirementSkeleton')).sendKeys(text);
+					}
+				})
+			})
+			element(by.buttonText("Save")).click();
+			browser.sleep(2000);
+		});
+
+		browser.get(browser.params.testHost);
+		generateRequirementSet('test artifact', 'External');
+		element(by.buttonText('Search')).click();
+		element(by.model('search')).sendKeys("test broken view in editor");
+		browser.sleep(2000);
+		expect(element(by.binding("filterRequirements()).length")).getText()).toBe('1');
+
+		// clean up
+		refreshBrowser();
+		browser.get(browser.params.testHost);
+		entities.click();
+		element(by.partialLinkText('Option Column Contents')).click();
+		browser.sleep(4000);
+		var deletes = element.all(by.css('button[class="btn btn-danger btn-sm"]'));
+		var contents = element.all(by.id("content"));
+		contents.each(function(elem, indexElem) {
+			elem.getText().then(function(elemText) {
+				if(elemText === "test broken view in editor") {
+					deletes.get(indexElem).click();
+					browser.sleep(2000);
+					element.all(by.buttonText('Delete')).last().click();
+					browser.sleep(1000);
+				}
+			}, function(){})
+		});
+		browser.sleep(3000);
+		switchActiveButtonForOptColumn("Motivation");
+		element(by.buttonText("Save")).click();
+		browser.sleep(2000);
+		browser.get(browser.params.testHost);
+		restoreSession.click();
+		browser.sleep(5000);
+
+		// cleanup
+		switchActiveButtonForOptColumn("Motivation");
+	})
 });

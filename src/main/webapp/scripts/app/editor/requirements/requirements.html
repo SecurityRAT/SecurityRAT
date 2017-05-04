@@ -86,7 +86,7 @@
                                         </td>
                                         <td data-ng-repeat="instances in categories.tagInstances | orderBy:'showOrder'">
                                             <div class="btn-group col-sm-12" data-toggle="buttons">
-                                                <label id="{{instances.id}}" class="btn btn-default col-sm-12" data-ng-click="selectTags(instances.id, instances.name, categories.name)">
+                                                <label id="{{instances.id}}" name="tagInstances" class="btn btn-default col-sm-12" data-ng-click="selectTags(instances.id, instances.name, categories.name)">
                                                     <input type="checkbox">{{instances.name}}</label>
                                             </div>
                                         </td>

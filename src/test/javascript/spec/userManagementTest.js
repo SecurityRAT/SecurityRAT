@@ -57,6 +57,7 @@ describe('Protractor Security RAT general testsuite', function() {
 		element.all(by.buttonText("Delete")).last().click();
 		browser.sleep(2000);
 		element.all(by.buttonText("Delete")).last().click();
+		browser.sleep(1500);
 	});
 	
 	it('Csrf test User Management', function() {

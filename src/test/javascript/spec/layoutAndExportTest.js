@@ -1,5 +1,5 @@
 // spec.js
-describe('Protractor Security RAT Testsuite', function() {
+describe('Protractor Security RAT editor and export testsuites', function() {
 	var defineArtifact = element(by.id('defineArtifact'));
 	var importArtifact = element(by.id('importArtifact'));
 	var restoreSession = element(by.id('restoreSession'));
@@ -76,7 +76,7 @@ describe('Protractor Security RAT Testsuite', function() {
 		browser.sleep(3000);
 	});
 	
-	it('new Internal Artifact with High criticality should have more than 50 requirements and alternative sets applies filters.', function() {
+	it('Test requirements generation, apply alternative instances and change settings', function() {
 		
 		expect(element(by.binding('requirements.length')).getText()).toBeGreaterThan('50');
 		element(by.buttonText('Category')).click();
@@ -90,20 +90,23 @@ describe('Protractor Security RAT Testsuite', function() {
 		//clicks on Action with selected and check if the buttons are grey
 		element(by.buttonText("Action with selected")).click();
 		expect(element.all(by.className("disabledButton")).count()).toBe(6)
-		element(by.partialButtonText(moreInfo)).isPresent().then(function(moreInfo) {
-			if(moreInfo) {
-				element(by.partialButtonText(moreInfo)).click();
-				element(by.buttonPartialText(javaApp)).isPresent().then(function(javaApp) {
-					if(javaApp) {
-						element(by.partialLinkText(javaApp)).click();
+
+		// Checks that alternative in
+		element(by.partialButtonText(moreInfo)).isPresent().then(function(moreInfoLiteral) {
+			if(moreInfoLiteral) {
+				element(by.buttonText(moreInfo)).click();
+				element(by.linkText(javaApp)).isPresent().then(function(javaAppLiteral) {
+					if(javaAppLiteral) {
+						element(by.linkText(javaApp)).click();
 					}
 				})
 			}
 		})
-		browser.sleep(5000);
+		browser.sleep(3000);
 		element(by.buttonText('Search')).click();
-		element(by.model('search')).sendKeys('Clickjacking');
+		element(by.model('search')).sendKeys(javaApp);
 		browser.sleep(5000);
+
 		element(by.model('search')).clear();
 		removeRibbon();
 		(element.all(by.className('accordion-toggle'))).first().click();
@@ -232,7 +235,7 @@ describe('Protractor Security RAT Testsuite', function() {
 		})
 	});
 	
-	it('exports to JIRA by creating a ticket in the queue and create ticket with first requirement and checks if when selected after creation the confirms modal pops up', function() {
+	it('exports to JIRA by creating a ticket in the queue, check spreadsheet creation, create a ticket in bash mode and checks if when selected after creation the confirms modal pops up', function() {
 		(element(by.buttonText(SaveButton))).click();
 		element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraQueue + "-100000");
 		(element(by.buttonText(exportButton))).click();
@@ -514,7 +517,7 @@ describe('Protractor Security RAT Testsuite', function() {
 		element(by.buttonText('Close')).click();
 	});	
 
-	it('Test invalid export form', function() {
+	it('Test constraints in export form', function() {
 		browser.sleep(1000);
 		(element(by.buttonText(SaveButton))).click();
 		browser.sleep(1000)
@@ -534,6 +537,7 @@ describe('Protractor Security RAT Testsuite', function() {
 	it('Test for the feedback feature', function() {
 		deleteCookie1();
 		deleteCookie();
+		browser.sleep(3000)
 		element.all(by.id('feedbackIcon')).get(1).click();
 		element(by.model('comment')).sendKeys('Feedback test submitted by automatic test. <script>alert(1)</script>');
 		element(by.buttonText('Submit')).click();

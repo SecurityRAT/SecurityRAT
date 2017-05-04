@@ -1,4 +1,4 @@
-describe('Protractor Security RAT general testsuite', function() {
+describe('Protractor Security RAT application constants testsuite', function() {
 	var admin = element(by.partialLinkText('Administration'));
 	var constantRepeater = "constant in constants | filter: searchQuery";
 	

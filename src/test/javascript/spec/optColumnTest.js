@@ -1,4 +1,4 @@
-describe('Protractor Security RAT general testsuite', function() {
+describe('Protractor Security RAT option column contents/types entities testsuite', function() {
 	var entities = element(by.partialLinkText('Entities'));
 	var confirmDelete = element(by.css('button[ng-disabled="deleteForm.$invalid"]'));
 	var optColumnRepeater = "optColumn in optColumns | orderBy: 'showOrder' | filter:searchString";
@@ -25,7 +25,7 @@ describe('Protractor Security RAT general testsuite', function() {
 	}
 	var deleteContent = function() {
 		var deletes = element.all(by.css('button[class="btn btn-danger btn-sm"]'));
-		var contents = element.all(by.css("content"));
+		var contents = element.all(by.id("content"));
 		contents.each(function(elem, indexElem) {
 			elem.getText().then(function(elemText) {
 				if(elemText === "test optColumn content modification") {
@@ -74,6 +74,7 @@ describe('Protractor Security RAT general testsuite', function() {
 		element.all(by.buttonText("Delete")).last().click();
 		browser.sleep(2000);
 		element.all(by.buttonText("Delete")).last().click();
+		browser.sleep(1500);
 	});
 	
 //	it('searching a option column', function() {
@@ -154,6 +155,7 @@ describe('Protractor Security RAT general testsuite', function() {
 		element.all(by.buttonText('Edit')).get(2).click();
 		element(by.cssContainingText('option', 'OnDemandText')).click();
 		element(by.buttonText('Save')).click();
+		browser.sleep(1500);
 		element(by.id("selectAll")).click();
 		browser.sleep(1000);
 		expect(element(by.buttonText("Bulk change with selected")).isPresent()).toBe(true);
@@ -167,7 +169,7 @@ describe('Protractor Security RAT general testsuite', function() {
 		element(by.buttonText("Bulk change with selected")).click();
 		element(by.css('span[class="bootstrap-switch-label"]')).click();
 		element(by.buttonText("Save")).click();
-		
+		browser.sleep(1500);
 	});
 	
 //	it('searching a option column contents', function() {
@@ -277,6 +279,7 @@ describe('Protractor Security RAT general testsuite', function() {
 		element(by.buttonText("Bulk change with selected")).click();
 		element(by.buttonText('Motivation')).click();
 		element(by.buttonText('Save')).click();
+		browser.sleep(1500);
 	});
 
 });

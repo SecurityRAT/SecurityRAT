@@ -1,4 +1,4 @@
-describe('Protractor Security RAT general testsuite', function() {
+describe('Protractor Security RAT requirement category/skeletons entities testsuite', function() {
 	var entities = element(by.partialLinkText('Entities'));
 	var confirmDelete = element(by.css('button[ng-disabled="deleteForm.$invalid"]'));
 	var skeletonRepeater = "requirementSkeleton in requirementSkeletons | filterCategoryForEntities : selectedCategory:'reqCategory'| filterByTagForReqSkeletons : selectedTags | filterByCollsForReqSkeletons : selectedColls| filterByTypesForReqSkeletons : selectedTypes | filter:searchString | orderBy : ['reqCategory.showOrder','showOrder'] | limitTo:numberToDisplay track by requirementSkeleton.id"; 
@@ -62,6 +62,7 @@ describe('Protractor Security RAT general testsuite', function() {
 		element.all(by.buttonText("Delete")).last().click();
 		browser.sleep(2000);
 		element.all(by.buttonText("Delete")).last().click();
+		browser.sleep(1000);
 	});
 	
 	it('bulk change requirement category', function() {
@@ -80,6 +81,7 @@ describe('Protractor Security RAT general testsuite', function() {
 		element(by.buttonText("Bulk change with selected")).click();
 		element(by.css('span[class="bootstrap-switch-label"]')).click();
 		element(by.buttonText("Save")).click();
+		browser.sleep(1000);
 	});
 	
 //	it('searching a requirement skeleton', function() {
@@ -173,6 +175,7 @@ describe('Protractor Security RAT general testsuite', function() {
 		element(by.buttonText("Bulk change with selected")).click();
 		element(by.css('span[class="bootstrap-switch-label"]')).click();
 		element(by.buttonText("Save")).click();
+		browser.sleep(1500);
 		selectButton.first().click();
 		selectButton.get(2).click();
 		element(by.buttonText("Bulk change with selected")).click();
@@ -200,6 +203,7 @@ describe('Protractor Security RAT general testsuite', function() {
 		typeCheckboxes.first().click();
 		element(by.buttonText('Lifecycle')).click();
 		element(by.buttonText("Save")).click();
+		browser.sleep(1500);
 	});
 
 });

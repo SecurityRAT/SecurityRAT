@@ -1,4 +1,4 @@
-describe('Protractor Security RAT general testsuite', function() {
+describe('Protractor Security RAT tag category/instances entities testsuite', function() {
 	var entities = element(by.partialLinkText('Entities'));
 	var confirmDelete = element(by.css('button[ng-disabled="deleteForm.$invalid"]'));
 	
@@ -61,6 +61,7 @@ describe('Protractor Security RAT general testsuite', function() {
 		element.all(by.buttonText("Delete")).last().click();
 		browser.sleep(2000);
 		element.all(by.buttonText("Delete")).last().click();
+		browser.sleep(1500);
 	});
 	
 	it('bulk change collection category', function() {
@@ -79,6 +80,7 @@ describe('Protractor Security RAT general testsuite', function() {
 		element(by.buttonText("Bulk change with selected")).click();
 		element(by.css('span[class="bootstrap-switch-label"]')).click();
 		element(by.buttonText("Save")).click();
+		browser.sleep(1500);
 	});
 	
 //	it('searching a tag Instance', function() {
@@ -178,6 +180,7 @@ describe('Protractor Security RAT general testsuite', function() {
 		element(by.buttonText("Bulk change with selected")).click();
 		element(by.buttonText("Requirement Owner")).click();
 		element(by.buttonText("Save")).click();
+		browser.sleep(1500);
 	});
 
 });

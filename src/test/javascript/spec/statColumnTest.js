@@ -1,4 +1,4 @@
-describe('Protractor Security RAT general testsuite', function() {
+describe('Protractor Security RAT statuscolumn values entities testsuite', function() {
 	var entities = element(by.partialLinkText('Entities'));
 	var confirmDelete = element(by.css('button[ng-disabled="deleteForm.$invalid"]'));
 	var statValueRepeater = "statusColumnValue in statusColumnValues | filterCategoryForEntities: selectedColumns: 'statusColumn'| filter:searchString | orderBy: ['statusColumn.showOrder','showOrder']";
@@ -107,7 +107,7 @@ describe('Protractor Security RAT general testsuite', function() {
 		element(by.buttonText("Bulk change with selected")).click();
 		element.all(by.css('span[class="bootstrap-switch-label"]')).first().click();
 		element(by.buttonText("Save")).click();
-		
+		browser.sleep(1500);
 	});
 	
 //	it('searching a status column value', function() {
@@ -213,6 +213,7 @@ describe('Protractor Security RAT general testsuite', function() {
 		element(by.buttonText("Bulk change with selected")).click();
 		element(by.buttonText("Fulfilled")).click();
 		element(by.buttonText("Save")).click();
+		browser.sleep(1500);
 	});
 
 });
