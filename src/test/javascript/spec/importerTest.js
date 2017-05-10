@@ -177,8 +177,8 @@ describe('Protractor Security RAT importer testsuite', function() {
 		    	if(acceptReq.count() > 0) {
 				    element.all(by.id('acceptReq')).isPresent().then(function() {
 					    expect(element(by.buttonText('Updates available')).isEnabled()).toBe(false);
-					    // expect(element(by.buttonText(SaveButton)).isEnabled()).toBe(false);
-					    expect(element.all(by.id("feedbackIcon")).count()).toBe(0);
+					    expect(element(by.buttonText(SaveButton)).isEnabled()).toBe(false);
+					    // expect(element.all(by.id("feedbackIcon")).count()).toBe(0);
 					    var acceptList = element.all(by.id('acceptReq'));
 					    
 					    var x = 0;

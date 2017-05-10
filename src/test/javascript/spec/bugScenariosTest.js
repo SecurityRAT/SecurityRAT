@@ -160,6 +160,7 @@ describe('Protractor Security RAT bug Scenarios Testsuite', function() {
 		browser.sleep(2000);
 		element(by.buttonText('Create')).click();
 		browser.sleep(2000);
+		refreshBrowser();
 	});
 
 	it("Test bug where view in editor is broken due to optColumn contents", function() {
@@ -221,5 +222,72 @@ describe('Protractor Security RAT bug Scenarios Testsuite', function() {
 
 		// cleanup
 		switchActiveButtonForOptColumn("Motivation");
+	})
+
+	it("Test bug where update available in not working", function() {
+		browser.get(browser.params.impTestAttachmentUrl + browser.params.attachmentUrls[3]).then(function() {}, function(){
+			browser.switchTo().alert().accept();
+		});
+		browser.sleep(5000);
+		(element(by.buttonText('Close'))).click();
+		browser.sleep(3000);
+		element(by.buttonText('Updates available')).isPresent().then(function(v){ 
+		    element(by.buttonText('Updates available')).click();
+		    browser.wait(function() {
+				return element(by.buttonText('Close')).isPresent();
+			});
+		    browser.sleep(3000);
+		    element(by.buttonText('Close')).click();
+		    browser.sleep(3000);
+		    element(by.buttonText('Updates available')).isPresent().then(function() {
+		    	acceptReq = element.all(by.id('acceptReq'));
+		    	expect(acceptReq.count()).toBeGreaterThan(0);
+		    	expect(element.all(by.id('removeReq')).count()).toBeGreaterThan(0);
+		    	
+			    element.all(by.id('acceptReq')).isPresent().then(function() {
+				    expect(element(by.buttonText('Updates available')).isEnabled()).toBe(false);
+				    expect(element(by.buttonText(SaveButton)).isEnabled()).toBe(false);
+				    var acceptList = element.all(by.id('acceptReq'));
+				    
+				    acceptList.each(function(element, index) {
+			    		element.click();
+				    });
+				    browser.sleep(5000);
+				});
+			});
+		});
+		refreshBrowser();
+		browser.get(browser.params.impTestAttachmentUrl + browser.params.attachmentUrls[3]).then(function() {}, function(){
+			browser.switchTo().alert().accept();
+		});
+		browser.sleep(5000);
+		(element(by.buttonText('Close'))).click();
+		browser.sleep(3000);
+		element(by.buttonText('Updates available')).isPresent().then(function(v){ 
+		    element(by.buttonText('Updates available')).click();
+		    browser.wait(function() {
+				return element(by.buttonText('Close')).isPresent();
+			});
+		    browser.sleep(3000);
+		    element(by.buttonText('Close')).click();
+		    browser.sleep(3000);
+		    element(by.buttonText('Updates available')).isPresent().then(function() {
+		    	removeReq = element.all(by.id('removeReq'));
+		    	expect(acceptReq.count()).toBeGreaterThan(0);
+		    	expect(element.all(by.id('acceptReq')).count()).toBeGreaterThan(0);
+		    	
+			    element.all(by.id('removeReq')).isPresent().then(function() {
+				    expect(element(by.buttonText('Updates available')).isEnabled()).toBe(false);
+				    expect(element(by.buttonText(SaveButton)).isEnabled()).toBe(false);
+				    var removeList = element.all(by.id('removeReq'));
+				    
+				    removeList.each(function(element, index) {
+			    		element.click();
+				    });
+				    browser.sleep(5000);
+				});
+			});
+		});
+
 	})
 });
