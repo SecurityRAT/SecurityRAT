@@ -8,11 +8,17 @@
  * Controller of the sdlcFrontendApp
  */
 angular.module('sdlctoolApp')
-    .controller('RequirementsController', function($scope, apiFactory, sharedProperties, $httpParamSerializer, $interval,
-        $timeout, $uibModal, $filter, getRequirementsFromImport, $confirm, $location, localStorageService, appConfig, $sce, SDLCToolExceptionService, $rootScope, marked, Helper, $state) {
+    .controller('RequirementsController', function($scope, apiFactory, sharedProperties, $httpParamSerializer, $interval, $timeout, $uibModal, $filter, 
+        getRequirementsFromImport, $confirm, $location, localStorageService, appConfig, $sce, SDLCToolExceptionService, $rootScope, marked, Helper, $state,
+        checkAuthentication, JiraService, $q) {
         $scope.failed = "";
         $scope.fail = false;
+        $scope.checks = {
+                    urlPattern: urlpattern.javascriptStringRegex, 
+                    errorMessage: "Invalid url. Please specify URL like https://www.example-queue.com/browse/DUMBQ-21"
+        }
         $scope.progressbar = { hide: true, barValue: 0, intervalPromise: undefined };
+        $scope.manageTicketProperty = {spinnerProperty: {showSpinner: false}, promise: {}, authenticatorProperty: {}, error : false}
         $scope.showRequirements = false;
         $scope.withselectedDropdown = { toggleExcel: false, testAutomation: appConfig.securityCAT !== undefined && appConfig.securityCAT !== "" ? true : false };
         $scope.outputStatus = "";
@@ -32,7 +38,7 @@ angular.module('sdlctoolApp')
         $scope.selectedCategory = [];
         $scope.tableArray = []; // excel table array
         $scope.selectedAlternativeSets = [];
-        $scope.requirementProperties = { requirementsEdited: true, selectedOptColumns: { ids: [], counts: 0 }, exported: false, statColumnChanged: false, crCounts: 0 };
+        $scope.requirementProperties = { hasIssueLinks : false, requirementsEdited: true, selectedOptColumns: { ids: [], counts: 0 }, exported: false, statColumnChanged: false, crCounts: 0 };
         $scope.selectOptCompare = { ids: [], counts: 0 };
         $scope.categoryLabelText = { buttonDefaultText: 'Category' };
         $scope.tableSpan = { row: 0, col: 0 };
@@ -71,7 +77,12 @@ angular.module('sdlctoolApp')
         $scope.alternativeSets = [];
         $scope.tempString = "";
         $scope.selectedStatus = [];
-        $scope.jiraStatus = {};
+
+        $scope.jiraStatus = {
+            addTicketTemplateUrl: "scripts/app/editor/requirements/manageTicketsTemplates/add-ticket.html",
+            removeTicketTemplateUrl: "scripts/app/editor/requirements/manageTicketsTemplates/remove-ticket.html"
+        };
+
         $scope.htmlTooltips = { optColumnTooltips: [], statusColumnTooltips: [] };
         $scope.promiseForStorage;
         $scope.selectedAlternativeSettings = {
@@ -142,7 +153,6 @@ angular.module('sdlctoolApp')
         }
 
         $scope.init = function() {
-            $scope.hasIssueLinks = false;
             $scope.onRouteChangeOff = $scope.$on('$locationChangeStart', $scope.routeChange);
             // initialise the jiraStatus object;
             angular.extend($scope.jiraStatus, { allStatus: [], selectedStatus: [], jiraStatusLabelText: { buttonDefaultText: "Status" } });
@@ -157,7 +167,7 @@ angular.module('sdlctoolApp')
                     if ($location.$$search.file !== undefined || $location.$$search.ticket !== undefined) {
                         $location.search('');
                     }
-                    $scope.hasIssueLinks = imports.hasIssueLinks;
+                    $scope.requirementProperties.hasIssueLinks = imports.hasIssueLinks;
                     $scope.requirements = imports.requirement;
                     $scope.requirementProperties.selectedOptColumns.counts = imports.selectedAlternativeSets.length;
                     $scope.selectOptCompare.counts = imports.selectedAlternativeSets.length;
@@ -178,7 +188,7 @@ angular.module('sdlctoolApp')
                     $scope.updateRequirements();
                 } else {
                     $scope.startProgressbar();
-                    $scope.generatedOn = $scope.getCurrentDate();
+                    $scope.generatedOn = Helper.getCurrentDate();
                     $scope.buildSettings();
                     $scope.getRequirements();
                     //if($scope.systemSettings.oldRequirements === undefined) {
@@ -186,7 +196,7 @@ angular.module('sdlctoolApp')
                     //} else {
                     $scope.getAlternativeSets();
                     $scope.alternativeSets = $scope.systemSettings.alternativeSets;
-                    $scope.hasIssueLinks = $scope.systemSettings.hasIssueLinks;
+                    $scope.requirementProperties.hasIssueLinks = $scope.systemSettings.hasIssueLinks;
                     //}
                 }
                 $scope.getOptandStatusColumns();
@@ -259,7 +269,7 @@ angular.module('sdlctoolApp')
                 project: $scope.systemSettings.project,
                 ticket: $scope.systemSettings.ticket,
                 alternativeSets: $scope.alternativeSets,
-                hasIssueLinks: $scope.hasIssueLinks,
+                hasIssueLinks: $scope.requirementProperties.hasIssueLinks,
                 requirements: $scope.requirements
             });
             sharedProperties.setProperty(oldSettings);
@@ -815,6 +825,7 @@ angular.module('sdlctoolApp')
                         tagInstances: requirement.tagInstanceIds,
                         optionColumns: values,
                         ticket: '',
+                        linkStatus : {enableTooltip : true, link: true},
                         statusColumns: statusColumnsValues,
                         selected: false
                     });
@@ -1037,6 +1048,7 @@ angular.module('sdlctoolApp')
                         tagInstances: requirement.tagInstanceIds,
                         optionColumns: values,
                         ticket: '',
+                        linkStatus : {enableTooltip: true, link:true},
                         statusColumns: statusColumnsValues,
                         selected: false,
                         isNew: false,
@@ -1090,6 +1102,12 @@ angular.module('sdlctoolApp')
                         // $scope.requirements[i].category = newRequirement.category;
                         // adds the taginstance ids
                         $scope.requirements[i].tagInstances = newRequirement.tagInstances;
+                        if(angular.isDefined($scope.requirements[i].linkStatus)) {
+                            $scope.requirements[i].linkStatus.enableTooltip = true;
+                            $scope.requirements[i].linkStatus.link = true;
+                        } else {
+                            $scope.requirements[i].linkStatus = {enableTooltip : true, link: true};
+                        }
                         var oldRequirement = $scope.requirements[i];
                         // search for new changes in description
                         if ((newRequirement.description.replace(/[^\x20-\x7E]|\s+/gmi, "") !== oldRequirement.description.replace(/[^\x20-\x7E]|\s+/gmi, ""))) {
@@ -1442,7 +1460,7 @@ angular.module('sdlctoolApp')
             if (navigator.userAgent.indexOf('Safari') !== -1 && navigator.userAgent.indexOf('Chrome') === -1) {
                 window.open("data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8;base64," + window.btoa(wbout), '', 'width=300,height=150');
             } else {
-                saveAs(new Blob([s2ab(wbout)], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet ;charset=utf-8" }), appConfig.filenamePrefix + "_" + $scope.removeUnwantedChars($scope.systemSettings.name, ['/', '\\', ':', '*', '?', '"', '<', '>', '|', '.']) + "_" + $scope.getCurrentDate() + ".xlsx");
+                saveAs(new Blob([s2ab(wbout)], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet ;charset=utf-8" }), appConfig.filenamePrefix + "_" + $scope.removeUnwantedChars($scope.systemSettings.name, ['/', '\\', ':', '*', '?', '"', '<', '>', '|', '.']) + "_" + Helper.getCurrentDate() + ".xlsx");
             }
         }
 
@@ -1477,7 +1495,7 @@ angular.module('sdlctoolApp')
                 $scope.tableArray[counter] = [{
                     value: $scope.systemSettings.name,
                     format: { fontId: 2 }
-                }, { value: null }, { value: null }, { value: $scope.getCurrentDate(), format: { fontId: 2, xfinnertags: [{ alignment: { horizontal: "right" }, name: 'alignment' }] } }];
+                }, { value: null }, { value: null }, { value: Helper.getCurrentDate(), format: { fontId: 2, xfinnertags: [{ alignment: { horizontal: "right" }, name: 'alignment' }] } }];
                 counter++;
                 $scope.tableArray[counter] = [];
                 counter++;
@@ -1634,7 +1652,7 @@ angular.module('sdlctoolApp')
                 projectType: $scope.systemSettings.project,
                 collections: $scope.systemSettings.colls,
                 generatedOn: $scope.generatedOn,
-                lastChanged: $scope.getCurrentDate(),
+                lastChanged: Helper.getCurrentDate(),
                 requirements: $scope.requirements,
                 statusColumns: $scope.statusColumns
             });
@@ -1650,9 +1668,7 @@ angular.module('sdlctoolApp')
                     angular.forEach(jiraStatus.allStatus, function(newStatus) {
                         for (var i = 0; i < $scope.jiraStatus.allStatus.length; i++) {
                             var oldStatus = $scope.jiraStatus.allStatus[i];
-                            if (angular.equals(oldStatus.name, newStatus.name)) {
-                                continue;
-                            } else {
+                            if (!angular.equals(oldStatus.name, newStatus.name)) {
                                 $scope.jiraStatus.allStatus.push(newStatus);
                             }
                         }
@@ -1661,7 +1677,7 @@ angular.module('sdlctoolApp')
                     $scope.jiraStatus.allStatus.push(jiraStatus.allStatus[0]);
                 }
                 $scope.disableSave(true)
-                $scope.hasIssueLinks = true;
+                $scope.requirementProperties.hasIssueLinks = true;
             });
         }
         $scope.checkExistingTickets = function() {
@@ -1687,7 +1703,7 @@ angular.module('sdlctoolApp')
                 projectType: $scope.systemSettings.project,
                 collections: $scope.systemSettings.colls,
                 generatedOn: $scope.generatedOn,
-                lastChanged: $scope.getCurrentDate(),
+                lastChanged: Helper.getCurrentDate(),
                 requirements: $scope.requirements
             });
             sharedProperties.setProperty(exportRequirements);
@@ -1703,7 +1719,7 @@ angular.module('sdlctoolApp')
                     $scope.ticket.key = obj.ticket.key;
                 }
                 if (angular.isDefined(obj.hasReqTicket) && !obj.hasReqTicket)
-                    $scope.hasIssueLinks = false;
+                    $scope.requirementProperties.hasIssueLinks = false;
                 $scope.disableSave(true);
                 if (localStorageService.isSupported) {
                     localStorageService.remove(appConfig.localStorageKey);
@@ -1711,14 +1727,8 @@ angular.module('sdlctoolApp')
             });
         }
 
-        $scope.getCurrentDate = function() {
-            var d = new Date();
-            var curr_date = d.getDate();
-            var curr_month = d.getMonth() + 1; //Months are zero based
-            var curr_year = d.getFullYear();
-            if (curr_month < 10) curr_month = "0" + curr_month;
-            if (curr_date < 10) curr_date = "0" + curr_date;
-            return curr_date + "-" + curr_month + "-" + curr_year;
+        $scope.hideTicketStatusColumn = function(value) {
+            $scope.requirementProperties.hasIssueLinks = value;
         }
 
         $scope.onTimeout = function() {
@@ -1736,7 +1746,7 @@ angular.module('sdlctoolApp')
                 projectType: $scope.systemSettings.project,
                 collections: $scope.systemSettings.colls,
                 generatedOn: $scope.generatedOn,
-                lastChanged: $scope.getCurrentDate(),
+                lastChanged: Helper.getCurrentDate(),
                 requirements: $scope.requirements
 
             };
@@ -1791,6 +1801,114 @@ angular.module('sdlctoolApp')
                     }
                 }
             }).result.then(function() {}, function() {});
+        }
+
+        function onIssueLinkFailure(exception, mainTicket, remoteTicket) {
+            if (exception.status !== 500) {
+                if (exception.errorException.opened.$$state.status === 0) {
+                    exception.errorException.opened.$$state.value = false;
+                    exception.errorException.opened.$$state.status = 1;
+                }
+                if (parseInt(exception.status) === 404) {
+                    message = "The issues could not be linked. This can occur when the issue linking between " + mainTicket + " and " + remoteTicket + " is disabled.";
+                    SDLCToolExceptionService.showWarning('Issue link unsuccessful', message, SDLCToolExceptionService.DANGER);
+                } else if (exception.status === 401) {
+                    $scope.exportProperty.issuelink = "permission";
+                    message = "The issues could not be linked. You do not have the permission to link issues.";
+                    SDLCToolExceptionService.showWarning('Issue link unsuccessful', message, SDLCToolExceptionService.DANGER);
+                }
+            }
+        }
+
+        function onLinkRemoveFailure(exception) {
+            if (exception.status !== 500) {
+                if (parseInt(exception.status) === 404) {
+                    message = "These issues are either not linked or the issue was not added by the SecurityRAT tool.";
+                    SDLCToolExceptionService.showWarning('Removing issue link unsuccessful', message, SDLCToolExceptionService.DANGER);
+                }
+            }
+        }
+
+        $scope.doIssueLinking = function(req, callbackFunction) {
+            var remoteObjectInfo = {};
+            var mainObjectInfo = {};
+            mainObjectInfo.apiUrl = Helper.buildJiraUrl($scope.ticket.url.split('/'));
+            mainObjectInfo.key = mainObjectInfo.apiUrl.ticketKey[0];
+            mainObjectInfo.url = $scope.ticket.url;
+            remoteObjectInfo.apiUrl = Helper.buildJiraUrl(req.ticket.split('/'));
+
+            if(remoteObjectInfo.apiUrl.ticketKey.length > 0) {
+                $scope.manageTicketProperty.error = false;
+                remoteObjectInfo.key = remoteObjectInfo.apiUrl.ticketKey[0];
+                remoteObjectInfo.url = req.ticket;
+
+                $scope.manageTicketProperty.authenticatorProperty = {url: $scope.ticket.url, message: "You are not authenticated, please click on the following link to authenticate yourself. You will have one minute after a click on the link."}
+                $scope.manageTicketProperty.promise.derefer = $q.defer();
+
+                checkAuthentication.jiraAuth(JiraService.buildUrlCall('issueKey', mainObjectInfo.apiUrl), $scope.manageTicketProperty.authenticatorProperty,
+                $scope.manageTicketProperty.spinnerProperty, $scope.manageTicketProperty.promise).then(function(response) {
+                    mainObjectInfo.fields = response.fields;
+                    $scope.manageTicketProperty.authenticatorProperty = {url: req.ticket, message: "You are not authenticated, please click on the following link to authenticate yourself. You will have one minute after a click on the link."}
+                    $scope.manageTicketProperty.promise.derefer = $q.defer();
+                    // Checks authentication in case the provided ticket url is not from the same jira instance.
+                    return Promise.all([response, checkAuthentication.jiraAuth(JiraService.buildUrlCall('issueKey', remoteObjectInfo.apiUrl), $scope.manageTicketProperty.authenticatorProperty,
+                    $scope.manageTicketProperty.spinnerProperty, $scope.manageTicketProperty.promise)])
+                
+                }).then(function(responses) {
+                    remoteObjectInfo.fields = responses[1].fields;
+                    callbackFunction(req, mainObjectInfo, remoteObjectInfo);
+                }).catch();
+            } else {
+                $scope.manageTicketProperty.error = true;
+            }
+        }
+
+        $scope.addManualTicket = function(req, mainObjectInfo, remoteObjectInfo) {
+            $scope.manageTicketProperty.spinnerProperty.showSpinner = true;
+            if(req.linkStatus.link) {
+                JiraService.addIssueLinks(mainObjectInfo, remoteObjectInfo).then(function() {
+                    req.linkStatus.enableTooltip = true
+                    req.linkStatus.summary = remoteObjectInfo.fields.summary
+                    $scope.manageTicketProperty.spinnerProperty.showSpinner = false;
+                    
+                }).catch(function(exception) {onIssueLinkFailure(exception, mainObjectInfo.url, remoteObjectInfo.url)})
+            }
+
+            linkStatus = {
+                iconUrl: remoteObjectInfo.fields.status.iconUrl,
+                name: remoteObjectInfo.fields.status.name,
+                summary: req.linkStatus.link ? null : remoteObjectInfo.fields.summary,
+                enableTooltip : req.linkStatus.link ? false : true
+            }
+            angular.extend(req, { linkStatus: linkStatus });
+            if($scope.jiraStatus.allStatus.length == 0) {
+                $scope.jiraStatus.allStatus.push(linkStatus)
+            } else {
+                if($filter('filter')($scope.jiraStatus.allStatus, {name: linkStatus.name}).length == 0) {
+                    $scope.jiraStatus.allStatus.push(linkStatus);
+                }
+            }
+            JiraService.addAttachmentAndComment(mainObjectInfo, {content: $scope.buildYAMLFile(), artifactName: $scope.systemSettings.name});
+            
+        }
+
+        $scope.removeManualTicket = function(req, mainObjectInfo, remoteObjectInfo) {
+            req.ticket = "";
+            req.linkStatus = {enableTooltip: true}
+            if($filter('filterTicketStatus')($scope.requirements, remoteObjectInfo.fields.status.name) == 0) {
+                for (var i = 0; i < $scope.jiraStatus.allStatus.length; i++) {
+                    if($scope.jiraStatus.allStatus[i].name === remoteObjectInfo.fields.status.name) {
+                        $scope.jiraStatus.allStatus.splice(i, 1);
+                        break;
+                    }
+                }
+
+            }
+            // This returns the jiraservice.sendComment promise
+            JiraService.addAttachmentAndComment(mainObjectInfo, {content: $scope.buildYAMLFile(), artifactName: $scope.systemSettings.name});
+            // JiraService.removeIssueLinks(mainObjectInfo, remoteObjectInfo).then(function() {
+                
+            // }).catch(function(exception) {onIssueLinkFailure(exception, mainObjectInfo.url, remoteObjectInfo.url)})
         }
 
         $scope.$on('$destroy', function() {

@@ -38,7 +38,15 @@ Developement Ribbon
     background-position: right 5px center;
     background-repeat: no-repeat;
 }
-.wrongPassword:focus {
+
+.wrongInput {
+    border-width: 1px;
+    border-style: solid;
+    border-color: red;
+    background-position: right 5px center;
+    background-repeat: no-repeat;
+}
+.wrongPassword:focus, .wrongInput:focus {
 	border-width: 1px;
 	border-style: solid;
 	border-color: red;
@@ -728,4 +736,18 @@ Template animation
   background-color: #f0ad4e;
   background-position: center center;
   background-repeat: no-repeat;
+}
+
+/* ===================================
+    Hide/Show chevron
+====================================== */
+.hide-chevron {
+    margin-top:15px;
+    cursor:pointer;
+    display: inline;
+}
+
+.show-chevron {
+    cursor:pointer;
+    display: inline;
 }

@@ -327,9 +327,10 @@ angular.module('sdlctoolApp')
 
         $scope.updateLinkStatus = function(response, jiraStatus, requirement, category, values, statusColumnsValues, linkStatus) {
             linkStatus = {
-                iconUrl: response.fields.status.iconUrl,
-                name: response.fields.status.name,
-                summary: response.fields.summary,
+                iconUrl : response.fields.status.iconUrl,
+                name : response.fields.status.name,
+                summary : response.fields.summary,
+                enableTooltip : true
             }
             jiraStatus.allStatus.push(linkStatus);
             var unique = {};
@@ -361,6 +362,7 @@ angular.module('sdlctoolApp')
                 applyUpdate: ' '
             });
         }
+        
         $scope.buildRequirement = function(requirementCategories) {
             var setIds = [];
             var jiraStatus = {};

@@ -1,15 +1,15 @@
 angular.module('sdlctoolApp')
     .controller('ExportController', function($scope, apiFactory, sharedProperties, $uibModalStack, $uibModalInstance, $timeout,
-        appConfig, authenticatorService, $uibModal, $interval, $q, SDLCToolExceptionService, $filter, $confirm, $window, Helper, checkAuthentication) {
+        appConfig, authenticatorService, $uibModal, $interval, $q, SDLCToolExceptionService, $filter, $confirm, $window, Helper, checkAuthentication, JiraService) {
         $scope.jiraUrl = {};
         $scope.checks = {};
         $scope.extension = {};
         $scope.fields = {};
         $scope.apiUrl = {};
         $scope.jiraAlternatives = {};
-        $scope.exportProperty = {};
+        $scope.exportProperty = {promise:{}};
         $scope.jiraStatus = {};
-        $scope.promise = {};
+        // $scope.promise = {};
         $scope.issueLinkObject = {}
         $scope.selection = { file: false, jira: true, createTickets: false };
         $scope.ticketURL = '';
@@ -20,7 +20,6 @@ angular.module('sdlctoolApp')
         $scope.autoComplete = {};
         $scope.toggleAutoCompleteDropdown = {};
         $scope.tempMandatoryValue = [];
-        $scope.remoteLinking = {};
 
         $scope.init = function() {
             $scope.manFilterObject = {};
@@ -100,7 +99,7 @@ angular.module('sdlctoolApp')
         }
 
         $scope.cancel = function() {
-                authenticatorService.cancelPromises($scope.promise);
+                authenticatorService.cancelPromises($scope.exportProperty.promise);
                 $scope.exportProperty.showSpinner = false;
 
                 $uibModalStack.dismissAll("closing export");
@@ -118,39 +117,7 @@ angular.module('sdlctoolApp')
 
         //build the url call need according to the distinguisher. 
         $scope.buildUrlCall = function(selector) {
-            var baseJiraCall = $scope.apiUrl.http + "//" + $scope.apiUrl.host + appConfig.jiraApiPrefix + '/';
-            var origin = $scope.apiUrl.http + "//" + $scope.apiUrl.host;
-            var returnValue = "";
-            switch (selector) {
-                case "ticket":
-                    returnValue = origin + appConfig.jiraApiPrefix;
-                    break;
-                case "attachment":
-                    returnValue = baseJiraCall + $scope.apiUrl.ticketKey[0] + appConfig.jiraAttachment;
-                    break;
-                case "comment":
-                    returnValue = baseJiraCall + $scope.apiUrl.ticketKey[0] + appConfig.jiraComment;
-                    break;
-                case "issueType":
-                    returnValue = origin + appConfig.jiraApiIssueType;
-                    break;
-                case "project":
-                    returnValue = origin + appConfig.jiraApiProject;
-                    break;
-                case "issueKey":
-                    returnValue = baseJiraCall + $scope.apiUrl.ticketKey[0];
-                    break;
-                case "search":
-                    returnValue = origin + appConfig.jiraRestApi + "/search";
-                    break;
-                case "issueLink":
-                    returnValue = origin + appConfig.jiraRestApi + "/issueLink";
-                    break;
-                case "field":
-                    returnValue = origin + appConfig.jiraRestApi + "/field";
-                    break;
-            }
-            return returnValue;
+            return JiraService.buildUrlCall(selector, $scope.apiUrl);
         }
 
         //checks if the queue exist.
@@ -258,77 +225,6 @@ angular.module('sdlctoolApp')
                     $scope.exportProperty.issuelink = "permission";
                     message = "The issues could not be linked. You do not have the permission to link issues.";
                     SDLCToolExceptionService.showWarning('Issue link unsuccessful', message, SDLCToolExceptionService.DANGER);
-                }
-            }
-        }
-
-        // links a tracker instance to another one.
-        $scope.createRemoteLink = function(apiCall, issueKey, issueInfo) {
-            var postData = {
-                "object": {
-                    "url": issueInfo.url,
-                    "title": issueKey,
-                    "summary": issueInfo.fields.summary,
-                    "icon": {
-                        "url16x16": issueInfo.fields.issuetype.iconUrl,
-                        "title": issueInfo.fields.issuetype.description
-                    },
-                    "status": {
-                        "icon": {
-                            "url16x16": issueInfo.fields.status.iconUrl,
-                            "title": issueInfo.fields.status.name
-                        }
-                    }
-                },
-                "relationship": "relates to"
-            }
-            apiFactory.postExport(apiCall, postData, { 'X-Atlassian-Token': 'nocheck', 'Content-Type': 'application/json' })
-                .then(function(data) {})
-                .catch(OnIssueLinkFailure);
-        }
-
-        $scope.addIssueLinks = function(inwardKey, outwardKey, remoteIssueInfo) {
-            var apiCall = $scope.buildUrlCall("issueLink");
-            var urlSplit = $scope.exported.ticket.url.split("/");
-            var apiUrl = {};
-            angular.extend(apiUrl, Helper.buildJiraUrl(urlSplit));
-
-            // console.log(remoteIssueInfo);
-            var postData = {
-                type: {
-                    name: "Relates"
-                },
-                inwardIssue: {
-                    key: inwardKey
-                },
-                outwardIssue: {
-                    key: outwardKey
-                }
-            };
-
-            if (angular.equals(apiUrl.host, remoteIssueInfo.apiUrl.host)) {
-                // links tickets are from the same JIRA instance
-                apiFactory.postExport(apiCall, postData, { 'X-Atlassian-Token': 'nocheck', 'Content-Type': 'application/json' })
-                    .then().catch(OnIssueLinkFailure);
-            } else {
-                // links tickets from different JIRA instances.
-
-                // links ticket from main JIRA ticket to ticket in different JIRA instance
-                var inwardApiCall = apiUrl.http + "//" + apiUrl.host + appConfig.jiraApiPrefix + '/' + inwardKey + "/remotelink";
-                $scope.createRemoteLink(inwardApiCall, outwardKey, remoteIssueInfo);
-                var object = {};
-                var outwardApiCall = remoteIssueInfo.apiUrl.http + "//" + remoteIssueInfo.apiUrl.host + appConfig.jiraApiPrefix + '/' + outwardKey + "/remotelink";
-                // get the summary of the main JIRA to prepare for remote linking if necessary
-                if (angular.isUndefined($scope.remoteLinking.info)) {
-                    apiFactory.getJIRAInfo(apiUrl.http + "//" + apiUrl.host + appConfig.jiraApiPrefix + "/" + apiUrl.ticketKey[0]).then(function(response) {
-                        object = response;
-                        object.url = $scope.exported.ticket.url;
-                        $scope.createRemoteLink(outwardApiCall, inwardKey, object);
-                    })
-                } else {
-                    object = $scope.remoteLinking.info;
-                    object.url = $scope.exported.ticket.url;
-                    $scope.createRemoteLink(outwardApiCall, inwardKey, object);
                 }
             }
         }
@@ -570,64 +466,49 @@ angular.module('sdlctoolApp')
         }
 
         $scope.sendAttachment = function() {
-                var file = $scope.buildYAMLFile();
-                var linksObject = {};
-                //          console.log(file);
-                try {
-                    // links the newly created ticket to the existing tickets (created in batch mode) from the yaml file. 
-                    // This happens when the requirement set has already been saved in a ticket and the user save it into a new one.
-                    for (var i = 0; i < $scope.ticketsToLink.length; i++) {
-                        var urlSplit = $scope.ticketsToLink[i].split('/');
-                        var apiUrl = {};
-                        angular.extend(apiUrl, Helper.buildJiraUrl(urlSplit));
+            var file = $scope.buildYAMLFile();
+            var linksObject = {};
+            //          console.log(file);
+            $scope.exported.ticket.apiUrl = $scope.apiUrl;
+            $scope.exported.ticket.key = $scope.apiUrl.ticketKey[0];
+            // links the newly created ticket to the existing tickets (created in batch mode) from the yaml file. 
+            // This happens when the requirement set has already been saved in a ticket and the user save it into a new one.
+            for (var i = 0; i < $scope.ticketsToLink.length; i++) {
+                var urlSplit = $scope.ticketsToLink[i].split('/');
+                var apiUrl = {};
+                angular.extend(apiUrl, Helper.buildJiraUrl(urlSplit));
 
-                        // this is done to prevent the data from been changed due to the asynchronous nature of the http calls.
-                        linksObject[apiUrl.ticketKey[0]] = {};
-                        linksObject[apiUrl.ticketKey[0]].apiUrl = apiUrl;
-                        linksObject[apiUrl.ticketKey[0]].url = $scope.ticketsToLink[i];
-                        // get Info to the ticket key
-                        apiFactory.getJIRAInfo(apiUrl.http + "//" + apiUrl.host + appConfig.jiraApiPrefix + "/" + apiUrl.ticketKey[0]).then(function(response) {
-                            $scope.addIssueLinks($scope.apiUrl.ticketKey[0], response.key, { fields: response.fields, apiUrl: linksObject[response.key].apiUrl, url: linksObject[response.key].url });
-                        })
-                    }
+                // this is done to prevent the data from been changed due to the asynchronous nature of the http calls.
+                linksObject[apiUrl.ticketKey[0]] = {};
+                linksObject[apiUrl.ticketKey[0]].apiUrl = apiUrl;
+                linksObject[apiUrl.ticketKey[0]].url = $scope.ticketsToLink[i];
+                linksObject[apiUrl.ticketKey[0]].key = apiUrl.ticketKey[0];
 
-                    var doc = jsyaml.safeDump(file);
-                    var filename = appConfig.filenamePrefix + "_" + $scope.exported.name + "_" + $scope.getCurrentDate() + ".yml";
-                    var blob = new Blob([doc], { type: 'application/x-yaml' })
-                    var data = new FormData();
-                    data.append('file', blob, filename);
-                    apiFactory.postExport($scope.buildUrlCall("attachment"), data, { 'X-Atlassian-Token': 'nocheck', 'Content-Type': undefined })
-                        .then(function(response) {
-                            var commentBody = appConfig.ticketComment;
-                            commentBody = commentBody.replace('§artifact_name§', $scope.exported.name);
-                            commentBody = commentBody.replace('§import_link§', appConfig.importPrefix + encodeURIComponent(response[0].self) + ".\n");
-                            commentBody = commentBody.replace('§filename§', filename);
-
-                            //get the attachment id and save in the current requirement.
-                            $scope.sendComment(commentBody);
-                        }, function(error) {
-                            if (error.status === 403) {
-                                SDLCToolExceptionService.showWarning('Export unsuccessful', 'The YAML file could not be attached. Please check if ticket is not closed and that you have the permission to attach files.', SDLCToolExceptionService.DANGER);
-                            }
-                        });
-                } catch (e) {
-                    SDLCToolExceptionService.showWarning('Export unsuccessful', "Yaml file could not be created for export please contact the developers.", SDLCToolExceptionService.DANGER);
-                }
-
+                // get Info to the ticket key
+                $scope.exportProperty.authenticatorProperty.url = $scope.ticketsToLink[i];
+                $scope.exportProperty.authenticatorProperty.message = "In order to link this issue, you have to authenticated. Please click on the following link to authenticate yourself. You will have one minute after a click on the link."
+                $scope.exportProperty.promise.derefer = $q.defer();
+                checkAuthentication.jiraAuth(JiraService.buildUrlCall('issueKey', apiUrl), $scope.exportProperty.authenticatorProperty, $scope.exportProperty, $scope.exportProperty.promise).then(function(response) {
+                    linksObject[response.key].fields = response.fields
+                    JiraService.addIssueLinks($scope.exported.ticket, linksObject[response.key]).then().catch(OnIssueLinkFailure);
+                }).catch(function(exception) {
+                    SDLCToolExceptionService.showWarning('Unsuccessful issue linking', 'The issue ' + $scope.ticketsToLink[i] + ' was not linked because the user was not authenticated.', SDLCToolExceptionService.DANGER);
+                })
             }
-            //adds comment to issue with link to attachment.
-        $scope.sendComment = function(body) {
-            commentData = {
-                    "body": body
-                }
-                //adds comment to ease import
-            apiFactory.postExport($scope.buildUrlCall("comment"), commentData, { 'X-Atlassian-Token': 'nocheck', 'Content-Type': 'application/json' }).then(function() {
-                //performs the export successful operation when adding a yaml attachment.
-                if ($scope.selection.jira) {
-                    $scope.close();
-                    SDLCToolExceptionService.showWarning('Export successful', 'The Secure SDLC artifact ' + $scope.exported.name + ' was successfully exported to:\n' + $scope.ticketURL, SDLCToolExceptionService.SUCCESS);
-                }
-            });
+
+            var returnPromise = JiraService.addAttachmentAndComment($scope.exported.ticket, {content: file, artifactName : $scope.exported.name});
+            if(angular.isDefined(returnPromise)) {
+                returnPromise
+                    .then(function() {
+                        if ($scope.selection.jira) {
+                            $scope.close();
+                            SDLCToolExceptionService.showWarning('Export successful', 'The Secure SDLC artifact ' + $scope.exported.name + ' was successfully exported to:\n' + $scope.ticketURL, SDLCToolExceptionService.SUCCESS);
+                        }
+                    }).catch(function() {
+
+                    })
+            }
+
         }
 
         $scope.checkForTicketInReqSet = function() {
@@ -665,7 +546,7 @@ angular.module('sdlctoolApp')
             // } else 
             if ($scope.selection.jira || $scope.selection.createTickets) {
                 //export to JIRA
-                var authenticatorProperty = {
+                $scope.exportProperty.authenticatorProperty = {
                     url: $scope.jiraUrl.url,
                     message: 'You are not authenticated, please click on the following link to authenticate yourself. You will have one minute after a click on the link.'
                 }
@@ -673,8 +554,8 @@ angular.module('sdlctoolApp')
                 //console.log($scope.apiUrl);
                 $scope.buildUrlObject(urlSplit);
                 //console.log($scope.apiUrl);
-                $scope.promise.derefer = $q.defer();
-                checkAuthentication.jiraAuth($scope.buildUrlCall("issueType"), authenticatorProperty, $scope.exportProperty, $scope.promise).then(function(data) {
+                $scope.exportProperty.promise.derefer = $q.defer();
+                checkAuthentication.jiraAuth($scope.buildUrlCall("issueType"), $scope.exportProperty.authenticatorProperty, $scope.exportProperty, $scope.exportProperty.promise).then(function(data) {
                     if ($scope.checks.isTicket && $scope.selection.jira) {
                         $scope.fields = {};
                         $scope.checkTicketAndSendAttachment();
@@ -786,7 +667,7 @@ angular.module('sdlctoolApp')
                     var a = document.createElement('a');
                     if (angular.isDefined(a.download)) {
                         a.href = mime + encodeURIComponent(doc);
-                        a.download = appConfig.filenamePrefix + "_" + $scope.exported.name + "_" + $scope.getCurrentDate() + ext;
+                        a.download = appConfig.filenamePrefix + "_" + $scope.exported.name + "_" + Helper.getDetailedCurrentDate() + ext;
                         a.target = "_blank";
                         document.body.appendChild(a);
                         $timeout(function() {
@@ -804,76 +685,91 @@ angular.module('sdlctoolApp')
         // creates tickets for each selected requirement.
         $scope.createReqTickets = function() {
             var size = ($filter('filter')($scope.exported.requirements, { selected: true })).length;
-            angular.forEach($filter('orderBy')($filter('filter')($scope.exported.requirements, { selected: true }), ['categoryOrder', 'order']), function(requirement) {
-                var remoteObject = {};
-                remoteObject.apiUrl = $scope.apiUrl
-                var fieldObject = {}
-                angular.extend(fieldObject, $scope.fields);
-                var commentBody = "";
-                var name = $scope.exported.name.replace(" ", "_");
-                //console.log(name);
-                fieldObject.description = "";
-                fieldObject.summary = "";
-                fieldObject.summary += '[' + $scope.exported.name + '] ' + requirement.description + " (" + requirement.shortName + ")";
-                fieldObject.description += "Category:\n";
-                fieldObject.description += requirement.category + "\n\n";
-                fieldObject.description += "Short name:\n";
-                fieldObject.description += requirement.shortName + "\n\n";
-                fieldObject.description += "Requirement description:\n";
-                fieldObject.description += requirement.description + "\n";
-                angular.forEach($filter('orderBy')(requirement.optionColumns, 'showOrder'), function(optColumn) {
-                    fieldObject.description += "\n" + optColumn.name + ":\n";
-                    angular.forEach(optColumn.content, function(content) {
-                        fieldObject.description += Helper.removeMarkdown(content.content, "export");
-                        fieldObject.description += "\n";
-                    });
-                });
-                //add comments to the description if these have been provided.
-                angular.forEach(requirement.statusColumns, function(statColumn) {
-                    angular.forEach($filter('orderBy')($scope.exported.statusColumns, 'showOrder'), function(stat) {
-                        if (stat.id === statColumn.id) {
-                            fieldObject.description += "\n" + stat.name + "\n";
-                            fieldObject.description += statColumn.value;
+            // preparing the main ticket object for linking
+            var urlSplit = $scope.exported.ticket.url.split("/");
+            $scope.exported.ticket.apiUrl = {};
+            angular.extend($scope.exported.ticket.apiUrl, Helper.buildJiraUrl(urlSplit));
+            $scope.exportProperty.promise.derefer = $q.defer();
+            $scope.exportProperty.authenticatorProperty.url = $scope.exported.ticket.url;
+            checkAuthentication.jiraAuth(JiraService.buildUrlCall('issueKey', $scope.exportProperty.ticket.apiUrl), $scope.exportProperty.authenticatorProperty, $scope.exportProperty, $scope.exportProperty.promise)
+            .then(function(response) {
+                $scope.exported.ticket.fields = response.fields;
+                angular.forEach($filter('orderBy')($filter('filter')($scope.exported.requirements, { selected: true }), ['categoryOrder', 'order']), function(requirement) {
+                    var remoteObject = {};
+                    remoteObject.apiUrl = $scope.apiUrl
+
+                    var fieldObject = {}
+                    angular.extend(fieldObject, $scope.fields);
+                    var commentBody = "";
+                    var name = $scope.exported.name.replace(" ", "_");
+                    //console.log(name);
+                    fieldObject.description = "";
+                    fieldObject.summary = "";
+                    fieldObject.summary += '[' + $scope.exported.name + '] ' + requirement.description + " (" + requirement.shortName + ")";
+                    fieldObject.description += "Category:\n";
+                    fieldObject.description += requirement.category + "\n\n";
+                    fieldObject.description += "Short name:\n";
+                    fieldObject.description += requirement.shortName + "\n\n";
+                    fieldObject.description += "Requirement description:\n";
+                    fieldObject.description += requirement.description + "\n";
+                    angular.forEach($filter('orderBy')(requirement.optionColumns, 'showOrder'), function(optColumn) {
+                        fieldObject.description += "\n" + optColumn.name + ":\n";
+                        angular.forEach(optColumn.content, function(content) {
+                            fieldObject.description += Helper.removeMarkdown(content.content, "export");
                             fieldObject.description += "\n";
-                        }
-                    })
-                });
-
-                $scope.createTicket(fieldObject, false).then(function() {
-                    requirement.ticket = $scope.ticketURL;
-                    // get the status of the newly created tickets and updates the filter.
-                    apiFactory.getJIRAInfo($scope.buildUrlCall("issueKey")).then(function(response) {
-                        remoteObject.fields = response.fields;
-                        remoteObject.url = $scope.jiraUrl.url + "-" + response.key.split('-').pop();
-                        //links the newly created ticket to the main ticket
-                        $scope.addIssueLinks($scope.exported.ticket.key, response.key, remoteObject);
-                        size--;
-                        linkStatus = {
-                            iconUrl: response.fields.status.iconUrl,
-                            name: response.fields.status.name,
-                            summary: response.fields.summary,
-                        }
-                        angular.extend(requirement, { linkStatus: linkStatus });
-                        $scope.jiraStatus.allStatus.push(linkStatus);
-                        // shows the successful modal and updates the attachment.
-                        if (size === 0) {
-                            var urlSplit = $scope.exported.ticket.url.split("/");
-                            $scope.buildUrlObject(urlSplit);
-                            $scope.sendAttachment();
-                            var tickets = "\n";
-                            var message = "";
-                            for (var i = 0; i < $scope.ticketURLs.length; i++) {
-                                tickets += $scope.ticketURLs[i];
-                                tickets += "\r\n";
+                        });
+                    });
+                    //add comments to the description if these have been provided.
+                    angular.forEach(requirement.statusColumns, function(statColumn) {
+                        angular.forEach($filter('orderBy')($scope.exported.statusColumns, 'showOrder'), function(stat) {
+                            if (stat.id === statColumn.id) {
+                                fieldObject.description += "\n" + stat.name + "\n";
+                                fieldObject.description += statColumn.value;
+                                fieldObject.description += "\n";
                             }
-                            $scope.close();
-                            SDLCToolExceptionService.showWarning('Tickets creation successful',
-                                'The following tickets were successfully created: ' + tickets, SDLCToolExceptionService.SUCCESS);
-                        }
+                        })
                     });
 
+                    $scope.createTicket(fieldObject, false).then(function() {
+                        requirement.ticket = $scope.ticketURL;
+                        // get the status of the newly created tickets and updates the filter.
+                        apiFactory.getJIRAInfo($scope.buildUrlCall("issueKey")).then(function(response) {
+                            remoteObject.fields = response.fields;
+                            remoteObject.key = response.key;
+                            remoteObject.url = $scope.jiraUrl.url + "-" + response.key.split('-').pop();
+                            //links the newly created ticket to the main ticket
+                            JiraService.addIssueLinks($scope.exported.ticket, remoteObject).then().catch(OnIssueLinkFailure);
+                            size--;
+                            linkStatus = {
+                                iconUrl: response.fields.status.iconUrl,
+                                name: response.fields.status.name,
+                                summary: response.fields.summary,
+                                enableTooltip: true
+                            }
+                            angular.extend(requirement, { linkStatus: linkStatus });
+                            $scope.jiraStatus.allStatus.push(linkStatus);
+                            // shows the successful modal and updates the attachment.
+                            if (size === 0) {
+                                var urlSplit = $scope.exported.ticket.url.split("/");
+                                $scope.buildUrlObject(urlSplit);
+                                $scope.sendAttachment();
+                                var tickets = "\n";
+                                var message = "";
+                                for (var i = 0; i < $scope.ticketURLs.length; i++) {
+                                    tickets += $scope.ticketURLs[i];
+                                    tickets += "\r\n";
+                                }
+                                $scope.close();
+                                SDLCToolExceptionService.showWarning('Tickets creation successful',
+                                    'The following tickets were successfully created: ' + tickets, SDLCToolExceptionService.SUCCESS);
+                            }
+                        });
+
+                    });
                 });
-            });
+            }).catch(function() {
+                if (angular.isDefined($scope.exportProperty.authenticating)) $scope.exportProperty.authenticating = false;
+            }) 
         }
 
         $scope.getTicketValue = function(req) {
@@ -906,26 +802,5 @@ angular.module('sdlctoolApp')
             })
 
             return Helper.buildYAMLFile(copyOfExport);
-        }
-
-        $scope.getCurrentDate = function() {
-            var d = new Date();
-            var curr_hour = d.getHours();
-            var curr_min = d.getMinutes();
-            var curr_sec = d.getSeconds();
-            var curr_date = d.getDate();
-            var curr_month = d.getMonth() + 1; //Months are zero based
-            var curr_year = d.getFullYear();
-            //add a zero for hours less than 10.
-            if (curr_hour < 10) {
-                curr_hour = "0" + curr_hour.toString();
-            }
-            if (curr_min < 10) {
-                curr_min = "0" + curr_min.toString();
-            }
-            if (curr_sec < 10) {
-                curr_sec = "0" + curr_sec.toString();
-            }
-            return curr_date + "-" + curr_month + "-" + curr_year + "_" + curr_hour + curr_min + curr_sec;
         }
     });

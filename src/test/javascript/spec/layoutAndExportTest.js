@@ -533,6 +533,46 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 		browser.sleep(4000);
 		expect(element(by.buttonText(exportButton)).isEnabled()).toBe(false);
 	})
+
+	it('Test manual linking', function() {
+		(element(by.buttonText(SaveButton))).click();
+		browser.sleep(2000);
+		
+		element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraQueue);
+		(element(by.buttonText(exportButton))).click();
+		element(by.model('fields.issuetype.name')).sendKeys(browser.params.issuetypes[0]);
+		element(by.model('fields.summary')).sendKeys("<script>alert(1)</script>");
+		element(by.model('fields.description')).sendKeys("<script>alert(1)</script>");
+		(element(by.buttonText(exportButton))).click();
+		browser.sleep(3000);
+		var list = element.all(by.id("addManualTicket"));
+		list.first().click();
+		element(by.id("ticket_field")).sendKeys(browser.params.jiraQueue);
+		element(by.id("addTicket")).click();
+		browser.sleep(2000);
+		element(by.id("ticket_field")).clear().then(function() {
+			element(by.id("ticket_field")).sendKeys(browser.params.jiraTicket);
+		});
+		element(by.id("addTicket")).click();
+		list.get(1).click();
+		element(by.id("ticket_field")).sendKeys(browser.params.jiraRemoteLinkTicket);
+		element(by.id("addTicket")).click();
+		browser.sleep(5000);
+		list.get(2).click();
+		var removeList1 = element.all(by.id("removeManualTicket")); 
+		element(by.model("ticket_field")).sendKeys(browser.params.jiraRemoteLinkTicket);
+		element(by.model("reqs.linkStatus.link")).click();
+		element(by.id("addTicket")).click();
+		browser.sleep(5000);
+		var removeList2 = element.all(by.id("removeManualTicket"));
+		expect(removeList1.count()).toBe(removeList2.count() - 1);
+
+		removeList.first().click();
+		browser.sleep(1000);
+		element(by.id("removeLink")).click();
+		browser.sleep(5000)
+
+	})
 	
 	it('Test for the feedback feature', function() {
 		deleteCookie1();

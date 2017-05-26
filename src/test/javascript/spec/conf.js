@@ -18,7 +18,9 @@ exports.config = {
 	   },// this is only relevant when you use FORM authentication.
 	   testHost:"https://securityrat.test.local", //FQDN of test instance of Security RAT
 	   jiraQueue : 'https://test-jira.local/browse/XYZ', //path to a JIRA Queue where test tickets can be opened
+	   jiraTicket : 'https://test-jira.local/browse/XYZ-144', //path to a JIRA Ticket to test manual linking of tickets
 	   jiraRemoteLinkQueue: 'https://second-test-jira.local/browse/ABC', // second jira to test the remote linking 
+	   jiraRemoteLinkTicket: 'https://second-test-jira.local/browse/ABC-524', // an existing ticket from the second jira instance to test manual linking 
 	   jiraHost : 'https://test-jira.local/browse/', //path to test JIRA
 	   impTestAttachmentUrl : 'https://securityrat.test.local/?file=https%3A%2F%2Ftest-jira.local%2Frest%2Fapi%2F2%2Fattachment%2F',
 	   impTestUrl2: 'https://securityrat.test.local/?ticket=https://test-jira.local/browse/XYZ-123', // the specied ticket in the "ticket" parameter should preferably have different attachment types. For e.g .yml, .xlsx.

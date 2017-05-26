@@ -246,10 +246,10 @@
 				    					uib-tooltip-html="optTooltip.tooltip" tooltip-append-to-body>
 				    					</span>
                             </span>
-                            <span class="glyphicon glyphicon-chevron-down positionChevron" style="margin-top:15px;cursor:pointer;" data-ng-if="optToHide.indexOf(opt.id) == -1" uib-tooltip="Hide {{opt.name}}" data-ng-click="hideColumn(opt.id)"></span>
+                            <span class="glyphicon glyphicon-chevron-down positionChevron hide-chevron" data-ng-if="optToHide.indexOf(opt.id) == -1" uib-tooltip="Hide {{opt.name}}" data-ng-click="hideColumn(opt.id)"></span>
                             </span>
-                            <p data-ng-if="optToHide.indexOf(opt.id) != -1" style="cursor:pointer;" data-ng-click="hideColumn(opt.id)">
-                                ...<span class="glyphicon glyphicon-chevron-right" style="display:inline" uib-tooltip="Show {{opt.name}}" tooltip-append-to-body></span>
+                            <p data-ng-if="optToHide.indexOf(opt.id) != -1" data-ng-click="hideColumn(opt.id)">
+                                ...<span class="glyphicon glyphicon-chevron-right show-chevron" uib-tooltip="Show {{opt.name}}" tooltip-append-to-body></span>
                             </p>
                         </th>
                         <th data-ng-repeat="status in statusColumns | orderBy:'showOrder'">
@@ -266,9 +266,16 @@
                                 </span>
                             </div>
                         </th>
-                        <th data-ng-if="hasIssueLinks" class="text-center">
-                            <div ng-dropdown-multiselect="" options="jiraStatus.allStatus" selected-model="jiraStatus.selectedStatus" translation-texts="jiraStatus.jiraStatusLabelText" extra-settings="selectedJiraStatusSettings">
+                        <th class="text-center" data-ng-if="ticket.url">
+                            <div data-ng-if="requirementProperties.hasIssueLinks" ng-dropdown-multiselect="" options="jiraStatus.allStatus" selected-model="jiraStatus.selectedStatus" translation-texts="jiraStatus.jiraStatusLabelText" extra-settings="selectedJiraStatusSettings" horizontal>
                             </div>
+                            <p uib-collapse="!requirementProperties.hasIssueLinks" data-ng-click="requirementProperties.hasIssueLinks = !requirementProperties.hasIssueLinks">
+                                <span class="glyphicon glyphicon-chevron-down positionChevron hide-chevron" uib-tooltip="Hide this column"  tooltip-append-to-body></span>
+                                </span>
+                            </p>
+                            <p uib-collapse="requirementProperties.hasIssueLinks" data-ng-click="requirementProperties.hasIssueLinks = !requirementProperties.hasIssueLinks" uib-tooltip="Show ticket status column">
+                                ...<span class="glyphicon glyphicon-chevron-right show-chevron"></span>
+                            </p>
                         </th>
                         <th class="text-center">
                             <select-all filter-length="{{filterRequirements().length}}" on-change="performSelection(selectionValue)" selected-length="{{(filterRequirements() | filter: {selected: true}).length}}"></select-all>
@@ -335,10 +342,13 @@
                                 </ul>
                             </div>
                         </td>
-                        <td class="text-center" data-ng-if="hasIssueLinks" data-ng-style="reqs.isNew && {'background-color':'rgb(204, 255, 204)'} || reqs.isOld && {'background-color':'rgb(255, 204, 204)'}">
-                            <span uib-popover="Ticket summary: {{reqs.linkStatus.summary}}" popover-placement="top" popover-trigger="mouseenter" data-ng-if="reqs.linkStatus.summary != null">
-			    				<a href="{{reqs.ticket}}" target="_blank"><img data-ng-src="{{reqs.linkStatus.iconUrl}}" data-ng-if="reqs.linkStatus.iconUrl != null"/> {{reqs.linkStatus.name}}</a>
-			    			</span>
+                        <td class="text-center" data-ng-style="reqs.isNew && {'background-color':'rgb(204, 255, 204)'} || reqs.isOld && {'background-color':'rgb(255, 204, 204)'}" data-ng-if="ticket.url">
+                            <div data-ng-if="reqs.linkStatus.summary && requirementProperties.hasIssueLinks">
+			    				<a href="{{reqs.ticket}}" target="_blank" uib-popover="Ticket summary: {{reqs.linkStatus.summary}}" popover-trigger="mouseenter"><img data-ng-src="{{reqs.linkStatus.iconUrl}}" data-ng-if="reqs.linkStatus.iconUrl != null" popover-append-to-body="true" /> {{reqs.linkStatus.name}}</a>
+                                <div id="removeManualTicket" data-ng-click="reqs.linkStatus.enableTooltip = !reqs.linkStatus.enableTooltip" class="glyphicon glyphicon-minus" uib-tooltip="remove this ticket" tooltip-placement="right-bottom" tooltip-enable="reqs.linkStatus.enableTooltip" uib-popover-template="jiraStatus.removeTicketTemplateUrl" popover-is-open="!reqs.linkStatus.enableTooltip" popover-append-to-body="true"></div>
+			    			</div>
+                            <div id="addManualTicket" data-ng-if="reqs.linkStatus.summary == null && requirementProperties.hasIssueLinks" data-ng-click="reqs.linkStatus.enableTooltip = !reqs.linkStatus.enableTooltip" class="glyphicon glyphicon-plus" uib-tooltip="Add a ticket" tooltip-placement="right-bottom" tooltip-enable="reqs.linkStatus.enableTooltip" uib-popover-template="jiraStatus.addTicketTemplateUrl" popover-is-open="!reqs.linkStatus.enableTooltip" popover-append-to-body="true">
+                            </div>
                         </td>
                         <td class="text-center" data-ng-style="reqs.isNew && {'background-color':'rgb(204, 255, 204)'} || reqs.isOld && {'background-color':'rgb(255, 204, 204)'}">
                             <input type="checkbox" data-ng-model="reqs.selected" />

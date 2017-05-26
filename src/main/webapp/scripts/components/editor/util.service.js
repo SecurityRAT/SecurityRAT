@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .factory('Helper', function Auth() {
+    .service('Helper', function Auth() {
         return {
             searchArrayByValue: function(search, object) {
                 var bool = false;
@@ -147,6 +147,35 @@ angular.module('sdlctoolApp')
                     }
                 });
                 return yamlExport;
+            },
+            getCurrentDate : function() {
+                var d = new Date();
+                var curr_date = d.getDate();
+                var curr_month = d.getMonth() + 1; //Months are zero based
+                var curr_year = d.getFullYear();
+                if (curr_month < 10) curr_month = "0" + curr_month;
+                if (curr_date < 10) curr_date = "0" + curr_date;
+                return curr_date + "-" + curr_month + "-" + curr_year;
+            },
+            getDetailedCurrentDate : function() {
+                var d = new Date();
+                var curr_hour = d.getHours();
+                var curr_min = d.getMinutes();
+                var curr_sec = d.getSeconds();
+                var curr_date = d.getDate();
+                var curr_month = d.getMonth() + 1; //Months are zero based
+                var curr_year = d.getFullYear();
+                //add a zero for hours less than 10.
+                if (curr_hour < 10) {
+                    curr_hour = "0" + curr_hour.toString();
+                }
+                if (curr_min < 10) {
+                    curr_min = "0" + curr_min.toString();
+                }
+                if (curr_sec < 10) {
+                    curr_sec = "0" + curr_sec.toString();
+                }
+                return curr_date + "-" + curr_month + "-" + curr_year + "_" + curr_hour + curr_min + curr_sec;
             }
         };
     });

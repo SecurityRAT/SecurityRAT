@@ -177,6 +177,9 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
         apiFactory.putExport = function(url, data, headerConfig) {
             return this.execute('PUT', url, data, headerConfig);
         }
+        apiFactory.deleteExport = function(url, data, headerConfig) {
+            return this.execute('DELETE', url, data, headerConfig);
+        }
         apiFactory.getAll = function(api) {
             return this.execute('GET', api_prefix + api);
         }
