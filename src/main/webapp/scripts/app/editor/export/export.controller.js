@@ -209,7 +209,7 @@ angular.module('sdlctoolApp')
 
         }
 
-        function OnIssueLinkFailure(exception) {
+        function OnIssueLinkFailure(exception, outwardKey) {
             if (exception.status !== 500) {
                 if (exception.errorException.opened.$$state.status === 0) {
                     exception.errorException.opened.$$state.value = false;
@@ -219,7 +219,7 @@ angular.module('sdlctoolApp')
                     var project = $scope.jiraUrl.url.split("/").pop();
                     $scope.exportProperty.issuelink = "disabled";
                     message = "The issues could not be linked. This can occur when the issue linking between " + $scope.exported.ticket.url + " and " +
-                        $scope.jiraUrl.url.slice(0, $scope.jiraUrl.url.indexOf(project)) + outwardKey + " is disabled.";
+                        $scope.jiraUrl.url.slice(0, $scope.jiraUrl.url.indexOf(project)) + outwardKey +" is disabled.";
                     SDLCToolExceptionService.showWarning('Issue link unsuccessful', message, SDLCToolExceptionService.DANGER);
                 } else if (exception.status === 401) {
                     $scope.exportProperty.issuelink = "permission";
@@ -468,33 +468,40 @@ angular.module('sdlctoolApp')
         $scope.sendAttachment = function() {
             var file = $scope.buildYAMLFile();
             var linksObject = {};
+            $scope.ticketAuthentication = {};
             //          console.log(file);
             $scope.exported.ticket.apiUrl = $scope.apiUrl;
             $scope.exported.ticket.key = $scope.apiUrl.ticketKey[0];
+            
             // links the newly created ticket to the existing tickets (created in batch mode) from the yaml file. 
             // This happens when the requirement set has already been saved in a ticket and the user save it into a new one.
-            for (var i = 0; i < $scope.ticketsToLink.length; i++) {
-                var urlSplit = $scope.ticketsToLink[i].split('/');
+            angular.forEach($scope.ticketsToLink, function(ticketToLink) {
+                var urlSplit = ticketToLink.split('/');
                 var apiUrl = {};
                 angular.extend(apiUrl, Helper.buildJiraUrl(urlSplit));
 
                 // this is done to prevent the data from been changed due to the asynchronous nature of the http calls.
                 linksObject[apiUrl.ticketKey[0]] = {};
                 linksObject[apiUrl.ticketKey[0]].apiUrl = apiUrl;
-                linksObject[apiUrl.ticketKey[0]].url = $scope.ticketsToLink[i];
+                linksObject[apiUrl.ticketKey[0]].url = ticketToLink;
                 linksObject[apiUrl.ticketKey[0]].key = apiUrl.ticketKey[0];
 
-                // get Info to the ticket key
-                $scope.exportProperty.authenticatorProperty.url = $scope.ticketsToLink[i];
-                $scope.exportProperty.authenticatorProperty.message = "In order to link this issue, you have to authenticated. Please click on the following link to authenticate yourself. You will have one minute after a click on the link."
-                $scope.exportProperty.promise.derefer = $q.defer();
-                checkAuthentication.jiraAuth(JiraService.buildUrlCall('issueKey', apiUrl), $scope.exportProperty.authenticatorProperty, $scope.exportProperty, $scope.exportProperty.promise).then(function(response) {
+                // makes the authenticator properties to be distinct to every ticket to link
+                $scope.ticketAuthentication[apiUrl.ticketKey[0]] = {authenticatorProperty: {}, promise: {}, showSpinner: false};
+                $scope.ticketAuthentication[apiUrl.ticketKey[0]].authenticatorProperty.url = ticketToLink;
+                $scope.ticketAuthentication[apiUrl.ticketKey[0]].authenticatorProperty.message = "In order to link this issue, you have to authenticated. Please click on the following link to authenticate yourself. You will have one minute after a click on the link."
+                $scope.ticketAuthentication[apiUrl.ticketKey[0]].promise.derefer = $q.defer();
+                checkAuthentication.jiraAuth(JiraService.buildUrlCall('issueKey', apiUrl), 
+                    $scope.ticketAuthentication[apiUrl.ticketKey[0]].authenticatorProperty, $scope.ticketAuthentication[apiUrl.ticketKey[0]], 
+                    $scope.ticketAuthentication[apiUrl.ticketKey[0]].promise).then(function(response) {
                     linksObject[response.key].fields = response.fields
-                    JiraService.addIssueLinks($scope.exported.ticket, linksObject[response.key]).then().catch(OnIssueLinkFailure);
+                    JiraService.addIssueLinks($scope.exported.ticket, linksObject[response.key]).then()
+                        .catch(function(exception){OnIssueLinkFailure(exception, response.key)});
                 }).catch(function(exception) {
-                    SDLCToolExceptionService.showWarning('Unsuccessful issue linking', 'The issue ' + $scope.ticketsToLink[i] + ' was not linked because the user was not authenticated.', SDLCToolExceptionService.DANGER);
+                    SDLCToolExceptionService.showWarning('Unsuccessful issue linking', 'The issue ' + ticketToLink + ' was not linked because the user was not authenticated.', SDLCToolExceptionService.DANGER);
                 })
-            }
+            })
+
 
             var returnPromise = JiraService.addAttachmentAndComment($scope.exported.ticket, {content: file, artifactName : $scope.exported.name});
             if(angular.isDefined(returnPromise)) {
@@ -738,7 +745,8 @@ angular.module('sdlctoolApp')
                             remoteObject.key = response.key;
                             remoteObject.url = $scope.jiraUrl.url + "-" + response.key.split('-').pop();
                             //links the newly created ticket to the main ticket
-                            JiraService.addIssueLinks($scope.exported.ticket, remoteObject).then().catch(OnIssueLinkFailure);
+                            JiraService.addIssueLinks($scope.exported.ticket, remoteObject).then()
+                                .catch(function(exception) {OnIssueLinkFailure(exception, remoteObject.key);});
                             size--;
                             linkStatus = {
                                 iconUrl: response.fields.status.iconUrl,

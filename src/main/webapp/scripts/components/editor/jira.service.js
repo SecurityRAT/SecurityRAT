@@ -6,7 +6,7 @@
 
 */
 angular.module('sdlctoolApp')
-	.service('JiraService', ['Helper', 'apiFactory', 'appConfig', '$q', 'SDLCToolExceptionService', function(Helper, apiFactory, appConfig, $q, SDLCToolExceptionService){
+	.factory('JiraService', ['Helper', 'apiFactory', 'appConfig', '$q', 'SDLCToolExceptionService', function(Helper, apiFactory, appConfig, $q, SDLCToolExceptionService){
 
 		var linkTypeName = "Relates";
 		var remoteRelationshipName = "relates to";
@@ -53,7 +53,7 @@ angular.module('sdlctoolApp')
         }
 
         function sendComment(body, ticketInfo) {
-            commentData = {
+            var commentData = {
                     "body": body
                 }
                 //adds comment to ease import
@@ -111,8 +111,7 @@ angular.module('sdlctoolApp')
 
 		function addIssueLinks(mainIssueInfo, remoteIssueInfo) {
             var apiCall = buildUrlCall("issueLink", remoteIssueInfo.apiUrl);
-
-            // console.log(remoteIssueInfo);
+            var promiseArray = [];
             var postData = {
                 type: {
                     name: linkTypeName
@@ -127,23 +126,26 @@ angular.module('sdlctoolApp')
 
             if (angular.equals(mainIssueInfo.apiUrl.host, remoteIssueInfo.apiUrl.host)) {
                 // links tickets are from the same JIRA instance
-                return apiFactory.postExport(apiCall, postData, { 'X-Atlassian-Token': 'nocheck', 'Content-Type': 'application/json' });
+                promiseArray.push(apiFactory.postExport(apiCall, postData, { 'X-Atlassian-Token': 'nocheck', 'Content-Type': 'application/json' }));
             } else {
                 // links tickets from different JIRA instances.
                 // links ticket from main JIRA ticket to ticket in different JIRA instance
                 var inwardApiCall = buildUrlCall("remotelink", mainIssueInfo.apiUrl);
-                createRemoteLink(inwardApiCall, remoteIssueInfo.key, remoteIssueInfo);
+                
+                promiseArray.push(createRemoteLink(inwardApiCall, remoteIssueInfo.key, remoteIssueInfo));
                 var outwardApiCall = buildUrlCall("remotelink", remoteIssueInfo.apiUrl);
                 // get the summary of the main JIRA to prepare for remote linking if necessary
                 if (angular.isUndefined(mainIssueInfo.fields)) {
-                    apiFactory.getJIRAInfo(buildUrlCall("issueKey", mainIssueInfo.apiUrl)).then(function(response) {
+                    promiseArray.push(apiFactory.getJIRAInfo(buildUrlCall("issueKey", mainIssueInfo.apiUrl)).then(function(response) {
                         mainIssueInfo.fields = response.fields;
-                        return createRemoteLink(outwardApiCall, mainIssueInfo.key, mainIssueInfo);
-                    })
+                        createRemoteLink(outwardApiCall, mainIssueInfo.key, mainIssueInfo);
+                        
+                    }))
                 } else {
-                    return createRemoteLink(outwardApiCall, mainIssueInfo.key, mainIssueInfo);
+                    promiseArray.push(createRemoteLink(outwardApiCall, mainIssueInfo.key, mainIssueInfo));
                 }
             }
+            return Promise.all(promiseArray);
         }
 
         function removeIssueLinks(mainIssueInfo, remoteIssueInfo) {

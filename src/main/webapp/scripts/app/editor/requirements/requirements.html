@@ -269,11 +269,11 @@
                         <th class="text-center" data-ng-if="ticket.url">
                             <div data-ng-if="requirementProperties.hasIssueLinks" ng-dropdown-multiselect="" options="jiraStatus.allStatus" selected-model="jiraStatus.selectedStatus" translation-texts="jiraStatus.jiraStatusLabelText" extra-settings="selectedJiraStatusSettings" horizontal>
                             </div>
-                            <p uib-collapse="!requirementProperties.hasIssueLinks" data-ng-click="requirementProperties.hasIssueLinks = !requirementProperties.hasIssueLinks">
+                            <p  uib-collapse="!requirementProperties.hasIssueLinks" data-ng-click="requirementProperties.hasIssueLinks = !requirementProperties.hasIssueLinks">
                                 <span class="glyphicon glyphicon-chevron-down positionChevron hide-chevron" uib-tooltip="Hide this column"  tooltip-append-to-body></span>
                                 </span>
                             </p>
-                            <p uib-collapse="requirementProperties.hasIssueLinks" data-ng-click="requirementProperties.hasIssueLinks = !requirementProperties.hasIssueLinks" uib-tooltip="Show ticket status column">
+                            <p id="toggleManualLink" uib-collapse="requirementProperties.hasIssueLinks" data-ng-click="requirementProperties.hasIssueLinks = !requirementProperties.hasIssueLinks" uib-tooltip="Show ticket status column">
                                 ...<span class="glyphicon glyphicon-chevron-right show-chevron"></span>
                             </p>
                         </th>
