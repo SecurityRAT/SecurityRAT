@@ -1097,17 +1097,18 @@ angular.module('sdlctoolApp')
                 var requirementToInsert = {};
                 var foundOne = false;
                 for(var i = 0; i < $scope.requirements.length; i++) {
+                    if(angular.isDefined($scope.requirements[i].linkStatus)) {
+                        $scope.requirements[i].linkStatus.enableTooltip = true;
+                        $scope.requirements[i].linkStatus.link = true;
+                    } else {
+                        $scope.requirements[i].linkStatus = {enableTooltip : true, link: true};
+                    }
                     if($scope.requirements[i].id === newRequirement.id) {
                         // updates category name is this was changed
                         // $scope.requirements[i].category = newRequirement.category;
                         // adds the taginstance ids
                         $scope.requirements[i].tagInstances = newRequirement.tagInstances;
-                        if(angular.isDefined($scope.requirements[i].linkStatus)) {
-                            $scope.requirements[i].linkStatus.enableTooltip = true;
-                            $scope.requirements[i].linkStatus.link = true;
-                        } else {
-                            $scope.requirements[i].linkStatus = {enableTooltip : true, link: true};
-                        }
+                        
                         var oldRequirement = $scope.requirements[i];
                         // search for new changes in description
                         if ((newRequirement.description.replace(/[^\x20-\x7E]|\s+/gmi, "") !== oldRequirement.description.replace(/[^\x20-\x7E]|\s+/gmi, ""))) {
@@ -1894,7 +1895,7 @@ angular.module('sdlctoolApp')
 
         $scope.removeManualTicket = function(req, mainObjectInfo, remoteObjectInfo) {
             req.ticket = "";
-            req.linkStatus = {enableTooltip: true}
+            req.linkStatus = {enableTooltip: true, link: true};
             if($filter('filterTicketStatus')($scope.requirements, remoteObjectInfo.fields.status.name) == 0) {
                 for (var i = 0; i < $scope.jiraStatus.allStatus.length; i++) {
                     if($scope.jiraStatus.allStatus[i].name === remoteObjectInfo.fields.status.name) {

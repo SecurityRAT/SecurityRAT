@@ -691,7 +691,7 @@ angular.module('sdlctoolApp')
             angular.extend($scope.exported.ticket.apiUrl, Helper.buildJiraUrl(urlSplit));
             $scope.exportProperty.promise.derefer = $q.defer();
             $scope.exportProperty.authenticatorProperty.url = $scope.exported.ticket.url;
-            checkAuthentication.jiraAuth(JiraService.buildUrlCall('issueKey', $scope.exportProperty.ticket.apiUrl), $scope.exportProperty.authenticatorProperty, $scope.exportProperty, $scope.exportProperty.promise)
+            checkAuthentication.jiraAuth(JiraService.buildUrlCall('issueKey', $scope.exported.ticket.apiUrl), $scope.exportProperty.authenticatorProperty, $scope.exportProperty, $scope.exportProperty.promise)
             .then(function(response) {
                 $scope.exported.ticket.fields = response.fields;
                 angular.forEach($filter('orderBy')($filter('filter')($scope.exported.requirements, { selected: true }), ['categoryOrder', 'order']), function(requirement) {
@@ -744,7 +744,8 @@ angular.module('sdlctoolApp')
                                 iconUrl: response.fields.status.iconUrl,
                                 name: response.fields.status.name,
                                 summary: response.fields.summary,
-                                enableTooltip: true
+                                enableTooltip: true,
+                                link: true
                             }
                             angular.extend(requirement, { linkStatus: linkStatus });
                             $scope.jiraStatus.allStatus.push(linkStatus);
