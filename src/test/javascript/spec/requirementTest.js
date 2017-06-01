@@ -1,7 +1,7 @@
 describe('Protractor Security RAT requirement category/skeletons entities testsuite', function() {
 	var entities = element(by.partialLinkText('Entities'));
 	var confirmDelete = element(by.css('button[ng-disabled="deleteForm.$invalid"]'));
-	var skeletonRepeater = "requirementSkeleton in requirementSkeletons | filterCategoryForEntities : selectedCategory:'reqCategory'| filterByTagForReqSkeletons : selectedTags | filterByCollsForReqSkeletons : selectedColls| filterByTypesForReqSkeletons : selectedTypes | filter:searchString | orderBy : ['reqCategory.showOrder','showOrder'] | limitTo:numberToDisplay track by requirementSkeleton.id"; 
+	var skeletonRepeater = "requirementSkeleton in requirementSkeletons | filterCategoryForEntities : selectedCategory:'reqCategory'| filterByTagForReqSkeletons : selectedTags | filterByCollsForReqSkeletons : selectedColls| filterByTypesForReqSkeletons : selectedTypes | filter:searchString | orderBy : ['reqCategory.showOrder','showOrder'] | limitTo:numberToDisplay"; 
 	
 	beforeEach(function() {
 		browser.get(browser.params.testHost);

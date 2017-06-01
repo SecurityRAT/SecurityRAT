@@ -7,7 +7,7 @@ describe('Protractor Security RAT bug Scenarios Testsuite', function() {
 	var deleteSession = element(by.id('deleteSession'));
 	var tagsRepeater = element.all(by.repeater("instances in categories.tagInstances | orderBy:'showOrder'").column("instances.name"));
 	var tagCategory = element.all(by.repeater("tagCategory in tagCategories | orderBy:'showOrder'").column("tagCategory.name"))
-	var skeletonRepeater = "requirementSkeleton in requirementSkeletons | filterCategoryForEntities : selectedCategory:'reqCategory'| filterByTagForReqSkeletons : selectedTags | filterByCollsForReqSkeletons : selectedColls| filterByTypesForReqSkeletons : selectedTypes | filter:searchString | orderBy : ['reqCategory.showOrder','showOrder'] | limitTo:numberToDisplay track by requirementSkeleton.id"; 
+	var skeletonRepeater = "requirementSkeleton in requirementSkeletons | filterCategoryForEntities : selectedCategory:'reqCategory'| filterByTagForReqSkeletons : selectedTags | filterByCollsForReqSkeletons : selectedColls| filterByTypesForReqSkeletons : selectedTypes | filter:searchString | orderBy : ['reqCategory.showOrder','showOrder'] | limitTo:numberToDisplay"; 
 	var optColumnContentRepeater = "optColumnContent in optColumnContents | filterCategoryForEntities : selectedOptColumns : 'optColumn'| filter:searchString | orderBy: ['requirementSkeleton.reqCategory.showOrder', 'requirementSkeleton.showOrder', 'optColumn.showOrder'] | limitTo:numberToDisplay";
 	var optColumnRepeater = "optColumn in optColumns | orderBy: 'showOrder' | filter:searchString";
 	var moreInfo = "More Information";
