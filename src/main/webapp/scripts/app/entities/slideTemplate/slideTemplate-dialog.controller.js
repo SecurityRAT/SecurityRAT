@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('securityratApp').controller('SlideTemplateDialogController',
+angular.module('sdlctoolApp').controller('SlideTemplateDialogController',
     ['$scope', '$stateParams', '$modalInstance', 'entity', 'SlideTemplate', 'User',
         function($scope, $stateParams, $modalInstance, entity, SlideTemplate, User) {
 
@@ -13,7 +13,7 @@ angular.module('securityratApp').controller('SlideTemplateDialogController',
         };
 
         var onSaveFinished = function (result) {
-            $scope.$emit('securityratApp:slideTemplateUpdate', result);
+            $scope.$emit('sdlctoolApp:slideTemplateUpdate', result);
             $modalInstance.close(result);
         };
 

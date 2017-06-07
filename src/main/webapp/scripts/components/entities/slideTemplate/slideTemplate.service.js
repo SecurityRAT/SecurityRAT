@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('securityratApp')
+angular.module('sdlctoolApp')
     .factory('SlideTemplate', function ($resource, DateUtils) {
         return $resource('api/slideTemplates/:id', {}, {
             'query': { method: 'GET', isArray: true},

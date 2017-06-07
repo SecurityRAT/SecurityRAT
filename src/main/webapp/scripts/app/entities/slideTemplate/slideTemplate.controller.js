@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('securityratApp')
+angular.module('sdlctoolApp')
     .controller('SlideTemplateController', function ($scope, SlideTemplate, SlideTemplateSearch) {
         $scope.slideTemplates = [];
         $scope.loadAll = function() {

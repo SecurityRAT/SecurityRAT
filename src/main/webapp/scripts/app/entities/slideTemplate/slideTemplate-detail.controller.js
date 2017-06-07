@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('securityratApp')
+angular.module('sdlctoolApp')
     .controller('SlideTemplateDetailController', function ($scope, $rootScope, $stateParams, entity, SlideTemplate, User) {
         $scope.slideTemplate = entity;
         $scope.load = function (id) {
@@ -8,7 +8,7 @@ angular.module('securityratApp')
                 $scope.slideTemplate = result;
             });
         };
-        $rootScope.$on('securityratApp:slideTemplateUpdate', function(event, result) {
+        $rootScope.$on('sdlctoolApp:slideTemplateUpdate', function(event, result) {
             $scope.slideTemplate = result;
         });
     });

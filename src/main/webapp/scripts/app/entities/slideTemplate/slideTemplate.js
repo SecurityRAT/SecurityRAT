@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('securityratApp')
+angular.module('sdlctoolApp')
     .config(function ($stateProvider) {
         $stateProvider
             .state('slideTemplate', {
