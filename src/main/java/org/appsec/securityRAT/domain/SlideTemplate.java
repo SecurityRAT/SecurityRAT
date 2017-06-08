@@ -29,9 +29,11 @@ public class SlideTemplate implements Serializable {
     private String name;
     
     @Column(name = "description")
+    @Lob
     private String description;
     
     @Column(name = "content")
+    @Lob
     private String content;
 
     @ManyToOne
