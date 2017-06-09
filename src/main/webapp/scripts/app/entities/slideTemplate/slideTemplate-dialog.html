@@ -1,12 +1,12 @@
 
 <form name="editForm" role="form" novalidate ng-submit="save()">
 
-    <div class="modal-header">
+    <div class="row">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
                 ng-click="clear()">&times;</button>
-        <h4 class="modal-title" id="mySlideTemplateLabel">Create or edit a SlideTemplate</h4>
+        <h4 class="page" id="mySlideTemplateLabel">Create or edit a SlideTemplate</h4>
     </div>
-    <div class="modal-body">
+    <div class="row">
         <jh-alert-error></jh-alert-error>
         <div class="form-group">
             <label for="id">ID</label>
@@ -33,15 +33,15 @@
         </div>
         <div class="form-group">
             <label for="field_author">author</label>
-            
+
             <select class="form-control" id="field_author" name="author" ng-model="slideTemplate.author" ng-options="user as user.login for user in users track by user.id">
                 <option value=""></option>
             </select>
-            
+
         </div>
     </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clear()">
+    <div class="row">
+        <button type="button" class="btn btn-default" ng-click="clear()">
             <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span>
         </button>
         <button type="submit" ng-disabled="editForm.$invalid || editForm.$submitted" class="btn btn-primary">

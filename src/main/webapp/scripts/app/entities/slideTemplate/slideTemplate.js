@@ -67,21 +67,16 @@ angular.module('sdlctoolApp')
                 data: {
                     roles: ['ROLE_USER'],
                 },
-                onEnter: ['$stateParams', '$state', '$modal', function($stateParams, $state, $modal) {
-                    $modal.open({
+                views: {
+                    'content@': {
                         templateUrl: 'scripts/app/entities/slideTemplate/slideTemplate-dialog.html',
-                        controller: 'SlideTemplateDialogController',
-                        size: 'lg',
-                        resolve: {
-                            entity: ['SlideTemplate', function(SlideTemplate) {
-                                return SlideTemplate.get({id : $stateParams.id});
-                            }]
-                        }
-                    }).result.then(function(result) {
-                        $state.go('slideTemplate', null, { reload: true });
-                    }, function() {
-                        $state.go('^');
-                    })
-                }]
+                        controller: 'SlideTemplateDialogController'
+                    }
+                },
+                resolve: {
+                    entity: ['$stateParams', 'SlideTemplate', function($stateParams, SlideTemplate) {
+                        return SlideTemplate.get({id : $stateParams.id});
+                    }]
+                }
             });
     });

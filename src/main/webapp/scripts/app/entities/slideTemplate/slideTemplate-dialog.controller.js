@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('sdlctoolApp').controller('SlideTemplateDialogController',
-    ['$scope', '$stateParams', '$modalInstance', 'entity', 'SlideTemplate', 'User',
-        function($scope, $stateParams, $modalInstance, entity, SlideTemplate, User) {
+    ['$scope', '$stateParams', '$state', 'entity', 'SlideTemplate', 'User',
+        function($scope, $stateParams, $state, entity, SlideTemplate, User) {
 
         $scope.slideTemplate = entity;
         $scope.users = User.query();
@@ -14,7 +14,6 @@ angular.module('sdlctoolApp').controller('SlideTemplateDialogController',
 
         var onSaveFinished = function (result) {
             $scope.$emit('sdlctoolApp:slideTemplateUpdate', result);
-            $modalInstance.close(result);
         };
 
         $scope.save = function () {
@@ -23,9 +22,10 @@ angular.module('sdlctoolApp').controller('SlideTemplateDialogController',
             } else {
                 SlideTemplate.save($scope.slideTemplate, onSaveFinished);
             }
+            $state.go('^', null, { reload: true });
         };
 
-        $scope.clear = function() {
-            $modalInstance.dismiss('cancel');
+        $scope.cancel = function() {
+            $state.go('slideTemplate', {});
         };
 }]);
