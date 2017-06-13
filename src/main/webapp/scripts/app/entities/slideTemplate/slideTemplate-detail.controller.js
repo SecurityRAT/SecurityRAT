@@ -1,14 +1,31 @@
 'use strict';
 
-angular.module('sdlctoolApp')
-    .controller('SlideTemplateDetailController', function ($scope, $rootScope, $stateParams, entity, SlideTemplate, User) {
+angular.module('sdlctoolApp').controller('SlideTemplateDetailController',
+    ['$scope', '$stateParams', '$state', 'entity', 'SlideTemplate', 'User',
+        function($scope, $stateParams, $state, entity, SlideTemplate, User) {
+
         $scope.slideTemplate = entity;
-        $scope.load = function (id) {
-            SlideTemplate.get({id: id}, function(result) {
+        $scope.users = User.query();
+        $scope.load = function(id) {
+            SlideTemplate.get({id : id}, function(result) {
                 $scope.slideTemplate = result;
             });
         };
-        $rootScope.$on('sdlctoolApp:slideTemplateUpdate', function(event, result) {
-            $scope.slideTemplate = result;
-        });
-    });
+
+        var onSaveFinished = function (result) {
+            $scope.$emit('sdlctoolApp:slideTemplateUpdate', result);
+        };
+
+        $scope.save = function () {
+            if ($scope.slideTemplate.id != null) {
+                SlideTemplate.update($scope.slideTemplate, onSaveFinished);
+            } else {
+                SlideTemplate.save($scope.slideTemplate, onSaveFinished);
+            }
+            $state.go('slideTemplate', null, { reload: true });
+        };
+
+        $scope.cancel = function() {
+            $state.go('slideTemplate', {});
+        };
+}]);
