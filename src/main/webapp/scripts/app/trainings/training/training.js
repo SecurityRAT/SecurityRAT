@@ -7,7 +7,7 @@ angular.module('sdlctoolApp')
                 parent: 'trainings',
                 url: '/trainings',
                 data: {
-                    roles: ['ROLE_USER'],
+                    roles: ['ROLE_TRAINER'],
                     pageTitle: 'Trainings'
                 },
                 views: {
@@ -23,7 +23,7 @@ angular.module('sdlctoolApp')
                 parent: 'entity',
                 url: '/training/{id}',
                 data: {
-                    roles: ['ROLE_USER'],
+                    roles: ['ROLE_TRAINER'],
                     pageTitle: 'Training'
                 },
                 views: {
@@ -42,7 +42,7 @@ angular.module('sdlctoolApp')
                 parent: 'training',
                 url: '/new',
                 data: {
-                    roles: ['ROLE_USER'],
+                    roles: ['ROLE_TRAINER'],
                 },
                 onEnter: ['$stateParams', '$state', '$modal', function($stateParams, $state, $modal) {
                     $modal.open({
@@ -65,7 +65,7 @@ angular.module('sdlctoolApp')
                 parent: 'training',
                 url: '/{id}/edit',
                 data: {
-                    roles: ['ROLE_USER'],
+                    roles: ['ROLE_TRAINER'],
                 },
                 onEnter: ['$stateParams', '$state', '$modal', function($stateParams, $state, $modal) {
                     $modal.open({
