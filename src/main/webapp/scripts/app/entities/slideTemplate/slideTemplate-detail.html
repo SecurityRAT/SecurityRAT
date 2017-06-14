@@ -13,7 +13,7 @@
             </div>
             <div class="form-group">
                 <label for="field_content">Content</label>
-                <textarea id="field_content" class="container form-control" name="content" data-ng-model='slideTemplate.content' rows="10" cols="125"></textarea>
+                <textarea id="field_content" class="container form-control" name="content" data-ng-model='slideTemplate.content' data-ng-change="loadSlidePreview()" rows="10" cols="125"></textarea>
             </div>
 
 
@@ -28,9 +28,7 @@
             </div>
         </div>
         <div class="col-md-6">
-            <iframe src="presentations/slide_table.html" style="width:100%; height:570px;">
-                <p>No frames supported</p>
-            </iframe>
+            <div ng-include src="slidePreview.html"></div>
         </div>
     </div>
 </form>
