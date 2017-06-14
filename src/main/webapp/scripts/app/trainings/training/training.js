@@ -4,7 +4,7 @@ angular.module('sdlctoolApp')
     .config(function ($stateProvider) {
         $stateProvider
             .state('training', {
-                parent: 'entity',
+                parent: 'trainings',
                 url: '/trainings',
                 data: {
                     roles: ['ROLE_USER'],
@@ -12,7 +12,7 @@ angular.module('sdlctoolApp')
                 },
                 views: {
                     'content@': {
-                        templateUrl: 'scripts/app/entities/training/trainings.html',
+                        templateUrl: 'scripts/app/trainings/training/trainings.html',
                         controller: 'TrainingController'
                     }
                 },
@@ -28,7 +28,7 @@ angular.module('sdlctoolApp')
                 },
                 views: {
                     'content@': {
-                        templateUrl: 'scripts/app/entities/training/training-detail.html',
+                        templateUrl: 'scripts/app/trainings/training/training-detail.html',
                         controller: 'TrainingDetailController'
                     }
                 },
@@ -46,7 +46,7 @@ angular.module('sdlctoolApp')
                 },
                 onEnter: ['$stateParams', '$state', '$modal', function($stateParams, $state, $modal) {
                     $modal.open({
-                        templateUrl: 'scripts/app/entities/training/training-dialog.html',
+                        templateUrl: 'scripts/app/trainings/training/training-dialog.html',
                         controller: 'TrainingDialogController',
                         size: 'lg',
                         resolve: {
@@ -69,7 +69,7 @@ angular.module('sdlctoolApp')
                 },
                 onEnter: ['$stateParams', '$state', '$modal', function($stateParams, $state, $modal) {
                     $modal.open({
-                        templateUrl: 'scripts/app/entities/training/training-dialog.html',
+                        templateUrl: 'scripts/app/trainings/training/training-dialog.html',
                         controller: 'TrainingDialogController',
                         size: 'lg',
                         resolve: {
