@@ -19,15 +19,15 @@
     <include file="classpath:config/liquibase/changelog/20150902174059_added_entity_RequirementSkeleton.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20150902174244_added_entity_AlternativeInstance.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20150902174552_added_entity_OptColumnContent.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/20170524123547_added_entity_Training.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20170607075959_added_entity_SlideTemplate.xml" relativeToChangelogFile="false"/>
+
     <!-- JHipster will add liquibase changelogs here -->
     <!-- dkefer -->
     <include file="classpath:config/liquibase/changelog/20150903_add_auditing.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20151109_add_frontenduser.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20151207-changelengths.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20160205_remove_auditing.xml" relativeToChangelogFile="false" />
-    
+
     <!-- jmboldayamdjeu -->
 	<include file="classpath:config/liquibase/changelog/20160329_add_constant_configuration.xml" relativeToChangelogFile="false" />
 	<include file="classpath:config/liquibase/changelog/20160329_update_constant_configuration.xml" relativeToChangelogFile="false" />
