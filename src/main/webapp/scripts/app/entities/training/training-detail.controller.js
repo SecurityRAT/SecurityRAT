@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('securityratApp')
+angular.module('sdlctoolApp')
     .controller('TrainingDetailController', function ($scope, $rootScope, $stateParams, entity, Training, User, TrainingTreeNode) {
         $scope.training = entity;
         $scope.load = function (id) {
@@ -8,7 +8,7 @@ angular.module('securityratApp')
                 $scope.training = result;
             });
         };
-        $rootScope.$on('securityratApp:trainingUpdate', function(event, result) {
+        $rootScope.$on('sdlctoolApp:trainingUpdate', function(event, result) {
             $scope.training = result;
         });
     });

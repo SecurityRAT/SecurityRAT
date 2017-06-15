@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('securityratApp')
+angular.module('sdlctoolApp')
     .controller('TrainingController', function ($scope, Training, TrainingSearch) {
         $scope.trainings = [];
         $scope.loadAll = function() {
