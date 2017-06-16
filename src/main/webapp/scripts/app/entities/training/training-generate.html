@@ -1,0 +1,87 @@
+<h3 class="page-header" onclick="showstep(1);">Step 1: Name and description</h3>
+<div id="step1div" class="container-fluid">
+    <div class="row" ui-view="skeleton"></div>
+    <div class="row">
+        <div class="form-group">
+            <button type="button" class="btn btn-primary" onclick="showstep(2);">
+                <span class="glyphicon glyphicon-chevron-right"></span>&nbsp;<span>Next step</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<h3 class="page-header" onclick="showstep(2);">Step 2: Select requirements</h3>
+<div id="step2div" class="container-fluid" style="display: none" >
+    <div class="row" ui-view="requirements"></div>
+    <div class="row" style="padding-top: 15px">
+        <div class="form-group">
+            <button type="button" class="btn btn-primary" onclick="showstep(3);">
+                <span class="glyphicon glyphicon-chevron-right"></span>&nbsp;<span>Next step</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<h3 class="page-header" onclick="showstep(3);">Step 3: Choose contents per requirement</h3>
+<div id="step3div" class="container-fluid" style="display: none">
+    <div class="row" ui-view="optcolumns"></div>
+    <div class="row">
+        <div class="form-group">
+            <button type="button" class="btn btn-primary" onclick="showstep(4);">
+                <span class="glyphicon glyphicon-chevron-right"></span>&nbsp;<span>Next step</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<h3 class="page-header" onclick="showstep(4);">Step 4: Generate</h3>
+<div id="step4div" class="container-fluid" style="display: none">
+    <div class="row">
+        <div class="well">
+            <strong>72</strong> Security Requirements selected.<br/>
+            <strong>3</strong> OptionColumns per Requirement selected.<br/>
+            <span class="glyphicon glyphicon-arrow-right"></span> The generator will produce
+            <strong>216</strong> Slides.
+        </div>
+    </div>
+    <div class="form-group">
+        <button type="button" class="btn btn-primary" onclick="simulateProgress();">
+            <span class="glyphicon glyphicon-cog"></span>&nbsp;<span>Generate</span></button>
+    </div>
+    <div>
+        <b>Progress:</b>
+        <div type="success" class="progress-striped active progress ng-isolate-scope">
+            <div id="simProgress" class="progress-bar progress-bar-success" role="progressbar"
+                 style="min-width: 0px; width: 0%;">
+                <span id="simProgressText" class="ng-binding ng-scope">0%</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="finishedBlock" class="container-fluid" style="visibility: hidden">
+    <h3 class="page-header"><span class="glyphicon glyphicon-ok-circle"></span> Generation complete!</h3>
+    <div class="row" ui-view="customize"></div>
+</div>
+
+<script type="text/javascript">
+    function showstep(n) {
+        for (i = 1; i < 10; i++) {
+            id_next = "#step" + i + "div";
+            if (i == n) $(id_next).css('display', 'block').hide().fadeIn();
+            else $(id_next).fadeOut();
+        }
+    }
+    function simulateProgress() {
+        for (i = 0; i <= 100; i++) {
+            document.getElementById('simProgress').style.width = i + "%";
+            document.getElementById('simProgressText').textContent = i + "%";
+        }
+        // finished! fade out all steps and fade in the finished block
+        for (i = 1; i < 10; i++) {
+            id_next = "#step" + i + "div";
+            $(id_next).fadeOut();
+        }
+        $('#finishedBlock').css('visibility', 'visible').hide().fadeIn();
+    }
+</script>

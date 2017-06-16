@@ -1,0 +1,65 @@
+<div class="col-sm-6 col-md-3">
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../jstree/dist/jstree.min.js"></script>
+    <link rel="stylesheet" href="../jstree/dist/themes/default/style.css">
+    <div id="tree"></div>
+    <script src="js/tree.js"></script>
+</div>
+
+
+<div class="col-sm-6 col-md-5">
+    <div id="headingBlock" class="" style="display: none;">
+        <input id="headingCheckbox" type="checkbox" onclick="headingSelect(this)"> Use a heading
+        slide for this branch
+        <hr>
+    </div>
+    <div id="editBlock">
+        <h2 class="page-header" style="margin-top: 0px">Edit Slide</h2>
+        <form style=""
+              class="ng-pristine ng-scope ng-valid-pattern ng-valid-maxlength ng-valid-minlength ng-valid-email ng-valid ng-valid-required"
+              name="form" role="form" data-ng-submit="save()">
+            <div class="form-group">
+                <label for="login">Slide Name</label>
+                <input class="form-control ng-pristine ng-untouched ng-valid-pattern ng-valid-maxlength ng-not-empty ng-valid ng-valid-required"
+                       name="login" id="slideNameField" value="Welcome">
+            </div>
+
+            <div class="form-group">
+                <label for="firstName">Slide Content</label>
+                <textarea style="" rows="14"
+                          class="form-control ng-pristine ng-untouched ng-valid-maxlength ng-not-empty ng-valid ng-valid-required"
+                          name="firstName" id="slideContentField" data-ng-model="user.firstName"
+                          data-ng-maxlength="50" required="" value="Max">### Application Security Basics
+
+Welcome to this training.</textarea>
+            </div>
+            <div class="form-group">
+                <!--
+                    <div class="checkbox">
+                        <label><input type="checkbox" value="">Permanently link to Security Requirement</label>
+                    </div>
+                -->
+                <div id="customSlideWarning" class="alert alert-warning" style="display: none">
+                    <strong>Warning!</strong> If you change this slide, it will be turned into a
+                    custom slide and won't receive updates!
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="window.history.back();">
+                    <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span>
+                </button>
+                <button type="button" class="btn btn-info">
+                    <span class="glyphicon glyphicon-eye-open"></span>&nbsp;<span>Update Preview</span>
+                </button>
+                <button type="button" class="btn btn-primary">
+                    <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Save</span></button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="previewBlock" class="col-sm-12 col-md-4">
+    <iframe src="presentations/slide_welcome.html" style="width:100%; height:570px;">
+        <p>No frames supported</p>
+    </iframe>
+</div>
