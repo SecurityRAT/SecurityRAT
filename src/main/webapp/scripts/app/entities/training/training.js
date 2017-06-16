@@ -80,48 +80,42 @@ angular.module('sdlctoolApp')
             })
             .state('training.regenerate', {
                 parent: 'training',
-                url: '/new',
+                abstract: 'true',
                 data: {
-                    roles: ['ROLE_USER'],
+                    roles: ['ROLE_TRAINER'],
+                    pageTitle: 'Generate a new Training'
                 },
-                onEnter: ['$stateParams', '$state', '$modal', function($stateParams, $state, $modal) {
-                    $modal.open({
-                        templateUrl: 'scripts/app/entities/training/training-dialog.html',
-                        controller: 'TrainingDialogController',
-                        size: 'lg',
-                        resolve: {
-                            entity: function () {
-                                return {name: null, description: null, last_modified_date: null, id: null};
-                            }
-                        }
-                    }).result.then(function(result) {
-                        $state.go('training', null, { reload: true });
-                    }, function() {
-                        $state.go('training');
-                    })
-                }]
+                views: {
+                    'content@': {
+                        templateUrl: 'scripts/app/entities/training/training-edit.html'
+                    }
+                }
             })
             .state('training.edit', {
-                parent: 'training',
+                parent: 'training.regenerate',
                 url: '/{id}/edit',
-                data: {
-                    roles: ['ROLE_USER'],
+                views: {
+                    'skeleton@training.regenerate': {
+                        templateUrl: 'scripts/app/entities/training/nested-views/training-skeleton.html',
+                        controller: 'TrainingSkeletonController'
+                    },
+                    'requirements@training.regenerate': {
+                        templateUrl: 'scripts/app/entities/training/nested-views/training-requirements.html',
+                        controller: 'TrainingRequirementsController'
+                    },
+                    'optcolumns@training.regenerate': {
+                        templateUrl: 'scripts/app/entities/training/nested-views/training-content.html',
+                        controller: 'TrainingContentController'
+                    },
+                    'customize@training.regenerate': {
+                        templateUrl: 'scripts/app/entities/training/nested-views/training-customize.html',
+                        controller: 'TrainingCustomizeController'
+                    }
                 },
-                onEnter: ['$stateParams', '$state', '$modal', function($stateParams, $state, $modal) {
-                    $modal.open({
-                        templateUrl: 'scripts/app/entities/training/training-dialog.html',
-                        controller: 'TrainingDialogController',
-                        size: 'lg',
-                        resolve: {
-                            entity: ['Training', function(Training) {
-                                return Training.get({id : $stateParams.id});
-                            }]
-                        }
-                    }).result.then(function(result) {
-                        $state.go('training', null, { reload: true });
-                    }, function() {
-                        $state.go('^');
-                    })
-                }]
-            });
+                resolve: {
+                    entity: ['$stateParams', 'Training', function($stateParams, Training) {
+                        return Training();
+                    }]
+                }
+            })
     });
