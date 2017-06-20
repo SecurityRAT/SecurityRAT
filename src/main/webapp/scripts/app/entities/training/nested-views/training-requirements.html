@@ -567,7 +567,7 @@
     </div><!-- row -->
     <div class="row">
         <div class="col-lg-8">
-            <div class="panel-group" ng-transclude="">
+            <div class="panel-group">
                 <script>
                     function toggle_tags(element) {
                         if ($(element).hasClass('panel-open')) {
@@ -584,7 +584,7 @@
                     <div class="panel-heading" onclick="toggle_tags(this);">
                         <h4 class="panel-title">
                             <a href="" tabindex="0" class="accordion-toggle" ng-click="toggleOpen()"
-                               uib-accordion-transclude="heading"><span class="ng-binding"
+                               ><span class="ng-binding"
                                                                         ng-class="{'text-muted': isDisabled}"><span
                                 class="ng-scope"> Tags</span><i style=""
                                                                 class="pull-right glyphicon ng-scope glyphicon-chevron-down"
@@ -594,7 +594,7 @@
                     <div id="tag-panel" aria-hidden="false" aria-expanded="true"
                          style="height: auto; display: none;" class="panel-collapse in collapse"
                          uib-collapse="!isOpen">
-                        <div class="panel-body" ng-transclude="">
+                        <div class="panel-body">
                             <div class="table-responsive ng-scope">
                                 <table class="table">
                                     <tbody> <!-- ngRepeat: categories in tags | orderBy:'showOrder' -->
