@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('securityratApp')
+angular.module('sdlctoolApp')
     .factory('TrainingTreeNode', function ($resource, DateUtils) {
         return $resource('api/trainingTreeNodes/:id', {}, {
             'query': { method: 'GET', isArray: true},
