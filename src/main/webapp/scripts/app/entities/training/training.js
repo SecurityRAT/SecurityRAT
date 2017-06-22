@@ -80,6 +80,7 @@ angular.module('sdlctoolApp')
             })
             .state('training.regenerate', {
                 parent: 'training',
+                url: '/{id}',
                 abstract: 'true',
                 data: {
                     roles: ['ROLE_TRAINER'],
@@ -93,7 +94,7 @@ angular.module('sdlctoolApp')
             })
             .state('training.edit', {
                 parent: 'training.regenerate',
-                url: '/{id}/edit',
+                url: '/edit',
                 views: {
                     'skeleton@training.regenerate': {
                         templateUrl: 'scripts/app/entities/training/nested-views/training-skeleton.html',
