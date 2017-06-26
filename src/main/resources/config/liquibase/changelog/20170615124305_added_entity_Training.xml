@@ -24,22 +24,16 @@
             </column>
             <column name="name" type="varchar(255)"/>
             <column name="description" type="varchar(255)"/>
-            <column name="last_modified_date" type="date"/>
-            <column name="author_id" type="bigint"/>
-            <column name="last_modified_by_id" type="bigint"/>
-        </createTable>
-        
-        <addForeignKeyConstraint baseColumnNames="author_id"
-                                 baseTableName="TRAINING"
-                                 constraintName="fk_training_author_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="JHI_USER"/>
 
-        <addForeignKeyConstraint baseColumnNames="last_modified_by_id"
-                                 baseTableName="TRAINING"
-                                 constraintName="fk_training_last_modified_by_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="JHI_USER"/>
+            <column name="created_by" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="timestamp" defaultValueDate="${now}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_by" type="varchar(50)"/>
+            <column name="last_modified_date" type="timestamp"/>
+        </createTable>
 
     </changeSet>
 </databaseChangeLog>

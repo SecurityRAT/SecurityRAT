@@ -10,10 +10,4 @@ import java.util.List;
  */
 public interface TrainingRepository extends JpaRepository<Training,Long> {
 
-    @Query("select training from Training training where training.author.login = ?#{principal.username}")
-    List<Training> findByAuthorIsCurrentUser();
-
-    @Query("select training from Training training where training.last_modified_by.login = ?#{principal.username}")
-    List<Training> findByLast_modified_byIsCurrentUser();
-
 }

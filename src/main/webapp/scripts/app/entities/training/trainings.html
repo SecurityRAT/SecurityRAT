@@ -53,9 +53,6 @@
                     <th>ID</th>
                     <th>Name</th>
                     <th>Description</th>
-                    <th>Last_modified_date</th>
-                    <th>author</th>
-                    <th>last_modified_by</th>
                     <th></th>
                 </tr>
             </thead>
@@ -64,13 +61,6 @@
                     <td><a ui-sref="training.detail({id:training.id})">{{training.id}}</a></td>
                     <td>{{training.name}}</td>
                     <td>{{training.description}}</td>
-                    <td>{{training.last_modified_date}}</td>
-                    <td>
-                        {{training.author.login}}
-                    </td>
-                    <td>
-                        {{training.last_modified_by.login}}
-                    </td>
                     <td>
                         <button type="submit"
                                 ui-sref="training.detail({id:training.id})"

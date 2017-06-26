@@ -23,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import org.joda.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -46,9 +45,6 @@ public class TrainingResourceTest {
     private static final String UPDATED_NAME = "UPDATED_TEXT";
     private static final String DEFAULT_DESCRIPTION = "SAMPLE_TEXT";
     private static final String UPDATED_DESCRIPTION = "UPDATED_TEXT";
-
-    private static final LocalDate DEFAULT_LAST_MODIFIED_DATE = new LocalDate(0L);
-    private static final LocalDate UPDATED_LAST_MODIFIED_DATE = new LocalDate();
 
     @Inject
     private TrainingRepository trainingRepository;
@@ -77,7 +73,6 @@ public class TrainingResourceTest {
         training = new Training();
         training.setName(DEFAULT_NAME);
         training.setDescription(DEFAULT_DESCRIPTION);
-        training.setLast_modified_date(DEFAULT_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -98,7 +93,6 @@ public class TrainingResourceTest {
         Training testTraining = trainings.get(trainings.size() - 1);
         assertThat(testTraining.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testTraining.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
-        assertThat(testTraining.getLast_modified_date()).isEqualTo(DEFAULT_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -113,8 +107,7 @@ public class TrainingResourceTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.[*].id").value(hasItem(training.getId().intValue())))
                 .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
-                .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
-                .andExpect(jsonPath("$.[*].last_modified_date").value(hasItem(DEFAULT_LAST_MODIFIED_DATE.toString())));
+                .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())));
     }
 
     @Test
@@ -129,8 +122,7 @@ public class TrainingResourceTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.id").value(training.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
-            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
-            .andExpect(jsonPath("$.last_modified_date").value(DEFAULT_LAST_MODIFIED_DATE.toString()));
+            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()));
     }
 
     @Test
@@ -152,7 +144,6 @@ public class TrainingResourceTest {
         // Update the training
         training.setName(UPDATED_NAME);
         training.setDescription(UPDATED_DESCRIPTION);
-        training.setLast_modified_date(UPDATED_LAST_MODIFIED_DATE);
         
 
         restTrainingMockMvc.perform(put("/api/trainings")
@@ -166,7 +157,6 @@ public class TrainingResourceTest {
         Training testTraining = trainings.get(trainings.size() - 1);
         assertThat(testTraining.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testTraining.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
-        assertThat(testTraining.getLast_modified_date()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
     }
 
     @Test
