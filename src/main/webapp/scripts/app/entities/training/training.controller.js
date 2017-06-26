@@ -1,8 +1,10 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('TrainingController', function ($scope, Training, TrainingSearch) {
+    .controller('TrainingController', function ($scope, $filter, Training, TrainingSearch) {
         $scope.trainings = [];
+
+        $scope.today = $filter('date')(new Date(), 'mediumDate');
         $scope.loadAll = function() {
             Training.query(function(result) {
                $scope.trainings = result;

@@ -53,14 +53,19 @@
                     <th>ID</th>
                     <th>Name</th>
                     <th>Description</th>
+                    <th>Created</th>
+                    <th>Last modified</th>
                     <th></th>
                 </tr>
             </thead>
+
             <tbody>
                 <tr ng-repeat="training in trainings">
                     <td><a ui-sref="training.detail({id:training.id})">{{training.id}}</a></td>
                     <td>{{training.name}}</td>
                     <td>{{training.description}}</td>
+                    <td>{{training.createdDate | date : "mediumDate" }} by {{training.createdBy}}</td>
+                    <td>{{training.lastModifiedDate | date : "shortTime" }} by {{training.lastModifiedBy}}</td>
                     <td>
                         <button type="submit"
                                 ui-sref="training.detail({id:training.id})"
