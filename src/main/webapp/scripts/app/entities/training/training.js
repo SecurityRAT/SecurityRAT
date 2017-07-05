@@ -47,8 +47,14 @@ angular.module('sdlctoolApp')
                 },
                 views: {
                     'content@': {
-                        templateUrl: 'scripts/app/entities/training/training-generate.html'
+                        templateUrl: 'scripts/app/entities/training/training-generate.html',
+                        controller: 'TrainingGenerateController'
                     }
+                },
+                resolve: {
+                    entity: ['$stateParams', 'Training', function($stateParams, Training) {
+                        return new Training();
+                    }]
                 }
             })
             .state('training.new', {
@@ -71,12 +77,8 @@ angular.module('sdlctoolApp')
                         templateUrl: 'scripts/app/entities/training/nested-views/training-customize.html',
                         controller: 'TrainingCustomizeController'
                     }
-                },
-                resolve: {
-                    entity: ['$stateParams', 'Training', function($stateParams, Training) {
-                        return Training();
-                    }]
                 }
+                // inherits resolve von parent
             })
             .state('training.regenerate', {
                 parent: 'training',
@@ -88,8 +90,14 @@ angular.module('sdlctoolApp')
                 },
                 views: {
                     'content@': {
-                        templateUrl: 'scripts/app/entities/training/training-edit.html'
+                        templateUrl: 'scripts/app/entities/training/training-edit.html',
+                        controller: 'TrainingEditController'
                     }
+                },
+                resolve: {
+                    entity: ['$stateParams', 'Training', function($stateParams, Training) {
+                        return Training.get({id : $stateParams.id});
+                    }]
                 }
             })
             .state('training.edit', {
@@ -112,11 +120,7 @@ angular.module('sdlctoolApp')
                         templateUrl: 'scripts/app/entities/training/nested-views/training-customize.html',
                         controller: 'TrainingCustomizeController'
                     }
-                },
-                resolve: {
-                    entity: ['$stateParams', 'Training', function($stateParams, Training) {
-                        return Training();
-                    }]
                 }
+                // inherits resolve von parent
             })
     });
