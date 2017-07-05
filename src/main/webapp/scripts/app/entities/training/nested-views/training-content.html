@@ -6,69 +6,15 @@
             <tr>
                 <th>Name</th>
                 <th>Description</th>
-                <th><input type="checkbox" value=""></th>
+                <th><input type="checkbox" data-ng-click="toggleAll()" data-ng-model="selectAll" ></th>
             </tr>
             </thead>
-            <tr>
-                <td>Criticality</td>
-                <td>Describes criticality of the requirement</td>
-                <td><input type="checkbox" value=""></td>
-            </tr>
-            <tr>
-                <td>More Information</td>
-                <td>This makes it clear to techs how to achieve the control</td>
-                <td><input type="checkbox" value=""></td>
-            </tr>
-            <tr>
-                <td>Motivation</td>
-                <td>This explains why we want to implement the requirement</td>
-                <td><input type="checkbox" value=""></td>
-            </tr>
-            <tr>
-                <td>Test Case</td>
-                <td>This describes how we can test the requirement</td>
-                <td><input type="checkbox" value=""></td>
+            <tr ng-repeat="optcolumn in optcolumns">
+                <td>{{ optcolumn.name }}</td>
+                <td>{{ optcolumn.description }}</td>
+                <td><input type="checkbox" data-ng-click="updateSelection(optcolumn.id)" data-ng-model="selected[optcolumn.id]"></td>
             </tr>
         </table>
     </div>
-    <!--
-    <div class="col-md-1">
-        &nbsp;
-    </div>
-    <div class="col-md-5">
-
-        <h3 class="text-center">Training Columns</h3>
-        <table class="table table-condensed table-striped">
-            <thead>
-            <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th><input type="checkbox" value=""></th>
-            </tr>
-            </thead>
-            <tr>
-                <td>Introduction</td>
-                <td>Introduces the security requirement.</td>
-                <td><input type="checkbox" value=""></td>
-            </tr>
-            <tr>
-                <td>Screenshot</td>
-                <td>Shows a relevant screenshot.</td>
-                <td><input type="checkbox" value=""></td>
-            </tr>
-            <tr>
-                <td>Comic</td>
-                <td>Shows a Comic to motivate the requirement.</td>
-                <td><input type="checkbox" value=""></td>
-            </tr>
-            <tr>
-                <td>Attack Vectors</td>
-                <td>Points out possible attack vectors.</td>
-                <td><input type="checkbox" value=""></td>
-            </tr>
-
-        </table>
-    </div>
--->
 </div>
 
