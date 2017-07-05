@@ -36,6 +36,13 @@ public class Training extends AbstractAuditingEntity implements Serializable {
     @JsonIgnore
     private TrainingTreeNode rootNode_id;
 
+    @ManyToMany
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @JoinTable(name = "TRAINING_OPTCOLUMN",
+               joinColumns = @JoinColumn(name="trainings_id", referencedColumnName="ID"),
+               inverseJoinColumns = @JoinColumn(name="optcolumns_id", referencedColumnName="ID"))
+    private Set<OptColumn> optColumns = new HashSet<>();
+
     public Long getId() {
         return id;
     }
@@ -66,6 +73,14 @@ public class Training extends AbstractAuditingEntity implements Serializable {
 
     public void setRootNode_id(TrainingTreeNode trainingTreeNode) {
         this.rootNode_id = trainingTreeNode;
+    }
+
+    public Set<OptColumn> getOptColumns() {
+        return optColumns;
+    }
+
+    public void setOptColumns(Set<OptColumn> optColumns) {
+        this.optColumns = optColumns;
     }
 
     @Override

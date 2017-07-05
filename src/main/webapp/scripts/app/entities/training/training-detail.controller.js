@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('TrainingDetailController', function ($scope, $rootScope, $stateParams, entity, Training, TrainingTreeNode) {
+    .controller('TrainingDetailController', function ($scope, $rootScope, $stateParams, entity, Training, TrainingTreeNode, OptColumn) {
         $scope.training = entity;
         $scope.load = function (id) {
             Training.get({id: id}, function(result) {

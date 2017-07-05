@@ -93,7 +93,7 @@ public class TrainingResource {
         }
 
         log.debug("REST request to get all Trainings");
-        return trainingRepository.findAll();
+        return trainingRepository.findAllWithEagerRelationships();
     }
 
     /**
@@ -105,7 +105,7 @@ public class TrainingResource {
     @Timed
     public ResponseEntity<Training> get(@PathVariable Long id) {
         log.debug("REST request to get Training : {}", id);
-        return Optional.ofNullable(trainingRepository.findOne(id))
+        return Optional.ofNullable(trainingRepository.findOneWithEagerRelationships(id))
             .map(training -> new ResponseEntity<>(
                 training,
                 HttpStatus.OK))

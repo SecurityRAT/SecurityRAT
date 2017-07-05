@@ -7,6 +7,14 @@
             "relationshipType": "one-to-one",
             "ownerSide": false,
             "otherEntityRelationshipName": "training_id"
+        },
+        {
+            "relationshipId": 4,
+            "relationshipName": "optColumn",
+            "otherEntityName": "optColumn",
+            "relationshipType": "many-to-many",
+            "otherEntityField": "name",
+            "ownerSide": true
         }
     ],
     "fields": [

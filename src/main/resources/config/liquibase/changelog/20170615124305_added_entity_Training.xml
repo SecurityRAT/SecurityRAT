@@ -35,5 +35,28 @@
             <column name="last_modified_date" type="timestamp"/>
         </createTable>
 
+        <createTable tableName="TRAINING_OPTCOLUMN">
+            <column name="optcolumns_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="trainings_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="trainings_id, optcolumns_id" tableName="TRAINING_OPTCOLUMN"/>
+
+        <addForeignKeyConstraint baseColumnNames="trainings_id"
+                                 baseTableName="TRAINING_OPTCOLUMN"
+                                 constraintName="fk_training_optcolumn_optcolumn_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="TRAINING"/>
+
+        <addForeignKeyConstraint baseColumnNames="optcolumns_id"
+                                 baseTableName="TRAINING_OPTCOLUMN"
+                                 constraintName="fk_optcolumn_optcolumn_training_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="OPTCOLUMN"/>
+        
     </changeSet>
 </databaseChangeLog>
