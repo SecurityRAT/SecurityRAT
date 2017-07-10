@@ -8,11 +8,17 @@ angular.module('sdlctoolApp')
         $rootScope.optColumnDict = {};
 
         // load selections from entity
-        $q.all([$rootScope.training.$promise, $scope.optcolumns.$promise]).then(function() {
-            angular.forEach($rootScope.training.optColumns, function(oc) {
-                $rootScope.selected[oc.id] = true;
+        $q.all([$scope.training.$promise, $scope.optcolumns.$promise]).then(function() {
+            // 1) fill $rootScope.selected with false for each OptColumn id
+            angular.forEach($scope.optcolumns, function(oc) {
+                $rootScope.selected[oc.id] = false;
             });
-            $scope.selectAll = ($rootScope.training.optColumns.length == $scope.optcolumns.length);
+
+            // 2) set saved selections to true
+            angular.forEach($scope.training.optColumns, function(oc_selected) {
+                $rootScope.selected[oc_selected.id] = true;
+            });
+            $scope.selectAll = ($scope.training.optColumns.length === $scope.optcolumns.length);
         });
 
 
@@ -23,6 +29,7 @@ angular.module('sdlctoolApp')
            });
         });
 
+        // called when user clicks the selectAll-Checkbox
         $scope.toggleAll = function() {
             angular.forEach($rootScope.selected, function(element, id){
                 if(element != null) {
@@ -32,6 +39,7 @@ angular.module('sdlctoolApp')
             });
         };
 
+        // updates state of the selectAll-Checkbox
         var updateSelectAll = function(value) {
             if(!value)
                 $scope.selectAll = false;
@@ -46,16 +54,17 @@ angular.module('sdlctoolApp')
             }
         };
 
+        // adds or removes a selection to/from the training entity (which will be saved to db in parent controller)
         $scope.updateSelection = function(id) {
             updateSelectAll($rootScope.selected[id]);
 
-            $q.all([$rootScope.training.$promise, $rootScope.optColumnDict.$promise]).then(function() {
+            $q.all([$scope.training.$promise, $rootScope.optColumnDict.$promise]).then(function() {
                 if($rootScope.selected[id]) {
-                    $rootScope.training.optColumns.push($rootScope.optColumnDict[id].toJSON());
+                    $scope.training.optColumns.push($rootScope.optColumnDict[id].toJSON());
                 } else {
-                    for(var i = 0; i < $rootScope.training.optColumns.length; i++) {
-                        if($rootScope.training.optColumns[i].id == id) {
-                            $rootScope.training.optColumns.splice(i, 1);
+                    for(var i = 0; i < $scope.training.optColumns.length; i++) {
+                        if($scope.training.optColumns[i].id === id) {
+                            $scope.training.optColumns.splice(i, 1);
                         }
                     }
                 }
@@ -64,10 +73,10 @@ angular.module('sdlctoolApp')
 
         $scope.load = function (id) {
             Training.get({id: id}, function(result) {
-                $rootScope.training = result;
+                $scope.training = result;
             });
         };
         $rootScope.$on('sdlctoolApp:trainingUpdate', function(event, result) {
-            $rootScope.training = result;
+            $scope.training = result;
         });
     });
