@@ -6,6 +6,10 @@ angular.module('sdlctoolApp')
         $scope.training = entity;
         if($scope.training.allRequirementsSelected == null)
             $scope.training.allRequirementsSelected = true;
+        if($scope.training.allRequirementsSelected)
+            $("#filterBlock").hide();
+        else
+            $("#filterBlock").show();
 
         // Custom Scope Variables
         $scope.includeAll = true;
