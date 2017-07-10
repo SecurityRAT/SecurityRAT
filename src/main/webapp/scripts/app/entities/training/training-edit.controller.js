@@ -7,12 +7,15 @@ angular.module('sdlctoolApp')
         };
 
         $scope.save = function() {
-            console.log("THE TRAINING TO SAVE: ", $scope.Training);
             if ($scope.Training.id != null) {
                 Training.update($scope.Training, onSaveFinished);
             } else {
                 Training.save($scope.Training, onSaveFinished);
             }
+
+            // set form controller to "unsubmitted" state
+            // $scope.editForm.$setUntouched();
+            // $scope.editForm.$setPristine();
             // $state.go('training', null, {reload: true});
         };
     });
