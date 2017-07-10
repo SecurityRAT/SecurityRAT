@@ -44,6 +44,6 @@ angular.module('sdlctoolApp')
         };
 
         $scope.clear = function () {
-            $scope.training = {name: null, description: null, id: null};
+            $scope.training = {name: null, description: null, allRequirementsSelected: null, id: null};
         };
     });

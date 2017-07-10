@@ -33,6 +33,9 @@
             </column>
             <column name="last_modified_by" type="varchar(50)"/>
             <column name="last_modified_date" type="timestamp"/>
+            <column name="all_requirements_selected" type="bit" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
 
         <createTable tableName="TRAINING_OPTCOLUMN">

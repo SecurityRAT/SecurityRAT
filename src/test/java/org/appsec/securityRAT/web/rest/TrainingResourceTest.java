@@ -46,6 +46,9 @@ public class TrainingResourceTest {
     private static final String DEFAULT_DESCRIPTION = "SAMPLE_TEXT";
     private static final String UPDATED_DESCRIPTION = "UPDATED_TEXT";
 
+    private static final Boolean DEFAULT_ALL_REQUIREMENTS_SELECTED = false;
+    private static final Boolean UPDATED_ALL_REQUIREMENTS_SELECTED = true;
+
     @Inject
     private TrainingRepository trainingRepository;
 
@@ -73,6 +76,7 @@ public class TrainingResourceTest {
         training = new Training();
         training.setName(DEFAULT_NAME);
         training.setDescription(DEFAULT_DESCRIPTION);
+        training.setAllRequirementsSelected(DEFAULT_ALL_REQUIREMENTS_SELECTED);
     }
 
     @Test
@@ -93,6 +97,7 @@ public class TrainingResourceTest {
         Training testTraining = trainings.get(trainings.size() - 1);
         assertThat(testTraining.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testTraining.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
+        assertThat(testTraining.getAllRequirementsSelected()).isEqualTo(DEFAULT_ALL_REQUIREMENTS_SELECTED);
     }
 
     @Test
@@ -107,7 +112,8 @@ public class TrainingResourceTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.[*].id").value(hasItem(training.getId().intValue())))
                 .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
-                .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())));
+                .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
+                .andExpect(jsonPath("$.[*].allRequirementsSelected").value(hasItem(DEFAULT_ALL_REQUIREMENTS_SELECTED.booleanValue())));
     }
 
     @Test
@@ -122,7 +128,8 @@ public class TrainingResourceTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.id").value(training.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
-            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()));
+            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
+            .andExpect(jsonPath("$.allRequirementsSelected").value(DEFAULT_ALL_REQUIREMENTS_SELECTED.booleanValue()));
     }
 
     @Test
@@ -144,6 +151,7 @@ public class TrainingResourceTest {
         // Update the training
         training.setName(UPDATED_NAME);
         training.setDescription(UPDATED_DESCRIPTION);
+        training.setAllRequirementsSelected(UPDATED_ALL_REQUIREMENTS_SELECTED);
         
 
         restTrainingMockMvc.perform(put("/api/trainings")
@@ -157,6 +165,7 @@ public class TrainingResourceTest {
         Training testTraining = trainings.get(trainings.size() - 1);
         assertThat(testTraining.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testTraining.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+        assertThat(testTraining.getAllRequirementsSelected()).isEqualTo(UPDATED_ALL_REQUIREMENTS_SELECTED);
     }
 
     @Test

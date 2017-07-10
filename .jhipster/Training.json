@@ -27,6 +27,11 @@
             "fieldId": 2,
             "fieldName": "description",
             "fieldType": "String"
+        },
+        {
+            "fieldId": 3,
+            "fieldName": "allRequirementsSelected",
+            "fieldType": "Boolean"
         }
     ],
     "changelogDate": "20170615124305",

@@ -32,6 +32,9 @@ public class Training extends AbstractAuditingEntity implements Serializable {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "all_requirements_selected")
+    private Boolean allRequirementsSelected;
+
     @OneToOne(mappedBy = "training_id")
     @JsonIgnore
     private TrainingTreeNode rootNode_id;
@@ -65,6 +68,14 @@ public class Training extends AbstractAuditingEntity implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Boolean getAllRequirementsSelected() {
+        return allRequirementsSelected;
+    }
+
+    public void setAllRequirementsSelected(Boolean allRequirementsSelected) {
+        this.allRequirementsSelected = allRequirementsSelected;
     }
 
     public TrainingTreeNode getRootNode_id() {
@@ -110,6 +121,7 @@ public class Training extends AbstractAuditingEntity implements Serializable {
                 "id=" + id +
                 ", name='" + name + "'" +
                 ", description='" + description + "'" +
+                ", allRequirementsSelected='" + allRequirementsSelected + "'" +
                 '}';
     }
 }

@@ -4,6 +4,8 @@ angular.module('sdlctoolApp')
     .controller('TrainingRequirementsController', function ($scope, $rootScope, $stateParams, entity, Training, User, TrainingTreeNode, apiFactory, sharedProperties, $filter) {
         var system = "old";
         $scope.training = entity;
+        if($scope.training.allRequirementsSelected == null)
+            $scope.training.allRequirementsSelected = true;
 
         // Custom Scope Variables
         $scope.includeAll = true;
@@ -12,7 +14,7 @@ angular.module('sdlctoolApp')
 
         $scope.showFilters = function() {
             $("#filterBlock").toggle();
-        }
+        };
 
         $scope.load = function (id) {
             Training.get({id: id}, function(result) {
