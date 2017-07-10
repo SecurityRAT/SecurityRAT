@@ -4,12 +4,18 @@ angular.module('sdlctoolApp')
     .controller('TrainingRequirementsController', function ($scope, $rootScope, $stateParams, entity, Training, User, TrainingTreeNode, apiFactory, sharedProperties, $filter) {
         var system = "old";
         $scope.training = entity;
-        if($scope.training.allRequirementsSelected == null)
-            $scope.training.allRequirementsSelected = true;
-        if($scope.training.allRequirementsSelected)
-            $("#filterBlock").hide();
-        else
-            $("#filterBlock").show();
+
+        $scope.training.$promise.then(function() {
+            if($scope.Training.id == null) {
+                $scope.training.allRequirementsSelected = true;
+            }
+            if($scope.training.allRequirementsSelected) {
+                $("#filterBlock").hide();
+            } else {
+                $("#filterBlock").show();
+            }
+        });
+
 
         // Custom Scope Variables
         $scope.includeAll = true;
@@ -107,7 +113,7 @@ angular.module('sdlctoolApp')
                     }
                 });
             });
-        }
+        };
         $scope.getCategoryObject = function(collection) {
             angular.forEach($scope.categories, function(category) {
                 if(angular.equals(category.name, collection.categoryName)) {
@@ -120,7 +126,7 @@ angular.module('sdlctoolApp')
                     });
                 }
             });
-        }
+        };
         $scope.selectProject = function(item) {
             $scope.projectTypeModel = item;
             var optsColumn = [];
