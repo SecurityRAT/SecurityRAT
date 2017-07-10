@@ -20,9 +20,6 @@
     <include file="classpath:config/liquibase/changelog/20150902174244_added_entity_AlternativeInstance.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20150902174552_added_entity_OptColumnContent.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20170607075959_added_entity_SlideTemplate.xml" relativeToChangelogFile="false"/>
-
-    <include file="classpath:config/liquibase/changelog/20170615124305_added_entity_Training.xml" relativeToChangelogFile="false"/>
-    <include file="classpath:config/liquibase/changelog/20170615135611_added_entity_TrainingTreeNode.xml" relativeToChangelogFile="false"/>
     <!-- JHipster will add liquibase changelogs here -->
     <!-- dkefer -->
     <include file="classpath:config/liquibase/changelog/20150903_add_auditing.xml" relativeToChangelogFile="false"/>
@@ -38,4 +35,6 @@
 
     <!-- pzschumme -->
     <include file="classpath:config/liquibase/changelog/20170613_add_trainer.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170615124305_added_entity_Training.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170615135611_added_entity_TrainingTreeNode.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>
