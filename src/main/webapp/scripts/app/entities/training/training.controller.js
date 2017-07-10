@@ -15,7 +15,7 @@ angular.module('sdlctoolApp')
         $scope.delete = function (id) {
             Training.get({id: id}, function(result) {
                 $scope.training = result;
-                $('#deleteTrainingConfirmation').modal('show');
+                $('#deleteTrainingConfirmation').appendTo("body").modal('show');
             });
         };
 
