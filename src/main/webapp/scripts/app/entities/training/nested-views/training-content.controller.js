@@ -15,10 +15,12 @@ angular.module('sdlctoolApp')
             });
 
             // 2) set saved selections to true
-            angular.forEach($scope.training.optColumns, function(oc_selected) {
-                $rootScope.selected[oc_selected.id] = true;
-            });
-            $scope.selectAll = ($scope.training.optColumns.length === $scope.optcolumns.length);
+            if($scope.training.optColumns != null) {
+                angular.forEach($scope.training.optColumns, function(oc_selected) {
+                    $rootScope.selected[oc_selected.id] = true;
+                });
+                $scope.selectAll = ($scope.training.optColumns.length === $scope.optcolumns.length);
+            }
         });
 
 
@@ -60,6 +62,8 @@ angular.module('sdlctoolApp')
 
             $q.all([$scope.training.$promise, $rootScope.optColumnDict.$promise]).then(function() {
                 if($rootScope.selected[id]) {
+                    if($scope.training.optColumns == null)
+                        $scope.training.optColumns = [];
                     $scope.training.optColumns.push($rootScope.optColumnDict[id].toJSON());
                 } else {
                     for(var i = 0; i < $scope.training.optColumns.length; i++) {
