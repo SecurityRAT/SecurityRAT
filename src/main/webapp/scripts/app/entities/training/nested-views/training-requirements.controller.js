@@ -5,17 +5,24 @@ angular.module('sdlctoolApp')
         var system = "old";
         $scope.training = entity;
 
-        $scope.training.$promise.then(function() {
-            if($scope.training.allRequirementsSelected) {
-                $("#filterBlock").hide();
-            } else {
-                $("#filterBlock").show();
-            }
-            // restore selection from training
-            $scope.training.collections.forEach(function(col) {
-                $scope.selectCollections(col);
+        if($scope.training.$promise != null) {
+            $scope.training.$promise.then(function() {
+                if($scope.training.allRequirementsSelected) {
+                    $("#filterBlock").hide();
+                } else {
+                    $("#filterBlock").show();
+                }
+                // restore selection from training
+                $scope.training.collections.forEach(function(col) {
+                    $scope.selectCollections(col);
+                });
             });
-        });
+        } else {
+            // this is a new training! Avoid undefined members.
+            console.log("new training");
+            $scope.training.collections = [];
+            $scope.training.allRequirementsSelected = true;
+        }
 
         // Custom Scope Variables
         $scope.includeAll = true;
