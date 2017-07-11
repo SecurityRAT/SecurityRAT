@@ -15,6 +15,14 @@
             "relationshipType": "many-to-many",
             "otherEntityField": "name",
             "ownerSide": true
+        },
+        {
+            "relationshipId": 5,
+            "relationshipName": "collection",
+            "otherEntityName": "collectionInstance",
+            "relationshipType": "many-to-many",
+            "otherEntityField": "name",
+            "ownerSide": true
         }
     ],
     "fields": [

@@ -6,21 +6,37 @@ angular.module('sdlctoolApp')
         $scope.training = entity;
 
         $scope.training.$promise.then(function() {
-            if($scope.Training.id == null) {
-                $scope.training.allRequirementsSelected = true;
-            }
             if($scope.training.allRequirementsSelected) {
                 $("#filterBlock").hide();
             } else {
                 $("#filterBlock").show();
             }
+            // restore selection from training
+            $scope.training.collections.forEach(function(col) {
+                $scope.selectCollections(col);
+            });
         });
-
 
         // Custom Scope Variables
         $scope.includeAll = true;
         $scope.requirementsSelected = 0;
         $scope.categoriesSelected = 0;
+
+        $scope.getSelectedCollectionsByCategory = function(category) {
+            var result = [];
+            $scope.training.collections.forEach(function(saved_col) {
+                if(saved_col["collectionCategory"].id === category.id) {
+                    // match! find the collectionInstance by it's id
+                    category.collectionInstances.forEach(function(colInst) {
+                        if(colInst.id === saved_col.id) {
+                            result.push(colInst);
+                            return;
+                        }
+                    });
+                }
+            });
+            return result;
+        };
 
         $scope.showFilters = function() {
             $("#filterBlock").toggle();
@@ -41,7 +57,6 @@ angular.module('sdlctoolApp')
         $scope.projectTypeModel = {};
 
         // Api Calls & Functions from StarterController
-
         $scope.selectedCollectionSettings = {
             smartButtonMaxItems: 7,
             closeOnSelect: true, closeOnDeselect: true,
@@ -63,7 +78,7 @@ angular.module('sdlctoolApp')
                 angular.forEach($scope.categories, function(category) {
                     //filters the collectionsInstances by showOrder.
                     category.collectionInstances = $filter('orderBy')(category.collectionInstances, 'showOrder');
-                    angular.extend(category,{selectedCollectionSets: []});
+                    angular.extend(category,{selectedCollectionSets: $scope.getSelectedCollectionsByCategory(category)});
                 });
                 $scope.init();
             },
@@ -88,7 +103,11 @@ angular.module('sdlctoolApp')
             if($scope.oldSettings != undefined && angular.equals(system, "old")) {
                 $scope.disabled = true;
 //                $scope.starterForm.name = $scope.oldSettings.name;
-                $scope.selectedCollection = $scope.oldSettings.colls;
+                if($scope.training.collections != null)
+                    $scope.selectedCollection = $scope.training.collections;
+                else {
+                    $scope.selectedCollection = $scope.oldSettings.colls;
+                }
                 $scope.selectedProjectType = $scope.oldSettings.project;
                 $scope.ticket = $scope.oldSettings.ticket;
                 $scope.oldAlternativeSets = $scope.oldSettings.alternativeSets;
@@ -184,6 +203,16 @@ angular.module('sdlctoolApp')
                 );
                 $scope.selectedCollection.push(collection);
             }
+            var saved_in_training = false;
+            $scope.training.collections.forEach(function(saved_col) {
+               if(saved_col.id === item.id) {
+                   saved_in_training = true;
+                   return;
+               }
+            });
+            if(!saved_in_training) {
+                $scope.training.collections.push(item);
+            }
         };
 
         $scope.deselectCollections = function(item) {
@@ -193,11 +222,13 @@ angular.module('sdlctoolApp')
                         var idx = collection.values.indexOf(instance);
                         collection.values.splice(idx,1);
                         if(collection.values.length === 0) {
-                            var idx = $scope.selectedCollection.indexOf(collection);
-                            $scope.selectedCollection.splice(idx,1);
+                            var id = $scope.selectedCollection.indexOf(collection);
+                            $scope.selectedCollection.splice(id,1);
                         }
                     }
                 });
+                var id = $scope.training.collections.indexOf(item);
+                $scope.training.collections.splice(id,1);
             });
         };
 

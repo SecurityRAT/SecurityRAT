@@ -68,6 +68,16 @@
                     <span>
                 </td>
             </tr>
+            <tr>
+                <td>
+                    <span>collection</span>
+                </td>
+                <td>
+                    <span ng-repeat="collection in training.collections">
+                        <a class="form-control-static" ui-sref="collectionInstance.detail({id: {{collection.id}}})">{{collection.name}}</a>{{$last ? '' : ', '}}
+                    <span>
+                </td>
+            </tr>
             </tbody>
         </table>
     </div>

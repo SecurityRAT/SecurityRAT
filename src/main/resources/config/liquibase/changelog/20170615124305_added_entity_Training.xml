@@ -60,6 +60,29 @@
                                  constraintName="fk_optcolumn_optcolumn_training_id"
                                  referencedColumnNames="id"
                                  referencedTableName="OPTCOLUMN"/>
-        
+
+        <createTable tableName="TRAINING_COLLECTION">
+            <column name="collections_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="trainings_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="trainings_id, collections_id" tableName="TRAINING_COLLECTION"/>
+
+        <addForeignKeyConstraint baseColumnNames="trainings_id"
+                                 baseTableName="TRAINING_COLLECTION"
+                                 constraintName="fk_training_collection_collectioninstance_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="TRAINING"/>
+
+        <addForeignKeyConstraint baseColumnNames="collections_id"
+                                 baseTableName="TRAINING_COLLECTION"
+                                 constraintName="fk_collectioninstance_collection_training_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="COLLECTIONINSTANCE"/>
+
     </changeSet>
 </databaseChangeLog>
