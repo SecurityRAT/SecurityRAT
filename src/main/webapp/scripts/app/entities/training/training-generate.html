@@ -40,13 +40,13 @@
         <div class="row">
             <div class="well">
                 <strong>72</strong> Security Requirements selected.<br/>
-                <strong>3</strong> OptionColumns per Requirement selected.<br/>
+                <strong>{{ $scope.training.optColumns.length }}</strong> OptionColumns per Requirement selected.<br/>
                 <span class="glyphicon glyphicon-arrow-right"></span> The generator will produce
                 <strong>216</strong> Slides.
             </div>
         </div>
         <div class="form-group">
-            <button type="button" class="btn btn-primary" onclick="simulateProgress();">
+            <button type="button" class="btn btn-primary" data-ng-click="generate();" onclick="simulateProgress();">
                 <span class="glyphicon glyphicon-cog"></span>&nbsp;<span>Generate</span></button>
         </div>
         <div>
