@@ -54,6 +54,9 @@ angular.module('sdlctoolApp')
                 resolve: {
                     entity: ['$stateParams', 'Training', function($stateParams, Training) {
                         return new Training();
+                    }],
+                    trainingRoot: ['TrainingTreeNode', function(TrainingTreeNode) {
+                        return new TrainingTreeNode();
                     }]
                 }
             })

@@ -9,7 +9,7 @@ $("#tree").bind(
         var selectedNodeType = selectedNode.type;
         var selectedNodeName = selectedNode.text;
 
-        if(selectedNodeType !== "default" && selectedNodeType !== "requirement") {
+        if(selectedNodeType !== "BranchNode" && selectedNodeType !== "RequirementNode") {
             $("#headingBlock").hide();
             $("#editBlock").fadeIn();
             $("#previewBlock").fadeIn();
@@ -29,7 +29,7 @@ $("#tree").bind(
             $('#slideNameField').val(selectedNodeName);
             $('#slideContentField').val(content);
 
-            if(selectedNodeType !== "custom") {
+            if(selectedNodeType !== "CustomSlideNode") {
                 $('#customSlideWarning').fadeIn();
             } else {
                 $('#customSlideWarning').hide();
@@ -124,13 +124,13 @@ function customMenu(node) {
         }
         /* MORE ENTRIES ... */
     };
-    if (node.type !== "requirement") {
+    if (node.type !== "RequirementNode") {
         delete items.add_content;
     } else {
         delete items.renameItem;
     }
     // node.li_attr.class === "slide"
-    if ((node.type === "slide") || (node.type === "custom")) {
+    if ((node.type === "GeneratedSlideNode") || (node.type === "CustomSlideNode")) {
         delete items.create_branch;
         delete items.insert_slide;
         delete items.renameItem;

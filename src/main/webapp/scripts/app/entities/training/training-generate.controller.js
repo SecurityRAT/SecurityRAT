@@ -1,14 +1,14 @@
 angular.module('sdlctoolApp')
-    .controller('TrainingGenerateController', function ($scope, $rootScope, $stateParams, $state, apiFactory, entity, Training) {
+    .controller('TrainingGenerateController', function ($scope, $rootScope, $stateParams, $state, apiFactory, entity, trainingRoot, Training, TrainingTreeNode) {
         $scope.Training = entity;
         $scope.trainingTreeData = [];
+        $scope.trainingRoot = trainingRoot;
 
         var onSaveFinished = function (result) {
             $scope.$emit('sdlctoolApp:trainingUpdate', result);
         };
 
         $scope.save = function() {
-            console.log("TRAINING", $scope.Training);
             if ($scope.Training.id != null) {
                 Training.update($scope.Training, onSaveFinished);
             } else {
@@ -21,81 +21,79 @@ angular.module('sdlctoolApp')
             var requestString = "";
             var collectionArray = [];
 
-            $scope.trainingTreeData[0] = {
-                "text" : $scope.Training.name,
-                "state": { "opened": true },
-                children : [
-                    { "text" : "Title", "type": "custom" },
-                    { "text" : "Introduction", "state": { "opened": true }, children: [
-                        { "text" : "Title", "type": "custom" },
-                        { "text" : "Welcome", "type": "custom", "state": { "opened": true, "selected": true } },
-                        { "text" : "Who am I", "type": "custom", "state": { "opened": true } },
-                        { "text" : "Portfolio", "type": "custom", "state": { "opened": true } }
-                    ]
-                    },
-                    { "text" : "Content", "state": { "opened": true }, children: []
-                    },
-                    { "text" : "Outro", "state": { "opened": true }, children: [
-                        { "text" : "Title", "type": "custom" },
-                        { "text" : "Comic", "type": "custom", "state": { "opened": true } }
-                    ]
-                    }
-                ]
-            };
+            trainingRoot.name = $scope.Training.name;
+            trainingRoot.sort_order = 0;
+            trainingRoot.type = "BranchNode";
+            trainingRoot.opened = true;
+            trainingRoot.addChildNode("CustomSlideNode", "Title", true);
+            var intro = trainingRoot.addChildNode("BranchNode", "Introduction", true );
+            intro.addChildNode("CustomSlideNode", "Title", false);
+            intro.addChildNode("CustomSlideNode", "Welcome", false);
+            intro.addChildNode("CustomSlideNode", "Who am I", false);
+            intro.addChildNode("CustomSlideNode", "Portfolio", false);
+
+            $scope.debugTree = trainingRoot.toJSON();
+            console.log("trainingRoot.toJSON()", $scope.debugTree);
+
+            TrainingTreeNode.save(trainingRoot, onSaveFinished);
+            TrainingTreeNode.save({sort_order: 1, node_type: "CustomSlideNode"}, onSaveFinished);
 
             // build the query
-            $scope.Training.collections.forEach(function(collection) {
-               collectionArray.push(collection.id);
-            });
-            var requirementsSettings = {
-                collections: collectionArray,
-                projectTypes: [1]
-            };
-            console.log("requirementsSettings", requirementsSettings);
-            angular.forEach(requirementsSettings, function(value, key) {
-                requestString += key + '=' + value + '&';
-            });
+            if(!Training.allRequirementsSelected) {
+                $scope.Training.collections.forEach(function(collection) {
+                   collectionArray.push(collection.id);
+                });
+                var requirementsSettings = {
+                    collections: collectionArray,
+                    projectTypes: [1]
+                };
+                angular.forEach(requirementsSettings, function(value, key) {
+                    requestString += key + '=' + value + '&';
+                });
+            }
             //Remove trailing &
             requestString = requestString.slice(0, -1);
-            console.log("requestString", requestString);
-            console.log("$scope.trainingTreeData", $scope.trainingTreeData);
             apiFactory.getByQuery("categoriesWithRequirements", "filter", requestString).then(
                 function(categoriesWithRequirements) {
                     $scope.requirementSkeletons = categoriesWithRequirements;
                     // $scope.buildRequirements();
-                    console.log("$scope.requirementSkeletons", $scope.requirementSkeletons);
 
+                    // create content node which holds all generated slides
+                    var contentNode = trainingRoot.addChildNode("BranchNode", "Contents", true);
+
+                    // add generated slides
                     categoriesWithRequirements.forEach(function(category) {
-                        var categoryNode = {
-                            "text": category.name,
-                            "state": {"opened": false},
-                            children: []
-                        };
+                        var categoryNode = contentNode.addChildNode("CategoryNode", category.name, false);
                         category.requirements.forEach(function(requirement) {
-                            var requirementNode = {
-                                "text" : requirement.shortName,
-                                "type": "requirement",
-                                "state": { "opened": false },
-                                children: [
-                                    {
-                                        "text": "Skeleton",
-                                        "type": "slide"
-                                    }
-                                ]
-                            };
-                            categoryNode.children.push(requirementNode);
-                        });
-                        // push to the 'content'-node
-                        console.log("pushing ", categoryNode, "into", $scope.trainingTreeData[0].children[2].children);
-                        $scope.trainingTreeData[0].children[2].children.push(categoryNode);
-                    });
+                            var requirementNode = categoryNode.addChildNode("RequirementNode", requirement.shortName, false);
+                            requirementNode.addChildNode("GeneratedSlideNode", "Skeleton", false);
 
-                    console.log("FINISHED TREE BUILDING", $scope.trainingTreeData);
-                    $scope.displayTree();
+                            // add option columns slides for each requirement
+                            //  if no optColumns were selected, $scope.TrainingoptColumns is undefined!
+                            if($scope.Training.optColumns != null) {
+                                $scope.Training.optColumns.forEach(function(optColumn) {
+                                    requirementNode.addChildNode("GeneratedSlideNode", optColumn.name, false);
+                                });
+                            }
+                        });
+                    });
                 },
                 function(exception) {}
+            ).then(
+                function() {
+                    var intro = trainingRoot.addChildNode("BranchNode", "Outro", true );
+                    intro.addChildNode("CustomSlideNode", "Title", false);
+                    intro.addChildNode("CustomSlideNode", "Comic", false);
+
+                    // add tree JSON data to the scope
+                    $scope.trainingTreeData[0] = trainingRoot.getJSON();
+                    console.log("FINISHED TREE BUILDING", $scope.trainingTreeData);
+                    $scope.displayTree();
+                }
             );
+
         };
+
 
         $scope.displayTree = function() {
             $('#tree').jstree({
@@ -106,29 +104,38 @@ angular.module('sdlctoolApp')
                 "contextmenu": {items: customMenu},
                 "types" : {
                     // the default type
-                    "default": {
+                    "BranchNode": {
                         "max_children": -1,
                         "max_depth": -1,
-                        "valid_children": ["default", "slide", "custom"],
+                        "valid_children": [
+                            "BranchNode",
+                            "GeneratedSlideNode",
+                            "CustomSlideNode",
+                            "CategoryNode",
+                            "RequirementNode"
+                        ],
                         "create_node": true
                     },
-                    "slide": {
+                    "GeneratedSlideNode": {
                         "icon": "glyphicon glyphicon-file",
                         "create_node": false,
                         "valid_children": "none",
                         "li_attr": { "class" : "slide" }
                     },
-                    "custom": {
+                    "CustomSlideNode": {
                         "icon": "glyphicon glyphicon-flash",
                         "create_node": false,
                         "valid_children": "none",
                         "li_attr": { "class" : "slide" }
                     },
-                    "requirement": {
+                    "RequirementNode": {
                         "icon": "glyphicon glyphicon-book",
                         "create_node": false,
                         "valid_children": "none",
                         "li_attr": { "class" : "slide" }
+                    },
+                    "CategoryNode": {
+
                     }
                 },
                 "plugins" : ["contextmenu", "dnd", "types"]
