@@ -53,8 +53,8 @@ public class TrainingTreeNodeResource {
         TrainingTreeNode result = trainingTreeNodeRepository.save(trainingTreeNode);
         trainingTreeNodeSearchRepository.save(result);
         return ResponseEntity.created(new URI("/api/trainingTreeNodes/" + result.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert("trainingTreeNode", result.getId().toString()))
-                .body(result);
+            .headers(new HttpHeaders())
+            .body(result);
     }
 
     /**
