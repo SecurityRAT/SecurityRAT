@@ -14,7 +14,7 @@ angular.module('sdlctoolApp')
         });
 
         var onSaveFinished = function (result) {
-            $scope.$emit('sdlctoolAppl:trainingUpdate', result);
+            $scope.$emit('sdlctoolApp:trainingUpdate', result);
         };
 
         $scope.update = function () {
