@@ -40,5 +40,41 @@
                                  referencedColumnNames="id"
                                  referencedTableName="TRAINING"/>
 
+        <!-- special tables to differenciate different node types -->
+        <createTable tableName="TRAININGCATEGORYNODE">
+            <column name="node_id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)"/>
+            <!-- many-to-one to REQCATEGORY -->
+            <column name="category_id" type="bigint"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="node_id"
+                                 baseTableName="TRAININGCATEGORYNODE"
+                                 constraintName="fk_trainingcategorynode_node_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="TRAININGTREENODE"/>
+
+        <addForeignKeyConstraint baseColumnNames="category_id"
+                                 baseTableName="TRAININGCATEGORYNODE"
+                                 constraintName="fk_trainingcategorynode_category_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="REQCATEGORY"/>
+
+        <createTable tableName="TRAININGCUSTOMSLIDENODE">
+            <column name="node_id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)"/>
+            <column name="content" type="TEXT"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="node_id"
+                                 baseTableName="TRAININGCUSTOMSLIDENODE"
+                                 constraintName="fk_trainingcustomslidenode_node_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="TRAININGTREENODE"/>
+
     </changeSet>
 </databaseChangeLog>
