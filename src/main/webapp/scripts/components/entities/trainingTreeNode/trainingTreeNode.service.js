@@ -27,7 +27,7 @@ angular.module('sdlctoolApp')
             if(this.children == null) this.children = [];
             var newChild = new TrainingTreeNode();
             newChild.name = name;
-            newChild.type = type;
+            newChild.node_type = type;
             newChild.opened = opened;
             this.children.push(newChild);
             return newChild;
@@ -88,7 +88,7 @@ angular.module('sdlctoolApp')
             var result = {
                 "text" : this.name,
                 "state" : { "opened": this.opened },
-                "type" : this.type,
+                "type" : this.node_type,
                 children: []
             };
             if(this.children != null) {

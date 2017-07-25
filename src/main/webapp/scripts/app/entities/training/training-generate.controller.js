@@ -39,7 +39,7 @@ angular.module('sdlctoolApp')
 
             trainingRoot.name = $scope.Training.name;
             trainingRoot.sort_order = 0;
-            trainingRoot.type = "BranchNode";
+            trainingRoot.node_type = "BranchNode";
             trainingRoot.opened = true;
             trainingRoot.addChildNode("CustomSlideNode", "Title", true);
             var intro = trainingRoot.addChildNode("BranchNode", "Introduction", true );
