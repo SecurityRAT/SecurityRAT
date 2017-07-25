@@ -1,14 +1,6 @@
 {
     "relationships": [
         {
-            "relationshipId": 3,
-            "relationshipName": "rootNode_id",
-            "otherEntityName": "trainingTreeNode",
-            "relationshipType": "one-to-one",
-            "ownerSide": false,
-            "otherEntityRelationshipName": "training_id"
-        },
-        {
             "relationshipId": 4,
             "relationshipName": "optColumn",
             "otherEntityName": "optColumn",

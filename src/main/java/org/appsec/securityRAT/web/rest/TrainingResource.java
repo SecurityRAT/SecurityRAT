@@ -83,15 +83,7 @@ public class TrainingResource {
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public List<Training> getAll(@RequestParam(required = false) String filter) {
-        if ("rootnode_id-is-null".equals(filter)) {
-            log.debug("REST request to get all Trainings where rootNode_id is null");
-            return StreamSupport
-                .stream(trainingRepository.findAll().spliterator(), false)
-                .filter(training -> training.getRootNode_id() == null)
-                .collect(Collectors.toList());
-        }
-
+    public List<Training> getAll() {
         log.debug("REST request to get all Trainings");
         return trainingRepository.findAllWithEagerRelationships();
     }

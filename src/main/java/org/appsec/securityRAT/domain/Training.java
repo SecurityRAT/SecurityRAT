@@ -1,6 +1,5 @@
 package org.appsec.securityRAT.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -24,20 +23,16 @@ public class Training extends AbstractAuditingEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
-    
+
+
     @Column(name = "name")
     private String name;
-    
+
     @Column(name = "description")
     private String description;
 
     @Column(name = "all_requirements_selected")
     private Boolean allRequirementsSelected;
-
-    @OneToOne(mappedBy = "training_id")
-    @JsonIgnore
-    private TrainingTreeNode rootNode_id;
 
     @ManyToMany
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -83,14 +78,6 @@ public class Training extends AbstractAuditingEntity implements Serializable {
 
     public void setAllRequirementsSelected(Boolean allRequirementsSelected) {
         this.allRequirementsSelected = allRequirementsSelected;
-    }
-
-    public TrainingTreeNode getRootNode_id() {
-        return rootNode_id;
-    }
-
-    public void setRootNode_id(TrainingTreeNode trainingTreeNode) {
-        this.rootNode_id = trainingTreeNode;
     }
 
     public Set<OptColumn> getOptColumns() {
