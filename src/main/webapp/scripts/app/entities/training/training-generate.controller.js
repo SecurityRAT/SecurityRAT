@@ -20,15 +20,9 @@ angular.module('sdlctoolApp')
             new_training.$promise.then(function(result) {
                 trainingRoot.setTrainingId(result);
 
-                var new_trainingtreenode;
-                new_trainingtreenode = TrainingTreeNode.save(trainingRoot, onSaveFinished);
-                // wait until the newly created trainingtreenode id is accessible...
-                new_trainingtreenode.$promise.then(function(result) {
-                    trainingRoot.self = result;
-                    $state.go('training', null, { reload: true });
-                });
-
-                trainingRoot.saveChildren();
+                console.log("SAVING TREE TO DB", result.id, result);
+                trainingRoot.saveSubTree();
+                $state.go('training', null, { reload: true });
             });
 
         };
@@ -49,9 +43,6 @@ angular.module('sdlctoolApp')
             intro.addChildNode("CustomSlideNode", "Portfolio", false);
 
             $scope.debugTree = trainingRoot.toJSON();
-            console.log("trainingRoot.toJSON()", $scope.debugTree);
-
-            // TrainingTreeNode.save(trainingRoot, onSaveFinished);
 
             // build the query
             if(!Training.allRequirementsSelected) {

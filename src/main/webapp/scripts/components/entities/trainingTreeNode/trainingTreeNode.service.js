@@ -39,7 +39,6 @@ angular.module('sdlctoolApp')
         // both training id and parent id are not ready at the time the objects are created
         // therefore they must be set afterwards as soon as the ids are ready
         TrainingTreeNode.prototype.setTrainingId = function(id) {
-            if(id == null) console.log("ERROR, setTrainingId(null/undefined)");
             this.training_id = id;
             if(this.children != null) {
                 this.children.forEach(function(childNode) {
@@ -49,18 +48,14 @@ angular.module('sdlctoolApp')
         };
 
         // Database operations
-        var saveNode = function(node) {
-            // generate main table entry
+        TrainingTreeNode.prototype.saveSubTree = function() {
+            var node = this;
+            // generate main table entry (TRAININGTREENODE)
             var new_trainingtreenode;
             new_trainingtreenode = TrainingTreeNode.save(node, onSaveFinished);
             new_trainingtreenode.$promise.then(function(result) {
-                console.log("CHILDREN OF ROOT AFTER SAVE", result.children);
-               result.children.forEach(function(childNode) {
-                  childNode.parent_id = result;
-               });
-            });
 
-            // generate additional table entry, if needed
+            // create additional table entry, if needed
             switch(node.node_type) {
                 case "CustomSlideNode":
                 case "BranchNode":
@@ -68,16 +63,17 @@ angular.module('sdlctoolApp')
                 case "RequirementNode":
                 default:
             }
-        };
-        TrainingTreeNode.prototype.saveChildren = function() {
-            saveNode(this);
-            if(this.children != null) {
+            if(node.children != null) {
                 var sort_order = 0;
-                this.children.forEach(function(node) {
+                node.children.forEach(function(node) {
                     node.sort_order = sort_order++;
-                    node.saveChildren();
+                    // result != node, because result only contains the data which has been saved to db (no children)!
+                    node.parent_id = result;
+                    node.saveSubTree();
                 });
             }
+
+            });
         };
         TrainingTreeNode.prototype.loadChildren = function() {
 
@@ -98,6 +94,5 @@ angular.module('sdlctoolApp')
             }
             return result;
         };
-        console.log("TrainingTreeNode.prototype", TrainingTreeNode.prototype);
         return TrainingTreeNode;
     });
