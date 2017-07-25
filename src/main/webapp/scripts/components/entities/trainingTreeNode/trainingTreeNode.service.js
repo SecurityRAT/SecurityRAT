@@ -2,6 +2,10 @@
 
 angular.module('sdlctoolApp')
     .factory('TrainingTreeNode', function ($resource, DateUtils) {
+        var onSaveFinished = function (result) {
+            // $scope.$emit('sdlctoolApp:trainingUpdate', result);
+        };
+
         var TrainingTreeNode = $resource('api/trainingTreeNodes/:id', {}, {
             'query': { method: 'GET', isArray: true},
             'get': {
@@ -32,11 +36,48 @@ angular.module('sdlctoolApp')
 
         };
 
+        // both training id and parent id are not ready at the time the objects are created
+        // therefore they must be set afterwards as soon as the ids are ready
+        TrainingTreeNode.prototype.setTrainingId = function(id) {
+            if(id == null) console.log("ERROR, setTrainingId(null/undefined)");
+            this.training_id = id;
+            if(this.children != null) {
+                this.children.forEach(function(childNode) {
+                    childNode.setTrainingId(id);
+                });
+            }
+        };
+
         // Database operations
-        TrainingTreeNode.prototype.saveChildren = function() {
-            this.children.forEach(function(node) {
-               console.log("treenode ", this, " wants to save childNode", node);
+        var saveNode = function(node) {
+            // generate main table entry
+            var new_trainingtreenode;
+            new_trainingtreenode = TrainingTreeNode.save(node, onSaveFinished);
+            new_trainingtreenode.$promise.then(function(result) {
+                console.log("CHILDREN OF ROOT AFTER SAVE", result.children);
+               result.children.forEach(function(childNode) {
+                  childNode.parent_id = result;
+               });
             });
+
+            // generate additional table entry, if needed
+            switch(node.node_type) {
+                case "CustomSlideNode":
+                case "BranchNode":
+                case "GeneratedSlideNode":
+                case "RequirementNode":
+                default:
+            }
+        };
+        TrainingTreeNode.prototype.saveChildren = function() {
+            saveNode(this);
+            if(this.children != null) {
+                var sort_order = 0;
+                this.children.forEach(function(node) {
+                    node.sort_order = sort_order++;
+                    node.saveChildren();
+                });
+            }
         };
         TrainingTreeNode.prototype.loadChildren = function() {
 

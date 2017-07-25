@@ -9,12 +9,28 @@ angular.module('sdlctoolApp')
         };
 
         $scope.save = function() {
+            var new_training;
             if ($scope.Training.id != null) {
-                Training.update($scope.Training, onSaveFinished);
+                new_training = Training.update($scope.Training, onSaveFinished);
             } else {
-                Training.save($scope.Training, onSaveFinished);
+                new_training = Training.save($scope.Training, onSaveFinished);
             }
-            $state.go('training', null, { reload: true });
+
+            // wait until the newly created training id is accessible...
+            new_training.$promise.then(function(result) {
+                trainingRoot.setTrainingId(result);
+
+                var new_trainingtreenode;
+                new_trainingtreenode = TrainingTreeNode.save(trainingRoot, onSaveFinished);
+                // wait until the newly created trainingtreenode id is accessible...
+                new_trainingtreenode.$promise.then(function(result) {
+                    trainingRoot.self = result;
+                    $state.go('training', null, { reload: true });
+                });
+
+                trainingRoot.saveChildren();
+            });
+
         };
 
         $scope.generate = function() {
@@ -35,8 +51,7 @@ angular.module('sdlctoolApp')
             $scope.debugTree = trainingRoot.toJSON();
             console.log("trainingRoot.toJSON()", $scope.debugTree);
 
-            TrainingTreeNode.save(trainingRoot, onSaveFinished);
-            TrainingTreeNode.save({sort_order: 1, node_type: "CustomSlideNode"}, onSaveFinished);
+            // TrainingTreeNode.save(trainingRoot, onSaveFinished);
 
             // build the query
             if(!Training.allRequirementsSelected) {
