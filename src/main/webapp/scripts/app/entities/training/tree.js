@@ -5,7 +5,7 @@ $("#tree").bind(
         //selected node object: data.inst.get_json()[0];
         //selected node text: data.inst.get_json()[0].data
 
-        var selectedNode = data.node;
+        $scope.selectedNode = data.node;
         var selectedNodeType = selectedNode.type;
         var selectedNodeName = selectedNode.text;
 
@@ -14,18 +14,12 @@ $("#tree").bind(
             $("#editBlock").fadeIn();
             $("#previewBlock").fadeIn();
 
-            var content;
+            var content = selectedNode.data.content;
+
+            console.log("selectedNode", selectedNode);
             $('#slideNameField').val(selectedNodeName);
-            if(selectedNodeName === "Welcome")
-                content = "### Application Security Basics\n\nWelcome to this training.";
-            else if(selectedNodeName === "Who am I")
-                content = "### John Doe\n\nSecurity Analyst";
-            else if(selectedNodeName === "Portfolio")
-                content = "## John Doe\n-----\n- Security Trainer\n- Expert in Security\n- Elite programmer";
-            else if(selectedNodeName === "Comic")
-                content = "{{ image: static/comics/aboutSecurity.gif }}";
-            else if(selectedNodeName === "Title")
-                content = "#{{ parent.name }}";
+
+
             $('#slideNameField').val(selectedNodeName);
             $('#slideContentField').val(content);
 

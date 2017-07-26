@@ -37,7 +37,7 @@ angular.module('sdlctoolApp')
             trainingRoot.opened = true;
             trainingRoot.addChildNode("CustomSlideNode", "Title", true);
             var intro = trainingRoot.addChildNode("BranchNode", "Introduction", true );
-            intro.addChildNode("CustomSlideNode", "Title", false);
+            intro.addCustomSlideNode("Title", "{ parent.name }");
             intro.addChildNode("CustomSlideNode", "Welcome", false);
             intro.addChildNode("CustomSlideNode", "Who am I", false);
             intro.addChildNode("CustomSlideNode", "Portfolio", false);

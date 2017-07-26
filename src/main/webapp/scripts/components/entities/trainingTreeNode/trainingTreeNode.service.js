@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .factory('TrainingTreeNode', function ($resource, DateUtils) {
+    .factory('TrainingTreeNode', function ($resource, DateUtils, TrainingCustomSlideNode) {
         var onSaveFinished = function (result) {
             // $scope.$emit('sdlctoolApp:trainingUpdate', result);
         };
@@ -32,8 +32,10 @@ angular.module('sdlctoolApp')
             this.children.push(newChild);
             return newChild;
         };
-        TrainingTreeNode.prototype.addRequirementNode = function() {
-
+        TrainingTreeNode.prototype.addCustomSlideNode = function(name, content) {
+            var newChild = this.addChildNode("CustomSlideNode", name, false);
+            newChild.content = content;
+            return newChild;
         };
 
         // both training id and parent id are not ready at the time the objects are created
@@ -56,8 +58,13 @@ angular.module('sdlctoolApp')
             new_trainingtreenode.$promise.then(function(result) {
 
             // create additional table entry, if needed
+            var spec_node = {};
             switch(node.node_type) {
                 case "CustomSlideNode":
+                    spec_node.node = new_trainingtreenode; // id is set in this object
+                    spec_node.name = node.name;
+                    spec_node.content = node.content;
+                    TrainingCustomSlideNode.save(spec_node, onSaveFinished);
                 case "BranchNode":
                 case "GeneratedSlideNode":
                 case "RequirementNode":
@@ -75,7 +82,7 @@ angular.module('sdlctoolApp')
 
             });
         };
-        TrainingTreeNode.prototype.loadChildren = function() {
+        TrainingTreeNode.prototype.loadSubTree = function(rootNode_id) {
 
         };
 
@@ -87,6 +94,12 @@ angular.module('sdlctoolApp')
                 "type" : this.node_type,
                 children: []
             };
+            // add data (custom properties are only available in the tree when inside 'data')
+            if(this.node_type == "CustomSlideNode") {
+                if(result.data == null) result.data = {};
+                result.data["content"] = this.content;
+                console.log("inserting content into slide", this.content, result);
+            }
             if(this.children != null) {
                 this.children.forEach(function(node) {
                     result.children.push(node.getJSON());
