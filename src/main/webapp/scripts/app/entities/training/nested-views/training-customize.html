@@ -1,6 +1,5 @@
 <div class="col-sm-6 col-md-3">
     <div id="tree"></div>
-    <script src="scripts/app/entities/training/tree.js"></script>
 </div>
 
 
@@ -16,19 +15,17 @@
               class="ng-pristine ng-scope ng-valid-pattern ng-valid-maxlength ng-valid-minlength ng-valid-email ng-valid ng-valid-required"
               name="form" role="form" data-ng-submit="save()">
             <div class="form-group">
-                <label for="login">Slide Name</label>
+                <label for="slideTitle">Slide Title</label>
                 <input class="form-control ng-pristine ng-untouched ng-valid-pattern ng-valid-maxlength ng-not-empty ng-valid ng-valid-required"
-                       name="login" id="slideNameField" value="Welcome">
+                       name="slideTitle" id="slideTitle" value="Welcome">
             </div>
 
             <div class="form-group">
-                <label for="firstName">Slide Content</label>
+                <label for="slideContent">Slide Content</label>
                 <textarea style="" rows="14"
                           class="form-control ng-pristine ng-untouched ng-valid-maxlength ng-not-empty ng-valid ng-valid-required"
-                          name="firstName" id="slideContentField" data-ng-model="user.firstName"
-                          data-ng-maxlength="50" required="" value="Max">### Application Security Basics
-
-Welcome to this training.</textarea>
+                          name="slideContent" id="slideContent" data-ng-model="selectedNode.data.content"
+                          data-ng-maxlength="50" required="" value="Max"></textarea>
             </div>
             <div class="form-group">
                 <!--
@@ -53,5 +50,5 @@ Welcome to this training.</textarea>
 </div>
 
 <div id="previewBlock" class="col-sm-12 col-md-4">
-    
+
 </div>

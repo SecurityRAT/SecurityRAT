@@ -1,7 +1,7 @@
 angular.module('sdlctoolApp')
     .controller('TrainingGenerateController', function ($scope, $rootScope, $stateParams, $state, apiFactory, entity, trainingRoot, Training, TrainingTreeNode) {
         $scope.Training = entity;
-        $scope.trainingTreeData = [];
+        $rootScope.trainingTreeData = [];
         $scope.trainingRoot = trainingRoot;
 
         var onSaveFinished = function (result) {
@@ -38,9 +38,9 @@ angular.module('sdlctoolApp')
             trainingRoot.addChildNode("CustomSlideNode", "Title", true);
             var intro = trainingRoot.addChildNode("BranchNode", "Introduction", true );
             intro.addCustomSlideNode("Title", "{ parent.name }");
-            intro.addChildNode("CustomSlideNode", "Welcome", false);
-            intro.addChildNode("CustomSlideNode", "Who am I", false);
-            intro.addChildNode("CustomSlideNode", "Portfolio", false);
+            intro.addCustomSlideNode("Welcome", "### Welcome to "+$scope.Training.name);
+            intro.addCustomSlideNode("Who am I", "### John Doe\n\nSecurity Analyst");
+            intro.addCustomSlideNode("Portfolio", "## John Doe\n-----\n- Security Trainer\n- Expert in Security\n- Elite programmer");
 
             $scope.debugTree = trainingRoot.toJSON();
 
@@ -92,59 +92,11 @@ angular.module('sdlctoolApp')
                     intro.addChildNode("CustomSlideNode", "Comic", false);
 
                     // add tree JSON data to the scope
-                    $scope.trainingTreeData[0] = trainingRoot.getJSON();
-                    console.log("FINISHED TREE BUILDING", $scope.trainingTreeData);
-                    $scope.displayTree();
+                    $rootScope.trainingTreeData[0] = trainingRoot.getJSON();
+                    console.log("FINISHED TREE BUILDING", $rootScope.trainingTreeData, $scope, $rootScope);
+                    $rootScope.displayTree();
                 }
             );
 
-        };
-
-
-        $scope.displayTree = function() {
-            $('#tree').jstree({
-                'core' : {
-                    'check_callback': true,
-                    'data' : $scope.trainingTreeData
-                },
-                "contextmenu": {items: customMenu},
-                "types" : {
-                    // the default type
-                    "BranchNode": {
-                        "max_children": -1,
-                        "max_depth": -1,
-                        "valid_children": [
-                            "BranchNode",
-                            "GeneratedSlideNode",
-                            "CustomSlideNode",
-                            "CategoryNode",
-                            "RequirementNode"
-                        ],
-                        "create_node": true
-                    },
-                    "GeneratedSlideNode": {
-                        "icon": "glyphicon glyphicon-file",
-                        "create_node": false,
-                        "valid_children": "none",
-                        "li_attr": { "class" : "slide" }
-                    },
-                    "CustomSlideNode": {
-                        "icon": "glyphicon glyphicon-flash",
-                        "create_node": false,
-                        "valid_children": "none",
-                        "li_attr": { "class" : "slide" }
-                    },
-                    "RequirementNode": {
-                        "icon": "glyphicon glyphicon-book",
-                        "create_node": false,
-                        "valid_children": "none",
-                        "li_attr": { "class" : "slide" }
-                    },
-                    "CategoryNode": {
-
-                    }
-                },
-                "plugins" : ["contextmenu", "dnd", "types"]
-            });
         };
     });
