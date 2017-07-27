@@ -14,7 +14,7 @@
         <form name="form" data-ng-submit="save()">
             <div class="form-group">
                 <label for="slideTitle">Slide Title</label>
-                <input class="form-control" name="slideTitle" id="slideTitle" value="Welcome">
+                <input class="form-control" name="slideTitle" id="slideTitle" data-ng-model="selectedNode.text">
             </div>
 
             <div class="form-group">
