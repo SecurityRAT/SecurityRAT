@@ -53,7 +53,7 @@ public class TrainingCustomSlideNodeResource {
         TrainingCustomSlideNode result = trainingCustomSlideNodeRepository.save(trainingCustomSlideNode);
         trainingCustomSlideNodeSearchRepository.save(result);
         return ResponseEntity.created(new URI("/api/trainingCustomSlideNodes/" + result.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert("trainingCustomSlideNode", result.getId().toString()))
+                .headers(new HttpHeaders())
                 .body(result);
     }
 
