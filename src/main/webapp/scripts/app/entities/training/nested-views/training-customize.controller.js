@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('TrainingCustomizeController', function ($scope, $rootScope, $stateParams, entity, Training, User, TrainingTreeNode) {
+    .controller('TrainingCustomizeController', function ($scope, $rootScope, $stateParams, $sanitize, entity, Training, User, TrainingTreeNode) {
         $scope.training = entity;
         $scope.load = function (id) {
             Training.get({id: id}, function(result) {
@@ -29,7 +29,7 @@ angular.module('sdlctoolApp')
                     $("#editBlock").fadeIn();
                     $("#previewBlock").fadeIn();
 
-                    var content = $scope.selectedNode.data.content;
+                    $scope.updateSlidePreview();
 
                     if(selectedNodeType !== "CustomSlideNode") {
                         $('#customSlideWarning').fadeIn();
@@ -42,6 +42,22 @@ angular.module('sdlctoolApp')
                 }
             }
         );
+
+        $scope.getParentNode = function() {
+            //TODO
+            return {'name': "parent name"};
+        };
+
+        $scope.updateSlidePreview = function() {
+            var content = $scope.selectedNode.data.content;
+            if(content != null) {
+                content = content
+                    .replace(/({{ *training.name *}})/g, $scope.training.name)
+                    .replace(/({{ *parent.name *}})/g, $scope.getParentNode().name);
+            } else content = "";
+            var content_sanitized = $sanitize(content);
+            $('#slidePreviewContent', frames['previewFrame'].document).html(content_sanitized);
+        };
 
         // Custom Menu
         var customMenu = function(node) {
@@ -143,7 +159,7 @@ angular.module('sdlctoolApp')
             }
             console.log(node.type);
             return items;
-        }
+        };
 
         $rootScope.displayTree = function() {
             console.log("displayTree called", $rootScope);

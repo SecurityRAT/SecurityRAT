@@ -11,21 +11,17 @@
     </div>
     <div id="editBlock">
         <h2 class="page-header" style="margin-top: 0px">Edit Slide</h2>
-        <form style=""
-              class="ng-pristine ng-scope ng-valid-pattern ng-valid-maxlength ng-valid-minlength ng-valid-email ng-valid ng-valid-required"
-              name="form" role="form" data-ng-submit="save()">
+        <form name="form" data-ng-submit="save()">
             <div class="form-group">
                 <label for="slideTitle">Slide Title</label>
-                <input class="form-control ng-pristine ng-untouched ng-valid-pattern ng-valid-maxlength ng-not-empty ng-valid ng-valid-required"
-                       name="slideTitle" id="slideTitle" value="Welcome">
+                <input class="form-control" name="slideTitle" id="slideTitle" value="Welcome">
             </div>
 
             <div class="form-group">
                 <label for="slideContent">Slide Content</label>
                 <textarea style="" rows="14"
-                          class="form-control ng-pristine ng-untouched ng-valid-maxlength ng-not-empty ng-valid ng-valid-required"
-                          name="slideContent" id="slideContent" data-ng-model="selectedNode.data.content"
-                          data-ng-maxlength="50" required="" value="Max"></textarea>
+                          class="form-control"
+                          name="slideContent" id="slideContent" data-ng-model="selectedNode.data.content"></textarea>
             </div>
             <div class="form-group">
                 <!--
@@ -39,7 +35,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-info">
+                <button type="button" class="btn btn-info" data-ng-click="updateSlidePreview()">
                     <span class="glyphicon glyphicon-eye-open"></span>&nbsp;<span>Update Preview</span>
                 </button>
                 <button type="button" class="btn btn-primary">
@@ -50,5 +46,7 @@
 </div>
 
 <div id="previewBlock" class="col-sm-12 col-md-4">
-
+    <iframe name="previewFrame" src="scripts/app/entities/training/slidePreview.html" style="width:100%; height:650px;">
+        <p>No frames supported</p>
+    </iframe>
 </div>

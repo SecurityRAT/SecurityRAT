@@ -101,6 +101,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 			casEntryPoint.setClient(casClient);
 			
 			http
+                .headers().frameOptions().sameOrigin()
+            .and()
 				.csrf()
 			.and()
 				.addFilterAfter(new CsrfCookieGeneratorFilter(),CsrfFilter.class).exceptionHandling()

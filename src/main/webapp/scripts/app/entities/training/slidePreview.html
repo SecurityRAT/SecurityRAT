@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Slide Preview</title>
+
+    <link rel="stylesheet" href="../../../../bower_components/revealjs/css/reveal.css">
+    <link rel="stylesheet" href="../../../../bower_components/revealjs/css/theme/black.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="../../../../bower_components/highlightjs/styles/zenburn.css">
+
+
+    <style>
+        .reveal table td {
+            border-bottom: 0px;
+        !important
+        }
+
+        .reveal section img {
+            background: none;
+            border: none;
+            box-shadow: none;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section id="slidePreviewContent">
+                <h1>My Slide</h1>
+            </section>
+        </div>
+    </div>
+<script src="../../../../bower_components/revealjs/lib/js/head.min.js"></script>
+<script src="../../../../bower_components/revealjs/js/reveal.js"></script>
+
+<script>
+    var path = "../../../../bower_components/";
+    // More info https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+        history: true,
+        transition: 'none', // none/fade/slide/convex/concave/zoom
+
+        // More info https://github.com/hakimel/reveal.js#dependencies
+        dependencies: [
+            {src: path+'revealjs/plugin/markdown/marked.js'},
+            {src: path+'revealjs/plugin/markdown/markdown.js'},
+            {src: path+'revealjs/plugin/notes/notes.js', async: true},
+//            {
+//                src: path+'highlight/highlight.pack.js', async: true, callback: function () {
+//                hljs.initHighlightingOnLoad();
+//            }
+        ]
+    });
+</script>
+</body>
+</html>
