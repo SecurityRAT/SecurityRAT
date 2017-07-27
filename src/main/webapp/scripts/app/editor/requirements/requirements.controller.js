@@ -38,7 +38,7 @@ angular.module('sdlctoolApp')
         $scope.selectedCategory = [];
         $scope.tableArray = []; // excel table array
         $scope.selectedAlternativeSets = [];
-        $scope.requirementProperties = { hasIssueLinks : false, requirementsEdited: true, selectedOptColumns: { ids: [], counts: 0 }, exported: false, statColumnChanged: false, crCounts: 0 };
+        $scope.requirementProperties = { hasIssueLinks : true, requirementsEdited: true, selectedOptColumns: { ids: [], counts: 0 }, exported: false, statColumnChanged: false, crCounts: 0 };
         $scope.selectOptCompare = { ids: [], counts: 0 };
         $scope.categoryLabelText = { buttonDefaultText: 'Category' };
         $scope.tableSpan = { row: 0, col: 0 };
@@ -167,7 +167,7 @@ angular.module('sdlctoolApp')
                     if ($location.$$search.file !== undefined || $location.$$search.ticket !== undefined) {
                         $location.search('');
                     }
-                    $scope.requirementProperties.hasIssueLinks = imports.hasIssueLinks;
+                    // $scope.requirementProperties.hasIssueLinks = imports.hasIssueLinks;
                     $scope.requirements = imports.requirement;
                     $scope.requirementProperties.selectedOptColumns.counts = imports.selectedAlternativeSets.length;
                     $scope.selectOptCompare.counts = imports.selectedAlternativeSets.length;
@@ -196,7 +196,7 @@ angular.module('sdlctoolApp')
                     //} else {
                     $scope.getAlternativeSets();
                     $scope.alternativeSets = $scope.systemSettings.alternativeSets;
-                    $scope.requirementProperties.hasIssueLinks = $scope.systemSettings.hasIssueLinks;
+                    // $scope.requirementProperties.hasIssueLinks = $scope.systemSettings.hasIssueLinks;
                     //}
                 }
                 $scope.getOptandStatusColumns();
@@ -269,7 +269,7 @@ angular.module('sdlctoolApp')
                 project: $scope.systemSettings.project,
                 ticket: $scope.systemSettings.ticket,
                 alternativeSets: $scope.alternativeSets,
-                hasIssueLinks: $scope.requirementProperties.hasIssueLinks,
+                // hasIssueLinks: $scope.requirementProperties.hasIssueLinks,
                 requirements: $scope.requirements
             });
             sharedProperties.setProperty(oldSettings);
@@ -1678,7 +1678,7 @@ angular.module('sdlctoolApp')
                     $scope.jiraStatus.allStatus.push(jiraStatus.allStatus[0]);
                 }
                 $scope.disableSave(true)
-                $scope.requirementProperties.hasIssueLinks = true;
+                // $scope.requirementProperties.hasIssueLinks = true;
             });
         }
         $scope.checkExistingTickets = function() {
@@ -1719,8 +1719,8 @@ angular.module('sdlctoolApp')
                     $scope.ticket.url = obj.ticket.url;
                     $scope.ticket.key = obj.ticket.key;
                 }
-                if (angular.isDefined(obj.hasReqTicket) && !obj.hasReqTicket)
-                    $scope.requirementProperties.hasIssueLinks = false;
+                // if (angular.isDefined(obj.hasReqTicket) && !obj.hasReqTicket)
+                //     $scope.requirementProperties.hasIssueLinks = false;
                 $scope.disableSave(true);
                 if (localStorageService.isSupported) {
                     localStorageService.remove(appConfig.localStorageKey);
@@ -1830,37 +1830,52 @@ angular.module('sdlctoolApp')
             }
         }
 
+        $scope.cleanUpIssueLinking = function(req) {
+            req.linkStatus.enableTooltip = !req.linkStatus.enableTooltip
+            if(angular.isDefined(req.ticket) && req.ticket !== "") req.ticket = "";
+            $scope.manageTicketProperty.sameTicketError = false;
+        }
+
         $scope.doIssueLinking = function(req, callbackFunction) {
-            var remoteObjectInfo = {};
-            var mainObjectInfo = {};
-            mainObjectInfo.apiUrl = Helper.buildJiraUrl($scope.ticket.url.split('/'));
-            mainObjectInfo.key = mainObjectInfo.apiUrl.ticketKey[0];
-            mainObjectInfo.url = $scope.ticket.url;
-            remoteObjectInfo.apiUrl = Helper.buildJiraUrl(req.ticket.split('/'));
-
-            if(remoteObjectInfo.apiUrl.ticketKey.length > 0) {
-                $scope.manageTicketProperty.error = false;
-                remoteObjectInfo.key = remoteObjectInfo.apiUrl.ticketKey[0];
-                remoteObjectInfo.url = req.ticket;
-
-                $scope.manageTicketProperty.authenticatorProperty = {url: $scope.ticket.url, message: "You are not authenticated, please click on the following link to authenticate yourself. You will have one minute after a click on the link."}
-                $scope.manageTicketProperty.promise.derefer = $q.defer();
-
-                checkAuthentication.jiraAuth(JiraService.buildUrlCall('issueKey', mainObjectInfo.apiUrl), $scope.manageTicketProperty.authenticatorProperty,
-                $scope.manageTicketProperty.spinnerProperty, $scope.manageTicketProperty.promise).then(function(response) {
-                    mainObjectInfo.fields = response.fields;
-                    $scope.manageTicketProperty.authenticatorProperty = {url: req.ticket, message: "You are not authenticated, please click on the following link to authenticate yourself. You will have one minute after a click on the link."}
-                    $scope.manageTicketProperty.promise.derefer = $q.defer();
-                    // Checks authentication in case the provided ticket url is not from the same jira instance.
-                    return Promise.all([response, checkAuthentication.jiraAuth(JiraService.buildUrlCall('issueKey', remoteObjectInfo.apiUrl), $scope.manageTicketProperty.authenticatorProperty,
-                    $scope.manageTicketProperty.spinnerProperty, $scope.manageTicketProperty.promise)])
-                
-                }).then(function(responses) {
-                    remoteObjectInfo.fields = responses[1].fields;
-                    callbackFunction(req, mainObjectInfo, remoteObjectInfo);
-                }).catch();
+            if(angular.equals(req.ticket, $scope.ticket.url)) {
+                $scope.manageTicketProperty.sameTicketError = true
             } else {
-                $scope.manageTicketProperty.error = true;
+                $scope.manageTicketProperty.sameTicketError = false
+                var remoteObjectInfo = {};
+                var mainObjectInfo = {};
+                mainObjectInfo.apiUrl = Helper.buildJiraUrl($scope.ticket.url.split('/'));
+                mainObjectInfo.key = mainObjectInfo.apiUrl.ticketKey[0];
+                mainObjectInfo.url = $scope.ticket.url;
+                remoteObjectInfo.apiUrl = Helper.buildJiraUrl(req.ticket.split('/'));
+
+                if(remoteObjectInfo.apiUrl.ticketKey.length > 0) {
+                    $scope.manageTicketProperty.error = false;
+                    remoteObjectInfo.key = remoteObjectInfo.apiUrl.ticketKey[0];
+                    remoteObjectInfo.url = req.ticket;
+
+                    $scope.manageTicketProperty.authenticatorProperty = {url: $scope.ticket.url, message: "You are not authenticated, please click on the following link to authenticate yourself. You will have one minute after a click on the link."}
+                    $scope.manageTicketProperty.promise.derefer = $q.defer();
+
+                    checkAuthentication.jiraAuth(JiraService.buildUrlCall('issueKey', mainObjectInfo.apiUrl), $scope.manageTicketProperty.authenticatorProperty,
+                    $scope.manageTicketProperty.spinnerProperty, $scope.manageTicketProperty.promise).then(function(response) {
+                        mainObjectInfo.fields = response.fields;
+                        $scope.manageTicketProperty.authenticatorProperty = {url: req.ticket, message: "You are not authenticated, please click on the following link to authenticate yourself. You will have one minute after a click on the link."}
+                        $scope.manageTicketProperty.promise.derefer = $q.defer();
+                        // Checks authentication in case the provided ticket url is not from the same jira instance.
+                        return Promise.all([response, checkAuthentication.jiraAuth(JiraService.buildUrlCall('issueKey', remoteObjectInfo.apiUrl), $scope.manageTicketProperty.authenticatorProperty,
+                        $scope.manageTicketProperty.spinnerProperty, $scope.manageTicketProperty.promise)])
+                    
+                    }).then(function(responses) {
+                        $scope.manageTicketProperty.spinnerProperty.showSpinner = false;
+                        remoteObjectInfo.fields = responses[1].fields;
+                        callbackFunction(req, mainObjectInfo, remoteObjectInfo);
+                    }).catch(function() {
+                        $scope.manageTicketProperty.authenticationFailure = true;
+                        $scope.manageTicketProperty.spinnerProperty.showSpinner = false;
+                    });
+                } else {
+                    $scope.manageTicketProperty.error = true;
+                }
             }
         }
 
@@ -1872,7 +1887,10 @@ angular.module('sdlctoolApp')
                     req.linkStatus.summary = remoteObjectInfo.fields.summary
                     $scope.manageTicketProperty.spinnerProperty.showSpinner = false;
                     
-                }).catch(function(exception) {onIssueLinkFailure(exception, mainObjectInfo.url, remoteObjectInfo.url)})
+                }).catch(function(exception) {
+                    $scope.manageTicketProperty.spinnerProperty.showSpinner = false;
+                    onIssueLinkFailure(exception, mainObjectInfo.url, remoteObjectInfo.url)
+                })
             }
 
             linkStatus = {
@@ -1889,7 +1907,12 @@ angular.module('sdlctoolApp')
                     $scope.jiraStatus.allStatus.push(linkStatus);
                 }
             }
-            JiraService.addAttachmentAndComment(mainObjectInfo, {content: $scope.buildYAMLFile(), artifactName: $scope.systemSettings.name});
+
+            var promise = JiraService.addAttachmentAndComment(mainObjectInfo, 
+                {content: $scope.buildYAMLFile(), artifactName: $scope.systemSettings.name, errorHandlingProperty: $scope.manageTicketProperty});
+            if(angular.isDefined(promise)) {
+                $scope.manageTicketProperty.spinnerProperty.showSpinner = false;
+            }
             
         }
 
@@ -1905,8 +1928,11 @@ angular.module('sdlctoolApp')
                 }
 
             }
+            
             // This returns the jiraservice.sendComment promise
-            JiraService.addAttachmentAndComment(mainObjectInfo, {content: $scope.buildYAMLFile(), artifactName: $scope.systemSettings.name});
+            JiraService.addAttachmentAndComment(mainObjectInfo, 
+                {content: $scope.buildYAMLFile(), artifactName: $scope.systemSettings.name, errorHandlingProperty: $scope.manageTicketProperty});
+            
             // JiraService.removeIssueLinks(mainObjectInfo, remoteObjectInfo).then(function() {
                 
             // }).catch(function(exception) {onIssueLinkFailure(exception, mainObjectInfo.url, remoteObjectInfo.url)})

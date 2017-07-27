@@ -77,11 +77,13 @@ angular.module('sdlctoolApp')
                         //get the attachment id and save in the current requirement.
                         return sendComment(commentBody, ticketInfo);
                     }, function(error) {
+                        if(angular.isDefined(fileObject.errorHandlingProperty)) fileObject.errorHandlingProperty.spinnerProperty.showSpinner = false
                         if (error.status === 403) {
-                            SDLCToolExceptionService.showWarning('Adding attachment unsuccessful', 'The YAML file could not be attached. Please check if ticket is not closed and that you have the permission to attach files.', SDLCToolExceptionService.DANGER);
+                            SDLCToolExceptionService.showWarning('Adding attachment unsuccessful', 'The YAML file could not be attached to the main ticket. Please check if ticket is not closed and that you have the permission to attach files.', SDLCToolExceptionService.DANGER);
                         }
                     });
             } catch (e) {
+                if(angular.isDefined(fileObject.errorHandlingProperty)) fileObject.errorHandlingProperty.spinnerProperty.showSpinner = false
                 SDLCToolExceptionService.showWarning('Adding attachment unsuccessful', "YAML file could not be attached to main ticket due to file parsing error. Please contact the developers.", SDLCToolExceptionService.DANGER);
             }
         }

@@ -1,4 +1,10 @@
 <form class="form-inline" name="formAddTicket" role="form" show-validation>
+	<div class="alert alert-danger" data-ng-show="manageTicketProperty.sameTicketError" data-ng-show="error">
+        You cannot link a ticket to itself.
+	</div>
+	<div class="alert alert-danger" data-ng-show="manageTicketProperty.authenticationFailure" data-ng-show="error">
+        The authentication to the issue tracker was unsuccesful.
+	</div>
 	<div class="input-group input-group-sm">
 		<span class="input-group-addon">
 			<input type="checkbox" data-ng-model="reqs.linkStatus.link" uib-tooltip="Link the tickets" tooltip-append-to-body />
@@ -19,7 +25,7 @@
 	</div>
 	<div class="btn-group-sm" data-ng-if="!manageTicketProperty.spinnerProperty.showSpinner">
 		<label id="addTicket" type="submit" data-ng-disabled="formAddTicket.$invalid" data-ng-click="doIssueLinking(reqs, addManualTicket)" class="btn btn-default"><i class="glyphicon glyphicon-ok"></i></label>
-		<label id="cancelAddTicket" data-ng-click="reqs.linkStatus.enableTooltip = !reqs.linkStatus.enableTooltip" class="btn btn-default"><i class="glyphicon glyphicon-remove"></i></label>
+		<label id="cancelAddTicket" data-ng-click="cleanUpIssueLinking(reqs)" class="btn btn-default"><i class="glyphicon glyphicon-remove"></i></label>
 	</div>
 	<div class="btn-group" data-ng-if="manageTicketProperty.spinnerProperty.showSpinner">
 		<label class="btn btn-default"><img src="assets/images/ellipsis.gif" /></label>
