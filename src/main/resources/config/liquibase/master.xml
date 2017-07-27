@@ -38,4 +38,5 @@
     <include file="classpath:config/liquibase/changelog/20170615124305_added_entity_Training.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20170615135611_added_entity_TrainingTreeNode.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20170726093957_added_entity_TrainingCustomSlideNode.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170727160224_added_entity_TrainingBranchNode.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>
