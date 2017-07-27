@@ -37,12 +37,14 @@ angular.module('sdlctoolApp')
             trainingRoot.opened = true;
             trainingRoot.addChildNode("CustomSlideNode", "Title", true);
             var intro = trainingRoot.addChildNode("BranchNode", "Introduction", true );
-            intro.addCustomSlideNode("Title", "{ parent.name }");
-            intro.addCustomSlideNode("Welcome", "### Welcome to "+$scope.Training.name);
-            intro.addCustomSlideNode("Who am I", "### John Doe\n\nSecurity Analyst");
-            intro.addCustomSlideNode("Portfolio", "## John Doe\n-----\n- Security Trainer\n- Expert in Security\n- Elite programmer");
-
-            $scope.debugTree = trainingRoot.toJSON();
+            intro.addCustomSlideNode("Title", "{{ parent.name }}");
+            intro.addCustomSlideNode("Welcome", "<h2>Welcome to {{ training.name }}</h2>");
+            intro.addCustomSlideNode("Who am I", "<h2>Who am I?</h2>\nJohn Doe, Security Analyst");
+            intro.addCustomSlideNode("Portfolio", "" +
+                "<h2>John Doe</h2>\n" +
+                "<ul><li>Security Trainer</li>\n" +
+                "<li>Expert in Security</li>\n" +
+                "<li>Elite programmer</li>");
 
             // build the query
             if(!Training.allRequirementsSelected) {
