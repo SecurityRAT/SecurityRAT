@@ -10,7 +10,7 @@
 angular.module('sdlctoolApp')
     .controller('RequirementsController', function($scope, apiFactory, sharedProperties, $httpParamSerializer, $interval, $timeout, $uibModal, $filter, 
         getRequirementsFromImport, $confirm, $location, localStorageService, appConfig, $sce, SDLCToolExceptionService, $rootScope, marked, Helper, $state,
-        checkAuthentication, JiraService, $q) {
+        checkAuthentication, JiraService, $q, $uibModalStack) {
         $scope.failed = "";
         $scope.fail = false;
         $scope.checks = {
@@ -38,7 +38,7 @@ angular.module('sdlctoolApp')
         $scope.selectedCategory = [];
         $scope.tableArray = []; // excel table array
         $scope.selectedAlternativeSets = [];
-        $scope.requirementProperties = { hasIssueLinks : true, requirementsEdited: true, selectedOptColumns: { ids: [], counts: 0 }, exported: false, statColumnChanged: false, crCounts: 0 };
+        $scope.requirementProperties = { hasIssueLinks : false, requirementsEdited: true, selectedOptColumns: { ids: [], counts: 0 }, exported: false, statColumnChanged: false, crCounts: 0 };
         $scope.selectOptCompare = { ids: [], counts: 0 };
         $scope.categoryLabelText = { buttonDefaultText: 'Category' };
         $scope.tableSpan = { row: 0, col: 0 };
@@ -167,7 +167,7 @@ angular.module('sdlctoolApp')
                     if ($location.$$search.file !== undefined || $location.$$search.ticket !== undefined) {
                         $location.search('');
                     }
-                    // $scope.requirementProperties.hasIssueLinks = imports.hasIssueLinks;
+                    $scope.requirementProperties.hasIssueLinks = imports.hasIssueLinks;
                     $scope.requirements = imports.requirement;
                     $scope.requirementProperties.selectedOptColumns.counts = imports.selectedAlternativeSets.length;
                     $scope.selectOptCompare.counts = imports.selectedAlternativeSets.length;
@@ -186,6 +186,8 @@ angular.module('sdlctoolApp')
                     $scope.onTimeout();
                     $scope.promiseForStorage = $interval($scope.onTimeout, 60000);
                     $scope.updateRequirements();
+                    $uibModalStack.dismissAll("cancel");
+                    SDLCToolExceptionService.showWarning('Import successful', 'The Secure SDLC artifact ' + $scope.name + ' was successfully imported.', SDLCToolExceptionService.SUCCESS);
                 } else {
                     $scope.startProgressbar();
                     $scope.generatedOn = Helper.getCurrentDate();
@@ -196,7 +198,7 @@ angular.module('sdlctoolApp')
                     //} else {
                     $scope.getAlternativeSets();
                     $scope.alternativeSets = $scope.systemSettings.alternativeSets;
-                    // $scope.requirementProperties.hasIssueLinks = $scope.systemSettings.hasIssueLinks;
+                    $scope.requirementProperties.hasIssueLinks = $scope.systemSettings.hasIssueLinks;
                     //}
                 }
                 $scope.getOptandStatusColumns();
@@ -269,7 +271,7 @@ angular.module('sdlctoolApp')
                 project: $scope.systemSettings.project,
                 ticket: $scope.systemSettings.ticket,
                 alternativeSets: $scope.alternativeSets,
-                // hasIssueLinks: $scope.requirementProperties.hasIssueLinks,
+                hasIssueLinks: $scope.requirementProperties.hasIssueLinks,
                 requirements: $scope.requirements
             });
             sharedProperties.setProperty(oldSettings);
@@ -1678,7 +1680,7 @@ angular.module('sdlctoolApp')
                     $scope.jiraStatus.allStatus.push(jiraStatus.allStatus[0]);
                 }
                 $scope.disableSave(true)
-                // $scope.requirementProperties.hasIssueLinks = true;
+                $scope.requirementProperties.hasIssueLinks = true;
             });
         }
         $scope.checkExistingTickets = function() {
@@ -1719,8 +1721,8 @@ angular.module('sdlctoolApp')
                     $scope.ticket.url = obj.ticket.url;
                     $scope.ticket.key = obj.ticket.key;
                 }
-                // if (angular.isDefined(obj.hasReqTicket) && !obj.hasReqTicket)
-                //     $scope.requirementProperties.hasIssueLinks = false;
+                if (angular.isDefined(obj.hasReqTicket) && !obj.hasReqTicket)
+                    $scope.requirementProperties.hasIssueLinks = false;
                 $scope.disableSave(true);
                 if (localStorageService.isSupported) {
                     localStorageService.remove(appConfig.localStorageKey);
@@ -1728,9 +1730,9 @@ angular.module('sdlctoolApp')
             });
         }
 
-        $scope.hideTicketStatusColumn = function(value) {
-            $scope.requirementProperties.hasIssueLinks = value;
-        }
+        // $scope.hideTicketStatusColumn = function(value) {
+        //     $scope.requirementProperties.hasIssueLinks = value;
+        // }
 
         $scope.onTimeout = function() {
             if (localStorageService.isSupported && $scope.requirementProperties.requirementsEdited) {

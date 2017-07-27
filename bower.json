@@ -16,7 +16,6 @@
     "angular-touch": "1.4.4",
     "angular-ui-router": "0.2.15",
     "angular-ui-sortable": "~0.13.4",
-    "angularjs-dropdown-multiselect": "~1.5.2",
     "bootstrap": "3.3.5",
     "jquery": "2.1.4",
     "jquery-ui": "~1.11.4",
@@ -36,7 +35,8 @@
     "angular-bootstrap-switch": "^0.4.1",
     "angular-ui-indeterminate": "^1.0.0",
     "angular-confirm-modal": "~1.2.3",
-    "highlightjs": "~9.6.0"
+    "highlightjs": "~9.6.0",
+    "angularjs-dropdown-multiselect": "^1.11.8"
   },
   "devDependencies": {
     "angular-mocks": "1.4.4",

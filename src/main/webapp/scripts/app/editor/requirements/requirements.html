@@ -16,7 +16,8 @@
                                     <h4>Created on: <strong>{{generatedOn}}</strong></h4>
                                 </div>
                                 <div class="col-sm-3">
-                                    <button class="btn btn-primary pull-right" data-ng-click="changeSettings()" confirm="By changing the settings and automatic update of the requirements will be done. You can review the updates afterwards. No data will be lost." data-ng-disabled="systemSettings.name == null">
+                                    <button class="btn btn-primary pull-right" data-ng-click="changeSettings()" confirm="By changing the settings and automatic update of the requirements will be done. You can review the updates afterwards. No data will be lost."
+                                        data-ng-disabled="systemSettings.name == null">
                                         <strong>Change Settings</strong>
                                     </button>
                                 </div>
@@ -48,8 +49,8 @@
                                         <td data-ng-repeat="collections in systemSettings.colls">
                                             <div data-ng-repeat="values in collections.values">
                                                 <h4>
-	    												<span class="label label-primary">{{values.type}}</span>
-	    											</h4>
+                                                    <span class="label label-primary">{{values.type}}</span>
+                                                </h4>
                                             </div>
                                         </td>
                                     </tr>
@@ -76,7 +77,7 @@
                                                             <strong style="color:yellow">{{categories.name}}: {{categories.description}}</strong>
                                                             <BR>
                                                             <span data-ng-repeat="instances in categories.tagInstances | orderBy:'showOrder'">
-																			<span style="color:#cc6600;">{{instances.name}}:</span> {{instances.description}}
+																			<span style="color:#cc6600;">{{instances.name}}:</span>                                                            {{instances.description}}
                                                             <BR>
                                                             </span>
                                                         </p>
@@ -145,11 +146,13 @@
         </p>
     </div>
     <div id="UsSpinner" data-ng-if="showSpinner" class="text-center col-sm-1 col-sm-offset-6">
-        <span spinner-on="showSpinner" us-spinner="{radius:35, width:14, length:28, lines:13}" uib-popover="Searching requirements" popover-placement="top" popover-trigger="mouseenter" popover-append-to-body></span>
+        <span spinner-on="showSpinner" us-spinner="{radius:35, width:14, length:28, lines:13}" uib-popover="Searching requirements"
+            popover-placement="top" popover-trigger="mouseenter" popover-append-to-body></span>
     </div>
     <div class="col-sm-12">
         <div class="pull-left">
-            <span ng-dropdown-multiselect="" options="filterCategory" selected-model="selectedCategory" translation-texts="categoryLabelText" extra-settings="selectedCategorySettings">
+            <span ng-dropdown-multiselect="" options="filterCategory" selected-model="selectedCategory" translation-texts="categoryLabelText"
+                extra-settings="selectedCategorySettings">
 			</span>
             <span>&nbsp;</span>
             <div class="btn-group" uib-dropdown is-open="crdropdown.isopen" auto-close="outsideClick">
@@ -161,7 +164,8 @@
                     </li>
                     <!-- Edit CR -->
                     <li role="menuitem">
-                        <a href="" data-ng-if="customRequirements.length == 0" uib-tooltip="Please create a custom requirement first." tooltip-trigger="mouseenter" tooltip-placement="right" style="cursor:not-allowed">
+                        <a href="" data-ng-if="customRequirements.length == 0" uib-tooltip="Please create a custom requirement first." tooltip-trigger="mouseenter"
+                            tooltip-placement="right" style="cursor:not-allowed">
                             <span class="disabledButton">Edit</span>
                             <!-- <span data-ng-click="editRequirement()" data-ng-if="customRequirements.length > 0">Edit</span> -->
                         </a>
@@ -169,7 +173,8 @@
                     </li>
                     <!-- Remove CR -->
                     <li role="menuitem">
-                        <a href="" data-ng-if="customRequirements.length == 0" uib-tooltip="Please create a custom requirement first." tooltip-trigger="mouseenter" tooltip-placement="right" style="cursor:not-allowed"><span class="disabledButton">Remove</span>
+                        <a href="" data-ng-if="customRequirements.length == 0" uib-tooltip="Please create a custom requirement first." tooltip-trigger="mouseenter"
+                            tooltip-placement="right" style="cursor:not-allowed"><span class="disabledButton">Remove</span>
 						</a>
                         <a href="" data-ng-click="removeRequirement()" data-ng-if="customRequirements.length > 0">Remove</a>
                     </li>
@@ -184,7 +189,8 @@
                 <ul class="dropdown-menu animate-dropdown" uib-dropdown-menu role="menu" aria-labelledby="selectDropdown">
                     <!-- show the link with a mouse over a ticket must first be created -->
                     <li role="menuitem" class="animate-hide" data-ng-hide="withselectedDropdown.toggleExcel">
-                        <a href="" data-ng-click="createTicketReqs()" confirm-if="checkExistingTickets()" confirm="The requirements {{existingTickets}} already have tickets. Are you sure you want to overwrite them?" data-ng-if="(requirements | filter:{selected: true}).length && ticket.url != null">
+                        <a href="" data-ng-click="createTicketReqs()" confirm-if="checkExistingTickets()" confirm="The requirements {{existingTickets}} already have tickets. Are you sure you want to overwrite them?"
+                            data-ng-if="(requirements | filter:{selected: true}).length && ticket.url != null">
                             <img src="assets/images/jira-icon.png" width="16" height="16" /> Create JIRA tickets</a>
                         <a href="" data-ng-if="(requirements | filter:{selected: true}).length == 0 || ticket.url == null && (requirements | filter:{selected: true}).length">
                             <span uib-tooltip="Please export the requirement set to JIRA first." tooltip-trigger="mouseenter" tooltip-placement="top" data-ng-if="ticket.url == null && (requirements | filter:{selected: true}).length" class="disabledButton" tooltip-append-to-body>
@@ -196,21 +202,24 @@
                         </a>
                     </li>
                     <li role="menuitem" class="animate-hide" data-ng-hide="withselectedDropdown.toggleExcel">
-                        <a href="" uib-tooltip="Please select requirements first." tooltip-enable="(requirements | filter:{selected: true}).length == 0" tooltip-trigger="mouseenter" tooltip-placement="top" tooltip-append-to-body>
+                        <a href="" uib-tooltip="Please select requirements first." tooltip-enable="(requirements | filter:{selected: true}).length == 0"
+                            tooltip-trigger="mouseenter" tooltip-placement="top" tooltip-append-to-body>
                             <span data-ng-click="configExcel()" data-ng-class="{'disabledButton': (requirements | filter:{selected: true}).length == 0}">
 								<img src="assets/images/Excel-icon.png"/> Create spreadsheet
 							</span>
                         </a>
                     </li>
                     <li role="menuitem" class="animate-hide" data-ng-hide="withselectedDropdown.toggleExcel">
-                        <a href="" uib-tooltip="Please select requirements first." tooltip-enable="(requirements | filter:{selected: true}).length == 0" tooltip-trigger="mouseenter" tooltip-placement="top" tooltip-append-to-body>
+                        <a href="" uib-tooltip="Please select requirements first." tooltip-enable="(requirements | filter:{selected: true}).length == 0"
+                            tooltip-trigger="mouseenter" tooltip-placement="top" tooltip-append-to-body>
                             <span data-ng-click="exportPTT()" data-ng-class="{'disabledButton': (requirements | filter:{selected: true}).length == 0}">
 								<img src="assets/images/powerpoint-icon.png"/> Create slides
 							</span>
                         </a>
                     </li>
                     <li role="menuitem" class="animate-hide">
-                        <a href="" tooltip-enable="(requirements | filter:{selected: true}).length == 0" uib-tooltip="Please select requirements first and make sure this one is testable by filtering with TAG TESTABILITY." tooltip-trigger="mouseenter" tooltip-placement="top" tooltip-append-to-body data-ng-if="withselectedDropdown.testAutomation">
+                        <a href="" tooltip-enable="(requirements | filter:{selected: true}).length == 0" uib-tooltip="Please select requirements first and make sure this one is testable by filtering with TAG TESTABILITY."
+                            tooltip-trigger="mouseenter" tooltip-placement="top" tooltip-append-to-body data-ng-if="withselectedDropdown.testAutomation">
                             <span data-ng-click="startAutomatedTest()" data-ng-class="{'disabledButton': (requirements | filter:{selected: true}).length == 0}">
 								<img src="assets/images/seccat.png"/> Test requirements (BETA)
 							</span>
@@ -237,7 +246,8 @@
                         <th class="text-center" data-ng-repeat="opt in optColumns | orderBy:'showOrder'">
                             <span data-ng-if="!opt.alternativeSets  && optToHide.indexOf(opt.id) == -1">
 		    					<span data-ng-show="optToHide.indexOf(opt.id) == -1">{{opt.name}}</span>
-                            <span class="glyphicon glyphicon-chevron-down positionChevron" data-ng-if="optToHide.indexOf(opt.id) == -1" uib-tooltip="Hide {{opt.name}}" style="cursor:pointer;" data-ng-click="hideColumn(opt.id)"></span>
+                            <span class="glyphicon glyphicon-chevron-down positionChevron" data-ng-if="optToHide.indexOf(opt.id) == -1" uib-tooltip="Hide {{opt.name}}"
+                                style="cursor:pointer;" data-ng-click="hideColumn(opt.id)"></span>
                             </span>
                             <span data-ng-if="opt.alternativeSets && optToHide.indexOf(opt.id) == -1">
 			    					<span data-ng-repeat="optTooltip in htmlTooltips.optColumnTooltips" >
@@ -246,10 +256,12 @@
 				    					uib-tooltip-html="optTooltip.tooltip" tooltip-append-to-body>
 				    					</span>
                             </span>
-                            <span class="glyphicon glyphicon-chevron-down positionChevron hide-chevron" data-ng-if="optToHide.indexOf(opt.id) == -1" uib-tooltip="Hide {{opt.name}}" data-ng-click="hideColumn(opt.id)"></span>
+                            <span class="glyphicon glyphicon-chevron-down positionChevron hide-chevron" data-ng-if="optToHide.indexOf(opt.id) == -1"
+                                uib-tooltip="Hide {{opt.name}}" data-ng-click="hideColumn(opt.id)"></span>
                             </span>
                             <p data-ng-if="optToHide.indexOf(opt.id) != -1" data-ng-click="hideColumn(opt.id)">
-                                ...<span class="glyphicon glyphicon-chevron-right show-chevron" uib-tooltip="Show {{opt.name}}" tooltip-append-to-body></span>
+                                ...<span class="glyphicon glyphicon-chevron-right show-chevron" uib-tooltip="Show {{opt.name}}"
+                                    tooltip-append-to-body></span>
                             </p>
                         </th>
                         <th data-ng-repeat="status in statusColumns | orderBy:'showOrder'">
@@ -267,15 +279,17 @@
                             </div>
                         </th>
                         <th class="text-center" data-ng-if="ticket.url">
-                            <div data-ng-if="requirementProperties.hasIssueLinks" ng-dropdown-multiselect="" options="jiraStatus.allStatus" selected-model="jiraStatus.selectedStatus" translation-texts="jiraStatus.jiraStatusLabelText" extra-settings="selectedJiraStatusSettings" horizontal>
+                            <div ng-dropdown-multiselect="" options="jiraStatus.allStatus" selected-model="jiraStatus.selectedStatus" translation-texts="jiraStatus.jiraStatusLabelText"
+                                extra-settings="selectedJiraStatusSettings" disabled="!requirementProperties.hasIssueLinks" horizontal>
                             </div>
-                            <p  uib-collapse="!requirementProperties.hasIssueLinks" data-ng-click="requirementProperties.hasIssueLinks = !requirementProperties.hasIssueLinks">
-                                <span class="glyphicon glyphicon-chevron-down positionChevron hide-chevron" uib-tooltip="Hide this column"  tooltip-append-to-body></span>
+                            <!-- <p uib-collapse="!requirementProperties.hasIssueLinks" data-ng-click="requirementProperties.hasIssueLinks = !requirementProperties.hasIssueLinks">
+                                <span class="glyphicon glyphicon-chevron-down positionChevron hide-chevron" uib-tooltip="Hide this column" tooltip-append-to-body></span>
                                 </span>
                             </p>
-                            <p id="toggleManualLink" uib-collapse="requirementProperties.hasIssueLinks" data-ng-click="requirementProperties.hasIssueLinks = !requirementProperties.hasIssueLinks" uib-tooltip="Show ticket status column">
+                            <p id="toggleManualLink" uib-collapse="requirementProperties.hasIssueLinks" data-ng-click="requirementProperties.hasIssueLinks = !requirementProperties.hasIssueLinks"
+                                uib-tooltip="Show ticket status column">
                                 ...<span class="glyphicon glyphicon-chevron-right show-chevron"></span>
-                            </p>
+                            </p> -->
                         </th>
                         <th class="text-center">
                             <select-all filter-length="{{filterRequirements().length}}" on-change="performSelection(selectionValue)" selected-length="{{(filterRequirements() | filter: {selected: true}).length}}"></select-all>
@@ -310,7 +324,8 @@
                                 <span data-ng-if="updatedReqs" uib-tooltip="Please apply updates first." style="cursor:not-allowed" tooltip-append-to-body>
 				    				<img src="assets/images/feedback.png" width="16" height="16">
 				    			</span>
-                                <span id="feedbackIcon" data-ng-if="!updatedReqs" uib-tooltip="Give feedback for this requirement." style="cursor:pointer;" data-ng-click="openFeedback(reqs)" tooltip-append-to-body>
+                                <span id="feedbackIcon" data-ng-if="!updatedReqs" uib-tooltip="Give feedback for this requirement." style="cursor:pointer;"
+                                    data-ng-click="openFeedback(reqs)" tooltip-append-to-body>
 			    					<img src="assets/images/feedback.png" width="16" height="16">
 			    				</span>
                             </div>
@@ -342,14 +357,24 @@
                                 </ul>
                             </div>
                         </td>
-                        <td class="text-center" data-ng-style="reqs.isNew && {'background-color':'rgb(204, 255, 204)'} || reqs.isOld && {'background-color':'rgb(255, 204, 204)'}" data-ng-if="ticket.url">
+                        <td class="text-center" data-ng-style="reqs.isNew && {'background-color':'rgb(204, 255, 204)'} || reqs.isOld && {'background-color':'rgb(255, 204, 204)'}"
+                            data-ng-if="ticket.url">
                             <div data-ng-if="reqs.linkStatus.summary && requirementProperties.hasIssueLinks">
-			    				<a href="{{reqs.ticket}}" target="_blank" uib-popover="Ticket summary: {{reqs.linkStatus.summary}}" popover-trigger="mouseenter" popover-append-to-body="true"><img data-ng-src="{{reqs.linkStatus.iconUrl}}" data-ng-if="reqs.linkStatus.iconUrl != null" popover-append-to-body="true" /> {{reqs.linkStatus.name}}</a>
+                                <a href="{{reqs.ticket}}" target="_blank" uib-popover-html="'<strong>{{reqs.linkStatus.issueKey}}:</strong> {{reqs.linkStatus.summary}}'" 
+                                popover-trigger="mouseenter" popover-append-to-body="true">
+                                    <img data-ng-src="{{reqs.linkStatus.iconUrl}}" data-ng-if="reqs.linkStatus.iconUrl != null" popover-append-to-body="true" /> {{reqs.linkStatus.name}}
+                                </a>
                                 <div>
-                                    <div id="removeManualTicket" data-ng-click="reqs.linkStatus.enableTooltip = !reqs.linkStatus.enableTooltip" class="glyphicon glyphicon-minus" style="cursor: pointer" uib-tooltip="remove this ticket" tooltip-placement="right-bottom" tooltip-enable="reqs.linkStatus.enableTooltip" uib-popover-template="jiraStatus.removeTicketTemplateUrl" popover-is-open="!reqs.linkStatus.enableTooltip" popover-append-to-body="true"></div>
+                                    <div id="removeManualTicket" data-ng-click="reqs.linkStatus.enableTooltip = !reqs.linkStatus.enableTooltip" class="glyphicon glyphicon-minus"
+                                        style="cursor: pointer" uib-tooltip="remove ticket link" tooltip-placement="right-bottom"
+                                        tooltip-enable="reqs.linkStatus.enableTooltip" uib-popover-template="jiraStatus.removeTicketTemplateUrl"
+                                        popover-is-open="!reqs.linkStatus.enableTooltip" popover-append-to-body="true"></div>
                                 </div>
-			    			</div>
-                            <div id="addManualTicket" data-ng-if="reqs.linkStatus.summary == null && requirementProperties.hasIssueLinks" data-ng-click="reqs.linkStatus.enableTooltip = !reqs.linkStatus.enableTooltip" class="glyphicon glyphicon-plus" style="cursor: pointer" uib-tooltip="Add a ticket" tooltip-placement="right-bottom" tooltip-enable="reqs.linkStatus.enableTooltip" uib-popover-template="jiraStatus.addTicketTemplateUrl" popover-is-open="!reqs.linkStatus.enableTooltip" popover-append-to-body="true">
+                            </div>
+                            <div id="addManualTicket" data-ng-if="reqs.linkStatus.summary == null" data-ng-click="reqs.linkStatus.enableTooltip = !reqs.linkStatus.enableTooltip"
+                                class="glyphicon glyphicon-plus" style="cursor: pointer" uib-tooltip="Add an existing ticket"
+                                tooltip-placement="right-bottom" tooltip-enable="reqs.linkStatus.enableTooltip" uib-popover-template="jiraStatus.addTicketTemplateUrl"
+                                popover-is-open="!reqs.linkStatus.enableTooltip" popover-append-to-body="true">
                             </div>
                         </td>
                         <td class="text-center" data-ng-style="reqs.isNew && {'background-color':'rgb(204, 255, 204)'} || reqs.isOld && {'background-color':'rgb(255, 204, 204)'}">

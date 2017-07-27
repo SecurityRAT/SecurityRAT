@@ -147,6 +147,9 @@ angular.module('sdlctoolApp')
                     $scope.exportProperty.failed = "You have entered a wrong queue. Please select a valid queue and click on Export again.";
                     $scope.alertType = "danger"
                 }
+                $scope.checks.exporting = false;
+            }).catch(function(exception) {
+                // handle error if any concern should arise.
             });
         }
 
@@ -199,7 +202,8 @@ angular.module('sdlctoolApp')
                         $scope.sendAttachment();
                     }
                 }
-            }, function(exception) {
+            }).catch(function(exception) {
+                $scope.checks.exporting = false;
                 if (exception.status == 404) {
                     $scope.exportProperty.failed = "You have entered an invalid ticket. Please provide a valid one.";
                     $scope.alertType = "danger";
@@ -563,6 +567,7 @@ angular.module('sdlctoolApp')
                 //console.log($scope.apiUrl);
                 $scope.exportProperty.promise.derefer = $q.defer();
                 checkAuthentication.jiraAuth($scope.buildUrlCall("issueType"), $scope.exportProperty.authenticatorProperty, $scope.exportProperty, $scope.exportProperty.promise).then(function(data) {
+                    $scope.checks.exporting = true;
                     if ($scope.checks.isTicket && $scope.selection.jira) {
                         $scope.fields = {};
                         $scope.checkTicketAndSendAttachment();
@@ -570,10 +575,12 @@ angular.module('sdlctoolApp')
                         $scope.exportProperty.fail = true;
                         $scope.exportProperty.failed = "You have entered a ticket. Please provide a queue.";
                         $scope.checks.isQueue = false;
+                        $scope.checks.exporting = false;
                     } else if ($scope.apiUrl.ticketKey.length > 1) {
                         $scope.exportProperty.fail = true;
                         $scope.alertType = "danger";
                         $scope.exportProperty.failed = "You have entered a invalid ticket. Please provide a valid ticket.";
+                        $scope.checks.exporting = false;
                     } else {
                         var excludedFields = ['summary', 'issuetype', 'reporter', 'project', 'description'];
                         var fatalFields = ['attachment', 'issuelinks'];
@@ -635,7 +642,6 @@ angular.module('sdlctoolApp')
                             // }
                             // create a ticket only when the required fields have been properly set.
                             if (!fieldNotfulfilled) {
-                                $scope.checks.exporting = true;
                                 if ($scope.selection.jira) {
                                     if (angular.isDefined($scope.exported.ticket.url)) {
                                         $confirm({
@@ -658,12 +664,14 @@ angular.module('sdlctoolApp')
                                 } else if ($scope.selection.createTickets) {
                                     $scope.createReqTickets();
                                 }
+                            } else {
+                                $scope.checks.exporting = false;
                             }
                         }
 
                     }
                 }, function(authentication) {
-                    if (angular.isDefined($scope.exportProperty.authenticating)) $scope.exportProperty.authenticating = false;
+                    $scope.exportProperty.authenticating = false;
                 });
             } else if ($scope.selection.file) {
                 if ($scope.extension === 'yaml') {
@@ -752,6 +760,7 @@ angular.module('sdlctoolApp')
                                 iconUrl: response.fields.status.iconUrl,
                                 name: response.fields.status.name,
                                 summary: response.fields.summary,
+                                issueKey: response.key,
                                 enableTooltip: true,
                                 link: true
                             }
@@ -777,7 +786,7 @@ angular.module('sdlctoolApp')
                     });
                 });
             }).catch(function() {
-                if (angular.isDefined($scope.exportProperty.authenticating)) $scope.exportProperty.authenticating = false;
+                $scope.exportProperty.authenticating = false;
             }) 
         }
 
