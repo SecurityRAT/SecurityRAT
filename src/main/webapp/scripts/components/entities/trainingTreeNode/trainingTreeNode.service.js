@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .factory('TrainingTreeNode', function ($resource, DateUtils, TrainingCustomSlideNode) {
+    .factory('TrainingTreeNode', function ($resource, DateUtils, TrainingCustomSlideNode, TrainingBranchNode) {
         var onSaveFinished = function (result) {
             // $scope.$emit('sdlctoolApp:trainingUpdate', result);
         };
@@ -66,6 +66,9 @@ angular.module('sdlctoolApp')
                     spec_node.content = node.content;
                     TrainingCustomSlideNode.save(spec_node, onSaveFinished);
                 case "BranchNode":
+                    spec_node.node = new_trainingtreenode;
+                    spec_node.name = node.name;
+                    TrainingBranchNode.save(spec_node, onSaveFinished);
                 case "GeneratedSlideNode":
                 case "RequirementNode":
                 default:
@@ -98,7 +101,6 @@ angular.module('sdlctoolApp')
             if(this.node_type == "CustomSlideNode") {
                 if(result.data == null) result.data = {};
                 result.data["content"] = this.content;
-                console.log("inserting content into slide", this.content, result);
             }
             if(this.children != null) {
                 this.children.forEach(function(node) {
@@ -120,7 +122,6 @@ angular.module('sdlctoolApp')
             switch(json_data.type) {
                 case "CustomSlideNode":
                     node.content = json_data.data.content;
-                //TODO: handle other types
             }
 
             json_data.children.forEach(function(child_json) {
