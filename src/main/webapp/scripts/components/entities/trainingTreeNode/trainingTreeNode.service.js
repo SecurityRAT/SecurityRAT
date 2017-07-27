@@ -107,5 +107,28 @@ angular.module('sdlctoolApp')
             }
             return result;
         };
+
+        // LOAD Tree out of jstree-library's JSON format to get the changes the user made to the tree
+        // the result can be saved to db afterwards
+        TrainingTreeNode.prototype.fromJSON = function(json_data) {
+            var node = this;
+
+            node.name = json_data.text;
+            node.node_type = json_data.type;
+            node.children = [];
+
+            switch(json_data.type) {
+                case "CustomSlideNode":
+                    node.content = json_data.data.content;
+                //TODO: handle other types
+            }
+
+            json_data.children.forEach(function(child_json) {
+               var childNode = new TrainingTreeNode();
+               childNode.fromJSON(child_json);
+                node.children.push(childNode);
+            });
+        };
+
         return TrainingTreeNode;
     });

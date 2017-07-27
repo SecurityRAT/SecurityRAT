@@ -18,6 +18,7 @@ angular.module('sdlctoolApp')
 
             // wait until the newly created training id is accessible...
             new_training.$promise.then(function(result) {
+                trainingRoot.fromJSON($rootScope.getTreeJSON());
                 trainingRoot.setTrainingId(result);
 
                 console.log("SAVING TREE TO DB", result.id, result);

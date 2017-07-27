@@ -208,4 +208,8 @@ angular.module('sdlctoolApp')
                 "plugins" : ["contextmenu", "dnd", "types"]
             });
         };
+
+        $rootScope.getTreeJSON = function() {
+            return $('#tree').jstree(true).get_json('#', {flat:false})[0];
+        };
     });
