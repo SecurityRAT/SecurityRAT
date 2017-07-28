@@ -65,10 +65,12 @@ angular.module('sdlctoolApp')
                     spec_node.name = node.name;
                     spec_node.content = node.content;
                     TrainingCustomSlideNode.save(spec_node, onSaveFinished);
+                    break;
                 case "BranchNode":
                     spec_node.node = new_trainingtreenode;
                     spec_node.name = node.name;
                     TrainingBranchNode.save(spec_node, onSaveFinished);
+                    break;
                 case "GeneratedSlideNode":
                 case "RequirementNode":
                 case "RootNode":
