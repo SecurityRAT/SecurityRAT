@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .factory('TrainingTreeNode', function ($resource, DateUtils, TrainingCustomSlideNode, TrainingBranchNode) {
+    .factory('TrainingTreeNode', function ($resource, DateUtils, TrainingCustomSlideNode, TrainingBranchNode,
+                                           TrainingCategoryNode) {
         var onSaveFinished = function (result) {
             // $scope.$emit('sdlctoolApp:trainingUpdate', result);
         };
@@ -37,6 +38,11 @@ angular.module('sdlctoolApp')
             newChild.content = content;
             return newChild;
         };
+        TrainingTreeNode.prototype.addCategoryNode = function(name, category, opened) {
+            var newChild = this.addChildNode("CategoryNode", name, opened);
+            newChild.category = category;
+            return newChild;
+        };
 
         // both training id and parent id are not ready at the time the objects are created
         // therefore they must be set afterwards as soon as the ids are ready
@@ -59,17 +65,23 @@ angular.module('sdlctoolApp')
 
             // create additional table entry, if needed
             var spec_node = {};
+            spec_node.node = new_trainingtreenode; // set relation to trainingtreenode
+
             switch(node.node_type) {
                 case "CustomSlideNode":
-                    spec_node.node = new_trainingtreenode; // id is set in this object
                     spec_node.name = node.name;
                     spec_node.content = node.content;
                     TrainingCustomSlideNode.save(spec_node, onSaveFinished);
                     break;
                 case "BranchNode":
-                    spec_node.node = new_trainingtreenode;
                     spec_node.name = node.name;
                     TrainingBranchNode.save(spec_node, onSaveFinished);
+                    break;
+                case "CategoryNode":
+                    spec_node.name = node.name;
+                    spec_node.category = node.category;
+                    console.log("saving category:", node.category);
+                    TrainingCategoryNode.save(spec_node, onSaveFinished);
                     break;
                 case "GeneratedSlideNode":
                 case "RequirementNode":
@@ -100,11 +112,17 @@ angular.module('sdlctoolApp')
                 "type" : this.node_type,
                 children: []
             };
-            // add data (custom properties are only available in the tree when inside 'data')
-            if(this.node_type == "CustomSlideNode") {
-                if(result.data == null) result.data = {};
-                result.data["content"] = this.content;
+
+            if(result.data == null) result.data = {};
+            switch(this.node_type) {
+                case "CustomSlideNode":
+                    result.data["content"] = this.content;
+                    break;
+                case "CategoryNode":
+                    result.data["category"] = this.category;
+                    break;
             }
+
             if(this.children != null) {
                 this.children.forEach(function(node) {
                     result.children.push(node.getJSON());
@@ -114,7 +132,7 @@ angular.module('sdlctoolApp')
         };
 
         // LOAD Tree out of jstree-library's JSON format to get the changes the user made to the tree
-        // the result can be saved to db afterwards
+        // load everything into 'this' object
         TrainingTreeNode.prototype.fromJSON = function(json_data) {
             var node = this;
 
@@ -125,6 +143,10 @@ angular.module('sdlctoolApp')
             switch(json_data.type) {
                 case "CustomSlideNode":
                     node.content = json_data.data.content;
+                    break;
+                case "CategoryNode":
+                    node.category = json_data.data.category;
+                    break;
             }
 
             json_data.children.forEach(function(child_json) {

@@ -1,5 +1,6 @@
 angular.module('sdlctoolApp')
-    .controller('TrainingGenerateController', function ($scope, $rootScope, $stateParams, $state, apiFactory, entity, trainingRoot, Training, TrainingTreeNode) {
+    .controller('TrainingGenerateController', function ($scope, $rootScope, $stateParams, $state, apiFactory,
+                                                        entity, trainingRoot, Training, TrainingTreeNode, ReqCategory) {
         $scope.Training = entity;
         $rootScope.trainingTreeData = [];
         $scope.trainingRoot = trainingRoot;
@@ -50,7 +51,7 @@ angular.module('sdlctoolApp')
                 "<li>Expert in Security</li>\n" +
                 "<li>Elite programmer</li>");
 
-            // build the query
+            // build the query to get the data (requirements, categories)
             if(!Training.allRequirementsSelected) {
                 $scope.Training.collections.forEach(function(collection) {
                    collectionArray.push(collection.id);
@@ -75,7 +76,7 @@ angular.module('sdlctoolApp')
 
                     // add generated slides
                     categoriesWithRequirements.forEach(function(category) {
-                        var categoryNode = contentNode.addChildNode("CategoryNode", category.name, false);
+                        var categoryNode = contentNode.addCategoryNode(category.name, {id: category.id}, false);
                         category.requirements.forEach(function(requirement) {
                             var requirementNode = categoryNode.addChildNode("RequirementNode", requirement.shortName, false);
                             requirementNode.addChildNode("GeneratedSlideNode", "Skeleton", false);
