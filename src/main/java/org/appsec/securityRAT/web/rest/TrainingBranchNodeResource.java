@@ -53,7 +53,7 @@ public class TrainingBranchNodeResource {
         TrainingBranchNode result = trainingBranchNodeRepository.save(trainingBranchNode);
         trainingBranchNodeSearchRepository.save(result);
         return ResponseEntity.created(new URI("/api/trainingBranchNodes/" + result.getId()))
-                .headers(HeaderUtil.createEntityCreationAlert("trainingBranchNode", result.getId().toString()))
+                .headers(new HttpHeaders())
                 .body(result);
     }
 
