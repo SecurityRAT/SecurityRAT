@@ -71,6 +71,7 @@ angular.module('sdlctoolApp')
                     TrainingBranchNode.save(spec_node, onSaveFinished);
                 case "GeneratedSlideNode":
                 case "RequirementNode":
+                case "RootNode":
                 default:
             }
             if(node.children != null) {

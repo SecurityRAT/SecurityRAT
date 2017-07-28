@@ -32,10 +32,13 @@ angular.module('sdlctoolApp')
             var requestString = "";
             var collectionArray = [];
 
+            // create root node
             trainingRoot.name = $scope.Training.name;
+            trainingRoot.node_type = "RootNode";
             trainingRoot.sort_order = 0;
-            trainingRoot.node_type = "BranchNode";
             trainingRoot.opened = true;
+
+            // add children
             trainingRoot.addChildNode("CustomSlideNode", "Title", true);
             var intro = trainingRoot.addChildNode("BranchNode", "Introduction", true );
             intro.addCustomSlideNode("Title", "{{ parent.name }}");

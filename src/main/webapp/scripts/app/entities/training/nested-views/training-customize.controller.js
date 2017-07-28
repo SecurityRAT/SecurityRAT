@@ -183,6 +183,18 @@ angular.module('sdlctoolApp')
                         ],
                         "create_node": true
                     },
+                    "RootNode": {
+                        "max_children": -1,
+                        "max_depth": -1,
+                        "valid_children": [
+                            "BranchNode",
+                            "GeneratedSlideNode",
+                            "CustomSlideNode",
+                            "CategoryNode",
+                            "RequirementNode"
+                        ],
+                        "create_node": true
+                    },
                     "GeneratedSlideNode": {
                         "icon": "glyphicon glyphicon-file",
                         "create_node": false,
