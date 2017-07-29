@@ -66,7 +66,7 @@ angular.module('sdlctoolApp')
             }
             //Remove trailing &
             requestString = requestString.slice(0, -1);
-            apiFactory.getByQuery("categoriesWithRequirements", "filter", requestString).then(
+            apiFactory.getByQuery("categoriesWithRequirementsSorted", "filter", requestString).then(
                 function(categoriesWithRequirements) {
                     $scope.requirementSkeletons = categoriesWithRequirements;
                     // $scope.buildRequirements();

@@ -1,10 +1,7 @@
 package org.appsec.securityRAT.web.rest.frontendApi;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -269,6 +266,30 @@ public class FrontEndUniversalResource {
         for (ReqCategory reqCategory : reqCategories) {
         	categoryDTOs.add(new FECategoryDTO(reqCategory));
         }
+        return categoryDTOs;
+    }
+
+    @RequestMapping(value="/categoriesWithRequirementsSorted/filter",
+        method=RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    //public ResponseEntity<Set<RequirementSkeleton>> get(@RequestParam Map<String,String> allRequestParams) {
+    public List<FECategoryDTO> getCategoriesWithSkeletonsSorted(@RequestParam("collections") Long[] collectionIds, @RequestParam("projectTypes") Long[] projectTypeIds) {
+
+        List<CollectionInstance> collectionInstances = new ArrayList<CollectionInstance>();
+        for (Long colId : collectionIds) {
+            collectionInstances.add(collectionInstanceRepository.findOne(colId));
+        }
+        List<ProjectType> projectTypes = new ArrayList<ProjectType>();
+        for (Long projectTypeId : projectTypeIds) {
+            projectTypes.add(projectTypeRepository.findOne(projectTypeId));
+        }
+
+        List<ReqCategory> reqCategories = reqCategoryRepository.findEagerlyCategoriesWithRequirements(collectionInstances, projectTypes);
+
+        List<FECategoryDTO> categoryDTOs = reqCategories.stream().map(reqCategory -> new FECategoryDTO(reqCategory)).collect(Collectors.toList());
+        Collections.sort(categoryDTOs, Comparator.comparingInt(FECategoryDTO::getShowOrder));
+
         return categoryDTOs;
     }
     /*
