@@ -78,7 +78,7 @@ angular.module('sdlctoolApp')
                     categoriesWithRequirements.forEach(function(category) {
                         var categoryNode = contentNode.addCategoryNode(category.name, {id: category.id}, false);
                         category.requirements.forEach(function(requirement) {
-                            var requirementNode = categoryNode.addChildNode("RequirementNode", requirement.shortName, false);
+                            var requirementNode = categoryNode.addRequirementNode(requirement, false);
                             requirementNode.addChildNode("GeneratedSlideNode", "Skeleton", false);
 
                             // add option columns slides for each requirement

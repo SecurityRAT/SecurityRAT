@@ -2,7 +2,7 @@
 
 angular.module('sdlctoolApp')
     .factory('TrainingTreeNode', function ($resource, DateUtils, TrainingCustomSlideNode, TrainingBranchNode,
-                                           TrainingCategoryNode) {
+                                           TrainingCategoryNode, TrainingRequirementNode) {
         var onSaveFinished = function (result) {
             // $scope.$emit('sdlctoolApp:trainingUpdate', result);
         };
@@ -43,6 +43,11 @@ angular.module('sdlctoolApp')
             newChild.category = category;
             return newChild;
         };
+        TrainingTreeNode.prototype.addRequirementNode = function(requirement, opened) {
+            var newChild = this.addChildNode("RequirementNode", requirement.shortName, opened);
+            newChild.requirementSkeleton = requirement;
+            return newChild;
+        };
 
         // both training id and parent id are not ready at the time the objects are created
         // therefore they must be set afterwards as soon as the ids are ready
@@ -80,11 +85,13 @@ angular.module('sdlctoolApp')
                 case "CategoryNode":
                     spec_node.name = node.name;
                     spec_node.category = node.category;
-                    console.log("saving category:", node.category);
                     TrainingCategoryNode.save(spec_node, onSaveFinished);
                     break;
-                case "GeneratedSlideNode":
                 case "RequirementNode":
+                    spec_node.requirementSkeleton = node.requirementSkeleton;
+                    TrainingRequirementNode.save(spec_node, onSaveFinished);
+                    break;
+                case "GeneratedSlideNode":
                 case "RootNode":
                 default:
             }
@@ -121,6 +128,9 @@ angular.module('sdlctoolApp')
                 case "CategoryNode":
                     result.data["category"] = this.category;
                     break;
+                case "RequirementNode":
+                    result.data["requirementSkeleton"] = this.requirementSkeleton;
+                    break;
             }
 
             if(this.children != null) {
@@ -146,6 +156,9 @@ angular.module('sdlctoolApp')
                     break;
                 case "CategoryNode":
                     node.category = json_data.data.category;
+                    break;
+                case "RequirementNode":
+                    node.requirementSkeleton = json_data.data.requirementSkeleton;
                     break;
             }
 
