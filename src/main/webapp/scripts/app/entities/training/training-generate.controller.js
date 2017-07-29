@@ -33,6 +33,9 @@ angular.module('sdlctoolApp')
             var requestString = "";
             var collectionArray = [];
 
+            // clear the tree
+            trainingRoot = new TrainingTreeNode();
+
             // create root node
             trainingRoot.name = $scope.Training.name;
             trainingRoot.node_type = "RootNode";

@@ -3,6 +3,8 @@
 angular.module('sdlctoolApp')
     .controller('TrainingCustomizeController', function ($scope, $rootScope, $stateParams, $sanitize, entity, Training, User, TrainingTreeNode) {
         $scope.training = entity;
+        $scope.firstTimeDrawingTree = true;
+
         $scope.load = function (id) {
             Training.get({id: id}, function(result) {
                 $scope.training = result;
@@ -163,62 +165,68 @@ angular.module('sdlctoolApp')
 
         $rootScope.displayTree = function() {
             console.log("displayTree called", $rootScope);
-            $('#tree').jstree({
-                'core' : {
-                    'check_callback': true,
-                    'data' : $rootScope.trainingTreeData
-                },
-                "contextmenu": {items: customMenu},
-                "types" : {
-                    // the default type
-                    "BranchNode": {
-                        "max_children": -1,
-                        "max_depth": -1,
-                        "valid_children": [
-                            "BranchNode",
-                            "GeneratedSlideNode",
-                            "CustomSlideNode",
-                            "CategoryNode",
-                            "RequirementNode"
-                        ],
-                        "create_node": true
+            if($scope.firstTimeDrawingTree) {
+                $('#tree').jstree({
+                    'core': {
+                        'check_callback': true,
+                        'data': $rootScope.trainingTreeData
                     },
-                    "RootNode": {
-                        "max_children": -1,
-                        "max_depth": -1,
-                        "valid_children": [
-                            "BranchNode",
-                            "GeneratedSlideNode",
-                            "CustomSlideNode",
-                            "CategoryNode",
-                            "RequirementNode"
-                        ],
-                        "create_node": true
+                    "contextmenu": {items: customMenu},
+                    "types": {
+                        // the default type
+                        "BranchNode": {
+                            "max_children": -1,
+                            "max_depth": -1,
+                            "valid_children": [
+                                "BranchNode",
+                                "GeneratedSlideNode",
+                                "CustomSlideNode",
+                                "CategoryNode",
+                                "RequirementNode"
+                            ],
+                            "create_node": true
+                        },
+                        "RootNode": {
+                            "max_children": -1,
+                            "max_depth": -1,
+                            "valid_children": [
+                                "BranchNode",
+                                "GeneratedSlideNode",
+                                "CustomSlideNode",
+                                "CategoryNode",
+                                "RequirementNode"
+                            ],
+                            "create_node": true
+                        },
+                        "GeneratedSlideNode": {
+                            "icon": "glyphicon glyphicon-file",
+                            "create_node": false,
+                            "valid_children": "none",
+                            "li_attr": {"class": "slide"}
+                        },
+                        "CustomSlideNode": {
+                            "icon": "glyphicon glyphicon-flash",
+                            "create_node": false,
+                            "valid_children": "none",
+                            "li_attr": {"class": "slide"}
+                        },
+                        "RequirementNode": {
+                            "icon": "glyphicon glyphicon-book",
+                            "create_node": false,
+                            "valid_children": "none",
+                            "li_attr": {"class": "slide"}
+                        },
+                        "CategoryNode": {}
                     },
-                    "GeneratedSlideNode": {
-                        "icon": "glyphicon glyphicon-file",
-                        "create_node": false,
-                        "valid_children": "none",
-                        "li_attr": { "class" : "slide" }
-                    },
-                    "CustomSlideNode": {
-                        "icon": "glyphicon glyphicon-flash",
-                        "create_node": false,
-                        "valid_children": "none",
-                        "li_attr": { "class" : "slide" }
-                    },
-                    "RequirementNode": {
-                        "icon": "glyphicon glyphicon-book",
-                        "create_node": false,
-                        "valid_children": "none",
-                        "li_attr": { "class" : "slide" }
-                    },
-                    "CategoryNode": {
-
-                    }
-                },
-                "plugins" : ["contextmenu", "dnd", "types"]
-            });
+                    "plugins": ["contextmenu", "dnd", "types"]
+                });
+            } else {
+                // if this is not the first time the tree is drawn, redraw it to update changes
+                var tree = $('#tree');
+                tree.jstree(true).settings.core.data = $rootScope.trainingTreeData;
+                tree.jstree('refresh');
+            }
+            $scope.firstTimeDrawingTree = false;
         };
 
         $rootScope.getTreeJSON = function() {
