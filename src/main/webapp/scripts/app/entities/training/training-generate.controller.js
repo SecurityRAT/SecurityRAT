@@ -22,7 +22,6 @@ angular.module('sdlctoolApp')
                 trainingRoot.fromJSON($rootScope.getTreeJSON());
                 trainingRoot.setTrainingId(result);
 
-                console.log("SAVING TREE TO DB", result.id, result);
                 trainingRoot.saveSubTree();
                 $state.go('training', null, { reload: true });
             });
@@ -103,7 +102,6 @@ angular.module('sdlctoolApp')
 
                     // add tree JSON data to the scope
                     $rootScope.trainingTreeData[0] = trainingRoot.getJSON();
-                    console.log("FINISHED TREE BUILDING", $rootScope.trainingTreeData, $scope, $rootScope);
                     $rootScope.displayTree();
                 }
             );

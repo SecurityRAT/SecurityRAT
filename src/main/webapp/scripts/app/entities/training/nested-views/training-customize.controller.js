@@ -22,7 +22,6 @@ angular.module('sdlctoolApp')
                 //selected node text: data.inst.get_json()[0].data
 
                 $scope.selectedNode = data.node;
-                console.log("NODE SELECTED", $scope.selectedNode);
                 var selectedNodeType = $scope.selectedNode.type;
                 var selectedNodeName = $scope.selectedNode.text;
 
@@ -159,12 +158,10 @@ angular.module('sdlctoolApp')
                 //delete items.editItem;
                 delete items.cloneItem;
             }
-            console.log(node.type);
             return items;
         };
 
         $rootScope.displayTree = function() {
-            console.log("displayTree called", $rootScope);
             if($scope.firstTimeDrawingTree) {
                 $('#tree').jstree({
                     'core': {

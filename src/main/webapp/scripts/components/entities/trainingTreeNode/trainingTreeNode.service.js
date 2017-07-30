@@ -20,7 +20,6 @@ angular.module('sdlctoolApp')
             'update': { method:'PUT' }
         });
         TrainingTreeNode.prototype.getChildren = function() {
-            console.log("getSubTree service function called");
             if(this.children == null) this.children = [];
             return this.children;
         };

@@ -19,7 +19,6 @@ angular.module('sdlctoolApp')
             });
         } else {
             // this is a new training! Avoid undefined members.
-            console.log("new training");
             $scope.training.collections = [];
             $scope.training.allRequirementsSelected = true;
         }
