@@ -2,7 +2,7 @@
 
 angular.module('sdlctoolApp')
     .factory('TrainingTreeNode', function ($resource, DateUtils, TrainingCustomSlideNode, TrainingBranchNode,
-                                           TrainingCategoryNode, TrainingRequirementNode) {
+                                           TrainingCategoryNode, TrainingRequirementNode, TrainingGeneratedSlideNode) {
         var onSaveFinished = function (result) {
             // $scope.$emit('sdlctoolApp:trainingUpdate', result);
         };
@@ -45,6 +45,16 @@ angular.module('sdlctoolApp')
         TrainingTreeNode.prototype.addRequirementNode = function(requirement, opened) {
             var newChild = this.addChildNode("RequirementNode", requirement.shortName, opened);
             newChild.requirementSkeleton = requirement;
+
+            // add skeleton slide
+            var skeletonSlide = newChild.addChildNode("GeneratedSlideNode", "Skeleton", false);
+            skeletonSlide.optColumn = null; // mark it as a skeleton slide!
+
+            return newChild;
+        };
+        TrainingTreeNode.prototype.addGeneratedSlideNode = function(optColumn) {
+            var newChild = this.addChildNode("GeneratedSlideNode", optColumn.name, false);
+            newChild.optColumn = {id: optColumn.id};
             return newChild;
         };
 
@@ -91,6 +101,9 @@ angular.module('sdlctoolApp')
                     TrainingRequirementNode.save(spec_node, onSaveFinished);
                     break;
                 case "GeneratedSlideNode":
+                    spec_node.optColumn = node.optColumn;
+                    TrainingGeneratedSlideNode.save(spec_node, onSaveFinished);
+                    break;
                 case "RootNode":
                 default:
             }
@@ -130,6 +143,9 @@ angular.module('sdlctoolApp')
                 case "RequirementNode":
                     result.data["requirementSkeleton"] = this.requirementSkeleton;
                     break;
+                case "GeneratedSlideNode":
+                    result.data["optColumn"] = this.optColumn;
+                    break;
             }
 
             if(this.children != null) {
@@ -158,6 +174,9 @@ angular.module('sdlctoolApp')
                     break;
                 case "RequirementNode":
                     node.requirementSkeleton = json_data.data.requirementSkeleton;
+                    break;
+                case "GeneratedSlideNode":
+                    node.optColumn = json_data.data.optColumn;
                     break;
             }
 

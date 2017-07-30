@@ -81,13 +81,12 @@ angular.module('sdlctoolApp')
                         var categoryNode = contentNode.addCategoryNode(category.name, {id: category.id}, false);
                         category.requirements.forEach(function(requirement) {
                             var requirementNode = categoryNode.addRequirementNode(requirement, false);
-                            requirementNode.addChildNode("GeneratedSlideNode", "Skeleton", false);
 
-                            // add option columns slides for each requirement
+                            // add slides for each requirement displaying option column content
                             //  if no optColumns were selected, $scope.TrainingoptColumns is undefined!
                             if($scope.Training.optColumns != null) {
                                 $scope.Training.optColumns.forEach(function(optColumn) {
-                                    requirementNode.addChildNode("GeneratedSlideNode", optColumn.name, false);
+                                    requirementNode.addGeneratedSlideNode(optColumn);
                                 });
                             }
                         });
