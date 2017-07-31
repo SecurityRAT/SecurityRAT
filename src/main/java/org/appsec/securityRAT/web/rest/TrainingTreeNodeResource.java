@@ -1,7 +1,9 @@
 package org.appsec.securityRAT.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import org.appsec.securityRAT.domain.Training;
 import org.appsec.securityRAT.domain.TrainingTreeNode;
+import org.appsec.securityRAT.repository.TrainingRepository;
 import org.appsec.securityRAT.repository.TrainingTreeNodeRepository;
 import org.appsec.securityRAT.repository.search.TrainingTreeNodeSearchRepository;
 import org.appsec.securityRAT.web.rest.util.HeaderUtil;
@@ -31,6 +33,9 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 public class TrainingTreeNodeResource {
 
     private final Logger log = LoggerFactory.getLogger(TrainingTreeNodeResource.class);
+
+    @Inject
+    private TrainingRepository trainingRepository;
 
     @Inject
     private TrainingTreeNodeRepository trainingTreeNodeRepository;
@@ -130,5 +135,35 @@ public class TrainingTreeNodeResource {
         return StreamSupport
             .stream(trainingTreeNodeSearchRepository.search(queryString(query)).spliterator(), false)
             .collect(Collectors.toList());
+    }
+
+    /**
+     * Get the rootNode of a training
+     */
+    @RequestMapping(value = "/TrainingTreeNode/rootNode/{training_id}",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<TrainingTreeNode> getTrainingRoot(@PathVariable Long training_id) {
+        Training training = trainingRepository.getOne(training_id);
+        TrainingTreeNode result = trainingTreeNodeRepository.getTrainingRoot(training);
+        return ResponseEntity.ok()
+            .headers(new HttpHeaders())
+            .body(result);
+    }
+
+    /**
+     * Get all children of a trainingTreeNode
+     */
+    @RequestMapping(value = "/TrainingTreeNode/childrenOf/{id}",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<List<TrainingTreeNode>> getChildrenOf(@PathVariable Long id) {
+        TrainingTreeNode node = trainingTreeNodeRepository.getOne(id);
+        List<TrainingTreeNode> result = trainingTreeNodeRepository.getChildrenOf(node);
+        return ResponseEntity.ok()
+            .headers(new HttpHeaders())
+            .body(result);
     }
 }

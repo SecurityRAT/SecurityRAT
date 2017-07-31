@@ -1,7 +1,9 @@
 package org.appsec.securityRAT.repository;
 
+import org.appsec.securityRAT.domain.Training;
 import org.appsec.securityRAT.domain.TrainingTreeNode;
 import org.springframework.data.jpa.repository.*;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -10,4 +12,9 @@ import java.util.List;
  */
 public interface TrainingTreeNodeRepository extends JpaRepository<TrainingTreeNode,Long> {
 
+    @Query("select distinct trainingTreeNode from TrainingTreeNode trainingTreeNode where trainingTreeNode.training_id = :training and trainingTreeNode.parent_id is null")
+    TrainingTreeNode getTrainingRoot(@Param("training") Training training);
+
+    @Query("select distinct trainingTreeNode from TrainingTreeNode trainingTreeNode where trainingTreeNode.parent_id = :parent_node")
+    List<TrainingTreeNode> getChildrenOf(@Param("parent_node") TrainingTreeNode parentNode);
 }
