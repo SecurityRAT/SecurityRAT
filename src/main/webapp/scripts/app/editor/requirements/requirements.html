@@ -360,21 +360,19 @@
                         <td class="text-center" data-ng-style="reqs.isNew && {'background-color':'rgb(204, 255, 204)'} || reqs.isOld && {'background-color':'rgb(255, 204, 204)'}"
                             data-ng-if="ticket.url">
                             <div data-ng-if="reqs.linkStatus.summary && requirementProperties.hasIssueLinks">
-                                <a href="{{reqs.ticket}}" target="_blank" uib-popover-html="'<strong>{{reqs.linkStatus.issueKey}}:</strong> {{reqs.linkStatus.summary}}'" 
-                                popover-trigger="mouseenter" popover-append-to-body="true">
+                                <a href="{{reqs.ticket}}" target="_blank" uib-popover-template="jiraStatus.displayStatusTemplateUrl"
+                                    popover-trigger="mouseenter" popover-append-to-body="true">
                                     <img data-ng-src="{{reqs.linkStatus.iconUrl}}" data-ng-if="reqs.linkStatus.iconUrl != null" popover-append-to-body="true" /> {{reqs.linkStatus.name}}
                                 </a>
                                 <div>
-                                    <div id="removeManualTicket" data-ng-click="reqs.linkStatus.enableTooltip = !reqs.linkStatus.enableTooltip" class="glyphicon glyphicon-minus"
-                                        style="cursor: pointer" uib-tooltip="remove ticket link" tooltip-placement="right-bottom"
-                                        tooltip-enable="reqs.linkStatus.enableTooltip" uib-popover-template="jiraStatus.removeTicketTemplateUrl"
-                                        popover-is-open="!reqs.linkStatus.enableTooltip" popover-append-to-body="true"></div>
+                                    <div id="removeManualTicket" class="glyphicon glyphicon-minus" style="cursor: pointer" uib-tooltip="remove ticket link" tooltip-placement="right-bottom"
+                                        uib-popover-template="jiraStatus.removeTicketTemplateUrl" popover-is-open="reqs.linkStatus.enableTooltip"
+                                        popover-append-to-body="true"></div>
                                 </div>
                             </div>
-                            <div id="addManualTicket" data-ng-if="reqs.linkStatus.summary == null" data-ng-click="reqs.linkStatus.enableTooltip = !reqs.linkStatus.enableTooltip"
-                                class="glyphicon glyphicon-plus" style="cursor: pointer" uib-tooltip="Add an existing ticket"
-                                tooltip-placement="right-bottom" tooltip-enable="reqs.linkStatus.enableTooltip" uib-popover-template="jiraStatus.addTicketTemplateUrl"
-                                popover-is-open="!reqs.linkStatus.enableTooltip" popover-append-to-body="true">
+                            <div id="addManualTicket" data-ng-if="reqs.linkStatus.summary == null" class="glyphicon glyphicon-plus" style="cursor: pointer"
+                                uib-tooltip="Add an existing ticket" tooltip-placement="right-bottom" uib-popover-template="jiraStatus.addTicketTemplateUrl"
+                                popover-is-open="reqs.linkStatus.enableTooltip" popover-append-to-body="true">
                             </div>
                         </td>
                         <td class="text-center" data-ng-style="reqs.isNew && {'background-color':'rgb(204, 255, 204)'} || reqs.isOld && {'background-color':'rgb(255, 204, 204)'}">

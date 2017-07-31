@@ -760,9 +760,9 @@ angular.module('sdlctoolApp')
                                 iconUrl: response.fields.status.iconUrl,
                                 name: response.fields.status.name,
                                 summary: response.fields.summary,
-                                issueKey: response.key,
-                                enableTooltip: true,
-                                link: true
+                                issueKey: response.key
+                                // enableTooltip: true,
+                                // link: true
                             }
                             angular.extend(requirement, { linkStatus: linkStatus });
                             $scope.jiraStatus.allStatus.push(linkStatus);

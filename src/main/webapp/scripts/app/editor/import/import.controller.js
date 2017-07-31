@@ -9,7 +9,7 @@
  */
 angular.module('sdlctoolApp')
     .controller('ImportController', function ($scope, $location, $uibModalStack, sharedProperties, getRequirementsFromImport, Helper, checkAuthentication,
-        apiFactory, $filter, authenticatorService, $interval, SDLCToolExceptionService, $timeout, appConfig, $q, $uibModal, localStorageService) {
+        apiFactory, $filter, authenticatorService, $interval, SDLCToolExceptionService, $timeout, appConfig, $q, $uibModal, localStorageService, JiraService) {
         $scope.status = {
             file: false,
             jira: false
@@ -342,6 +342,7 @@ angular.module('sdlctoolApp')
                         $scope.buildSystemSettings(doc);
                         $scope.buildRequirement(doc.requirementCategories);
                     } catch (e) {
+                        // console.log(e);
                         $scope.importProperty.importing = false;
                         SDLCToolExceptionService.showWarning('Import unsuccessful', "Yaml file could not be read please contact the developers.", SDLCToolExceptionService.DANGER);
                     }
@@ -378,13 +379,13 @@ angular.module('sdlctoolApp')
             }
         }
 
-        $scope.updateLinkStatus = function (response, jiraStatus, requirement, category, values, statusColumnsValues, linkStatus) {
-            linkStatus = {
+        $scope.updateLinkStatus = function (response, jiraStatus, requirement, category, values, statusColumnsValues) {
+            var linkStatus = {
                 iconUrl: response.fields.status.iconUrl,
                 name: response.fields.status.name,
                 summary: response.fields.summary,
-                issueKey: response.key,
-                enableTooltip: true
+                issueKey: response.key
+                // enableTooltip: true
             }
             jiraStatus.allStatus.push(linkStatus);
             var unique = {};
@@ -428,7 +429,7 @@ angular.module('sdlctoolApp')
                 var lastElementOrder = 0;
                 angular.forEach(category.requirements, function (requirement) {
                     var values = [];
-                    var linkStatus = {};
+                    // var linkStatus = {};
                     angular.forEach(requirement.optColumns, function (optColumn) {
                         angular.forEach(optColumn.content, function (content) {
                             if (content.setId != undefined) {
@@ -480,10 +481,11 @@ angular.module('sdlctoolApp')
                         var urlSplit = requirement.ticket.split("/");
                         $scope.buildUrlObject(urlSplit);
                         hasIssueLinks = true;
-                        var urlCall = $scope.apiUrl.http + "//" + $scope.apiUrl.host + appConfig.jiraApiPrefix + "/" + $scope.apiUrl.ticketKey[0];
-                        var jiraLink = $scope.apiUrl.http + "//" + $scope.apiUrl.host + '/browse/' + $scope.apiUrl.ticketKey[0];
+                        var urlCall = JiraService.buildUrlCall("issueKey", $scope.apiUrl);
+                        // var jiraLink = $scope.apiUrl.http + "//" + $scope.apiUrl.host + '/browse/' + $scope.apiUrl.ticketKey[0];
+                        var jiraLink = $scope.apiUrl.http + "//" + $scope.apiUrl.host + $scope.apiUrl.path.join("/") + '/' + $scope.apiUrl.ticketKey[0];
                         apiFactory.getJIRAInfo(urlCall).then(function (response) {
-                            $scope.updateLinkStatus(response, jiraStatus, requirement, category, values, statusColumnsValues, linkStatus);
+                            $scope.updateLinkStatus(response, jiraStatus, requirement, category, values, statusColumnsValues);
                         }, function (error) {
                             if (error.status === 401) {
                                 $scope[$scope.apiUrl.ticketKey[0]] = {};
@@ -535,7 +537,7 @@ angular.module('sdlctoolApp')
                             statusColumns: statusColumnsValues,
                             tagInstances: requirement.tagInstances,
                             selected: false,
-                            linkStatus: linkStatus,
+                            linkStatus: {},
                             isNew: false,
                             isOld: false,
                             applyUpdate: ' '
@@ -627,7 +629,8 @@ angular.module('sdlctoolApp')
         $scope.close = function () {
             $location.path('/requirements');
             // $scope.importProperty.importing = false;
-            // $scope.cancel();
-            $scope.cleanAll();
+            // $scope.cancel();$uibModalStack.dismissAll("cancel");
+            SDLCToolExceptionService.showWarning('Import successful', 'The Secure SDLC artifact ' + $scope.name + ' was successfully imported.', SDLCToolExceptionService.SUCCESS);
+            $scope.cancel();
         }
     });
