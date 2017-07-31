@@ -2053,8 +2053,6 @@ angular.module('sdlctoolApp')
                 0: "tempTicket",
                 1: "ticket"
             }
-            console.log("property " + reqPropMapper[propMapper]);
-            console.log("ticket url: " + req[reqPropMapper[propMapper]]);
 
             // reset the error handling properties.
             $scope.manageTicketProperty.error = false;

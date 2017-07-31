@@ -94,7 +94,7 @@ angular.module('sdlctoolApp')
                 });
                 angular.extend(yamlExport, {
                     name: settings.name,
-                    ticket: settings.ticket,
+                    ticket: {url: settings.ticket.url, key: settings.ticket.key },
                     projectType: [{ 
                     	projectTypeId: projectTypeIdValue,
                     	projectTypeName: projectTypeNameValue

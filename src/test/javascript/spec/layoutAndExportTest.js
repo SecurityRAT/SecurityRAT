@@ -583,9 +583,30 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 		browser.sleep(20000);
 		expect(removeList.count() + 1, element.all(by.id("removeManualTicket")).count());
 		list.get(1).click();
-		element(by.id("ticket_field")).sendKeys(browser.params.jiraRemoteLinkTicket);
+
+		// Test that queue are not allowed
+		element(by.id("ticket_field")).sendKeys(browser.params.jiraQueue);
+		element(by.id("addTicket")).click();
+		browser.click(5000);
+
+		// test invalid ticket
+		element(by.id("ticket_field")).clear().then(function() {
+			element(by.id("ticket_field")).sendKeys(browser.params.jiraTicket + "-");
+		});
+		element(by.id("addTicket")).click();
+		browser.click(5000);
+		element(by.buttonText("Close")).click();
+		expect(element(by.binding("manageTicketProperty.authenticationFailureMessage")).getText())
+			.toBe("The authentication to the issue tracker was unsuccesful. Please make sure that the given ticket exist.")
+		
+		// Add an existing remote ticket.
+		element(by.id("ticket_field")).clear().then(function() {
+			element(by.id("ticket_field")).sendKeys(browser.params.jiraRemoteLinkTicket);
+		});
+		
 		element(by.id("addTicket")).click();
 		browser.sleep(5000);
+		
 		var removeList1 = element.all(by.id("removeManualTicket")); 
 		list.get(2).click();
 		element(by.model("ticket_field")).sendKeys(browser.params.jiraRemoteLinkTicket);
