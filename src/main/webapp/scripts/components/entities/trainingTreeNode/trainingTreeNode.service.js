@@ -3,7 +3,7 @@
 angular.module('sdlctoolApp')
     .factory('TrainingTreeNode', function ($resource, $sanitize, DateUtils, TrainingCustomSlideNode, TrainingBranchNode,
                                            TrainingCategoryNode, TrainingRequirementNode, TrainingGeneratedSlideNode,
-                                           ChildrenOf, TrainingCustomSlideNodeByTrainingTreeNode, TrainingBranchNodeByTrainingTreeNode) {
+                                           TrainingTreeUtil) {
         var onSaveFinished = function (result) {
             // $scope.$emit('sdlctoolApp:trainingUpdate', result);
         };
@@ -124,19 +124,19 @@ angular.module('sdlctoolApp')
         TrainingTreeNode.prototype.loadSubTree = function() {
             var node = this;
             return new Promise(function(resolve, reject) {
-                var subPromises = [ChildrenOf.query({id: node.id}).$promise];
+                var subPromises = [TrainingTreeUtil.ChildrenOfNode.query({id: node.id}).$promise];
                 node.children = [];
 
                 switch(node.node_type) {
                     case "CustomSlideNode":
-                        var query_promise = TrainingCustomSlideNodeByTrainingTreeNode.get({id: node.id}).$promise;
+                        var query_promise = TrainingTreeUtil.CustomSlideNode.get({id: node.id}).$promise;
                         subPromises.push(query_promise);
                         query_promise.then(function(result) {
                             node.content = result.content;
                         });
                         break;
                     case "BranchNode":
-                        var query_promise = TrainingBranchNodeByTrainingTreeNode.get({id: node.id}).$promise;
+                        var query_promise = TrainingTreeUtil.BranchNode.get({id: node.id}).$promise;
                         subPromises.push(query_promise);
                         query_promise.then(function(result) {
                             node.name = result.name;

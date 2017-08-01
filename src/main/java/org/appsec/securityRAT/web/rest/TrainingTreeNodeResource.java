@@ -140,13 +140,13 @@ public class TrainingTreeNodeResource {
     /**
      * Get the rootNode of a training
      */
-    @RequestMapping(value = "/TrainingTreeNode/rootNode/{training_id}",
+    @RequestMapping(value = "/TrainingTreeNode/rootNode/{id}",
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<TrainingTreeNode> getTrainingRoot(@PathVariable Long training_id) {
-        log.debug("REST request to get the rootNode of the training with id : {}", training_id);
-        Training training = trainingRepository.getOne(training_id);
+    public ResponseEntity<TrainingTreeNode> getTrainingRoot(@PathVariable Long id) {
+        log.debug("REST request to get the rootNode of the training with id : {}", id);
+        Training training = trainingRepository.getOne(id);
         TrainingTreeNode result = trainingTreeNodeRepository.getTrainingRoot(training);
         return ResponseEntity.ok()
             .headers(new HttpHeaders())

@@ -1,11 +1,11 @@
 angular.module('sdlctoolApp')
 
     .controller('TrainingViewController', function ($scope, $rootScope, $stateParams, $state, $compile, $timeout,
-                                                    apiFactory, entity, TrainingTreeNode, TrainingRoot) {
+                                                    apiFactory, entity, TrainingTreeNode, TrainingTreeUtil) {
         $scope.training = entity;
         $scope.slides = [];
         console.log("parameter for query: ", $scope.training.id);
-        TrainingRoot.query({training_id: $scope.training.id}).$promise.then(function(foundRootNode){
+        TrainingTreeUtil.RootNodeOfTraining.query({id: $scope.training.id}).$promise.then(function(foundRootNode){
             console.log("The foundRootNode", foundRootNode);
             TrainingTreeNode.get({id: foundRootNode.id}).$promise.then(function(realRootNode) {
 
