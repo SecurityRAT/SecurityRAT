@@ -1,8 +1,9 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .factory('TrainingTreeNode', function ($resource, DateUtils, TrainingCustomSlideNode, TrainingBranchNode,
-                                           TrainingCategoryNode, TrainingRequirementNode, TrainingGeneratedSlideNode) {
+    .factory('TrainingTreeNode', function ($resource, $sanitize, DateUtils, TrainingCustomSlideNode, TrainingBranchNode,
+                                           TrainingCategoryNode, TrainingRequirementNode, TrainingGeneratedSlideNode,
+                                           ChildrenOf) {
         var onSaveFinished = function (result) {
             // $scope.$emit('sdlctoolApp:trainingUpdate', result);
         };
@@ -119,8 +120,80 @@ angular.module('sdlctoolApp')
 
             });
         };
-        TrainingTreeNode.prototype.loadSubTree = function(rootNode_id) {
 
+        TrainingTreeNode.prototype.loadSubTree = function() {
+            var node = this;
+            return new Promise(function(resolve, reject) {
+                var subPromises = [ChildrenOf.query({id: node.id}).$promise];
+                node.children = [];
+
+                subPromises[0].then(function(children) {
+
+                    if(children != null) {
+                        children.forEach(function(child) {
+                            // convert the result to a full TrainingTreeNode-Object (which has all member methods)
+                            var childNode = new TrainingTreeNode();
+                            childNode.id = child.id;
+                            childNode.node_type = child.node_type;
+                            childNode.parent_id = child.parent_id;
+                            childNode.sort_order = child.sort_order;
+                            childNode.training_id = child.training_id;
+
+                            subPromises.push(childNode.loadSubTree());
+                            node.children.push(childNode);
+                        })
+                    }
+
+                    Promise.all(subPromises).then(function() {
+                        resolve();
+                    })
+                });
+                // TODO get special node table infos
+
+
+            });
+        };
+
+        TrainingTreeNode.prototype.loadContent = function() {
+            var node = this;
+            var content = "";
+            switch(node.node_type) {
+                case "CustomSlideNode":
+                    content = node.content;
+                    if(content != null) {
+                        content = content
+                            .replace(/({{ *training.name *}})/g, $scope.training.name)
+                            .replace(/({{ *parent.name *}})/g, $scope.getParentNode().name);
+                    }
+                    break;
+                case "GeneratedSlideNode":
+                    if(node.optColumn == null) {
+                        // TODO load content of skeleton slide
+                        content = "Skeleton Slide content";
+                    } else {
+                        // TODO load optcolumnContent
+                        content = "OptColumnContent";
+                    }
+                    break;
+            }
+            return $sanitize(content);
+        };
+
+        // load and return slides of this nodes subtree
+        TrainingTreeNode.prototype.loadSlides = function() {
+            var slides = [];
+            var nodeContent = this.loadContent();
+            if(nodeContent != null && nodeContent != "")
+                slides.push({content: nodeContent});
+
+            if(this.children != null) {
+                this.children.forEach(function(node) {
+                    node.loadSlides().forEach(function(new_slide) {
+                       slides.push(new_slide);
+                    });
+                });
+            }
+            return slides;
         };
 
         // Generate JSON for the jstree-library

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('TrainingCustomizeController', function ($scope, $rootScope, $stateParams, $sanitize, entity, Training, User, TrainingTreeNode) {
+    .controller('TrainingCustomizeController', function ($scope, $rootScope, $stateParams, entity, Training) {
         $scope.training = entity;
         $scope.firstTimeDrawingTree = true;
 
@@ -50,14 +50,8 @@ angular.module('sdlctoolApp')
         };
 
         $scope.updateSlidePreview = function() {
-            var content = $scope.selectedNode.data.content;
-            if(content != null) {
-                content = content
-                    .replace(/({{ *training.name *}})/g, $scope.training.name)
-                    .replace(/({{ *parent.name *}})/g, $scope.getParentNode().name);
-            } else content = "";
-            var content_sanitized = $sanitize(content);
-            $('#slidePreviewContent', frames['previewFrame'].document).html(content_sanitized);
+            var content = $scope.selectedNode.loadContent();
+            $('#slidePreviewContent', frames['previewFrame'].document).html(content);
         };
 
         // Custom Menu
