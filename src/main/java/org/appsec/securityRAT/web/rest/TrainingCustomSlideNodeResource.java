@@ -2,7 +2,9 @@ package org.appsec.securityRAT.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import org.appsec.securityRAT.domain.TrainingCustomSlideNode;
+import org.appsec.securityRAT.domain.TrainingTreeNode;
 import org.appsec.securityRAT.repository.TrainingCustomSlideNodeRepository;
+import org.appsec.securityRAT.repository.TrainingTreeNodeRepository;
 import org.appsec.securityRAT.repository.search.TrainingCustomSlideNodeSearchRepository;
 import org.appsec.securityRAT.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
@@ -37,6 +39,9 @@ public class TrainingCustomSlideNodeResource {
 
     @Inject
     private TrainingCustomSlideNodeSearchRepository trainingCustomSlideNodeSearchRepository;
+
+    @Inject
+    private TrainingTreeNodeRepository trainingTreeNodeRepository;
 
     /**
      * POST  /trainingCustomSlideNodes -> Create a new trainingCustomSlideNode.
@@ -130,5 +135,21 @@ public class TrainingCustomSlideNodeResource {
         return StreamSupport
             .stream(trainingCustomSlideNodeSearchRepository.search(queryString(query)).spliterator(), false)
             .collect(Collectors.toList());
+    }
+
+    /**
+     * GET TrainingCustomSlideNode by its node_id
+     */
+    @RequestMapping(value = "/TrainingCustomSlideNodeByTrainingTreeNode/{id}",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<TrainingCustomSlideNode> getTrainingCustomSlideNodeByTrainingTreeNode(@PathVariable Long id) {
+        log.debug("REST request to get TrainingCustomSlideNode with node_id : {}", id);
+        TrainingTreeNode node = trainingTreeNodeRepository.getOne(id);
+        TrainingCustomSlideNode result = trainingCustomSlideNodeRepository.getTrainingCustomSlideNodeByTrainingTreeNode(node);
+        return ResponseEntity.ok()
+            .headers(new HttpHeaders())
+            .body(result);
     }
 }

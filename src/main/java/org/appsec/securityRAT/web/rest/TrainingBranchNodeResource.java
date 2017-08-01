@@ -2,7 +2,9 @@ package org.appsec.securityRAT.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import org.appsec.securityRAT.domain.TrainingBranchNode;
+import org.appsec.securityRAT.domain.TrainingTreeNode;
 import org.appsec.securityRAT.repository.TrainingBranchNodeRepository;
+import org.appsec.securityRAT.repository.TrainingTreeNodeRepository;
 import org.appsec.securityRAT.repository.search.TrainingBranchNodeSearchRepository;
 import org.appsec.securityRAT.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
@@ -21,7 +23,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryString;
 
 /**
  * REST controller for managing TrainingBranchNode.
@@ -37,6 +39,9 @@ public class TrainingBranchNodeResource {
 
     @Inject
     private TrainingBranchNodeSearchRepository trainingBranchNodeSearchRepository;
+
+    @Inject
+    private TrainingTreeNodeRepository trainingTreeNodeRepository;
 
     /**
      * POST  /trainingBranchNodes -> Create a new trainingBranchNode.
@@ -130,5 +135,21 @@ public class TrainingBranchNodeResource {
         return StreamSupport
             .stream(trainingBranchNodeSearchRepository.search(queryString(query)).spliterator(), false)
             .collect(Collectors.toList());
+    }
+
+    /**
+     * GET TrainingCustomSlideNode by its node_id
+     */
+    @RequestMapping(value = "/TrainingBranchNodeByTrainingTreeNode/{id}",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<TrainingBranchNode> getTrainingBranchNodeByTrainingTreeNode(@PathVariable Long id) {
+        log.debug("REST request to get TrainingBranchNode with node_id : {}", id);
+        TrainingTreeNode node = trainingTreeNodeRepository.getOne(id);
+        TrainingBranchNode result = trainingBranchNodeRepository.getTrainingBranchNodeByTrainingTreeNode(node);
+        return ResponseEntity.ok()
+            .headers(new HttpHeaders())
+            .body(result);
     }
 }

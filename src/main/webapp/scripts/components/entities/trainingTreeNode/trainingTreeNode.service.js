@@ -3,7 +3,7 @@
 angular.module('sdlctoolApp')
     .factory('TrainingTreeNode', function ($resource, $sanitize, DateUtils, TrainingCustomSlideNode, TrainingBranchNode,
                                            TrainingCategoryNode, TrainingRequirementNode, TrainingGeneratedSlideNode,
-                                           ChildrenOf) {
+                                           ChildrenOf, TrainingCustomSlideNodeByTrainingTreeNode, TrainingBranchNodeByTrainingTreeNode) {
         var onSaveFinished = function (result) {
             // $scope.$emit('sdlctoolApp:trainingUpdate', result);
         };
@@ -127,6 +127,23 @@ angular.module('sdlctoolApp')
                 var subPromises = [ChildrenOf.query({id: node.id}).$promise];
                 node.children = [];
 
+                switch(node.node_type) {
+                    case "CustomSlideNode":
+                        var query_promise = TrainingCustomSlideNodeByTrainingTreeNode.get({id: node.id}).$promise;
+                        subPromises.push(query_promise);
+                        query_promise.then(function(result) {
+                            node.content = result.content;
+                        });
+                        break;
+                    case "BranchNode":
+                        var query_promise = TrainingBranchNodeByTrainingTreeNode.get({id: node.id}).$promise;
+                        subPromises.push(query_promise);
+                        query_promise.then(function(result) {
+                            node.name = result.name;
+                        });
+                        break;
+                }
+
                 subPromises[0].then(function(children) {
 
                     if(children != null) {
@@ -148,9 +165,6 @@ angular.module('sdlctoolApp')
                         resolve();
                     })
                 });
-                // TODO get special node table infos
-
-
             });
         };
 
@@ -162,8 +176,8 @@ angular.module('sdlctoolApp')
                     content = node.content;
                     if(content != null) {
                         content = content
-                            .replace(/({{ *training.name *}})/g, $scope.training.name)
-                            .replace(/({{ *parent.name *}})/g, $scope.getParentNode().name);
+                            .replace(/({{ *training.name *}})/g, node.training_id.name)
+                            .replace(/({{ *parent.name *}})/g, node.parent_id.name);
                     }
                     break;
                 case "GeneratedSlideNode":
