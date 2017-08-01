@@ -145,6 +145,7 @@ public class TrainingTreeNodeResource {
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<TrainingTreeNode> getTrainingRoot(@PathVariable Long training_id) {
+        log.debug("REST request to get the rootNode of the training with id : {}", training_id);
         Training training = trainingRepository.getOne(training_id);
         TrainingTreeNode result = trainingTreeNodeRepository.getTrainingRoot(training);
         return ResponseEntity.ok()
@@ -160,6 +161,7 @@ public class TrainingTreeNodeResource {
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<List<TrainingTreeNode>> getChildrenOf(@PathVariable Long id) {
+        log.debug("REST request to get all children of TrainingTreeNode with id : {}", id);
         TrainingTreeNode node = trainingTreeNodeRepository.getOne(id);
         List<TrainingTreeNode> result = trainingTreeNodeRepository.getChildrenOf(node);
         return ResponseEntity.ok()
