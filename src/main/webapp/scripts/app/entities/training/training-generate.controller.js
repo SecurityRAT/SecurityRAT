@@ -42,7 +42,7 @@ angular.module('sdlctoolApp')
             trainingRoot.opened = true;
 
             // add children
-            trainingRoot.addChildNode("CustomSlideNode", "Title", true);
+            trainingRoot.addCustomSlideNode("Title", "<h1>{{ training.name }}</h1>");
             var intro = trainingRoot.addChildNode("BranchNode", "Introduction", true );
             intro.addCustomSlideNode("Title", "{{ parent.name }}");
             intro.addCustomSlideNode("Welcome", "<h2>Welcome to {{ training.name }}</h2>");
