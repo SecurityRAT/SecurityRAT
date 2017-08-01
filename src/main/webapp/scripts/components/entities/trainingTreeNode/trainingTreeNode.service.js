@@ -142,6 +142,20 @@ angular.module('sdlctoolApp')
                             node.name = result.name;
                         });
                         break;
+                    case "RequirementNode":
+                        var query_promise = TrainingTreeUtil.RequirementNode.get({id: node.id}).$promise;
+                        subPromises.push(query_promise);
+                        query_promise.then(function(result) {
+                            node.requirement = result.requirementSkeleton;
+                        });
+                        break;
+                    case "GeneratedSlideNode":
+                        var query_promise = TrainingTreeUtil.GeneratedSlideNode.get({id: node.id}).$promise;
+                        subPromises.push(query_promise);
+                        query_promise.then(function(result) {
+                            node.optColumn = result.optColumn;
+                        });
+                        break;
                 }
 
                 subPromises[0].then(function(children) {

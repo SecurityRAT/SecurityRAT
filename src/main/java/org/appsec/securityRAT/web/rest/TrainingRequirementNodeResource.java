@@ -2,7 +2,9 @@ package org.appsec.securityRAT.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import org.appsec.securityRAT.domain.TrainingRequirementNode;
+import org.appsec.securityRAT.domain.TrainingTreeNode;
 import org.appsec.securityRAT.repository.TrainingRequirementNodeRepository;
+import org.appsec.securityRAT.repository.TrainingTreeNodeRepository;
 import org.appsec.securityRAT.repository.search.TrainingRequirementNodeSearchRepository;
 import org.appsec.securityRAT.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
@@ -21,7 +23,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryString;
 
 /**
  * REST controller for managing TrainingRequirementNode.
@@ -37,6 +39,9 @@ public class TrainingRequirementNodeResource {
 
     @Inject
     private TrainingRequirementNodeSearchRepository trainingRequirementNodeSearchRepository;
+
+    @Inject
+    private TrainingTreeNodeRepository trainingTreeNodeRepository;
 
     /**
      * POST  /trainingRequirementNodes -> Create a new trainingRequirementNode.
@@ -130,5 +135,21 @@ public class TrainingRequirementNodeResource {
         return StreamSupport
             .stream(trainingRequirementNodeSearchRepository.search(queryString(query)).spliterator(), false)
             .collect(Collectors.toList());
+    }
+
+    /**
+     * GET TrainingRequirementNode by its node_id
+     */
+    @RequestMapping(value = "/TrainingRequirementNodeByTrainingTreeNode/{id}",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<TrainingRequirementNode> getTrainingRequirementNodeByTrainingTreeNode(@PathVariable Long id) {
+        log.debug("REST request to get TrainingRequirementNode with node_id : {}", id);
+        TrainingTreeNode node = trainingTreeNodeRepository.getOne(id);
+        TrainingRequirementNode result = trainingRequirementNodeRepository.getTrainingRequirementNodeByTrainingTreeNode(node);
+        return ResponseEntity.ok()
+            .headers(new HttpHeaders())
+            .body(result);
     }
 }

@@ -12,6 +12,12 @@ angular.module('sdlctoolApp')
             }),
             BranchNode: $resource('api/TrainingBranchNodeByTrainingTreeNode/:id', {}, {
                 query: { method: 'GET', isArray: false}
+            }),
+            RequirementNode: $resource('api/TrainingRequirementNodeByTrainingTreeNode/:id', {}, {
+                query: { method: 'GET', isArray: false}
+            }),
+            GeneratedSlideNode: $resource('api/TrainingGeneratedSlideNodeByTrainingTreeNode/:id', {}, {
+                query: { method: 'GET', isArray: false}
             })
         };
     });

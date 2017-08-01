@@ -2,7 +2,10 @@ package org.appsec.securityRAT.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import org.appsec.securityRAT.domain.TrainingGeneratedSlideNode;
+import org.appsec.securityRAT.domain.TrainingRequirementNode;
+import org.appsec.securityRAT.domain.TrainingTreeNode;
 import org.appsec.securityRAT.repository.TrainingGeneratedSlideNodeRepository;
+import org.appsec.securityRAT.repository.TrainingTreeNodeRepository;
 import org.appsec.securityRAT.repository.search.TrainingGeneratedSlideNodeSearchRepository;
 import org.appsec.securityRAT.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
@@ -21,7 +24,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryString;
 
 /**
  * REST controller for managing TrainingGeneratedSlideNode.
@@ -37,6 +40,9 @@ public class TrainingGeneratedSlideNodeResource {
 
     @Inject
     private TrainingGeneratedSlideNodeSearchRepository trainingGeneratedSlideNodeSearchRepository;
+
+    @Inject
+    private TrainingTreeNodeRepository trainingTreeNodeRepository;
 
     /**
      * POST  /trainingGeneratedSlideNodes -> Create a new trainingGeneratedSlideNode.
@@ -130,5 +136,21 @@ public class TrainingGeneratedSlideNodeResource {
         return StreamSupport
             .stream(trainingGeneratedSlideNodeSearchRepository.search(queryString(query)).spliterator(), false)
             .collect(Collectors.toList());
+    }
+
+    /**
+     * GET TrainingGeneratedSlideNode by its node_id
+     */
+    @RequestMapping(value = "/TrainingGeneratedSlideNodeByTrainingTreeNode/{id}",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<TrainingGeneratedSlideNode> getTrainingGeneratedSlideNodeByTrainingTreeNode(@PathVariable Long id) {
+        log.debug("REST request to get TrainingGeneratedSlideNode with node_id : {}", id);
+        TrainingTreeNode node = trainingTreeNodeRepository.getOne(id);
+        TrainingGeneratedSlideNode result = trainingGeneratedSlideNodeRepository.getTrainingGeneratedSlideNodeByTrainingTreeNode(node);
+        return ResponseEntity.ok()
+            .headers(new HttpHeaders())
+            .body(result);
     }
 }
