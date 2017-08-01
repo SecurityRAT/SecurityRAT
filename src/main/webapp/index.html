@@ -27,12 +27,12 @@
         <!--[if lt IE 9]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-        <div data-ng-if="toState.name!=='presentation'" id="ribbon" data-ng-show="{{ENV === 'dev'}}" class="development" data-ng-cloak="" ></div>
-        <div ui-view="navbar" data-ng-cloak="" data-ng-if="toState.name!=='presentation'"></div>
-        <div id="mainContent" data-ng-class="{jumbotron: (toState.name=='editor'), reveal: (toState.name=='presentation'), container: ((toState.name!='presentation'))}">
+        <div data-ng-if="toState.name!=='presentation' && toState.name!=='viewTraining'" id="ribbon" data-ng-show="{{ENV === 'dev'}}" class="development" data-ng-cloak="" ></div>
+        <div ui-view="navbar" data-ng-cloak="" data-ng-if="toState.name!=='presentation' && toState.name!=='viewTraining'"></div>
+        <div id="mainContent" data-ng-class="{jumbotron: (toState.name=='editor'), reveal: (toState.name=='presentation' || toState.name=='viewTraining'), container: ((toState.name!='presentation' && toState.name!='viewTraining'))}">
             <div ui-view="content" ></div>
 
-            <div class="footer" data-ng-if="toState.name!=='presentation'">
+            <div class="footer" data-ng-if="toState.name!=='presentation' && toState.name!=='viewTraining'">
                 <p translate="footer"><a href="https://github.com/SecurityRAT">https://github.com/SecurityRAT</a></p>
             </div>
         </div>
@@ -324,6 +324,7 @@
     <script src="scripts/app/entities/training/training-detail.controller.js"></script>
     <script src="scripts/app/entities/training/training-generate.controller.js"></script>
     <script src="scripts/app/entities/training/training-edit.controller.js"></script>
+    <script src="scripts/app/entities/training/training-view.controller.js"></script>
     <script src="scripts/app/entities/training/nested-views/training-skeleton.controller.js"></script>
     <script src="scripts/app/entities/training/nested-views/training-requirements.controller.js"></script>
     <script src="scripts/app/entities/training/nested-views/training-content.controller.js"></script>

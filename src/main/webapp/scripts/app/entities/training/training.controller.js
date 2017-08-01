@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('TrainingController', function ($scope, $filter, Training, TrainingSearch) {
+    .controller('TrainingController', function ($scope, $filter, $state,  Training, TrainingSearch) {
         $scope.trainings = [];
 
         $scope.today = $filter('date')(new Date(), 'mediumDate');
@@ -46,4 +46,8 @@ angular.module('sdlctoolApp')
         $scope.clear = function () {
             $scope.training = {name: null, description: null, allRequirementsSelected: null, id: null};
         };
+
+        $scope.startPresentation = function(id) {
+            window.open($state.href('viewTraining', {id: id}, '_blank'));
+        }
     });

@@ -67,6 +67,12 @@
                     <td>{{training.createdDate | date : "mediumDate" }} by {{training.createdBy}}</td>
                     <td>{{training.lastModifiedDate | date : "shortTime" }} by {{training.lastModifiedBy}}</td>
                     <td>
+                    <td class="col-sm-2">
+                        <button type="button"
+                                data-ng-click="startPresentation(training.id)"
+                                class="btn btn-primary btn-sm">
+                            <span class="glyphicon glyphicon-film"></span>&nbsp;<span> Start</span>
+                        </button>
                         <button type="submit"
                                 ui-sref="training.detail({id:training.id})"
                                 class="btn btn-info btn-sm">
