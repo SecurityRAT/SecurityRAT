@@ -15,6 +15,6 @@ public interface TrainingTreeNodeRepository extends JpaRepository<TrainingTreeNo
     @Query("select distinct trainingTreeNode from TrainingTreeNode trainingTreeNode where trainingTreeNode.training_id = :training and trainingTreeNode.parent_id is null")
     TrainingTreeNode getTrainingRoot(@Param("training") Training training);
 
-    @Query("select distinct trainingTreeNode from TrainingTreeNode trainingTreeNode where trainingTreeNode.parent_id = :parent_node")
+    @Query("select distinct trainingTreeNode from TrainingTreeNode trainingTreeNode where trainingTreeNode.parent_id = :parent_node order by trainingTreeNode.sort_order")
     List<TrainingTreeNode> getChildrenOf(@Param("parent_node") TrainingTreeNode parentNode);
 }
