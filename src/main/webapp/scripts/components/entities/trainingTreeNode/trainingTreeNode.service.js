@@ -182,29 +182,70 @@ angular.module('sdlctoolApp')
             });
         };
 
+        var getTrainingName = function(node) {
+            var result = "";
+            if(node.training_id != null)
+                if(node.training_id.name != null)
+                    result = node.training_id.name;
+            return result;
+        };
+        var getParentName = function(node) {
+            var result = "";
+            if(node.parent_id != null)
+                if(node.parent_id.name != null)
+                    result = node.parent_id.name;
+            return result;
+        };
+
         TrainingTreeNode.prototype.loadContent = function() {
             var node = this;
             var content = "";
-            switch(node.node_type) {
-                case "CustomSlideNode":
-                    content = node.content;
-                    if(content != null) {
-                        content = content
-                            .replace(/({{ *training.name *}})/g, node.training_id.name)
-                            .replace(/({{ *parent.name *}})/g, node.parent_id.name);
-                    }
-                    break;
-                case "GeneratedSlideNode":
-                    if(node.optColumn == null) {
-                        // TODO load content of skeleton slide
-                        content = "Skeleton Slide content";
-                    } else {
-                        // TODO load optcolumnContent
-                        content = "OptColumnContent";
-                    }
-                    break;
-            }
-            return $sanitize(content);
+
+            return new Promise(function(resolve, reject) {
+                var subPromises = [];
+                switch (node.node_type) {
+                    case "CustomSlideNode":
+                        content = node.content;
+                        if (content != null) {
+                            content = content
+                                .replace(/({{ *training.name *}})/g, getTrainingName(node))
+                                .replace(/({{ *parent.name *}})/g, getParentName(node));
+                        }
+                        break;
+                    case "GeneratedSlideNode":
+                        var parentNode = node.parent_id;
+                        var reqPromise = RequirementSkeleton.get({id: parentNode.requirement.id}).$promise;
+                        subPromises.push(reqPromise);
+
+                        if (node.optColumn == null) {
+                            if (parentNode.node_type == "RequirementNode") {
+                                reqPromise.then(function (req) {
+                                    content = "<h2>" + req.shortName + "</h2>"
+                                        + req.description;
+                                });
+                            }
+                        } else {
+                            var optPromise = TrainingTreeUtil.OptColumnContent.query(
+                                {
+                                    optColumnId: node.optColumn.id,
+                                    requirementId: parentNode.requirement.id
+                                }).$promise;
+
+                            subPromises.push(optPromise);
+                            optPromise.then(function(optColumnContent) {
+                                if(optColumnContent.content != null) {
+                                    content = "<h3>"+node.optColumn.name+"</h3>"
+                                        + optColumnContent.content;
+                                }
+                            });
+                        }
+                        break;
+                }
+
+                Promise.all(subPromises).then(function() {
+                  resolve($sanitize(content));
+                });
+            });
         };
 
         // load and return slides of this nodes subtree
