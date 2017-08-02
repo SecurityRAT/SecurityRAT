@@ -30,7 +30,8 @@ angular.module('sdlctoolApp')
 
         $scope.generate = function() {
             var requestString = "";
-            var collectionArray = [];
+            var selectedCollections = [];
+            var selectedProjectTypes = [];
 
             // clear the tree
             trainingRoot = new TrainingTreeNode();
@@ -56,15 +57,20 @@ angular.module('sdlctoolApp')
             // build the query to get the data (requirements, categories)
             if(!Training.allRequirementsSelected) {
                 $scope.Training.collections.forEach(function(collection) {
-                   collectionArray.push(collection.id);
+                   selectedCollections.push(collection.id);
+                });
+                $scope.Training.projectTypes.forEach(function(projectType) {
+                    selectedProjectTypes.push(projectType.id);
                 });
                 var requirementsSettings = {
-                    collections: collectionArray,
-                    projectTypes: [1]
+                    collections: selectedCollections,
+                    projectTypes: selectedProjectTypes
                 };
                 angular.forEach(requirementsSettings, function(value, key) {
                     requestString += key + '=' + value + '&';
                 });
+            } else {
+                //TODO load ALL categories with requirements (sorted)
             }
             //Remove trailing &
             requestString = requestString.slice(0, -1);

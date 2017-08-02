@@ -57,12 +57,10 @@
             </div>
             <div class="col-sm-1"></div>
             <div class="col-sm-3" uib-dropdown>
-                <button class="btn btn-default" data-ng-disabled="disabled" type="button" uib-dropdown-toggle>{{projectTypeModel.name}} <span class="caret"></span></button>
-                <ul class="uib-dropdown-menu" aria-labelledby="typeDropdown">
-                    <li  data-ng-repeat="type in projectType"><a href="" data-ng-click="selectProject(type)">{{type.name}}</a></li>
-                </ul>
-                <!--  <select data-ng-options="type as type.name for type in projectType" data-ng-model="projectTypeModel" data-ng-change="selectProject(projectTypeModel)"
-                class="btn btn-default form-control"></select>-->
+                <div ng-dropdown-multiselect="" options="projectType"
+                     selected-model="selectedProjectType"
+                     extra-settings="selectedProjectTypeSettings"
+                     events="selectedProjectTypeEvents"></div><BR>
             </div>
         </div>
     </div>

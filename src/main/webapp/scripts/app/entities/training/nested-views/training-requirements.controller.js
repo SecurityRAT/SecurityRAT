@@ -16,10 +16,14 @@ angular.module('sdlctoolApp')
                 $scope.training.collections.forEach(function(col) {
                     $scope.selectCollections(col);
                 });
+                $scope.training.projectTypes.forEach(function(prot) {
+                    $scope.selectedProjectType.push(prot);
+                })
             });
         } else {
             // this is a new training! Avoid undefined members.
             $scope.training.collections = [];
+            $scope.training.projectTypes = []
             $scope.training.allRequirementsSelected = true;
         }
 
@@ -69,6 +73,8 @@ angular.module('sdlctoolApp')
             showCheckAll: false, showUncheckAll: false,
             displayProp: 'name', idProp: 'id', externalIdProp: ''
         };
+        $scope.selectedProjectTypeSettings = $scope.selectedCollectionSettings;
+
         $scope.selectedCollectionEvents = {
             onItemSelect : function(item) {
                 $scope.selectCollections(item);
@@ -77,6 +83,16 @@ angular.module('sdlctoolApp')
                 $scope.deselectCollections(item);
             }
         };
+        $scope.selectedProjectTypeEvents = {
+            onItemSelect : function(item) {
+                $scope.selectProjectType(item);
+            },
+            onItemDeselect : function(item) {
+                $scope.deselectProjectType(item);
+            }
+        };
+
+        console.log("find category.selectedCollectionSets in", $scope.category);
 
         apiFactory.getAll("collections").then(
             function(collections) {
@@ -152,22 +168,32 @@ angular.module('sdlctoolApp')
                 }
             });
         };
-        $scope.selectProject = function(item) {
+        $scope.selectProjectType = function(item) {
+            console.log("BEFORE $scope.selectedProjectType", $scope.selectedProjectType);
             $scope.projectTypeModel = item;
-            var optsColumn = [];
-            var statsColumn = [];
-            angular.forEach($scope.projectType, function(type) {
-                if (item.id === type.id) {
-                    optsColumn = type.optionColumns;
-                    statsColumn = type.statusColumns;
+
+
+
+            var saved_in_training = false;
+            $scope.training.projectTypes.forEach(function(saved_col) {
+                if(saved_col.id === item.id) {
+                    saved_in_training = true;
+                    return;
                 }
             });
-            $scope.selectedProjectType = [{
-                projectTypeId: item.id,
-                name: item.name,
-                optsColumn: optsColumn,
-                statsColumn: statsColumn
-            }];
+            if(!saved_in_training) {
+                $scope.training.projectTypes.push(item);
+            }
+            console.log("AFTER $scope.selectedProjectType", $scope.selectedProjectType);
+            console.log("$scope.training.projectTypes", $scope.training.projectTypes);
+        };
+
+        $scope.deselectProjectType = function(item) {
+            var id = $scope.training.projectTypes.indexOf(item);
+            $scope.training.projectTypes.splice(id,1);
+
+            console.log("$scope.selectedProjectType", $scope.selectedProjectType);
+            console.log("$scope.training.projectTypes", $scope.training.projectTypes);
         };
 
         $scope.selectCollections = function(item) {
