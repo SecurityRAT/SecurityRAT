@@ -3,7 +3,7 @@
 angular.module('sdlctoolApp')
     .factory('TrainingTreeNode', function ($resource, $sanitize, DateUtils, TrainingCustomSlideNode, TrainingBranchNode,
                                            TrainingCategoryNode, TrainingRequirementNode, TrainingGeneratedSlideNode,
-                                           TrainingTreeUtil) {
+                                           TrainingTreeUtil, RequirementSkeleton) {
         var onSaveFinished = function (result) {
             // $scope.$emit('sdlctoolApp:trainingUpdate', result);
         };
@@ -166,7 +166,7 @@ angular.module('sdlctoolApp')
                             var childNode = new TrainingTreeNode();
                             childNode.id = child.id;
                             childNode.node_type = child.node_type;
-                            childNode.parent_id = child.parent_id;
+                            childNode.parent_id = node;
                             childNode.sort_order = child.sort_order;
                             childNode.training_id = child.training_id;
 
@@ -210,11 +210,8 @@ angular.module('sdlctoolApp')
         // load and return slides of this nodes subtree
         TrainingTreeNode.prototype.loadSlides = function() {
             var slides = [];
-            var nodeContent = this.loadContent();
-            if(nodeContent != null && nodeContent != "")
-                slides.push({content: nodeContent});
+            var node = this;
 
-            if(this.children != null) {
                 this.children.forEach(function(node) {
                     node.loadSlides().forEach(function(new_slide) {
                        slides.push(new_slide);
