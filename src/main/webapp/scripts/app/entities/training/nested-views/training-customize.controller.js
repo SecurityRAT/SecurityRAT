@@ -26,7 +26,6 @@ angular.module('sdlctoolApp')
                 var selectedNodeName = $scope.selectedNode.text;
 
                 if(selectedNodeType !== "BranchNode" && selectedNodeType !== "RequirementNode") {
-                    $("#headingBlock").hide();
                     $("#editBlock").fadeIn();
                     $("#previewBlock").fadeIn();
 
