@@ -15,6 +15,14 @@
             "relationshipType": "many-to-many",
             "otherEntityField": "name",
             "ownerSide": true
+        },
+        {
+            "relationshipId": 6,
+            "relationshipName": "projectType",
+            "otherEntityName": "projectType",
+            "relationshipType": "many-to-many",
+            "otherEntityField": "name",
+            "ownerSide": true
         }
     ],
     "fields": [

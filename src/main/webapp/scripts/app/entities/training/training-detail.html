@@ -78,6 +78,16 @@
                     <span>
                 </td>
             </tr>
+            <tr>
+                <td>
+                    <span>projectType</span>
+                </td>
+                <td>
+                    <span ng-repeat="projectType in training.projectTypes">
+                        <a class="form-control-static" ui-sref="projectType.detail({id: {{projectType.id}}})">{{projectType.name}}</a>{{$last ? '' : ', '}}
+                    <span>
+                </td>
+            </tr>
             </tbody>
         </table>
     </div>

@@ -48,6 +48,13 @@ public class Training extends AbstractAuditingEntity implements Serializable {
                inverseJoinColumns = @JoinColumn(name="collections_id", referencedColumnName="ID"))
     private Set<CollectionInstance> collections = new HashSet<>();
 
+    @ManyToMany
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    @JoinTable(name = "TRAINING_PROJECTTYPE",
+               joinColumns = @JoinColumn(name="trainings_id", referencedColumnName="ID"),
+               inverseJoinColumns = @JoinColumn(name="projecttypes_id", referencedColumnName="ID"))
+    private Set<ProjectType> projectTypes = new HashSet<>();
+
     public Long getId() {
         return id;
     }
@@ -94,6 +101,14 @@ public class Training extends AbstractAuditingEntity implements Serializable {
 
     public void setCollections(Set<CollectionInstance> collectionInstances) {
         this.collections = collectionInstances;
+    }
+
+    public Set<ProjectType> getProjectTypes() {
+        return projectTypes;
+    }
+
+    public void setProjectTypes(Set<ProjectType> projectTypes) {
+        this.projectTypes = projectTypes;
     }
 
     @Override

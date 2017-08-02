@@ -11,10 +11,10 @@ import java.util.List;
  */
 public interface TrainingRepository extends JpaRepository<Training,Long> {
 
-    @Query("select distinct training from Training training left join fetch training.optColumns left join fetch training.collections")
+    @Query("select distinct training from Training training left join fetch training.optColumns left join fetch training.collections left join fetch training.projectTypes")
     List<Training> findAllWithEagerRelationships();
 
-    @Query("select training from Training training left join fetch training.optColumns left join fetch training.collections where training.id =:id")
+    @Query("select training from Training training left join fetch training.optColumns left join fetch training.collections left join fetch training.projectTypes where training.id =:id")
     Training findOneWithEagerRelationships(@Param("id") Long id);
 
 }
