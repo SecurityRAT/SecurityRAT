@@ -253,13 +253,28 @@ angular.module('sdlctoolApp')
             var slides = [];
             var node = this;
 
-                this.children.forEach(function(node) {
-                    node.loadSlides().forEach(function(new_slide) {
-                       slides.push(new_slide);
+            return new Promise(function(resolve, reject) {
+                var subPromises = [node.loadContent()];
+                subPromises[0].then(function(nodeContent) {
+                    if(nodeContent != null && nodeContent != "")
+                        slides.push({content: nodeContent});
+
+                    if(node.children != null) {
+                        node.children.forEach(function (childNode) {
+                            var subPromise = childNode.loadSlides();
+                            subPromises.push(subPromise);
+                            subPromise.then(function (childSlides) {
+                                childSlides.forEach(function (new_slide) {
+                                    slides.push(new_slide);
+                                });
+                            });
+                        });
+                    }
+                    Promise.all(subPromises).then(function() {
+                        resolve(slides);
                     });
                 });
-            }
-            return slides;
+            });
         };
 
         // Generate JSON for the jstree-library
