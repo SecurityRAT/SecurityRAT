@@ -28,7 +28,7 @@
                         </div>
                         <div id="UsSpinner" data-ng-if="exportProperty.showSpinner" class="text-center col-sm-1">
                             <span spinner-on="exportProperty.showSpinner" us-spinner="{radius:5, width:3, length:3, lines:9}" uib-popover="JIRA Authentication running..."
-                                popover-placement="top" popover-trigger="mouseenter" popover-append-to-body></span>
+                                popover-placement="top" popover-trigger="mouseenter" ></span>
                         </div>
                         <div class="col-sm-offset-1" uib-dropdown auto-close="disabled" data-ng-if="((jiraAlternatives.mandatoryFields | filter : {configurable : true}).length > 0) && fields.issuetype.name && !checks.isTicket">
                             <button type="button" class="btn btn-default" uib-dropdown-toggle id="dropdown-fields" data-ng-click="getHeight('dropdown-fields')">

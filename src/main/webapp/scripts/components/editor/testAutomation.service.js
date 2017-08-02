@@ -87,7 +87,7 @@ angular.module('sdlctoolApp')
                     if (angular.isDefined(headers.location)) {
                         resolve(headers.location);
                     } else {
-                        reject("error")
+                        reject("error");
                     }
                 }).catch(function (response) {
                     reject(response)

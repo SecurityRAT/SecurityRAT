@@ -86,7 +86,13 @@ angular.module('sdlctoolApp')
             	var yamlExport = {};
             	var projectTypeIdValue = 0;
             	var projectTypeNameValue = '';
-
+                var ticket = {};
+                if(angular.isDefined(settings.ticket.url)) {
+                    ticket.url = settings.ticket.url;
+                }
+                if(angular.isDefined(settings.ticket.key)) {
+                    ticket.key = settings.ticket.key;
+                }
             	// this is done this way to prevent exception if the settings.project is empty
                 angular.forEach(settings.projectType, function(projectType) {
                     projectTypeIdValue = projectType.projectTypeId;
@@ -94,7 +100,7 @@ angular.module('sdlctoolApp')
                 });
                 angular.extend(yamlExport, {
                     name: settings.name,
-                    ticket: {url: settings.ticket.url, key: settings.ticket.key },
+                    ticket: ticket,
                     projectType: [{ 
                     	projectTypeId: projectTypeIdValue,
                     	projectTypeName: projectTypeNameValue

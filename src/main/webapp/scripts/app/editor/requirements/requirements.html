@@ -279,8 +279,8 @@
                             </div>
                         </th>
                         <th class="text-center" data-ng-if="ticket.url">
-                            <div ng-dropdown-multiselect="" options="jiraStatus.allStatus" selected-model="jiraStatus.selectedStatus" translation-texts="jiraStatus.jiraStatusLabelText"
-                                extra-settings="selectedJiraStatusSettings" disabled="!requirementProperties.hasIssueLinks" horizontal>
+                            <div data-ng-dropdown-multiselect="" options="jiraStatus.allStatus" selected-model="jiraStatus.selectedStatus" translation-texts="jiraStatus.jiraStatusLabelText"
+                                extra-settings="selectedJiraStatusSettings" disabled="isStatusArrayEmpty()" >
                             </div>
                             <!-- <p uib-collapse="!requirementProperties.hasIssueLinks" data-ng-click="requirementProperties.hasIssueLinks = !requirementProperties.hasIssueLinks">
                                 <span class="glyphicon glyphicon-chevron-down positionChevron hide-chevron" uib-tooltip="Hide this column" tooltip-append-to-body></span>
@@ -359,7 +359,7 @@
                         </td>
                         <td class="text-center" data-ng-style="reqs.isNew && {'background-color':'rgb(204, 255, 204)'} || reqs.isOld && {'background-color':'rgb(255, 204, 204)'}"
                             data-ng-if="ticket.url">
-                            <div data-ng-if="reqs.linkStatus.summary && requirementProperties.hasIssueLinks">
+                            <div data-ng-if="reqs.linkStatus.issueKey">
                                 <a href="{{reqs.ticket}}" target="_blank" uib-popover-template="jiraStatus.displayStatusTemplateUrl"
                                     popover-trigger="mouseenter" popover-append-to-body="true">
                                     <img data-ng-src="{{reqs.linkStatus.iconUrl}}" data-ng-if="reqs.linkStatus.iconUrl != null" popover-append-to-body="true" /> {{reqs.linkStatus.name}}

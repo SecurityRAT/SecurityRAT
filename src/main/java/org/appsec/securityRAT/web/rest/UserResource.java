@@ -1,8 +1,6 @@
 package org.appsec.securityRAT.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
 
 import org.appsec.securityRAT.domain.User;
 import org.appsec.securityRAT.repository.UserRepository;
@@ -23,10 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 
-import java.io.File;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;

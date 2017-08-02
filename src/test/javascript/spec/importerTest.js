@@ -129,15 +129,15 @@ describe('Protractor Security RAT importer testsuite', function() {
 			browser.get(browser.params.testHost);
 			importArtifact.click();
 			browser.sleep(1000);
-			(element(by.linkText('Import from File'))).click();
-			var fileToUpload = '../../../../../Downloads/' + value;
-			 var absolutePath = path.resolve(__dirname, fileToUpload);
+			// (element(by.linkText('Import from File'))).click();
+			// var fileToUpload = '../../../../../Downloads/' + value;
+			//  var absolutePath = path.resolve(__dirname, fileToUpload);
 			
-			var input = element(by.id('fileUpload'));
+			// var input = element(by.id('fileUpload'));
 			
-			input.sendKeys(absolutePath);
-			browser.sleep(3000);
-			(element(by.buttonText("Import"))).click();
+			// input.sendKeys(absolutePath);
+			// browser.sleep(3000);
+			// (element(by.buttonText("Import"))).click();
 			browser.sleep(2000);
 			browser.wait(function() {
 				return element(by.buttonText('Close')).isPresent();
