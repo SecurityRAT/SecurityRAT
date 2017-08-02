@@ -18,6 +18,10 @@ angular.module('sdlctoolApp')
             }),
             GeneratedSlideNode: $resource('api/TrainingGeneratedSlideNodeByTrainingTreeNode/:id', {}, {
                 query: { method: 'GET', isArray: false}
+            }),
+            OptColumnContent: $resource('api/optColumnContents/byOptColumnAndRequirement/:optColumnId' +
+                '/:requirementId', {}, {
+                query: { method: 'GET', isArray: false}
             })
         };
     });
