@@ -31,6 +31,8 @@ angular.module('sdlctoolApp')
         $scope.includeAll = true;
         $scope.requirementsSelected = 0;
         $scope.categoriesSelected = 0;
+        $rootScope.allCollections = [];
+        $rootScope.allProjectTypes = [];
 
         $scope.getSelectedCollectionsByCategory = function(category) {
             var result = [];
@@ -92,7 +94,6 @@ angular.module('sdlctoolApp')
             }
         };
 
-        console.log("find category.selectedCollectionSets in", $scope.category);
 
         apiFactory.getAll("collections").then(
             function(collections) {
@@ -101,6 +102,9 @@ angular.module('sdlctoolApp')
                     //filters the collectionsInstances by showOrder.
                     category.collectionInstances = $filter('orderBy')(category.collectionInstances, 'showOrder');
                     angular.extend(category,{selectedCollectionSets: $scope.getSelectedCollectionsByCategory(category)});
+                    category.collectionInstances.forEach(function(col) {
+                        $rootScope.allCollections.push(col.id);
+                    });
                 });
                 $scope.init();
             },
@@ -111,6 +115,9 @@ angular.module('sdlctoolApp')
         apiFactory.getAll("projectTypes").then(
             function(projectTypes) {
                 $scope.projectType = $filter('orderBy')(projectTypes, 'showOrder');
+                $scope.projectType.forEach(function(prot) {
+                    $rootScope.allProjectTypes.push(prot.id);
+                });
                 if($scope.selectedProjectType.length > 0) {
                     $scope.selectOldProjectTypeSettings();
                 }
@@ -124,7 +131,6 @@ angular.module('sdlctoolApp')
             $scope.oldSettings = sharedProperties.getProperty();
             if($scope.oldSettings != undefined && angular.equals(system, "old")) {
                 $scope.disabled = true;
-//                $scope.starterForm.name = $scope.oldSettings.name;
                 if($scope.training.collections != null)
                     $scope.selectedCollection = $scope.training.collections;
                 else {
@@ -172,8 +178,6 @@ angular.module('sdlctoolApp')
             console.log("BEFORE $scope.selectedProjectType", $scope.selectedProjectType);
             $scope.projectTypeModel = item;
 
-
-
             var saved_in_training = false;
             $scope.training.projectTypes.forEach(function(saved_col) {
                 if(saved_col.id === item.id) {
@@ -184,16 +188,11 @@ angular.module('sdlctoolApp')
             if(!saved_in_training) {
                 $scope.training.projectTypes.push(item);
             }
-            console.log("AFTER $scope.selectedProjectType", $scope.selectedProjectType);
-            console.log("$scope.training.projectTypes", $scope.training.projectTypes);
         };
 
         $scope.deselectProjectType = function(item) {
             var id = $scope.training.projectTypes.indexOf(item);
             $scope.training.projectTypes.splice(id,1);
-
-            console.log("$scope.selectedProjectType", $scope.selectedProjectType);
-            console.log("$scope.training.projectTypes", $scope.training.projectTypes);
         };
 
         $scope.selectCollections = function(item) {
