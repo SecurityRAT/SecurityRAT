@@ -13,7 +13,7 @@ angular.module('sdlctoolApp')
         $scope.delete = function (id) {
             SlideTemplate.get({id: id}, function(result) {
                 $scope.slideTemplate = result;
-                $('#deleteSlideTemplateConfirmation').modal('show');
+                $('#deleteSlideTemplateConfirmation').appendTo("body").modal('show');
             });
         };
 
