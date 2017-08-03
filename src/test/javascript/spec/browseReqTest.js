@@ -1,6 +1,6 @@
 describe('Protractor Security RAT browse requirements view testsuite', function() {
 	var browseLink = element(by.partialLinkText('Browse'));
-	var constantRepeater = "requirementSkeleton in requirementSkeletons | filterByTagForReqSkeletons : selectedTags | filterByCollsForReqSkeletons : selectedColls| filterByTypesForReqSkeletons : selectedTypes| orderBy : ['reqCategory.showOrder','showOrder'] | filter: searchQuery  track by requirementSkeleton.id";
+	var constantRepeater = "requirementSkeleton in requirementSkeletons | filterByTagForReqSkeletons : selectedTags | filterByCollsForReqSkeletons : selectedColls| filterByTypesForReqSkeletons : selectedTypes| orderBy : ['reqCategory.showOrder','showOrder'] | filter: searchQuery | limitTo:numberToDisplay track by requirementSkeleton.id";
 	var deleteCookie = function() {
 		browser.getAllWindowHandles().then(function(handles) {
 			expect(handles.length).toBeGreaterThan(1);

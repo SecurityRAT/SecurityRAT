@@ -41,8 +41,9 @@ angular.module('sdlctoolApp')
 
         $scope.error = {
             message: '',
-            class: ''
-        }
+            class: '',
+            display: false
+        };
 
         $scope.templates = [{
                 name: 'info',
@@ -64,7 +65,7 @@ angular.module('sdlctoolApp')
                 url: 'scripts/app/editor/requirements/testRequirementsTemplates/errorTemplate.html',
                 title: 'Test requirements'
             }
-        ]
+        ];
 
         $scope.templateInScope = {
             title: 'Test requirements',
@@ -119,13 +120,14 @@ angular.module('sdlctoolApp')
                 $scope.testResults.self = appConfig.securityCAT + testResults.self;
                 // var tempResults = testResults.requirements;
 
-                angular.forEach($scope.testResults.reqs, function (req) {
-                    if (req.state === 0) {
-                        angular.extend(req, $filter('filter')(testResults.requirements, {
-                            shortName: req.shortName
+                for (var i = 0; i < $scope.testResults.reqs.length; i++) {
+                    var element = $scope.testResults.reqs[i];
+                    if(element.state === 0) {
+                        angular.extend(element, $filter('filter')(testResults.requirements, {
+                            shortName: element.shortName
                         }).pop());
                     }
-                });
+                }
                 
                 if (STATECONSTANT[resultStateObj.state] === STATECONSTANT.INPROGRESS) {
                     $scope.authenticationProperties.spinnerProperty.text = 'Automated test still in progress...';
@@ -135,8 +137,15 @@ angular.module('sdlctoolApp')
                     $interval.cancel($scope.interval);
                 }
             }).catch(function () {
-                configureDisplay('error', true, 'alert alert-danger', 'An error occurred when fetching the results.')
+                if (($filter('filter')($scope.testResults.reqs, {state: 1})).length == 0) {
+                    configureDisplay('error', true, 'alert alert-danger', 'An error occurred when fetching the results.');
+                } else {
+                    $scope.error.display = true;
+                    configureDisplay('error', true, 'alert alert-danger', 'An error occurred when fetching the results.');
+                }
                 cleanIntervalPromise();
+                authenticatorService.cancelPromises($scope.authenticationProperties.authenticatorpromise);
+                $scope.authenticationProperties.spinnerProperty.showSpinner = false;
             });
         }
 

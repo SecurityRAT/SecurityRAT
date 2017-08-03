@@ -23,14 +23,14 @@ describe('Protractor Security RAT requirement category/skeletons entities testsu
 		});
 	}
 	 
-	it('searching a requirement category', function() {
-		entities.click();
-		element(by.partialLinkText('Requirement Categories')).click();
-		element(by.id('searchQuery')).sendKeys('Lifecycle');
-		element(by.id('searchButton')).click();
-		expect(element.all(by.repeater("reqCategory in reqCategorys | orderBy:'showOrder'")).count()).toBe(1);
+	// it('searching a requirement category', function() {
+	// 	entities.click();
+	// 	element(by.partialLinkText('Requirement Categories')).click();
+	// 	element(by.id('searchQuery')).sendKeys('Lifecycle');
+	// 	element(by.id('searchButton')).click();
+	// 	expect(element.all(by.repeater("reqCategory in reqCategorys | orderBy:'showOrder'")).count()).toBe(1);
 		
-	});
+	// });
 	
 	it('administering requirement category', function() {
 		entities.click();
@@ -133,8 +133,10 @@ describe('Protractor Security RAT requirement category/skeletons entities testsu
 			typeCheckboxes.first().click();
 			element(by.buttonText("Save")).click();
 			browser.sleep(3000);
-			expect(element.all(by.repeater(skeletonRepeater))
-					.count()).toBe(count);
+			element.all(by.repeater(skeletonRepeater))
+			.then(function(instanceArray) {
+				expect(count).toBe(instanceArray.length)
+			});
 		});
 		var instanceOrders = element.all(by.repeater(skeletonRepeater)
 				.column('requirementSkeleton.shortName'));

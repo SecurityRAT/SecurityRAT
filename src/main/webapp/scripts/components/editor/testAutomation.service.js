@@ -71,9 +71,9 @@ angular.module('sdlctoolApp')
                 apiFactory.testRequirementApi('GET', restcall, '', headerConfig, false).then(function (data) {
                     resolve(data);
                 }).catch(function () {
-                    reject("error")
-                })
-            })
+                    reject('error');
+                });
+            });
 
         }
 

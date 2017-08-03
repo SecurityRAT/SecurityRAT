@@ -146,8 +146,7 @@ describe('Protractor Security RAT tag category/instances entities testsuite', fu
 		entities.click();
 		element(by.partialLinkText('Tag Instances')).click();
 		var selectButton = element.all(by.model('tagInstance.selected'));
-		var categories = element.all(by.repeater("tagInstance in tagInstances | filterCategoryForEntities: selectedCategory: 'tagCategory' | orderBy: ['tagCategory.showOrder','showOrder']")
-		.column('tagInstance.tagCategory.name'));
+		
 		element(by.id("selectAll")).click();
 		browser.sleep(1000);
 		expect(element(by.buttonText("Bulk change with selected")).isPresent()).toBe(true);
@@ -171,6 +170,8 @@ describe('Protractor Security RAT tag category/instances entities testsuite', fu
 				.column('tagInstance.name')).each(function(elem, index) {
 					elem.getText().then(function(elemText) {
 						if(elemText === 'Product Manager' || elemText === 'Security Mentor') {
+							var categories = element.all(by.repeater("tagInstance in tagInstances | filterCategoryForEntities: selectedCategory: 'tagCategory' | orderBy: ['tagCategory.showOrder','showOrder']")
+								.column('tagInstance.tagCategory.name'));
 							expect(categories.get(index).getText()).toBe("Documentation");
 							selectButton.get(index).click();
 						}
