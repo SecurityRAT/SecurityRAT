@@ -73,51 +73,56 @@ angular.module('sdlctoolApp')
         // Database operations
         TrainingTreeNode.prototype.saveSubTree = function() {
             var node = this;
-            // generate main table entry (TRAININGTREENODE)
-            var new_trainingtreenode;
-            new_trainingtreenode = TrainingTreeNode.save(node, onSaveFinished);
-            new_trainingtreenode.$promise.then(function(result) {
 
-            // create additional table entry, if needed
-            var spec_node = {};
-            spec_node.node = new_trainingtreenode; // set relation to trainingtreenode
+            return new Promise(function(resolve, reject) {
+                // generate main table entry (TRAININGTREENODE)
+                var subPromises = [TrainingTreeNode.save(node, onSaveFinished).$promise];
+                subPromises[0].then(function(new_trainingtreenode) {
 
-            switch(node.node_type) {
-                case "CustomSlideNode":
-                    spec_node.name = node.name;
-                    spec_node.content = node.content;
-                    TrainingCustomSlideNode.save(spec_node, onSaveFinished);
-                    break;
-                case "BranchNode":
-                    spec_node.name = node.name;
-                    TrainingBranchNode.save(spec_node, onSaveFinished);
-                    break;
-                case "CategoryNode":
-                    spec_node.name = node.name;
-                    spec_node.category = node.category;
-                    TrainingCategoryNode.save(spec_node, onSaveFinished);
-                    break;
-                case "RequirementNode":
-                    spec_node.requirementSkeleton = node.requirementSkeleton;
-                    TrainingRequirementNode.save(spec_node, onSaveFinished);
-                    break;
-                case "GeneratedSlideNode":
-                    spec_node.optColumn = node.optColumn;
-                    TrainingGeneratedSlideNode.save(spec_node, onSaveFinished);
-                    break;
-                case "RootNode":
-                default:
-            }
-            if(node.children != null) {
-                var sort_order = 0;
-                node.children.forEach(function(node) {
-                    node.sort_order = sort_order++;
-                    // result != node, because result only contains the data which has been saved to db (no children)!
-                    node.parent_id = result;
-                    node.saveSubTree();
+                    var spec_node = {};
+                    spec_node.node = new_trainingtreenode; // set relation to trainingtreenode
+
+                    // create special table entry, if needed
+                    switch(node.node_type) {
+                        case "CustomSlideNode":
+                            spec_node.name = node.name;
+                            spec_node.content = node.content;
+                            subPromises.push(TrainingCustomSlideNode.save(spec_node, onSaveFinished).$promise);
+                            break;
+                        case "BranchNode":
+                            spec_node.name = node.name;
+                            subPromises.push(TrainingBranchNode.save(spec_node, onSaveFinished).$promise);
+                            break;
+                        case "CategoryNode":
+                            spec_node.name = node.name;
+                            spec_node.category = node.category;
+                            subPromises.push(TrainingCategoryNode.save(spec_node, onSaveFinished).$promise);
+                            break;
+                        case "RequirementNode":
+                            spec_node.requirementSkeleton = node.requirementSkeleton;
+                            subPromises.push(TrainingRequirementNode.save(spec_node, onSaveFinished).$promise);
+                            break;
+                        case "GeneratedSlideNode":
+                            spec_node.optColumn = node.optColumn;
+                            subPromises.push(TrainingGeneratedSlideNode.save(spec_node, onSaveFinished).$promise);
+                            break;
+                        case "RootNode":
+                        default:
+                    }
+                    if(node.children != null) {
+                        var sort_order = 0;
+                        node.children.forEach(function(node) {
+                            node.sort_order = sort_order++;
+                            // result != node, because result only contains the data which has been saved to db (no children)!
+                            node.parent_id = new_trainingtreenode;
+                            subPromises.push(node.saveSubTree());
+                        });
+                    }
+
+                    Promise.all(subPromises).then(function() {
+                        resolve();
+                    });
                 });
-            }
-
             });
         };
 
