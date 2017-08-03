@@ -334,11 +334,12 @@ angular.module('sdlctoolApp')
                     break;
             }
 
-            json_data.children.forEach(function(child_json) {
-               var childNode = new TrainingTreeNode();
-               childNode.fromJSON(child_json);
-                node.children.push(childNode);
-            });
+            if(json_data.children != null)
+                json_data.children.forEach(function(child_json) {
+                   var childNode = new TrainingTreeNode();
+                   childNode.fromJSON(child_json);
+                    node.children.push(childNode);
+                });
         };
 
         return TrainingTreeNode;

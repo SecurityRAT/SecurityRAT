@@ -14,6 +14,18 @@ angular.module('sdlctoolApp')
             $scope.training = result;
         });
 
+        $scope.slideEditor = function(state) {
+            console.log("slideEditor set to "+state);
+            if(state) {
+                $("#editBlock").fadeIn();
+                $("#previewBlock").fadeIn();
+            } else {
+                $("#editBlock").hide();
+                $("#previewBlock").hide();
+            }
+        };
+
+        $scope.slideEditor(false);
 
         // Tree selection binding
         $("#tree").bind(
@@ -21,13 +33,17 @@ angular.module('sdlctoolApp')
                 //selected node object: data.inst.get_json()[0];
                 //selected node text: data.inst.get_json()[0].data
 
-                $scope.selectedNode = data.node;
-                var selectedNodeType = $scope.selectedNode.type;
+                $scope.selectedNode = new TrainingTreeNode();
+                $scope.selectedNode.fromJSON(data.node);
+                // $scope.selectedNode = new TrainingTreeNode();
+                // $scope.selectedNode.name = data.node.text;
+                // $scope.selectedNode.node_type = data.node.type;
+
+                var selectedNodeType = $scope.selectedNode.node_type;
                 var selectedNodeName = $scope.selectedNode.text;
 
-                if(selectedNodeType !== "BranchNode" && selectedNodeType !== "RequirementNode") {
-                    $("#editBlock").fadeIn();
-                    $("#previewBlock").fadeIn();
+                if(selectedNodeType == "GeneratedSlideNode" || selectedNodeType == "CustomSlideNode") {
+                    $scope.slideEditor(true);
 
                     $scope.updateSlidePreview();
 
@@ -37,8 +53,7 @@ angular.module('sdlctoolApp')
                         $('#customSlideWarning').hide();
                     }
                 } else {
-                    $("#editBlock").hide();
-                    $("#previewBlock").hide();
+                    $scope.slideEditor(false);
                 }
             }
         );
@@ -49,8 +64,13 @@ angular.module('sdlctoolApp')
         };
 
         $scope.updateSlidePreview = function() {
-            var content = $scope.selectedNode.loadContent();
-            $('#slidePreviewContent', frames['previewFrame'].document).html(content);
+            $scope.selectedNode.loadContent().then(function(content) {
+                $('#slidePreviewContent', frames['previewFrame'].document).html(content);
+            }, function(failed_reason) {
+                console.error("failed to load content from slide");
+                $('#slidePreviewContent', frames['previewFrame'].document).html("");
+            });
+
         };
 
         // Custom Menu
