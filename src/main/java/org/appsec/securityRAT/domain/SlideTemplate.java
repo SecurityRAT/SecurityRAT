@@ -18,7 +18,7 @@ import java.util.Objects;
 @Table(name = "SLIDETEMPLATE")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName="slidetemplate")
-public class SlideTemplate implements Serializable {
+public class SlideTemplate extends AbstractAuditingEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -35,9 +35,6 @@ public class SlideTemplate implements Serializable {
     @Column(name = "content")
     @Lob
     private String content;
-
-    @ManyToOne
-    private User author;
 
     public Long getId() {
         return id;
@@ -69,14 +66,6 @@ public class SlideTemplate implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public User getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(User user) {
-        this.author = user;
     }
 
     @Override

@@ -25,14 +25,16 @@
             <column name="name" type="varchar(255)"/>
             <column name="description" type="varchar(255)"/>
             <column name="content" type="varchar(255)"/>
-            <column name="author_id" type="bigint"/>
+
+            <column name="created_by" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="timestamp" defaultValueDate="${now}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_by" type="varchar(50)"/>
+            <column name="last_modified_date" type="timestamp"/>
         </createTable>
-        
-        <addForeignKeyConstraint baseColumnNames="author_id"
-                                 baseTableName="SLIDETEMPLATE"
-                                 constraintName="fk_slidetemplate_author_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="JHI_USER"/>
 
     </changeSet>
 </databaseChangeLog>

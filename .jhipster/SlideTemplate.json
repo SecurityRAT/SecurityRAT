@@ -1,13 +1,5 @@
 {
-    "relationships": [
-        {
-            "relationshipId": 1,
-            "relationshipName": "author",
-            "otherEntityName": "user",
-            "relationshipType": "many-to-one",
-            "otherEntityField": "login"
-        }
-    ],
+    "relationships": [],
     "fields": [
         {
             "fieldId": 1,

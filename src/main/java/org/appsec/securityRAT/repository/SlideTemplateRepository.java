@@ -10,7 +10,4 @@ import java.util.List;
  */
 public interface SlideTemplateRepository extends JpaRepository<SlideTemplate,Long> {
 
-    @Query("select slideTemplate from SlideTemplate slideTemplate where slideTemplate.author.login = ?#{principal.username}")
-    List<SlideTemplate> findByAuthorIsCurrentUser();
-
 }

@@ -53,7 +53,8 @@
                     <th>ID</th>
                     <th>Name</th>
                     <th>Description</th>
-                    <th>author</th>
+                    <th>Created</th>
+                    <th>Last modified</th>
                     <th></th>
                 </tr>
             </thead>
@@ -62,16 +63,15 @@
                     <td><a ui-sref="slideTemplate.detail({id:slideTemplate.id})">{{slideTemplate.id}}</a></td>
                     <td>{{slideTemplate.name}}</td>
                     <td>{{slideTemplate.description}}</td>
+                    <td>{{slideTemplate.createdDate | date : "mediumDate" }} by {{slideTemplate.createdBy}}</td>
+                    <td>{{slideTemplate.lastModifiedDate | date : "shortTime" }} by {{slideTemplate.lastModifiedBy}}</td>
                     <td>
-                        {{slideTemplate.author.login}}
-                    </td>
-                    <td>
-                        <button type="submit"
+                        <button type="button"
                                 ui-sref="slideTemplate.detail({id:slideTemplate.id})"
                                 class="btn btn-primary btn-sm">
                             <span class="glyphicon glyphicon-pencil"></span>&nbsp;<span> Edit</span>
                         </button>
-                        <button type="submit"
+                        <button type="button"
                                 ng-click="delete(slideTemplate.id)"
                                 class="btn btn-danger btn-sm">
                             <span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span> Delete</span>
