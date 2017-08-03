@@ -1,11 +1,9 @@
 'use strict';
 
-angular.module('sdlctoolApp').controller('SlideTemplateDetailController',
-    ['$scope', '$stateParams', '$state', 'entity', 'SlideTemplate', 'User',
-        function($scope, $stateParams, $state, entity, SlideTemplate, User) {
+angular.module('sdlctoolApp')
+    .controller('SlideTemplateDetailController', function($scope, $stateParams, $state, $timeout, entity, SlideTemplate) {
 
         $scope.slideTemplate = entity;
-        $scope.users = User.query();
         $scope.load = function(id) {
             SlideTemplate.get({id : id}, function(result) {
                 $scope.slideTemplate = result;
@@ -17,6 +15,7 @@ angular.module('sdlctoolApp').controller('SlideTemplateDetailController',
         };
 
         $scope.save = function () {
+            $scope.updateSlidePreview();
             if ($scope.slideTemplate.id != null) {
                 SlideTemplate.update($scope.slideTemplate, onSaveFinished);
             } else {
@@ -28,4 +27,14 @@ angular.module('sdlctoolApp').controller('SlideTemplateDetailController',
         $scope.cancel = function() {
             $state.go('slideTemplate', {});
         };
-}]);
+
+        $scope.updateSlidePreview = function() {
+            $('#slidePreviewContent', frames['previewFrame'].document).html($scope.slideTemplate.content);
+            console.log("preview updated!");
+        };
+
+        $timeout(function() {
+            // this must be done _after_ the iframe content loaded or has no effect
+            $scope.updateSlidePreview();
+        }, 2500);
+});
