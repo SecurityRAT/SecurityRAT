@@ -1,9 +1,34 @@
 angular.module('sdlctoolApp')
-    .controller('TrainingGenerateController', function ($scope, $rootScope, $stateParams, $state, apiFactory,
-                                                        entity, trainingRoot, Training, TrainingTreeNode, ReqCategory) {
+    .controller('TrainingGenerateController', function ($scope, $rootScope, $stateParams, $state, $interval, $timeout,
+                                                        apiFactory, entity, trainingRoot, Training, TrainingTreeNode) {
         $scope.Training = entity;
         $rootScope.trainingTreeData = [];
         $scope.trainingRoot = trainingRoot;
+        $scope.progressbar = { hide: true, barValue: 0, intervalPromise: undefined };
+
+        $scope.startProgressbar = function() {
+            $scope.progressbar.intervalPromise = $interval(function() { $scope.progressbar.barValue += 1; }, 100, 95);
+            $scope.progressbar.hide = false;
+            $scope.showRequirements = false;
+        };
+
+        $scope.finishProgressbar = function() {
+            if (angular.isDefined($scope.progressbar.intervalPromise)) {
+                $interval.cancel($scope.progressbar.intervalPromise);
+                $scope.progressbar.intervalPromise = undefined;
+            }
+            $scope.progressbar.barValue = 100;
+            $timeout(function() {
+                $scope.progressbar.barValue = 0;
+                $scope.progressbar.hide = true;
+                // finished! fade out all steps and fade in the finished block
+                for (i = 1; i < 10; i++) {
+                    id_next = "#step" + i + "div";
+                    $(id_next).fadeOut();
+                }
+                $('#finishedBlock').css('visibility', 'visible').fadeIn();
+            }, 2500);
+        };
 
         var onSaveFinished = function (result) {
             $scope.$emit('sdlctoolApp:trainingUpdate', result);
@@ -57,6 +82,8 @@ angular.module('sdlctoolApp')
             var requestString = "";
             var selectedCollections = [];
             var selectedProjectTypes = [];
+
+            $scope.startProgressbar();
 
             // clear the tree
             trainingRoot = new TrainingTreeNode();
@@ -122,12 +149,14 @@ angular.module('sdlctoolApp')
                     function() {
                         addOutro();
                         initTree();
+                        $scope.finishProgressbar();
                     }
                 );
             } else {
                 // no content has been added
                 addOutro();
                 initTree();
+                $scope.finishProgressbar();
             }
         };
     });
