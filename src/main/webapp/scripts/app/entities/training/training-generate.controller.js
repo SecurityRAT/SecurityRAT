@@ -1,15 +1,15 @@
 angular.module('sdlctoolApp')
     .controller('TrainingGenerateController', function ($scope, $rootScope, $stateParams, $state, $interval, $timeout,
-                                                        apiFactory, entity, trainingRoot, Training, TrainingTreeNode) {
+                                                        $uibModal, apiFactory, entity, trainingRoot, Training, TrainingTreeNode) {
         $scope.Training = entity;
         $rootScope.trainingTreeData = [];
         $scope.trainingRoot = trainingRoot;
         $scope.progressbar = { hide: true, barValue: 0, intervalPromise: undefined };
+        $scope.modalProgressbar = { barValue: 0, intervalPromise: undefined };
 
         $scope.startProgressbar = function() {
             $scope.progressbar.intervalPromise = $interval(function() { $scope.progressbar.barValue += 1; }, 100, 95);
             $scope.progressbar.hide = false;
-            $scope.showRequirements = false;
         };
 
         $scope.finishProgressbar = function() {
@@ -34,6 +34,29 @@ angular.module('sdlctoolApp')
             $scope.$emit('sdlctoolApp:trainingUpdate', result);
         };
 
+        $scope.openSaveProgressModal = function() {
+            $scope.modalProgressbar.intervalPromise = $interval(function() { $scope.modalProgressbar.barValue += 1; }, 100, 99);
+
+            $scope.saveProgressModalInstance = $uibModal.open({
+                size: 'md',
+                backdrop: 'static',
+                templateUrl: 'scripts/app/entities/training/training-progressModal.html',
+                scope: $scope
+            });
+        };
+        $scope.closeSaveProgressModal = function() {
+            if (angular.isDefined($scope.modalProgressbar.intervalPromise)) {
+                $interval.cancel($scope.modalProgressbar.intervalPromise);
+                $scope.modalProgressbar.intervalPromise = undefined;
+            }
+            $scope.modalProgressbar.barValue = 100;
+            $timeout(function() {
+                // actions when finished
+                $scope.saveProgressModalInstance.close();
+                $state.go('training', null, { reload: true });
+            }, 2500);
+        };
+
         $scope.save = function() {
             var new_training;
             if ($scope.Training.id != null) {
@@ -47,8 +70,11 @@ angular.module('sdlctoolApp')
                 trainingRoot.fromJSON($rootScope.getTreeJSON());
                 trainingRoot.setTrainingId(result);
 
-                trainingRoot.saveSubTree();
-                $state.go('training', null, { reload: true });
+                var promise = trainingRoot.saveSubTree();
+                $scope.openSaveProgressModal();
+                promise.then(function() {
+                    $scope.closeSaveProgressModal();
+                })
             });
 
         };
