@@ -50,12 +50,14 @@ angular.module('sdlctoolApp')
             // add skeleton slide
             var skeletonSlide = newChild.addChildNode("GeneratedSlideNode", "Skeleton", false);
             skeletonSlide.optColumn = null; // mark it as a skeleton slide!
+            skeletonSlide.parent_id = {requirementSkeleton: newChild.requirementSkeleton};
 
             return newChild;
         };
         TrainingTreeNode.prototype.addGeneratedSlideNode = function(optColumn) {
             var newChild = this.addChildNode("GeneratedSlideNode", optColumn.name, false);
             newChild.optColumn = {id: optColumn.id};
+            newChild.parent_id = {requirementSkeleton: this.requirementSkeleton};
             return newChild;
         };
 
@@ -152,7 +154,7 @@ angular.module('sdlctoolApp')
                         var query_promise = TrainingTreeUtil.RequirementNode.get({id: node.id}).$promise;
                         subPromises.push(query_promise);
                         query_promise.then(function(result) {
-                            node.requirement = result.requirementSkeleton;
+                            node.requirementSkeleton = result.requirementSkeleton;
                             node.name = result.requirementSkeleton.shortName;
                         });
                         break;
@@ -235,10 +237,9 @@ angular.module('sdlctoolApp')
                         break;
                     case "GeneratedSlideNode":
                         var parentNode = node.parent_id;
-                        var reqPromise = RequirementSkeleton.get({id: parentNode.requirement.id}).$promise;
-                        subPromises.push(reqPromise);
-
                         if (node.optColumn == null) {
+                            var reqPromise = RequirementSkeleton.get({id: parentNode.requirementSkeleton.id}).$promise;
+                            subPromises.push(reqPromise);
                             if (parentNode.node_type == "RequirementNode") {
                                 reqPromise.then(function (req) {
                                     content = "<h2>" + req.shortName + "</h2>"
@@ -249,7 +250,7 @@ angular.module('sdlctoolApp')
                             var optPromise = TrainingTreeUtil.OptColumnContent.query(
                                 {
                                     optColumnId: node.optColumn.id,
-                                    requirementId: parentNode.requirement.id
+                                    requirementId: parentNode.requirementSkeleton.id
                                 }).$promise;
 
                             subPromises.push(optPromise);
