@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('TrainingCustomizeController', function ($scope, $rootScope, $stateParams, entity, Training) {
+    .controller('TrainingCustomizeController', function ($scope, $rootScope, $stateParams, $timeout, entity, Training,
+                                                         TrainingTreeNode) {
         $scope.training = entity;
         $scope.firstTimeDrawingTree = true;
 
@@ -45,7 +46,7 @@ angular.module('sdlctoolApp')
                 if(selectedNodeType == "GeneratedSlideNode" || selectedNodeType == "CustomSlideNode") {
                     $scope.slideEditor(true);
 
-                    $scope.updateSlidePreview();
+                    $scope.updateSlidePreview(selectedNodeType == "GeneratedSlideNode");
 
                     if(selectedNodeType !== "CustomSlideNode") {
                         $('#customSlideWarning').fadeIn();
@@ -58,14 +59,16 @@ angular.module('sdlctoolApp')
             }
         );
 
-        $scope.getParentNode = function() {
-            //TODO
-            return {'name': "parent name"};
-        };
-
-        $scope.updateSlidePreview = function() {
+        $scope.updateSlidePreview = function(writeBack=false) {
             $scope.selectedNode.loadContent().then(function(content) {
                 $('#slidePreviewContent', frames['previewFrame'].document).html(content);
+                if(writeBack) {
+                    $timeout(function() {
+                        $scope.selectedNode.content = content;
+                        $scope.$apply();
+                    });
+
+                }
             }, function(failed_reason) {
                 console.error("failed to load content from slide");
                 $('#slidePreviewContent', frames['previewFrame'].document).html("");

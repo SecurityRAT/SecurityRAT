@@ -322,6 +322,7 @@ angular.module('sdlctoolApp')
                     result.data["optColumn"] = this.optColumn;
                     break;
             }
+            result.data["parent_id"] = this.parent_id;
 
             if(this.children != null) {
                 this.children.forEach(function(node) {
@@ -354,6 +355,8 @@ angular.module('sdlctoolApp')
                     node.optColumn = json_data.data.optColumn;
                     break;
             }
+            if(json_data.data != null)
+                node.parent_id = json_data.data.parent_id;
 
             if(json_data.children != null)
                 json_data.children.forEach(function(child_json) {
