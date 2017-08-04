@@ -273,21 +273,15 @@ public class FrontEndUniversalResource {
         method=RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    //public ResponseEntity<Set<RequirementSkeleton>> get(@RequestParam Map<String,String> allRequestParams) {
-    public List<FECategoryDTO> getCategoriesWithSkeletonsSorted(@RequestParam("collections") Long[] collectionIds, @RequestParam("projectTypes") Long[] projectTypeIds) {
+    public List<FECategoryDTO> getCategoriesWithSkeletonsSorted(
+        @RequestParam("collections") Long[] collectionIds,
+        @RequestParam("projectTypes") Long[] projectTypeIds) {
 
-        List<CollectionInstance> collectionInstances = new ArrayList<CollectionInstance>();
-        for (Long colId : collectionIds) {
-            collectionInstances.add(collectionInstanceRepository.findOne(colId));
-        }
-        List<ProjectType> projectTypes = new ArrayList<ProjectType>();
-        for (Long projectTypeId : projectTypeIds) {
-            projectTypes.add(projectTypeRepository.findOne(projectTypeId));
-        }
+        List<FECategoryDTO> categoryDTOs = new ArrayList<>();
 
-        List<ReqCategory> reqCategories = reqCategoryRepository.findEagerlyCategoriesWithRequirements(collectionInstances, projectTypes);
-
-        List<FECategoryDTO> categoryDTOs = reqCategories.stream().map(reqCategory -> new FECategoryDTO(reqCategory)).collect(Collectors.toList());
+        Set<FECategoryDTO> categorySet = getCategoriesWithSkeletons(collectionIds, projectTypeIds);
+        for(FECategoryDTO category : categorySet)
+            categoryDTOs.add(category);
         Collections.sort(categoryDTOs, Comparator.comparingInt(FECategoryDTO::getShowOrder));
 
         return categoryDTOs;
