@@ -60,6 +60,8 @@ angular.module('sdlctoolApp')
         );
 
         $scope.updateSlidePreview = function(writeBack=false) {
+            if($scope.selectedNode.training_id == null || $scope.selectedNode.training_id.name == null )
+                $scope.selectedNode.training_id = $scope.training;
             $scope.selectedNode.loadContent().then(function(content) {
                 $('#slidePreviewContent', frames['previewFrame'].document).html(content);
                 if(writeBack) {

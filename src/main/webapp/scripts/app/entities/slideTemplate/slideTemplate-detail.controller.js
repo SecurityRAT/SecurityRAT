@@ -29,7 +29,11 @@ angular.module('sdlctoolApp')
         };
 
         $scope.updateSlidePreview = function() {
-            $('#slidePreviewContent', frames['previewFrame'].document).html($scope.slideTemplate.content);
+            var content = $scope.slideTemplate.content;
+            content = content
+                .replace(/({{ *training.name *}})/g, "TrainingName")
+                .replace(/({{ *parent.name *}})/g, "ParentName");
+            $('#slidePreviewContent', frames['previewFrame'].document).html(content);
             console.log("preview updated!");
         };
 
