@@ -83,6 +83,11 @@ angular.module('sdlctoolApp')
             return requestString;
         };
 
+        $scope.allRequirementsSwitched = function() {
+            $scope.showFilters();
+            $scope.updateNumberOfRequirements();
+        };
+
         $scope.updateNumberOfRequirements = function() {
             if($scope.training.allRequirementsSelected
                 || $scope.training.collections.length > 0
