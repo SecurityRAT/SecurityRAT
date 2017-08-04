@@ -105,10 +105,6 @@ angular.module('sdlctoolApp')
         };
 
         $scope.generate = function() {
-            var requestString = "";
-            var selectedCollections = [];
-            var selectedProjectTypes = [];
-
             $scope.startProgressbar();
 
             // clear the tree
@@ -122,29 +118,9 @@ angular.module('sdlctoolApp')
 
             addIntro();
 
-            // build the query to get the data (requirements, categories)
-            if(!$scope.Training.allRequirementsSelected) {
-                $scope.Training.collections.forEach(function(collection) {
-                   selectedCollections.push(collection.id);
-                });
-                $scope.Training.projectTypes.forEach(function(projectType) {
-                    selectedProjectTypes.push(projectType.id);
-                });
-            } else {
-                selectedCollections = $rootScope.allCollections;
-                selectedProjectTypes = $rootScope.allProjectTypes;
-            }
+            var requestString = $rootScope.buildQueryParams();
 
-            var hasCollectionsSelected = selectedCollections.length > 0;
-            var hasProjectTypesSelected = selectedProjectTypes.length > 0;
-
-            if(hasCollectionsSelected || hasProjectTypesSelected) {
-                if(hasCollectionsSelected) {
-                    requestString += "collections=" + selectedCollections;
-                    if(selectedProjectTypes.length > 0) requestString += "&";
-                }
-                if(hasProjectTypesSelected)
-                    requestString += "projectTypes=" + selectedProjectTypes;
+            if(requestString != "") {
 
                 // load the content
                 apiFactory.getByQuery("categoriesWithRequirementsSorted", "filter", requestString).then(

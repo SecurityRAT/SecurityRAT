@@ -286,6 +286,25 @@ public class FrontEndUniversalResource {
 
         return categoryDTOs;
     }
+
+    @RequestMapping(value="/numberOfRequirements/filter",
+        method=RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public int getNumberOfRequirements(
+        @RequestParam("collections") Long[] collectionIds,
+        @RequestParam("projectTypes") Long[] projectTypeIds) {
+
+        int result = 0;
+        Set<FECategoryDTO> categorySet = new HashSet<>();
+
+        categorySet = getCategoriesWithSkeletons(collectionIds, projectTypeIds);
+        for(FECategoryDTO category : categorySet)
+            result += category.getRequirements().size();
+
+        return result;
+    }
+
     /*
     @RequestMapping(value = "/testOptColumns/{projectTypeId}",
             method = RequestMethod.GET,

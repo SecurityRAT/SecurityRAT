@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('TrainingRequirementsController', function ($scope, $rootScope, $stateParams, entity, Training, User, TrainingTreeNode, apiFactory, sharedProperties, $filter) {
+    .controller('TrainingRequirementsController', function ($scope, $rootScope, $stateParams, $filter, entity, Training,
+                                                            TrainingTreeNode, apiFactory, sharedProperties ) {
         var system = "old";
         $scope.training = entity;
 
@@ -18,18 +19,18 @@ angular.module('sdlctoolApp')
                 });
                 $scope.training.projectTypes.forEach(function(prot) {
                     $scope.selectedProjectType.push(prot);
-                })
+                });
             });
         } else {
             // this is a new training! Avoid undefined members.
             $scope.training.collections = [];
-            $scope.training.projectTypes = []
+            $scope.training.projectTypes = [];
             $scope.training.allRequirementsSelected = true;
         }
 
         // Custom Scope Variables
         $scope.includeAll = true;
-        $scope.requirementsSelected = 0;
+        $rootScope.requirementsSelected = 0;
         $scope.categoriesSelected = 0;
         $rootScope.allCollections = [];
         $rootScope.allProjectTypes = [];
@@ -48,6 +49,54 @@ angular.module('sdlctoolApp')
                 }
             });
             return result;
+        };
+
+        $rootScope.buildQueryParams = function() {
+            var requestString = "";
+            var selectedCollections = [];
+            var selectedProjectTypes = [];
+
+            // build the query to get the data (requirements, categories)
+            if(!$scope.training.allRequirementsSelected) {
+                $scope.training.collections.forEach(function(collection) {
+                    selectedCollections.push(collection.id);
+                });
+                $scope.training.projectTypes.forEach(function(projectType) {
+                    selectedProjectTypes.push(projectType.id);
+                });
+            } else {
+                selectedCollections = $rootScope.allCollections;
+                selectedProjectTypes = $rootScope.allProjectTypes;
+            }
+
+            var hasCollectionsSelected = selectedCollections.length > 0;
+            var hasProjectTypesSelected = selectedProjectTypes.length > 0;
+
+            if(hasCollectionsSelected || hasProjectTypesSelected) {
+                if (hasCollectionsSelected) {
+                    requestString += "collections=" + selectedCollections;
+                    if (selectedProjectTypes.length > 0) requestString += "&";
+                }
+                if (hasProjectTypesSelected)
+                    requestString += "projectTypes=" + selectedProjectTypes;
+            }
+            return requestString;
+        };
+
+        $scope.updateNumberOfRequirements = function() {
+            if($scope.training.allRequirementsSelected
+                || $scope.training.collections.length > 0
+                || $scope.training.projectTypes.length > 0) {
+                var requestString = $rootScope.buildQueryParams();
+                console.log("requestString", requestString);
+                apiFactory.getByQuery("numberOfRequirements", "filter", requestString).then(
+                    function (numberOfRequirements) {
+                        $rootScope.requirementsSelected = numberOfRequirements;
+                        console.log("$rootScope.requirementsSelected", $rootScope.requirementsSelected);
+                    });
+            } else {
+                $rootScope.requirementsSelected = 0;
+            }
         };
 
         $scope.showFilters = function() {
@@ -94,8 +143,10 @@ angular.module('sdlctoolApp')
             }
         };
 
-
-        apiFactory.getAll("collections").then(
+        var queryPromises = [];
+        var collectionPromise = apiFactory.getAll("collections");
+        queryPromises.push(collectionPromise);
+        collectionPromise.then(
             function(collections) {
                 $scope.categories = collections;
                 angular.forEach($scope.categories, function(category) {
@@ -112,7 +163,9 @@ angular.module('sdlctoolApp')
 
             });
 
-        apiFactory.getAll("projectTypes").then(
+        var projectTypePromise = apiFactory.getAll("projectTypes");
+        queryPromises.push(projectTypePromise);
+        projectTypePromise.then(
             function(projectTypes) {
                 $scope.projectType = $filter('orderBy')(projectTypes, 'showOrder');
                 $scope.projectType.forEach(function(prot) {
@@ -125,6 +178,10 @@ angular.module('sdlctoolApp')
             function(exception) {
 
             });
+
+        Promise.all(queryPromises).then(function() {
+            $scope.updateNumberOfRequirements();
+        });
 
         $scope.init = function() {
             $scope.projectTypeModel.name = 'Select';
@@ -188,11 +245,13 @@ angular.module('sdlctoolApp')
             if(!saved_in_training) {
                 $scope.training.projectTypes.push(item);
             }
+            $scope.updateNumberOfRequirements();
         };
 
         $scope.deselectProjectType = function(item) {
             var id = $scope.training.projectTypes.indexOf(item);
             $scope.training.projectTypes.splice(id,1);
+            $scope.updateNumberOfRequirements();
         };
 
         $scope.selectCollections = function(item) {
@@ -244,6 +303,7 @@ angular.module('sdlctoolApp')
             if(!saved_in_training) {
                 $scope.training.collections.push(item);
             }
+            $scope.updateNumberOfRequirements();
         };
 
         $scope.deselectCollections = function(item) {
@@ -261,6 +321,7 @@ angular.module('sdlctoolApp')
                 var id = $scope.training.collections.indexOf(item);
                 $scope.training.collections.splice(id,1);
             });
+            $scope.updateNumberOfRequirements();
         };
 
         $scope.searchObjectbyValue = function(search, object) {

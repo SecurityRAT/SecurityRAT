@@ -1,9 +1,9 @@
 <div class="container">
     <div class="row">
         <label for="includeAllSwitch"><strong>Include ALL Requirements </strong></label>
-        <input name="includeAllSwitch" bs-switch type="checkbox" switch-on-color="success" switch-off-color="danger"
+        <input id="includeAllSwitch" bs-switch type="checkbox" switch-on-color="success" switch-off-color="danger"
                switch-on-text="Yes" switch-off-text="No"
-               switch-label-width="2px" data-ng-change="showFilters()"
+               switch-label-width="2px" data-ng-change="showFilters(); updateNumberOfRequirements();"
                data-ng-model="training.allRequirementsSelected"
                switch-handle-width="45"
         />
