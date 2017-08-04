@@ -11,7 +11,7 @@ angular.module('sdlctoolApp')
 
                 $scope.trainingRoot = realRootNode;
 
-                $scope.trainingRoot.loadSubTree().then(function() {
+                $scope.trainingRoot.loadSubTree(false).then(function() {
                     console.log("TREE LOADING FINISHED", $scope.trainingRoot);
 
                     $scope.trainingRoot.loadSlides().then(function(slides) {

@@ -2,7 +2,9 @@ package org.appsec.securityRAT.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import org.appsec.securityRAT.domain.TrainingCategoryNode;
+import org.appsec.securityRAT.domain.TrainingTreeNode;
 import org.appsec.securityRAT.repository.TrainingCategoryNodeRepository;
+import org.appsec.securityRAT.repository.TrainingTreeNodeRepository;
 import org.appsec.securityRAT.repository.search.TrainingCategoryNodeSearchRepository;
 import org.appsec.securityRAT.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
@@ -37,6 +39,9 @@ public class TrainingCategoryNodeResource {
 
     @Inject
     private TrainingCategoryNodeSearchRepository trainingCategoryNodeSearchRepository;
+
+    @Inject
+    private TrainingTreeNodeRepository trainingTreeNodeRepository;
 
     /**
      * POST  /trainingCategoryNodes -> Create a new trainingCategoryNode.
@@ -130,5 +135,21 @@ public class TrainingCategoryNodeResource {
         return StreamSupport
             .stream(trainingCategoryNodeSearchRepository.search(queryString(query)).spliterator(), false)
             .collect(Collectors.toList());
+    }
+
+    /**
+     * GET TrainingCategoryNode by its node_id
+     */
+    @RequestMapping(value = "/TrainingCategoryNodeByTrainingTreeNode/{id}",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<TrainingCategoryNode> getTrainingCategoryNodeByTrainingTreeNode(@PathVariable Long id) {
+        log.debug("REST request to get TrainingCategoryNode with node_id : {}", id);
+        TrainingTreeNode node = trainingTreeNodeRepository.getOne(id);
+        TrainingCategoryNode result = trainingCategoryNodeRepository.getTrainingCategoryNodeByTrainingTreeNode(node);
+        return ResponseEntity.ok()
+            .headers(new HttpHeaders())
+            .body(result);
     }
 }

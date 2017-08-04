@@ -126,7 +126,7 @@ angular.module('sdlctoolApp')
             });
         };
 
-        TrainingTreeNode.prototype.loadSubTree = function() {
+        TrainingTreeNode.prototype.loadSubTree = function(loadNames=true) {
             var node = this;
             return new Promise(function(resolve, reject) {
                 var subPromises = [TrainingTreeUtil.ChildrenOfNode.query({id: node.id}).$promise];
@@ -138,6 +138,7 @@ angular.module('sdlctoolApp')
                         subPromises.push(query_promise);
                         query_promise.then(function(result) {
                             node.content = result.content;
+                            node.name = result.name;
                         });
                         break;
                     case "BranchNode":
@@ -152,6 +153,7 @@ angular.module('sdlctoolApp')
                         subPromises.push(query_promise);
                         query_promise.then(function(result) {
                             node.requirement = result.requirementSkeleton;
+                            node.name = result.requirementSkeleton.shortName;
                         });
                         break;
                     case "GeneratedSlideNode":
@@ -159,7 +161,21 @@ angular.module('sdlctoolApp')
                         subPromises.push(query_promise);
                         query_promise.then(function(result) {
                             node.optColumn = result.optColumn;
+                            if(result.optColumn != null)
+                                node.name = result.optColumn.name;
+                            else
+                                node.name = "Skeleton";
                         });
+                        break;
+                    case "CategoryNode":
+                        if(loadNames) {
+                            var query_promise = TrainingTreeUtil.CategoryNode.get({id: node.id}).$promise;
+                            subPromises.push(query_promise);
+                            query_promise.then(function(result) {
+                                node.name = result.name;
+                                console.log("CategoryNode", result);
+                            });
+                        }
                         break;
                 }
 
@@ -175,7 +191,7 @@ angular.module('sdlctoolApp')
                             childNode.sort_order = child.sort_order;
                             childNode.training_id = child.training_id;
 
-                            subPromises.push(childNode.loadSubTree());
+                            subPromises.push(childNode.loadSubTree(loadNames));
                             node.children.push(childNode);
                         })
                     }

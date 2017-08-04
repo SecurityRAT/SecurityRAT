@@ -7,6 +7,7 @@ angular.module('sdlctoolApp')
             ChildrenOfNode: $resource('api/TrainingTreeNode/childrenOf/:id', {}, {
                 query: { method: 'GET', isArray: true}
             }),
+
             CustomSlideNode: $resource('api/TrainingCustomSlideNodeByTrainingTreeNode/:id', {}, {
                 query: { method: 'GET', isArray: false}
             }),
@@ -19,9 +20,14 @@ angular.module('sdlctoolApp')
             GeneratedSlideNode: $resource('api/TrainingGeneratedSlideNodeByTrainingTreeNode/:id', {}, {
                 query: { method: 'GET', isArray: false}
             }),
+            CategoryNode: $resource('api/TrainingCategoryNodeByTrainingTreeNode/:id', {}, {
+                query: { method: 'GET', isArray: false}
+            }),
+
             OptColumnContent: $resource('api/optColumnContents/byOptColumnAndRequirement/:optColumnId' +
                 '/:requirementId', {}, {
                 query: { method: 'GET', isArray: false}
             })
+
         };
     });
