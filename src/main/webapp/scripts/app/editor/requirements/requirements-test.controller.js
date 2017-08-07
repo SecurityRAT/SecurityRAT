@@ -8,6 +8,8 @@ angular.module('sdlctoolApp')
             COMPLETE: 1
         };
 
+        var LETTERLIMIT = 200;
+
         $scope.entity = entity;
 
         $scope.testObject = {
@@ -81,7 +83,7 @@ angular.module('sdlctoolApp')
                 $scope.displayProperties.showTypes = 'Hide selected requirements';
                 $scope.displayProperties.myglyphicon = 'glyphicon glyphicon-minus';
             }
-        }
+        };
 
         $scope.parseEntity = function () {
             $scope.testObject.reqs = [];
@@ -91,10 +93,19 @@ angular.module('sdlctoolApp')
                     shortName: req.shortName,
                     showOrder: req.showOrder,
                     description: req.description,
+                    limitDesc: LETTERLIMIT,
                     state: 0
                 });
                 $scope.testObject.reqs.push(req.shortName);
             });
+        };
+
+        $scope.showLongdesc = function(req) {
+            req.limitDesc = undefined;
+        };
+
+        $scope.hideLongdesc = function(req) {
+            req.limitDesc = LETTERLIMIT;
         };
 
         function cleanIntervalPromise() {
