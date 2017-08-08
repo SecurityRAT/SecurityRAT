@@ -35,7 +35,7 @@ angular.module('sdlctoolApp')
         };
 
         $scope.openSaveProgressModal = function() {
-            $scope.modalProgressbar.intervalPromise = $interval(function() { $scope.modalProgressbar.barValue += 1; }, 100, 99);
+            $scope.modalProgressbar.intervalPromise = $interval(function() { $scope.modalProgressbar.barValue += 0.65; }, 100, 99);
 
             $scope.saveProgressModalInstance = $uibModal.open({
                 size: 'md',
