@@ -82,7 +82,7 @@ angular.module('sdlctoolApp')
         var addIntro = function() {
             trainingRoot.addCustomSlideNode("Title", "<h1>{{ training.name }}</h1>");
             var intro = trainingRoot.addChildNode("BranchNode", "Introduction", true );
-            intro.addCustomSlideNode("Title", "{{ parent.name }}");
+            intro.addCustomSlideNode("Title", "<h2>{{ parent.name }}</h2>");
             intro.addCustomSlideNode("Welcome", "<h2>Welcome to {{ training.name }}</h2>");
             intro.addCustomSlideNode("Who am I", "<h2>Who am I?</h2>\nJohn Doe, Security Analyst");
             intro.addCustomSlideNode("Portfolio", "" +
