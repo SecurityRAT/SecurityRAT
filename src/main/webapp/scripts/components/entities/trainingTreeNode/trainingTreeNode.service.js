@@ -134,6 +134,7 @@ angular.module('sdlctoolApp')
                 var subPromises = [TrainingTreeUtil.ChildrenOfNode.query({id: node.id}).$promise];
                 node.children = [];
 
+                // load info from special tables
                 switch(node.node_type) {
                     case "CustomSlideNode":
                         var query_promise = TrainingTreeUtil.CustomSlideNode.get({id: node.id}).$promise;
@@ -175,16 +176,16 @@ angular.module('sdlctoolApp')
                             subPromises.push(query_promise);
                             query_promise.then(function(result) {
                                 node.name = result.name;
-                                console.log("CategoryNode", result);
                             });
                         }
                         break;
                 }
 
+                // process children
                 subPromises[0].then(function(children) {
-
                     if(children != null) {
                         children.forEach(function(child) {
+                            // first: check list of children for updates according to category_id
                             // convert the result to a full TrainingTreeNode-Object (which has all member methods)
                             var childNode = new TrainingTreeNode();
                             childNode.id = child.id;
@@ -197,7 +198,6 @@ angular.module('sdlctoolApp')
                             node.children.push(childNode);
                         })
                     }
-
                     Promise.all(subPromises).then(function() {
                         resolve();
                     })
