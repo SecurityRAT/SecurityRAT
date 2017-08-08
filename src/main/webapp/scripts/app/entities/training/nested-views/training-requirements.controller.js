@@ -61,24 +61,23 @@ angular.module('sdlctoolApp')
                 $scope.training.collections.forEach(function(collection) {
                     selectedCollections.push(collection.id);
                 });
-                $scope.training.projectTypes.forEach(function(projectType) {
-                    selectedProjectTypes.push(projectType.id);
-                });
+                if($scope.training.projectTypes.length > 0) {
+                    $scope.training.projectTypes.forEach(function(projectType) {
+                        selectedProjectTypes.push(projectType.id);
+                    });
+                } else {
+                    // in case no project type was selected, select all to get a project type independent result
+                    selectedProjectTypes = $rootScope.allProjectTypes;
+                }
             } else {
                 selectedCollections = $rootScope.allCollections;
                 selectedProjectTypes = $rootScope.allProjectTypes;
             }
 
-            var hasCollectionsSelected = selectedCollections.length > 0;
-            var hasProjectTypesSelected = selectedProjectTypes.length > 0;
-
-            if(hasCollectionsSelected || hasProjectTypesSelected) {
-                if (hasCollectionsSelected) {
-                    requestString += "collections=" + selectedCollections;
-                    if (selectedProjectTypes.length > 0) requestString += "&";
-                }
-                if (hasProjectTypesSelected)
-                    requestString += "projectTypes=" + selectedProjectTypes;
+            if(selectedCollections.length > 0) {
+                requestString += "collections=" + selectedCollections;
+                requestString += "&";
+                requestString += "projectTypes=" + selectedProjectTypes;
             }
             return requestString;
         };
