@@ -42,8 +42,7 @@ angular.module('sdlctoolApp')
                 parent: 'training',
                 abstract: 'true',
                 data: {
-                    roles: ['ROLE_TRAINER'],
-                    pageTitle: 'Generate a new Training'
+                    roles: ['ROLE_TRAINER']
                 },
                 views: {
                     'content@': {
@@ -89,7 +88,6 @@ angular.module('sdlctoolApp')
                 abstract: 'true',
                 data: {
                     roles: ['ROLE_TRAINER'],
-                    pageTitle: 'Generate a new Training'
                 },
                 views: {
                     'content@': {
