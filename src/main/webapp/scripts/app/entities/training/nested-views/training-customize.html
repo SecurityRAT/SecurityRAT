@@ -2,7 +2,9 @@
     <div id="tree"></div>
 </div>
 
-
+<style>
+    .vakata-context { z-index: 10000 !important; }
+</style>
 <div class="col-sm-6 col-md-5">
     <div id="editBlock">
         <h2 class="page-header" style="margin-top: 0px">Edit Slide</h2>
@@ -16,7 +18,9 @@
                 <label for="slideContent">Slide Content</label>
                 <textarea style="" rows="14"
                           class="form-control"
-                          name="slideContent" id="slideContent" data-ng-model="selectedNode.content"></textarea>
+                          name="slideContent"
+                          id="slideContent"
+                          data-ng-model="selectedNode.content"></textarea>
             </div>
             <div class="form-group">
                 <!--
@@ -28,12 +32,15 @@
                     <strong>Warning!</strong> If you change this slide, it will be turned into a
                     custom slide and won't receive updates!
                 </div>
+                <div id="customSlideWarning" class="alert alert-info" data-ng-hide="selectedNode.content.length > 0">
+                    Slides with no content will be excluded from the presentation.
+                </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-info" data-ng-click="updateSlidePreview()">
+                <button id="updateSlideButton" type="button" class="btn btn-info" data-ng-click="updateSlidePreview()">
                     <span class="glyphicon glyphicon-eye-open"></span>&nbsp;<span>Update Preview</span>
                 </button>
-                <button type="button" class="btn btn-primary">
+                <button id="saveSlideButton" type="button" class="btn btn-primary">
                     <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Save</span></button>
             </div>
         </form>
@@ -41,7 +48,7 @@
 </div>
 
 <div id="previewBlock" class="col-sm-12 col-md-4">
-    <iframe name="previewFrame" src="scripts/app/entities/training/slidePreview.html" style="width:100%; height:650px;">
+    <iframe id="previewFrameId" name="previewFrame" src="scripts/app/entities/training/slidePreview.html" style="width:100%; height:650px;">
         <p>No frames supported</p>
     </iframe>
 </div>

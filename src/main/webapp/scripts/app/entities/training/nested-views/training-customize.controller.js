@@ -49,9 +49,17 @@ angular.module('sdlctoolApp')
                     $scope.updateSlidePreview(selectedNodeType == "GeneratedSlideNode");
 
                     if(selectedNodeType !== "CustomSlideNode") {
-                        $('#customSlideWarning').fadeIn();
+                        $('#slideTitle').prop('disabled', true);
+                        $('#slideContent').prop('disabled', true);
+                        $('#saveSlideButton').prop('disabled', true);
+                        $('#updateSlideButton').prop('disabled', true);
+                        // $('#customSlideWarning').fadeIn();
                     } else {
-                        $('#customSlideWarning').hide();
+                        $('#slideTitle').prop('disabled', false);
+                        $('#slideContent').prop('disabled', false);
+                        $('#saveSlideButton').prop('disabled', false);
+                        $('#updateSlideButton').prop('disabled', false);
+                        // $('#customSlideWarning').hide();
                     }
                 } else {
                     $scope.slideEditor(false);
@@ -72,7 +80,7 @@ angular.module('sdlctoolApp')
 
                 }
             }, function(failed_reason) {
-                console.error("failed to load content from slide");
+                console.error("failed to load content from slide: " + failed_reason);
                 $('#slidePreviewContent', frames['previewFrame'].document).html("");
             });
 
