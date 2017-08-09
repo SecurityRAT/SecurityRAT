@@ -67,6 +67,18 @@ angular.module('sdlctoolApp')
             }
         );
 
+        $scope.saveSlide = function() {
+            $scope.selectedNodeJSTree.node.data["content"] = $scope.selectedNode.content;
+
+            if($scope.selectedNode.node_type == "CustomSlideNode" && $scope.selectedNodeJSTree.node.data.node_id != null) {
+                // if this training exists in db, there is already a node id which can be used to update the CustomSlideNode
+
+                TrainingTreeUtil.CustomSlideNode.query({id: $scope.selectedNodeJSTree.node.data.node_id}).$promise.then(function(customSlideNode) {
+                    customSlideNode.content = $scope.selectedNode.content;
+                    TrainingCustomSlideNode.update(customSlideNode, onSaveFinished);
+                });
+            }
+        };
         $scope.updateSlidePreview = function(writeBack=false) {
             if($scope.selectedNode.training_id == null || $scope.selectedNode.training_id.name == null )
                 $scope.selectedNode.training_id = $scope.training;

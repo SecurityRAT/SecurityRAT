@@ -309,6 +309,10 @@ angular.module('sdlctoolApp')
             };
 
             if(result.data == null) result.data = {};
+
+            if(this.id != null)
+                result.data["node_id"] = this.id;
+
             switch(this.node_type) {
                 case "CustomSlideNode":
                     result.data["content"] = this.content;
