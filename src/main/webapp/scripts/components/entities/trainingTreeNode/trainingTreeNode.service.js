@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .factory('TrainingTreeNode', function ($resource, $sanitize, DateUtils, TrainingCustomSlideNode, TrainingBranchNode,
+    .factory('TrainingTreeNode', function ($resource, DateUtils, TrainingCustomSlideNode, TrainingBranchNode,
                                            TrainingCategoryNode, TrainingRequirementNode, TrainingGeneratedSlideNode,
                                            TrainingTreeUtil, RequirementSkeleton) {
         var onSaveFinished = function (result) {
@@ -265,7 +265,7 @@ angular.module('sdlctoolApp')
                 }
 
                 Promise.all(subPromises).then(function() {
-                  resolve($sanitize(content));
+                  resolve(content);
                 });
             });
         };

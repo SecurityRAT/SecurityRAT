@@ -1,4 +1,7 @@
 <div class="slides">
-    <section data-ng-repeat="slide in slides" data-ng-bind-html="slide.content">
+    <section data-markdown data-ng-repeat="slide in slides">
+        <textarea data-markdown>
+            {{slide.content}}
+        </textarea>
     </section>
 </div>
