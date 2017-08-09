@@ -1161,7 +1161,7 @@ angular.module('sdlctoolApp')
             requirementToInsert.statusColumns = oldRequirement.statusColumns;
             requirementToInsert.ticket = oldRequirement.ticket;
             requirementToInsert.linkStatus = oldRequirement.linkStatus;
-            $scope.updatesCounter++;
+            // $scope.updatesCounter++;
             $scope.updateCounter++;
             if (afterImport) {
                 $scope.updatesAvailable = true;
@@ -1282,7 +1282,7 @@ angular.module('sdlctoolApp')
                         $scope.newRequirements.push(newRequirement);
                         $scope.updatesAvailable = true;
                         $scope.newCounter++;
-                        $scope.updatesCounter++;
+                        // $scope.updatesCounter++;
                         //console.log('a new requirement was added');
                     }
                 }
@@ -1332,6 +1332,7 @@ angular.module('sdlctoolApp')
                     SDLCToolExceptionService.showWarning('Change settings and update requirements successful', message, SDLCToolExceptionService.INFO);
                 }
             }
+            $scope.updatesCounter = $scope.updateCounter + $scope.newCounter;
         };
 
         $scope.updatesAvailableClicked = function () {
@@ -1394,7 +1395,7 @@ angular.module('sdlctoolApp')
                 $scope.requirementProperties.requirementsEdited = true;
             } else if ($scope.updateCounter > 0) {
 
-                message = 'Summary:<ul><li>' + $scope.updatesCounter + ' requirement(s) were updated</li><li> ' + $scope.newCounter + ' new requirement(s) were added</li><li>' + $scope.deletedCounter + ' requirement(s) were removed</li></ul><BR>You can now review the updates. ' +
+                message = 'Summary:<ul><li>' + $scope.updateCounter + ' requirement(s) were updated</li><li> ' + $scope.newCounter + ' new requirement(s) were added</li><li>' + $scope.deletedCounter + ' requirement(s) were removed</li></ul><BR>You can now review the updates. ' +
                     'The old requirement is marked in <span style=\'background-color:rgb(255, 204, 204);\'>light red</span> and the new requirement in <span style=\'background-color:rgb(204, 255, 204);\'>light green</span>' +
                     ' Please accept the change by clicking on the <button class=\'btn btn-success\'>' +
                     '<span class=\'glyphicon glyphicon-ok\'></span></button> button to keep the new requirement or by clicking on the <button class=\'btn btn-danger\'><span class=\'glyphicon glyphicon-remove\'></span></button> ' +
@@ -1408,10 +1409,12 @@ angular.module('sdlctoolApp')
                 }
                 SDLCToolExceptionService.showWarning('Update requirements successful', message, SDLCToolExceptionService.INFO);
             }
-            // console.log($scope.updateCounter);
+            // console.log("updates available clicked");
+            // console.log($scope.updatesCounter);
         };
 
         $scope.applyChanges = function (reqId, keepNewOne) {
+            // defined whether the user's choice has been finally applied in the object.
             var decisionMade = false;
             angular.forEach($scope.requirements, function (requirement) {
                 if (requirement.id === reqId) {
@@ -1429,14 +1432,18 @@ angular.module('sdlctoolApp')
                 if (requirement.id === reqId && keepNewOne && !requirement.isNew) {
                     var idx = $scope.requirements.indexOf(requirement);
                     $scope.requirements.splice(idx, 1);
-                    $scope.updatesCounter--;
+                    if(!decisionMade) {
+                        $scope.updatesCounter--;
+                    }
                     $scope.requirementProperties.requirementsEdited = true;
                     decisionMade = true;
                     //keep old one
                 } else if (requirement.id === reqId && !keepNewOne && requirement.isNew) {
                     var idx = $scope.requirements.indexOf(requirement);
                     $scope.requirements.splice(idx, 1);
-                    $scope.updatesCounter--;
+                    if(!decisionMade) {
+                        $scope.updatesCounter--;
+                    }
                     decisionMade = true;
                     //remove green background from new one
                 } else if ((requirement.id === reqId) && (keepNewOne) && (requirement.isNew)) {
@@ -1466,7 +1473,7 @@ angular.module('sdlctoolApp')
                 }
             });
 
-            if ($scope.updatesCounter === 0) {
+            if ($scope.updatesCounter <= 0) {
                 $scope.updatedReqs = false;
                 $scope.updatesAvailable = false;
             }

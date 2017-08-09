@@ -302,7 +302,7 @@
                             <br/>
                         </td>
                     </tr>
-                    <tr class="animate-repeat" data-ng-repeat="reqs in requirements | orderBy:['categoryOrder','order'] | limitTo : infiniteScroll.numberToDisplay | filterUpdates : updatedReqs | filterByTags : filteredRequirementsByTags | filter: {category: category.label} | filterByStatus : selectedStatus | filterTicketStatus : jiraStatus.selectedStatus | filter:search">
+                    <tr class="animate-repeat" data-ng-repeat="reqs in requirements | orderBy:['categoryOrder','order'] | filterUpdates : updatedReqs | filterByTags : filteredRequirementsByTags | filter: {category: category.label} | filterByStatus : selectedStatus | filterTicketStatus : jiraStatus.selectedStatus | filter:search">
                         <td data-ng-if="updatedReqs && !reqs.isNew">{{reqs.applyUpdate}}</td>
                         <td data-ng-if="updatedReqs && reqs.isNew">
                             <div>
