@@ -33,6 +33,10 @@ angular.module('sdlctoolApp')
             this.children.push(newChild);
             return newChild;
         };
+        TrainingTreeNode.prototype.addBranchNode = function(name, content) {
+            var newChild = this.addChildNode("BranchNode", name, true);
+            return newChild;
+        };
         TrainingTreeNode.prototype.addCustomSlideNode = function(name, content) {
             var newChild = this.addChildNode("CustomSlideNode", name, false);
             newChild.content = content;

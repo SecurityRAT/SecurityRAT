@@ -81,7 +81,7 @@ angular.module('sdlctoolApp')
 
         var addIntro = function() {
             trainingRoot.addCustomSlideNode("Title", "<h1>{{ training.name }}</h1>");
-            var intro = trainingRoot.addChildNode("BranchNode", "Introduction", true );
+            var intro = trainingRoot.addBranchNode("Introduction");
             intro.addCustomSlideNode("Title", "<h2>{{ parent.name }}</h2>");
             intro.addCustomSlideNode("Welcome", "<h2>Welcome to {{ training.name }}</h2>");
             intro.addCustomSlideNode("Who am I", "<h2>Who am I?</h2>\nJohn Doe, Security Analyst");
@@ -93,7 +93,7 @@ angular.module('sdlctoolApp')
         };
 
         var addOutro = function() {
-            var intro = trainingRoot.addChildNode("BranchNode", "Outro", true );
+            var intro = trainingRoot.addBranchNode("Outro");
             intro.addChildNode("CustomSlideNode", "Title", false);
             intro.addChildNode("CustomSlideNode", "Comic", false);
         };
@@ -128,7 +128,7 @@ angular.module('sdlctoolApp')
                         $scope.requirementSkeletons = categoriesWithRequirements;
 
                         // create content node which holds all generated slides
-                        var contentNode = trainingRoot.addChildNode("BranchNode", "Contents", true);
+                        var contentNode = trainingRoot.addBranchNode("Contents");
 
                         // add generated slides
                         categoriesWithRequirements.forEach(function(category) {

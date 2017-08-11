@@ -2,7 +2,13 @@
 
 angular.module('sdlctoolApp')
     .controller('TrainingCustomizeController', function ($scope, $rootScope, $stateParams, $timeout, entity, Training,
-                                                         TrainingTreeNode) {
+                                                         TrainingTreeNode, TrainingCustomSlideNode, TrainingTreeUtil,
+                                                         SlideTemplate) {
+
+        var onSaveFinished = function (result) {
+            $scope.$emit('sdlctoolApp:trainingUpdate', result);
+        };
+
         $scope.training = entity;
         $scope.firstTimeDrawingTree = true;
 
@@ -32,8 +38,7 @@ angular.module('sdlctoolApp')
         $("#tree").bind(
             "select_node.jstree", function(evt, data){
                 //selected node object: data.inst.get_json()[0];
-                //selected node text: data.inst.get_json()[0].data
-
+                $scope.selectedNodeJSTree = data;
                 $scope.selectedNode = new TrainingTreeNode();
                 $scope.selectedNode.fromJSON(data.node);
                 // $scope.selectedNode = new TrainingTreeNode();
@@ -68,17 +73,19 @@ angular.module('sdlctoolApp')
         );
 
         $scope.saveSlide = function() {
+            // rename node
+            var tree = $('#tree').jstree(true);
+            tree.rename_node(tree.get_selected(), $scope.selectedNode.name);
+
+            // update content
             $scope.selectedNodeJSTree.node.data["content"] = $scope.selectedNode.content;
 
-            if($scope.selectedNode.node_type == "CustomSlideNode" && $scope.selectedNodeJSTree.node.data.node_id != null) {
-                // if this training exists in db, there is already a node id which can be used to update the CustomSlideNode
-
-                TrainingTreeUtil.CustomSlideNode.query({id: $scope.selectedNodeJSTree.node.data.node_id}).$promise.then(function(customSlideNode) {
-                    customSlideNode.content = $scope.selectedNode.content;
-                    TrainingCustomSlideNode.update(customSlideNode, onSaveFinished);
-                });
-            }
+            TrainingTreeUtil.CustomSlideNode.query({id: $scope.selectedNodeJSTree.node.data.node_id}).$promise.then(function(customSlideNode) {
+                customSlideNode.content = $scope.selectedNode.content;
+                TrainingCustomSlideNode.update(customSlideNode, onSaveFinished);
+            });
         };
+
         $scope.updateSlidePreview = function(writeBack=false) {
             if($scope.selectedNode.training_id == null || $scope.selectedNode.training_id.name == null )
                 $scope.selectedNode.training_id = $scope.training;
@@ -100,6 +107,8 @@ angular.module('sdlctoolApp')
 
         // Custom Menu
         var customMenu = function(node) {
+            console.log("custom Menu", node);
+            var tree = $('#tree').jstree(true);
             // The default set of all items
             var items = {
                 // Some key
@@ -107,7 +116,18 @@ angular.module('sdlctoolApp')
                     // The item label
                     "label"				: "Create Branch",
                     // The function to execute upon a click
-                    "action"			: function (node) {},
+                    "action"			: function (obj) {
+                        var newChild = tree.create_node(node.id,
+                            {
+                                "text": "new Branch",
+                                "type": "BranchNode"
+                            }
+                        );
+                        tree.edit(newChild);
+                        $scope.selectedNode.addBranchNode(newChild.text);
+                        //TODO how to get the branchNodes new name?
+
+                    },
                     // All below are optional
                     "_disabled"			: false,		// clicking the item won't do a thing
                     "_class"			: "class",	// class is applied to the item LI node
@@ -119,23 +139,9 @@ angular.module('sdlctoolApp')
                         /* Collection of objects (the same structure) */
                     }
                 },
-                add_content : {
-                    "label": "Add Option Column",
-                    "icon": "glyphicon glyphicon-plus-sign",
-                    "submenu": {
-                        info: {"label": "More Information", icon: "glyphicon glyphicon-asterisk"},
-                        motivation: {"label": "Motivation", icon: "glyphicon glyphicon-asterisk"},
-                        test: {"label": "Test Case", icon: "glyphicon glyphicon-asterisk"}
-                    }
-                },
                 insert_slide : {
                     // The item label
                     "label"				: "Insert Custom Slide",
-                    // The function to execute upon a click
-                    "action"			: function (node) {
-                        console.log($('#tree'));
-                        console.log($('#tree').jstree());
-                    },
                     // All below are optional
                     "_disabled"			: false,		// clicking the item won't do a thing
                     "_class"			: "class",	// class is applied to the item LI node
@@ -144,16 +150,28 @@ angular.module('sdlctoolApp')
                     // false or string - if does not contain `/` - used as classname
                     "icon"				:  "glyphicon glyphicon-flash",
                     "submenu"			: {
-                        intro: {"label": "Empty Slide", "separator_after"	: true, icon: "glyphicon glyphicon-flash"},
+                        empty: {
+                            "label": "Empty Slide",
+                            "separator_after": true,
+                            icon: "glyphicon glyphicon-flash",
+                            action: function(obj) {
+                                var newChild = tree.create_node(node.id,
+                                    {
+                                        "text": "new Customslide",
+                                        "type": "CustomSlideNode",
+                                        "data": {
+                                            "content": ""
+                                        }
+                                    }
+                                );
+                                tree.deselect_all();
+                                tree.select_node(newChild);
+                            }
+                        },
                         template: {
                             "label": "Template",
                             "icon":  "glyphicon glyphicon-list-alt",
-                            "submenu": {
-                                tpl_table: {"label": "Table", icon: "glyphicon glyphicon-flash"},
-                                tpl_image: {"label": "Image", icon: "glyphicon glyphicon-flash"},
-                                tpl_text: {"label": "Text", icon: "glyphicon glyphicon-flash"},
-                                tpl_demoIframe: {"label": "Demo with iframe", icon: "glyphicon glyphicon-flash"}
-                            }
+                            "submenu": $scope.slideTemplateSubMenu
                         }
                     }
                 },
@@ -164,14 +182,16 @@ angular.module('sdlctoolApp')
                  "icon": "glyphicon glyphicon-edit"
                  },
                  */
-                cloneItem: {
-                    "label": "Clone",
-                    "action": function (node) {},
-                    "icon": "glyphicon glyphicon-duplicate"
-                },
+                // cloneItem: {
+                //     "label": "Clone",
+                //     "action": function (node) {},
+                //     "icon": "glyphicon glyphicon-duplicate"
+                // },
                 renameItem: { // The "rename" menu item
                     "label": "Rename",
-                    "action": function (node) {},
+                    "action": function (obj) {
+                        tree.edit(node);
+                    },
                     "icon": "glyphicon glyphicon-wrench"
                 },
                 deleteItem: { // The "delete" menu item
@@ -199,69 +219,104 @@ angular.module('sdlctoolApp')
             return items;
         };
 
-        $rootScope.displayTree = function() {
-            if($scope.firstTimeDrawingTree) {
-                $('#tree').jstree({
-                    'core': {
-                        'check_callback': true,
-                        'data': $rootScope.trainingTreeData
-                    },
-                    "contextmenu": {items: customMenu},
-                    "types": {
-                        // the default type
-                        "BranchNode": {
-                            "max_children": -1,
-                            "max_depth": -1,
-                            "valid_children": [
-                                "BranchNode",
-                                "GeneratedSlideNode",
-                                "CustomSlideNode",
-                                "CategoryNode",
-                                "RequirementNode"
-                            ],
-                            "create_node": true
-                        },
-                        "RootNode": {
-                            "max_children": -1,
-                            "max_depth": -1,
-                            "valid_children": [
-                                "BranchNode",
-                                "GeneratedSlideNode",
-                                "CustomSlideNode",
-                                "CategoryNode",
-                                "RequirementNode"
-                            ],
-                            "create_node": true
-                        },
-                        "GeneratedSlideNode": {
-                            "icon": "glyphicon glyphicon-file",
-                            "create_node": false,
-                            "valid_children": "none",
-                            "li_attr": {"class": "slide"}
-                        },
-                        "CustomSlideNode": {
+        $rootScope.createSlideTemplateSubMenu = function() {
+            return new Promise(function(resolve, reject) {
+                var result = {};
+                SlideTemplate.query().$promise.then(function (slideTemplates) {
+                    slideTemplates.forEach(function (slideTemplate) {
+                        var subMenuEntry = {
+                            "label": slideTemplate.name,
                             "icon": "glyphicon glyphicon-flash",
-                            "create_node": false,
-                            "valid_children": "none",
-                            "li_attr": {"class": "slide"}
-                        },
-                        "RequirementNode": {
-                            "icon": "glyphicon glyphicon-book",
-                            "create_node": false,
-                            "valid_children": "none",
-                            "li_attr": {"class": "slide"}
-                        },
-                        "CategoryNode": {}
-                    },
-                    "plugins": ["contextmenu", "dnd", "types"]
+                            "action": function (obj) {
+                                console.log("$scope.selectedNodeJSTree", $scope.selectedNodeJSTree);
+
+                                var tree = $('#tree').jstree(true);
+                                var newChild = tree.create_node($scope.selectedNodeJSTree.node.id,
+                                    {
+                                        "text": slideTemplate.name,
+                                        "type": "CustomSlideNode",
+                                        "data": {
+                                            "content": slideTemplate.content
+                                        }
+                                    }
+                                );
+                                tree.deselect_all();
+                                tree.select_node(newChild);
+                            }
+                        };
+                        result["slideTemplate" + slideTemplate.id] = subMenuEntry;
+                    });
+                    $scope.slideTemplateSubMenu = result;
+                    resolve();
                 });
-            } else {
-                // if this is not the first time the tree is drawn, redraw it to update changes
-                var tree = $('#tree');
-                tree.jstree(true).settings.core.data = $rootScope.trainingTreeData;
-                tree.jstree('refresh');
-            }
-            $scope.firstTimeDrawingTree = false;
+            });
+        };
+
+        $rootScope.displayTree = function() {
+            $rootScope.createSlideTemplateSubMenu().then(function() {
+                if($scope.firstTimeDrawingTree) {
+                    $('#tree').jstree({
+                        'core': {
+                            'check_callback': true,
+                            'data': $rootScope.trainingTreeData
+                        },
+                        "contextmenu": {items: customMenu},
+                        "types": {
+                            // the default type
+                            "BranchNode": {
+                                "max_children": -1,
+                                "max_depth": -1,
+                                "valid_children": [
+                                    "BranchNode",
+                                    "GeneratedSlideNode",
+                                    "CustomSlideNode",
+                                    "CategoryNode",
+                                    "RequirementNode"
+                                ],
+                                "create_node": true
+                            },
+                            "RootNode": {
+                                "max_children": -1,
+                                "max_depth": -1,
+                                "valid_children": [
+                                    "BranchNode",
+                                    "GeneratedSlideNode",
+                                    "CustomSlideNode",
+                                    "CategoryNode",
+                                    "RequirementNode"
+                                ],
+                                "create_node": true
+                            },
+                            "GeneratedSlideNode": {
+                                "icon": "glyphicon glyphicon-file",
+                                "create_node": false,
+                                "valid_children": "none",
+                                "li_attr": {"class": "slide"}
+                            },
+                            "CustomSlideNode": {
+                                "icon": "glyphicon glyphicon-flash",
+                                "create_node": false,
+                                "valid_children": "none",
+                                "li_attr": {"class": "slide"}
+                            },
+                            "RequirementNode": {
+                                "icon": "glyphicon glyphicon-book",
+                                "create_node": false,
+                                "valid_children": "none",
+                                "li_attr": {"class": "slide"}
+                            },
+                            "CategoryNode": {}
+                        },
+                        "plugins": ["contextmenu", "dnd", "types"]
+                    });
+                } else {
+                    // if this is not the first time the tree is drawn, redraw it to update changes
+                    var tree = $('#tree');
+                    tree.jstree(true).settings.core.data = $rootScope.trainingTreeData;
+                    tree.jstree('refresh');
+                }
+                $scope.firstTimeDrawingTree = false;
+            });
         };
 
         $rootScope.getTreeJSON = function() {
