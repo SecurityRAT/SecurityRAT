@@ -31,8 +31,8 @@ angular.module('sdlctoolApp')
                                 dependencies: [
                                     {
                                         src: 'bower_components/revealjs/lib/js/classList.js', condition: function () {
-                                        return !document.body.classList;
-                                    }
+                                            return !document.body.classList;
+                                        }
                                     },
                                     {src: 'bower_components/revealjs/plugin/markdown/marked.js'},
                                     {src: 'bower_components/revealjs/plugin/markdown/markdown.js'},
