@@ -28,7 +28,9 @@
 <body>
     <div class="reveal">
         <div class="slides">
-            <section id="slidePreviewContent"></section>
+            <section data-markdown>
+                <textarea data-markdown id="slidePreviewContent"></textarea>
+            </section>
         </div>
     </div>
 <script src="../../../../bower_components/revealjs/lib/js/head.min.js"></script>
@@ -36,22 +38,42 @@
 
 <script>
     var path = "../../../../bower_components/";
-    // More info https://github.com/hakimel/reveal.js#configuration
-    Reveal.initialize({
-        history: true,
-        transition: 'none', // none/fade/slide/convex/concave/zoom
+    var receiveMessage = function( event ) {
+        var data = event.data;
 
-        // More info https://github.com/hakimel/reveal.js#dependencies
-        dependencies: [
-            {src: path+'revealjs/plugin/markdown/marked.js'},
-            {src: path+'revealjs/plugin/markdown/markdown.js'},
-            {src: path+'revealjs/plugin/notes/notes.js', async: true},
-//            {
-//                src: path+'highlight/highlight.pack.js', async: true, callback: function () {
-//                hljs.initHighlightingOnLoad();
-//            }
-        ]
-    });
+        // Make sure we're dealing with JSON
+        if( typeof data === 'string' && data.charAt( 0 ) === '{' && data.charAt( data.length - 1 ) === '}' ) {
+            data = JSON.parse(data);
+            var section = document.evaluate("//section", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+            section.innerHTML = data.args;
+            section.setAttribute("data-markdown-parsed", "false");
+            Reveal.sync()
+        }
+    };
+    window.addEventListener("message", receiveMessage, false);
+
+    var revealInit = function() {
+        Reveal.initialize({
+            history: true,
+            transition: 'none', // none/fade/slide/convex/concave/zoom
+            // Exposes the reveal.js API through window.postMessage
+            postMessage: true,
+
+            // More info https://github.com/hakimel/reveal.js#dependencies
+            dependencies: [
+                {src: path+'revealjs/plugin/markdown/marked.js'},
+                {src: path+'revealjs/plugin/markdown/markdown.js'},
+                {src: path+'revealjs/plugin/notes/notes.js', async: true},
+                {
+                    src: path + 'highlight/highlight.pack.js', async: true, callback: function () {
+                    hljs.initHighlightingOnLoad();
+                }
+                }
+            ]
+        });
+    };
+
+    revealInit();
 </script>
 </body>
 </html>

@@ -90,7 +90,8 @@ angular.module('sdlctoolApp')
             if($scope.selectedNode.training_id == null || $scope.selectedNode.training_id.name == null )
                 $scope.selectedNode.training_id = $scope.training;
             $scope.selectedNode.loadContent().then(function(content) {
-                $('#slidePreviewContent', frames['previewFrame'].document).html(content);
+
+                document.getElementById('previewFrameId').contentWindow.postMessage( JSON.stringify({ method: 'updateSlide', args: [ content ] }), '*' );
                 if(writeBack) {
                     $timeout(function() {
                         $scope.selectedNode.content = content;
