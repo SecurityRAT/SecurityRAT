@@ -1,12 +1,15 @@
 package org.appsec.securityRAT.domain;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
+import javax.servlet.annotation.HttpConstraint;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.Objects;
 
@@ -18,7 +21,7 @@ import org.appsec.securityRAT.domain.enumeration.TrainingTreeNodeType;
 @Entity
 @Table(name = "TRAININGTREENODE")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@Document(indexName="trainingtreenode")
+@Document(indexName = "trainingtreenode")
 public class TrainingTreeNode implements Serializable {
 
     @Id
@@ -35,9 +38,88 @@ public class TrainingTreeNode implements Serializable {
 
     @ManyToOne
     private TrainingTreeNode parent_id;
-
+    @Transient
+    private String content;
+    @Transient
+    private String name;
+    @Transient
+    private TrainingCustomSlideNode customSlideNode;
+    @Transient
+    private TrainingGeneratedSlideNode generatedSlideNode;
+    @Transient
+    private TrainingBranchNode branchNode;
+    @Transient
+    private TrainingRequirementNode requirementNode;
+    @Transient
+    private TrainingCategoryNode categoryNode;
+    @Transient
+    private List<TrainingTreeNode> children;
     @ManyToOne
     private Training training_id;
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public TrainingCategoryNode getCategoryNode() {
+        return categoryNode;
+    }
+
+    public void setCategoryNode(TrainingCategoryNode categoryNode) {
+        this.categoryNode = categoryNode;
+    }
+
+    public TrainingRequirementNode getRequirementNode() {
+        return requirementNode;
+    }
+
+    public void setRequirementNode(TrainingRequirementNode requirementNode) {
+        this.requirementNode = requirementNode;
+    }
+
+    public TrainingBranchNode getBranchNode() {
+        return branchNode;
+    }
+
+    public void setBranchNode(TrainingBranchNode branchNode) {
+        this.branchNode = branchNode;
+    }
+
+    public List<TrainingTreeNode> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<TrainingTreeNode> children) {
+        this.children = children;
+    }
+
+    public TrainingCustomSlideNode getCustomSlideNode() {
+        return customSlideNode;
+    }
+
+    public void setCustomSlideNode(TrainingCustomSlideNode customSlideNode) {
+        this.customSlideNode = customSlideNode;
+    }
+
+    public TrainingGeneratedSlideNode getGeneratedSlideNode() {
+        return generatedSlideNode;
+    }
+
+    public void setGeneratedSlideNode(TrainingGeneratedSlideNode generatedSlideNode) {
+        this.generatedSlideNode = generatedSlideNode;
+    }
 
     public Long getId() {
         return id;
@@ -90,7 +172,7 @@ public class TrainingTreeNode implements Serializable {
 
         TrainingTreeNode trainingTreeNode = (TrainingTreeNode) o;
 
-        if ( ! Objects.equals(id, trainingTreeNode.id)) return false;
+        if (!Objects.equals(id, trainingTreeNode.id)) return false;
 
         return true;
     }
@@ -103,9 +185,9 @@ public class TrainingTreeNode implements Serializable {
     @Override
     public String toString() {
         return "TrainingTreeNode{" +
-                "id=" + id +
-                ", node_type='" + node_type + "'" +
-                ", sort_order='" + sort_order + "'" +
-                '}';
+            "id=" + id +
+            ", node_type='" + node_type + "'" +
+            ", sort_order='" + sort_order + "'" +
+            '}';
     }
 }
