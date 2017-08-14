@@ -17,11 +17,10 @@ angular.module('sdlctoolApp')
                     $scope.trainingRoot.name = $scope.training.name;
                     $scope.trainingRoot.opened = true;
 
-                    $scope.trainingRoot.loadSubTree().then(function() {
-                        console.log("TREE LOADING FINISHED", $scope.trainingRoot);
-                        $rootScope.trainingTreeData[0] = $scope.trainingRoot.getJSON();
-                        $rootScope.displayTree();
-                    });
+
+                    console.log("TREE LOADING FINISHED", $scope.trainingRoot);
+                    $rootScope.trainingTreeData[0] = TrainingTreeNode.JSON_to_JSTree($scope.trainingRoot);
+                    $rootScope.displayTree();
                 });
             });
         };

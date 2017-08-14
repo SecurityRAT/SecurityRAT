@@ -1,10 +1,8 @@
 package org.appsec.securityRAT.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import org.appsec.securityRAT.domain.Training;
-import org.appsec.securityRAT.domain.TrainingTreeNode;
-import org.appsec.securityRAT.repository.TrainingRepository;
-import org.appsec.securityRAT.repository.TrainingTreeNodeRepository;
+import org.appsec.securityRAT.domain.*;
+import org.appsec.securityRAT.repository.*;
 import org.appsec.securityRAT.repository.search.TrainingTreeNodeSearchRepository;
 import org.appsec.securityRAT.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
@@ -18,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.inject.Inject;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -42,6 +41,21 @@ public class TrainingTreeNodeResource {
 
     @Inject
     private TrainingTreeNodeSearchRepository trainingTreeNodeSearchRepository;
+
+    @Inject
+    private TrainingCustomSlideNodeRepository trainingCustomSlideNodeRepository;
+
+    @Inject
+    private TrainingGeneratedSlideNodeRepository trainingGeneratedSlideNodeRepository;
+
+    @Inject
+    private TrainingRequirementNodeRepository trainingRequirementNodeRepository;
+
+    @Inject
+    private TrainingBranchNodeRepository trainingBranchNodeRepository;
+
+    @Inject
+    private TrainingCategoryNodeRepository trainingCategoryNodeRepository;
 
     /**
      * POST  /trainingTreeNodes -> Create a new trainingTreeNode.
@@ -102,7 +116,39 @@ public class TrainingTreeNodeResource {
     @Timed
     public ResponseEntity<TrainingTreeNode> get(@PathVariable Long id) {
         log.debug("REST request to get TrainingTreeNode : {}", id);
-        return Optional.ofNullable(trainingTreeNodeRepository.findOne(id))
+        TrainingTreeNode result = trainingTreeNodeRepository.findOne(id);
+
+        // add reverse relations
+        switch(result.getNode_type()) {
+            case CustomSlideNode:
+                TrainingCustomSlideNode customSlideNode = trainingCustomSlideNodeRepository.getTrainingCustomSlideNodeByTrainingTreeNode(result);
+                result.setCustomSlideNode(customSlideNode);
+                break;
+            case BranchNode:
+                TrainingBranchNode branchNode = trainingBranchNodeRepository.getTrainingBranchNodeByTrainingTreeNode(result);
+                result.setBranchNode(branchNode);
+                break;
+            case RequirementNode:
+                result.setRequirementNode(trainingRequirementNodeRepository.getTrainingRequirementNodeByTrainingTreeNode(result));
+                result.getRequirementNode().getRequirementSkeleton().getShortName();
+                break;
+            case GeneratedSlideNode:
+                result.setGeneratedSlideNode(trainingGeneratedSlideNodeRepository.getTrainingGeneratedSlideNodeByTrainingTreeNode(result));
+                break;
+            case CategoryNode:
+                TrainingCategoryNode categoryNode = trainingCategoryNodeRepository.getTrainingCategoryNodeByTrainingTreeNode(result);
+                result.setCategoryNode(categoryNode);
+                break;
+        }
+
+        List<TrainingTreeNode> children = trainingTreeNodeRepository.getChildrenOf(result);
+        List<TrainingTreeNode> childrenResult = new ArrayList<>();
+        for(TrainingTreeNode child : children) {
+            childrenResult.add(get(child.getId()).getBody());
+        }
+        result.setChildren(childrenResult);
+
+        return Optional.ofNullable(result)
             .map(trainingTreeNode -> new ResponseEntity<>(
                 trainingTreeNode,
                 HttpStatus.OK))

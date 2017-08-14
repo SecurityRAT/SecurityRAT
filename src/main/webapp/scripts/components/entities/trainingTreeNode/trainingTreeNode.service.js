@@ -14,7 +14,6 @@ angular.module('sdlctoolApp')
                 method: 'GET',
                 transformResponse: function (data) {
                     data = angular.fromJson(data);
-                    data.children = [];
                     return data;
                 }
             },
@@ -301,6 +300,56 @@ angular.module('sdlctoolApp')
                     });
                 });
             });
+        };
+
+        TrainingTreeNode.prototype.JSTree_to_JSON = function(jstree_json) {
+
+        };
+
+        TrainingTreeNode.JSON_to_JSTree = function(json) {
+            var result = {
+                "text" : json.name,
+                "state" : { "opened": json.opened },
+                "type" : json.node_type,
+                children: [],
+                data: {}
+            };
+
+            if(json.id != null)
+                result.data["node_id"] = json.id;
+
+            switch(json.node_type) {
+                case "BranchNode":
+                    result.text = json.branchNode.name;
+                    break;
+                case "CustomSlideNode":
+                    result.text = json.customSlideNode.name;
+                    result.data["content"] = json.customSlideNode.content;
+                    break;
+                case "CategoryNode":
+                    result.text = json.categoryNode.category.name;
+                    result.data["category"] = json.categoryNode.category;
+                    break;
+                case "RequirementNode":
+                    result.data["requirementSkeleton"] = json.RequirementNode;
+                    result.text = json.requirementNode.requirementSkeleton.shortName;
+                    break;
+                case "GeneratedSlideNode":
+                    result.data["optColumn"] = json.optColumn;
+                    if(json.generatedSlideNode.optColumn != null)
+                        result.text = json.generatedSlideNode.optColumn.name;
+                    else
+                        result.text = "Skeleton";
+                    break;
+            }
+            result.data["parent_id"] = json.parent_id;
+
+            if(json.children != null) {
+                json.children.forEach(function(node) {
+                    result.children.push(TrainingTreeNode.JSON_to_JSTree(node));
+                });
+            }
+            return result;
         };
 
         // Generate JSON for the jstree-library
