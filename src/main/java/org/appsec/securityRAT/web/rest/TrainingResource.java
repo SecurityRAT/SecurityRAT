@@ -1,13 +1,12 @@
 package org.appsec.securityRAT.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import org.appsec.securityRAT.domain.Training;
-import org.appsec.securityRAT.repository.TrainingRepository;
+import org.appsec.securityRAT.domain.*;
+import org.appsec.securityRAT.repository.*;
 import org.appsec.securityRAT.repository.search.TrainingSearchRepository;
 import org.appsec.securityRAT.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +20,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryString;
 
 /**
  * REST controller for managing Training.
@@ -37,6 +36,25 @@ public class TrainingResource {
 
     @Inject
     private TrainingSearchRepository trainingSearchRepository;
+
+    @Inject
+    private TrainingTreeNodeRepository trainingTreeNodeRepository;
+
+
+    @Inject
+    private TrainingCustomSlideNodeRepository trainingCustomSlideNodeRepository;
+
+    @Inject
+    private TrainingGeneratedSlideNodeRepository trainingGeneratedSlideNodeRepository;
+
+    @Inject
+    private TrainingRequirementNodeRepository trainingRequirementNodeRepository;
+
+    @Inject
+    private TrainingBranchNodeRepository trainingBranchNodeRepository;
+
+    @Inject
+    private TrainingCategoryNodeRepository trainingCategoryNodeRepository;
 
     /**
      * POST  /trainings -> Create a new training.
@@ -113,6 +131,43 @@ public class TrainingResource {
     @Timed
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         log.debug("REST request to delete Training : {}", id);
+
+        // step1: remove parent relations
+        Training training = trainingRepository.findOne(id);
+        trainingTreeNodeRepository.removeParentRelationsForTraining(training);
+
+        // step2: fetch all associated nodes and delete them
+        // (delete related special table entries first)
+        List<TrainingTreeNode> trainingNodes = trainingTreeNodeRepository.getAllByTraining(training);
+        for(TrainingTreeNode trainingNode : trainingNodes) {
+            // delete special table entry
+            switch(trainingNode.getNode_type()) {
+                case BranchNode:
+                    TrainingBranchNode branchNode = trainingBranchNodeRepository.getTrainingBranchNodeByTrainingTreeNode(trainingNode);
+                    trainingBranchNodeRepository.delete(branchNode.getId());
+                    break;
+                case CustomSlideNode:
+                    TrainingCustomSlideNode customSlideNode = trainingCustomSlideNodeRepository.getTrainingCustomSlideNodeByTrainingTreeNode(trainingNode);
+                    trainingCustomSlideNodeRepository.delete(customSlideNode);
+                    break;
+                case CategoryNode:
+                    TrainingCategoryNode categoryNode = trainingCategoryNodeRepository.getTrainingCategoryNodeByTrainingTreeNode(trainingNode);
+                    trainingCategoryNodeRepository.delete(categoryNode);
+                    break;
+                case RequirementNode:
+                    TrainingRequirementNode requirementNode = trainingRequirementNodeRepository.getTrainingRequirementNodeByTrainingTreeNode(trainingNode);
+                    trainingRequirementNodeRepository.delete(requirementNode);
+                    break;
+                case GeneratedSlideNode:
+                    TrainingGeneratedSlideNode generatedSlideNode = trainingGeneratedSlideNodeRepository.getTrainingGeneratedSlideNodeByTrainingTreeNode(trainingNode);
+                    trainingGeneratedSlideNodeRepository.delete(generatedSlideNode);
+                    break;
+            }
+
+            trainingTreeNodeRepository.delete(trainingNode.getId());
+        }
+
+        // step3: delete training
         trainingRepository.delete(id);
         trainingSearchRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("training", id.toString())).build();

@@ -164,8 +164,36 @@ public class TrainingTreeNodeResource {
     @Timed
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         log.debug("REST request to delete TrainingTreeNode : {}", id);
+
+        TrainingTreeNode trainingTreeNode = trainingTreeNodeRepository.findOne(id);
+
         trainingTreeNodeRepository.delete(id);
         trainingTreeNodeSearchRepository.delete(id);
+
+        // delete special table entry
+        switch(trainingTreeNode.getNode_type()) {
+            case BranchNode:
+                TrainingBranchNode branchNode = trainingBranchNodeRepository.getTrainingBranchNodeByTrainingTreeNode(trainingTreeNode);
+                trainingBranchNodeRepository.delete(branchNode.getId());
+                break;
+            case CustomSlideNode:
+                TrainingCustomSlideNode customSlideNode = trainingCustomSlideNodeRepository.getTrainingCustomSlideNodeByTrainingTreeNode(trainingTreeNode);
+                trainingCustomSlideNodeRepository.delete(customSlideNode);
+                break;
+            case CategoryNode:
+                TrainingCategoryNode categoryNode = trainingCategoryNodeRepository.getTrainingCategoryNodeByTrainingTreeNode(trainingTreeNode);
+                trainingCategoryNodeRepository.delete(categoryNode);
+                break;
+            case RequirementNode:
+                TrainingRequirementNode requirementNode = trainingRequirementNodeRepository.getTrainingRequirementNodeByTrainingTreeNode(trainingTreeNode);
+                trainingRequirementNodeRepository.delete(requirementNode);
+                break;
+            case GeneratedSlideNode:
+                TrainingGeneratedSlideNode generatedSlideNode = trainingGeneratedSlideNodeRepository.getTrainingGeneratedSlideNodeByTrainingTreeNode(trainingTreeNode);
+                trainingGeneratedSlideNodeRepository.delete(generatedSlideNode);
+                break;
+        }
+
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("trainingTreeNode", id.toString())).build();
     }
 
