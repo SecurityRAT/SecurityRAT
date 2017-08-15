@@ -44,15 +44,18 @@ angular.module('sdlctoolApp')
         TrainingTreeNode.prototype.addCategoryNode = function(name, category, opened) {
             var newChild = this.addChildNode("CategoryNode", name, opened);
             newChild.category = category;
+            newChild.json_universal_id = category.id;
             return newChild;
         };
         TrainingTreeNode.prototype.addRequirementNode = function(requirement, opened) {
             var newChild = this.addChildNode("RequirementNode", requirement.shortName, opened);
             newChild.requirementSkeleton = requirement;
+            newChild.json_universal_id = requirement.id;
 
             // add skeleton slide
             var skeletonSlide = newChild.addChildNode("GeneratedSlideNode", "Skeleton", false);
             skeletonSlide.optColumn = null; // mark it as a skeleton slide!
+            skeletonSlide.json_universal_id = -1;
             skeletonSlide.parent_id = {requirementSkeleton: newChild.requirementSkeleton};
 
             return newChild;
@@ -60,6 +63,7 @@ angular.module('sdlctoolApp')
         TrainingTreeNode.prototype.addGeneratedSlideNode = function(optColumn) {
             var newChild = this.addChildNode("GeneratedSlideNode", optColumn.name, false);
             newChild.optColumn = {id: optColumn.id};
+            newChild.json_universal_id = optColumn.id;
             newChild.parent_id = {requirementSkeleton: this.requirementSkeleton};
             return newChild;
         };
@@ -67,7 +71,7 @@ angular.module('sdlctoolApp')
         // both training id and parent id are not ready at the time the objects are created
         // therefore they must be set afterwards as soon as the ids are ready
         TrainingTreeNode.prototype.setTrainingId = function(id) {
-            this.training_id = id;
+            this.json_training_id = id;
             if(this.children != null) {
                 this.children.forEach(function(childNode) {
                     childNode.setTrainingId(id);
@@ -318,31 +322,20 @@ angular.module('sdlctoolApp')
             if(json.id != null)
                 result.data["node_id"] = json.id;
 
+            result.data["json_universal_id"] = json.json_universal_id;
+
             switch(json.node_type) {
                 case "BranchNode":
-                    result.text = json.branchNode.name;
-                    break;
-                case "CustomSlideNode":
-                    result.text = json.customSlideNode.name;
-                    result.data["content"] = json.customSlideNode.content;
-                    break;
-                case "CategoryNode":
-                    result.text = json.categoryNode.category.name;
-                    result.data["category"] = json.categoryNode.category;
-                    break;
-                case "RequirementNode":
-                    result.data["requirementSkeleton"] = json.RequirementNode;
-                    result.text = json.requirementNode.requirementSkeleton.shortName;
                     break;
                 case "GeneratedSlideNode":
-                    result.data["optColumn"] = json.optColumn;
-                    if(json.generatedSlideNode.optColumn != null)
-                        result.text = json.generatedSlideNode.optColumn.name;
-                    else
-                        result.text = "Skeleton";
+                case "CustomSlideNode":
+                    result.data["content"] = json.content;
+                    break;
+                case "CategoryNode":
+                    break;
+                case "RequirementNode":
                     break;
             }
-            result.data["parent_id"] = json.parent_id;
 
             if(json.children != null) {
                 json.children.forEach(function(node) {
@@ -365,6 +358,8 @@ angular.module('sdlctoolApp')
 
             if(this.id != null)
                 result.data["node_id"] = this.id;
+
+            result.data["json_universal_id"] = this.json_universal_id;
 
             switch(this.node_type) {
                 case "CustomSlideNode":
@@ -399,18 +394,13 @@ angular.module('sdlctoolApp')
             node.node_type = json_data.type;
             node.children = [];
 
+            node.json_universal_id = json_data.data.json_universal_id;
+            console.log("fromJSON setting universal id for " + node.node_type + " to " + json_data.data.json_universal_id, json_data);
+
             switch(json_data.type) {
+                case "GeneratedSlideNode":
                 case "CustomSlideNode":
                     node.content = json_data.data.content;
-                    break;
-                case "CategoryNode":
-                    node.category = json_data.data.category;
-                    break;
-                case "RequirementNode":
-                    node.requirementSkeleton = json_data.data.requirementSkeleton;
-                    break;
-                case "GeneratedSlideNode":
-                    node.optColumn = json_data.data.optColumn;
                     break;
             }
             if(json_data.data != null)
