@@ -1,5 +1,6 @@
 package org.appsec.securityRAT.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -27,35 +28,59 @@ public class TrainingTreeNode implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
-    
+
     @Enumerated(EnumType.STRING)
     @Column(name = "node_type")
     private TrainingTreeNodeType node_type;
-    
+
     @Column(name = "sort_order")
     private Integer sort_order;
 
     @ManyToOne
+    @JsonIgnore
     private TrainingTreeNode parent_id;
     @Transient
     private String content;
     @Transient
     private String name;
     @Transient
-    private TrainingCustomSlideNode customSlideNode;
-    @Transient
-    private TrainingGeneratedSlideNode generatedSlideNode;
-    @Transient
-    private TrainingBranchNode branchNode;
-    @Transient
-    private TrainingRequirementNode requirementNode;
-    @Transient
-    private TrainingCategoryNode categoryNode;
+    private boolean opened;
     @Transient
     private List<TrainingTreeNode> children;
     @ManyToOne
+    @JsonIgnore
     private Training training_id;
+
+    // JSON transfer attribute for training_id
+    @Transient
+    private Long json_training_id;
+    // JSON transfer attribute for database links
+    @Transient
+    private Long json_universal_id;
+
+    public Long getJson_universal_id() {
+        return json_universal_id;
+    }
+
+    public void setJson_universal_id(Long json_universal_id) {
+        this.json_universal_id = json_universal_id;
+    }
+
+    public Long getJson_training_id() {
+        return json_training_id;
+    }
+
+    public void setJson_training_id(Long json_training_id) {
+        this.json_training_id = json_training_id;
+    }
+
+    public boolean isOpened() {
+        return opened;
+    }
+
+    public void setOpened(boolean opened) {
+        this.opened = opened;
+    }
 
     public String getContent() {
         return content;
@@ -73,52 +98,12 @@ public class TrainingTreeNode implements Serializable {
         this.name = name;
     }
 
-    public TrainingCategoryNode getCategoryNode() {
-        return categoryNode;
-    }
-
-    public void setCategoryNode(TrainingCategoryNode categoryNode) {
-        this.categoryNode = categoryNode;
-    }
-
-    public TrainingRequirementNode getRequirementNode() {
-        return requirementNode;
-    }
-
-    public void setRequirementNode(TrainingRequirementNode requirementNode) {
-        this.requirementNode = requirementNode;
-    }
-
-    public TrainingBranchNode getBranchNode() {
-        return branchNode;
-    }
-
-    public void setBranchNode(TrainingBranchNode branchNode) {
-        this.branchNode = branchNode;
-    }
-
     public List<TrainingTreeNode> getChildren() {
         return children;
     }
 
     public void setChildren(List<TrainingTreeNode> children) {
         this.children = children;
-    }
-
-    public TrainingCustomSlideNode getCustomSlideNode() {
-        return customSlideNode;
-    }
-
-    public void setCustomSlideNode(TrainingCustomSlideNode customSlideNode) {
-        this.customSlideNode = customSlideNode;
-    }
-
-    public TrainingGeneratedSlideNode getGeneratedSlideNode() {
-        return generatedSlideNode;
-    }
-
-    public void setGeneratedSlideNode(TrainingGeneratedSlideNode generatedSlideNode) {
-        this.generatedSlideNode = generatedSlideNode;
     }
 
     public Long getId() {
