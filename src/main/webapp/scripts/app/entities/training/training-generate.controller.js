@@ -68,13 +68,17 @@ angular.module('sdlctoolApp')
             // wait until the newly created training id is accessible...
             new_training.$promise.then(function(result) {
                 trainingRoot.fromJSON($rootScope.getTreeJSON());
-                trainingRoot.setTrainingId(result);
+                trainingRoot.json_training_id = result.id;
 
-                var promise = trainingRoot.saveSubTree();
+                console.log("trainingRoot to save", trainingRoot);
+
                 $scope.openSaveProgressModal();
-                promise.then(function() {
+                TrainingTreeNode.save(trainingRoot).$promise.then(function() {
                     $scope.closeSaveProgressModal();
-                })
+                }, function() {
+                    $scope.closeSaveProgressModal();
+                    console.error("tree save operation failed");
+                });
             });
 
         };
