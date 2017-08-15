@@ -2,9 +2,11 @@ package org.appsec.securityRAT.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import org.appsec.securityRAT.domain.*;
+import org.appsec.securityRAT.domain.enumeration.TrainingTreeNodeType;
 import org.appsec.securityRAT.repository.*;
 import org.appsec.securityRAT.repository.search.TrainingTreeNodeSearchRepository;
 import org.appsec.securityRAT.web.rest.util.HeaderUtil;
+import org.hibernate.annotations.CascadeType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -57,6 +59,18 @@ public class TrainingTreeNodeResource {
     @Inject
     private TrainingCategoryNodeRepository trainingCategoryNodeRepository;
 
+    @Inject
+    private OptColumnContentRepository optColumnContentRepository;
+
+    @Inject
+    private RequirementSkeletonRepository requirementSkeletonRepository;
+
+    @Inject
+    private ReqCategoryRepository reqCategoryRepository;
+
+    @Inject
+    private OptColumnRepository optColumnRepository;
+
     /**
      * POST  /trainingTreeNodes -> Create a new trainingTreeNode.
      */
@@ -65,12 +79,69 @@ public class TrainingTreeNodeResource {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<TrainingTreeNode> create(@RequestBody TrainingTreeNode trainingTreeNode) throws URISyntaxException {
-        log.debug("REST request to save TrainingTreeNode : {}", trainingTreeNode);
-        if (trainingTreeNode.getId() != null) {
-            return ResponseEntity.badRequest().header("Failure", "A new trainingTreeNode cannot already have an ID").body(null);
+
+        // fetch the related training because the json format only contains it's id
+        if(trainingTreeNode.getNode_type() == TrainingTreeNodeType.RootNode) {
+            Training training = trainingRepository.findOne(trainingTreeNode.getJson_training_id());
+            trainingTreeNode.setTraining_id(training);
         }
         TrainingTreeNode result = trainingTreeNodeRepository.save(trainingTreeNode);
         trainingTreeNodeSearchRepository.save(result);
+
+        // create special node entities
+        switch(trainingTreeNode.getNode_type()) {
+            case CustomSlideNode:
+                TrainingCustomSlideNode customSlideNode = new TrainingCustomSlideNode();
+                customSlideNode.setNode(trainingTreeNode);
+                customSlideNode.setName(trainingTreeNode.getName());
+                customSlideNode.setContent(trainingTreeNode.getContent());
+                trainingCustomSlideNodeRepository.save(customSlideNode);
+                break;
+            case BranchNode:
+                TrainingBranchNode branchNode = new TrainingBranchNode();
+                branchNode.setNode(trainingTreeNode);
+                branchNode.setName(trainingTreeNode.getName());
+                trainingBranchNodeRepository.save(branchNode);
+                break;
+            case CategoryNode:
+                TrainingCategoryNode categoryNode = new TrainingCategoryNode();
+                categoryNode.setNode(trainingTreeNode);
+                Long categoryId = trainingTreeNode.getJson_universal_id();
+                ReqCategory category = null;
+                if(categoryId != null)
+                    category = reqCategoryRepository.findOne(categoryId);
+                categoryNode.setCategory(category);
+                trainingCategoryNodeRepository.save(categoryNode);
+                break;
+            case RequirementNode:
+                TrainingRequirementNode requirementNode = new TrainingRequirementNode();
+                Long requirementId = trainingTreeNode.getJson_universal_id();
+                RequirementSkeleton skeleton = null;
+                if(requirementId != null)
+                    skeleton = requirementSkeletonRepository.findOne(requirementId);
+                requirementNode.setRequirementSkeleton(skeleton);
+                trainingRequirementNodeRepository.save(requirementNode);
+                break;
+            case GeneratedSlideNode:
+                TrainingGeneratedSlideNode generatedSlideNode = new TrainingGeneratedSlideNode();
+                Long optColumnId = trainingTreeNode.getJson_universal_id();
+                OptColumn optColumn = null;
+                if(optColumnId != null && optColumnId >= 0)
+                    optColumn = optColumnRepository.findOne(optColumnId);
+                generatedSlideNode.setOptColumn(optColumn);
+                trainingGeneratedSlideNodeRepository.save(generatedSlideNode);
+                break;
+        }
+
+        int sort_order = 0;
+        Training training = result.getTraining_id();
+        for(TrainingTreeNode child : trainingTreeNode.getChildren()) {
+            child.setParent_id(result);
+            child.setTraining_id(training);
+            child.setSort_order(sort_order++);
+            create(child);
+        }
+
         return ResponseEntity.created(new URI("/api/trainingTreeNodes/" + result.getId()))
             .headers(new HttpHeaders())
             .body(result);
@@ -85,9 +156,9 @@ public class TrainingTreeNodeResource {
     @Timed
     public ResponseEntity<TrainingTreeNode> update(@RequestBody TrainingTreeNode trainingTreeNode) throws URISyntaxException {
         log.debug("REST request to update TrainingTreeNode : {}", trainingTreeNode);
-        if (trainingTreeNode.getId() == null) {
-            return create(trainingTreeNode);
-        }
+//        if (trainingTreeNode.getId() == null) {
+//            return create(trainingTreeNode);
+//        }
         TrainingTreeNode result = trainingTreeNodeRepository.save(trainingTreeNode);
         trainingTreeNodeSearchRepository.save(trainingTreeNode);
         return ResponseEntity.ok()
@@ -122,29 +193,80 @@ public class TrainingTreeNodeResource {
         switch(result.getNode_type()) {
             case CustomSlideNode:
                 TrainingCustomSlideNode customSlideNode = trainingCustomSlideNodeRepository.getTrainingCustomSlideNodeByTrainingTreeNode(result);
-                result.setCustomSlideNode(customSlideNode);
+                if(customSlideNode != null) {
+                    result.setName(customSlideNode.getName());
+                    String customSlideContent = customSlideNode.getContent();
+                    if(customSlideContent != null) {
+                        Training training = result.getTraining_id();
+                        if(training != null && training.getName() != null)
+                            customSlideContent = customSlideContent.replaceAll("(\\{{2} *training.name *}{2})", training.getName());
+                        TrainingTreeNode parent = result.getParent_id();
+                        if(parent != null && parent.getName() != null)
+                            customSlideContent = customSlideContent.replaceAll("(\\{{2} *parent.name *}{2})", parent.getName());
+                    }
+                    result.setContent(customSlideContent);
+                }
                 break;
             case BranchNode:
                 TrainingBranchNode branchNode = trainingBranchNodeRepository.getTrainingBranchNodeByTrainingTreeNode(result);
-                result.setBranchNode(branchNode);
+                if(branchNode != null)
+                    result.setName(branchNode.getName());
                 break;
             case RequirementNode:
-                result.setRequirementNode(trainingRequirementNodeRepository.getTrainingRequirementNodeByTrainingTreeNode(result));
-                result.getRequirementNode().getRequirementSkeleton().getShortName();
+                TrainingRequirementNode requirementNode = trainingRequirementNodeRepository.getTrainingRequirementNodeByTrainingTreeNode(result);
+                if(requirementNode != null) {
+                    RequirementSkeleton requirementSkeleton = requirementSkeletonRepository.findOneWithEagerRelationships(requirementNode.getRequirementSkeleton().getId());
+                    result.setName(requirementSkeleton.getShortName());
+                }
                 break;
             case GeneratedSlideNode:
-                result.setGeneratedSlideNode(trainingGeneratedSlideNodeRepository.getTrainingGeneratedSlideNodeByTrainingTreeNode(result));
+                TrainingGeneratedSlideNode generatedSlideNode = trainingGeneratedSlideNodeRepository.getTrainingGeneratedSlideNodeByTrainingTreeNode(result);
+                if(generatedSlideNode != null) {
+                    String generatedSlideName = "";
+                    String generatedSlideContent = "";
+                    TrainingTreeNode parent = result.getParent_id();
+                    if(parent != null) {
+                        TrainingRequirementNode requirementNodeOfParent = trainingRequirementNodeRepository.getTrainingRequirementNodeByTrainingTreeNode(parent);
+                        RequirementSkeleton skeleton = requirementSkeletonRepository.findOne(requirementNodeOfParent.getRequirementSkeleton().getId());
+                        if(skeleton != null) {
+                            OptColumn optColumn = generatedSlideNode.getOptColumn();
+                            if(optColumn == null) {
+                                generatedSlideContent = "<h2>" + skeleton.getShortName() + "</h2>"
+                                    + skeleton.getDescription();
+                                generatedSlideName = "Skeleton";
+                            } else {
+                                OptColumnContent optColumnContent =
+                                    optColumnContentRepository.getOptColumnContentByOptColumnAndRequirement(
+                                        skeleton,
+                                        optColumn
+                                    );
+                                if(optColumn != null && optColumnContent != null)
+                                    generatedSlideContent = "<h3>"+optColumn.getName()+"</h3>"
+                                        + optColumnContent.getContent();
+                                generatedSlideName = optColumn.getName();
+                            }
+                        }
+                    }
+                    result.setContent(generatedSlideContent);
+                    result.setName(generatedSlideName);
+                }
                 break;
             case CategoryNode:
                 TrainingCategoryNode categoryNode = trainingCategoryNodeRepository.getTrainingCategoryNodeByTrainingTreeNode(result);
-                result.setCategoryNode(categoryNode);
+                if(categoryNode != null) {
+                    ReqCategory category = reqCategoryRepository.findOne(categoryNode.getId());
+                    if(category != null)
+                        result.setName(category.getName());
+                }
                 break;
         }
 
         List<TrainingTreeNode> children = trainingTreeNodeRepository.getChildrenOf(result);
         List<TrainingTreeNode> childrenResult = new ArrayList<>();
         for(TrainingTreeNode child : children) {
-            childrenResult.add(get(child.getId()).getBody());
+            TrainingTreeNode childNode = get(child.getId()).getBody();
+            childNode.setParent_id(result);
+            childrenResult.add(childNode);
         }
         result.setChildren(childrenResult);
 
