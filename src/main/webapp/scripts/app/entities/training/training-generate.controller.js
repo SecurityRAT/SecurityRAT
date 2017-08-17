@@ -109,6 +109,19 @@ angular.module('sdlctoolApp')
             $rootScope.displayTree();
         };
 
+        var sortByShowOrder = function(array) {
+            console.log("array", array);
+            if(array.length > 1) {
+                array.sort(function(a,b) {
+                    if (a.showOrder < b.showOrder)
+                        return -1;
+                    if (a.showOrder > b.showOrder)
+                        return 1;
+                    return 0;
+                });
+            }
+        };
+
         $scope.generate = function() {
             $scope.startProgressbar();
 
@@ -128,8 +141,9 @@ angular.module('sdlctoolApp')
             if(requestString != "") {
 
                 // load the content
-                apiFactory.getByQuery("categoriesWithRequirementsSorted", "filter", requestString).then(
+                apiFactory.getByQuery("categoriesWithRequirements", "filter", requestString).then(
                     function(categoriesWithRequirements) {
+                        sortByShowOrder(categoriesWithRequirements);
                         $scope.requirementSkeletons = categoriesWithRequirements;
 
                         // create content node which holds all generated slides
@@ -138,6 +152,7 @@ angular.module('sdlctoolApp')
                         // add generated slides
                         categoriesWithRequirements.forEach(function(category) {
                             var categoryNode = contentNode.addCategoryNode(category.name, {id: category.id}, false);
+                            sortByShowOrder(category.requirements);
                             category.requirements.forEach(function(requirement) {
                                 var requirementNode = categoryNode.addRequirementNode(requirement, false);
 

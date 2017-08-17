@@ -269,24 +269,6 @@ public class FrontEndUniversalResource {
         return categoryDTOs;
     }
 
-    @RequestMapping(value="/categoriesWithRequirementsSorted/filter",
-        method=RequestMethod.GET,
-        produces = MediaType.APPLICATION_JSON_VALUE)
-    @Timed
-    public List<FECategoryDTO> getCategoriesWithSkeletonsSorted(
-        @RequestParam("collections") Long[] collectionIds,
-        @RequestParam("projectTypes") Long[] projectTypeIds) {
-
-        List<FECategoryDTO> categoryDTOs = new ArrayList<>();
-
-        Set<FECategoryDTO> categorySet = getCategoriesWithSkeletons(collectionIds, projectTypeIds);
-        for(FECategoryDTO category : categorySet)
-            categoryDTOs.add(category);
-        Collections.sort(categoryDTOs, Comparator.comparingInt(FECategoryDTO::getShowOrder));
-
-        return categoryDTOs;
-    }
-
     @RequestMapping(value="/numberOfRequirements/filter",
         method=RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE)
