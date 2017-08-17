@@ -28,6 +28,15 @@ describe('Protractor Security RAT general testsuite', function() {
 			}, browser.params.jiraRemoteLinkQueue);
 		// wait for the user to log into the jira queue.
 		browser.sleep(20000);
+		browser.get(browser.params.testHost);
+		element(by.id('username')).clear().then(function(){
+			element(by.id('username')).sendKeys(browser.params.admin.user);
+		});
+		element(by.id('password')).clear().then(function(){
+			element(by.id('password')).sendKeys(browser.params.admin.password);
+		});
+		element(by.partialButtonText('Authenticate')).click();
+		browser.sleep(2000);
 	});
 	
 	beforeEach(function() {

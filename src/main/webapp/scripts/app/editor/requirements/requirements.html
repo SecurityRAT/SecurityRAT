@@ -330,7 +330,7 @@
 			    				</span>
                             </div>
                         </td>
-                        <td data-ng-class="{changes:reqs.isOld}" data-ng-style="(reqs.isNew && {'background-color':'rgb(204, 255, 204)'})
+                        <td id="description" data-ng-class="{changes:reqs.isOld}" data-ng-style="(reqs.isNew && {'background-color':'rgb(204, 255, 204)'})
 			    		|| reqs.isOld && {'background-color':'rgb(255, 204, 204)'}">
                             <div data-ng-if="!(reqs.isNew || reqs.isOld)" data-ng-bind-html="reqs.description | trusted"></div>
                             <div data-ng-if="reqs.isNew || reqs.isOld" marked="reqs.description"></div>

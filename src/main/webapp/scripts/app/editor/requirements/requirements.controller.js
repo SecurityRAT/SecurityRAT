@@ -42,7 +42,7 @@ angular.module('sdlctoolApp')
         $scope.customRequirements = [];
         $scope.newRequirementParam = {
             index: 1,
-            id: 10000
+            id: 20000
         };
         $scope.optToHide = [];
         $scope.showSpinner = false;
@@ -291,27 +291,41 @@ angular.module('sdlctoolApp')
         };
 
         $scope.getCustomRequirements = function () {
-            $scope.customRequirements = [];
-            var cusSmallId = [];
+            // temporary save the default id for CusReq since this one changed in the loop.
+            var tempdefaultCusReqId = $scope.newRequirementParam.id;
+            var customReqFound = [];
+            var existingIds = []; // saves existing cusReqId. this will help resolve id duplicates.
+            $scope.requirements = $filter('orderBy')($scope.requirements, 'id');
+            var lastElement = $scope.requirements[$scope.requirements.length - 1];
+
+            // assign the default cusReqId the id of the last element after sort by id, if this condition is met.
+            if(lastElement.shortName.indexOf(appConfig.customRequirement) >= 0 && lastElement.id > $scope.newRequirementParam.id) {
+                $scope.newRequirementParam.id = lastElement.id + 1;
+            } 
+
             angular.forEach($scope.requirements, function (requirement) {
                 if (requirement.shortName.indexOf(appConfig.customRequirement) >= 0) {
                     $scope.requirementProperties.crCounts++;
                     $scope.newRequirementParam.index++;
-                    $scope.customRequirements.push(requirement);
-                    if (requirement.id >= $scope.newRequirementParam.id) {
-                        $scope.newRequirementParam.id = requirement.id;
-                    } else {
-                        cusSmallId.push(requirement);
+                    
+                    // assign the new cusReqId to :
+                    // first cas: existing cusReq which have id less than the default id.
+                    // second case: if there are any duplicates.
+                    if (requirement.id < tempdefaultCusReqId || existingIds.indexOf(requirement.id) >= 0) {
+                        requirement.id = $scope.newRequirementParam.id;
+                        $scope.newRequirementParam.id++;
                     }
+
+                    if(existingIds.indexOf(requirement.id) === -1) {
+                        existingIds.push(requirement.id);
+                    }
+                    // push value after updating id.
+                    customReqFound.push(requirement);
                 }
 
             });
-            // gets the custom requirements with id less than $scope.newRequirementParam.id and updates them
-            angular.forEach($filter('orderBy')(cusSmallId, 'id'), function (cusr) {
-                cusr.id = $scope.newRequirementParam.id;
-                $scope.newRequirementParam.id++;
 
-            });
+            $scope.customRequirements = customReqFound;
         };
 
         $scope.changeSettings = function () {
@@ -606,19 +620,22 @@ angular.module('sdlctoolApp')
                 filterCategory: $scope.filterCategory,
                 shortnameIndex: $scope.newRequirementParam.index
             });
-            sharedProperties.setProperty(crObject);
             var modalInstance = $uibModal.open({
                 size: 'lg',
                 backdrop: 'static',
                 templateUrl: 'scripts/app/editor/customrequirements/customRequirement.html',
-                controller: 'customRequirementController'
+                controller: 'customRequirementController',
+                resolve : {
+                    crObject : crObject
+                }
             });
             //adds the categoryOrder, id of the item and updates the filterCategory library for the filter nach category.
             modalInstance.result.then(function (item) {
                 //            console.log(item);
                 item.requirement.id = $scope.newRequirementParam.id;
-                //update the order of the last element in the category filter.
+                
                 $scope.newRequirementParam.id++;
+                //update the order of the last element in the category filter.
                 $scope.filterCategory[item.categoryIndex].lastElemOrder = item.requirement.order;
                 item.requirement.universalId = '';
                 item.requirement.ticket = '';
@@ -648,15 +665,36 @@ angular.module('sdlctoolApp')
                 size: 'lg',
                 backdrop: 'static',
                 templateUrl: 'scripts/app/editor/customrequirements/customRequirement.html',
-                controller: 'customRequirementController'
+                controller: 'customRequirementController',
+                resolve : {
+                    crObject : crObject
+                }
             });
             //adds the categoryOrder, id of the item and updates the filterCategory library for the filter nach category.
             modalInstance.result.then(function (item) {
-                angular.forEach($scope.requirements, function (requirement) {
-                    if (requirement.id === item.id) {
-                        requirement = item;
+                // updates the edited custom requirement in the requirements list object.
+                for(var i = 0; i < $scope.requirements.length; i++) {
+                    if($scope.requirements[i].id === item.requirement.id && $scope.requirements[i].shortName === item.requirement.shortName) {
+                        // $scope.requirements.splice(i, 1);
+                        $scope.requirements[i] = item.requirement;
+                        break;
                     }
-                });
+                }
+                
+                // updates the edited in the customrequirements list.
+                for(var j = 0; j < $scope.customRequirements.length; j++) {
+                    if($scope.customRequirements[j].id === item.requirement.id && $scope.customRequirements[j].shortName === item.requirement.shortName) {
+                        // $scope.customRequirements.splice(j, 1);
+                        $scope.customRequirements[j] = item.requirement;
+                        break;
+                    }
+                }
+
+                // $scope.requirements.push(item.requirement);
+                // $scope.customRequirements.push(item.requirement);
+
+                // sets the show order of the last requirement element to a category.
+                $scope.filterCategory[item.categoryIndex].lastElemOrder = item.requirement.order;
             });
             //
         };
@@ -2054,21 +2092,21 @@ angular.module('sdlctoolApp')
             req.tempTicket = '';
             // if(angular.isDefined(req.ticket) && req.ticket !== '') req.ticket = '';
             $scope.manageTicketProperty.sameTicketError = false;
-        }
+        };
 
         $scope.doIssueLinking = function (req, callbackFunction, propMapper) {
             var reqPropMapper = {
                 0: 'tempTicket',
                 1: 'ticket'
-            }
+            };
 
             // reset the error handling properties.
             $scope.manageTicketProperty.error = false;
             $scope.manageTicketProperty.authenticationFailure = false;
             if (angular.equals(req[reqPropMapper[propMapper]], $scope.ticket.url)) {
-                $scope.manageTicketProperty.sameTicketError = true
+                $scope.manageTicketProperty.sameTicketError = true;
             } else {
-                $scope.manageTicketProperty.sameTicketError = false
+                $scope.manageTicketProperty.sameTicketError = false;
                 var remoteObjectInfo = {};
                 var mainObjectInfo = {};
                 mainObjectInfo.apiUrl = Helper.buildJiraUrl($scope.ticket.url.split('/'));
@@ -2084,7 +2122,7 @@ angular.module('sdlctoolApp')
                     $scope.manageTicketProperty.authenticatorProperty = {
                         url: $scope.ticket.url,
                         message: 'You are not authenticated, please click on the following link to authenticate yourself. You will have one minute after a click on the link.'
-                    }
+                    };
                     $scope.manageTicketProperty.promise.derefer = $q.defer();
 
                     checkAuthentication.jiraAuth(JiraService.buildUrlCall('issueKey', mainObjectInfo.apiUrl), $scope.manageTicketProperty.authenticatorProperty,
@@ -2094,11 +2132,11 @@ angular.module('sdlctoolApp')
                         $scope.manageTicketProperty.authenticatorProperty = {
                             url: req[reqPropMapper[propMapper]],
                             message: 'You are not authenticated, please click on the following link to authenticate yourself. You will have one minute after a click on the link.'
-                        }
+                        };
                         $scope.manageTicketProperty.promise.derefer = $q.defer();
                         // Checks authentication in case the provided ticket url is not from the same jira instance.
                         return Promise.all([response, checkAuthentication.jiraAuth(JiraService.buildUrlCall('issueKey', remoteObjectInfo.apiUrl), $scope.manageTicketProperty.authenticatorProperty,
-                            $scope.manageTicketProperty.spinnerProperty, $scope.manageTicketProperty.promise)])
+                            $scope.manageTicketProperty.spinnerProperty, $scope.manageTicketProperty.promise)]);
 
                     }).then(function (responses) {
                         // $scope.manageTicketProperty.spinnerProperty.showSpinner = false;
@@ -2174,7 +2212,7 @@ angular.module('sdlctoolApp')
             req.ticket = '';
             // must be done since it deletes the enabletooltip property linked to the linkStatus property.
             req.linkStatus = {link: true};
-            if (($filter('filterTicketStatus')($scope.requirements, [remoteObjectInfo.fields.status.name])).length == 0) {
+            if (($filter('filterTicketStatus')($scope.requirements, [remoteObjectInfo.fields.status.name])).length === 1) {
                 for (var i = 0; i < $scope.jiraStatus.allStatus.length; i++) {
                     if ($scope.jiraStatus.allStatus[i].name === remoteObjectInfo.fields.status.name) {
                         $scope.jiraStatus.allStatus.splice(i, 1);

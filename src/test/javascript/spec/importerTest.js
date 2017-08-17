@@ -264,4 +264,19 @@ describe('Protractor Security RAT importer testsuite', function() {
 		browser.sleep(20000);
 		element(by.buttonText("Close")).click();
 	});
+
+	it('Import file with custom requirements', function() {
+		browser.get(browser.params.impTestAttachmentUrl + browser.params.attachmentUrls[4]).then(function() {}, function(){
+			browser.switchTo().alert().accept();
+		});
+		browser.sleep(5000);
+		element(by.buttonText('Custom requirements')).click();
+		expect(element(by.linkText('Edit').isPresent())).toBe(true);
+		expect(element(by.partialLinkText('Remove').isPresent())).toBe(true);
+		element(by.buttonText(SaveButton)).click();
+		browser.sleep(2000);
+		element(by.partialLinkText('Export into File')).click();
+		browser.sleep(1000);
+		element(by.buttonText(exportButton)).click();
+	});
 });

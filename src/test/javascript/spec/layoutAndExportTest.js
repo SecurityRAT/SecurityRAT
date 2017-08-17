@@ -6,6 +6,7 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 	var importArtifact = element(by.id('importArtifact'));
 	var restoreSession = element(by.id('restoreSession'));
 	var deleteSession = element(by.id('deleteSession'));
+	var requirementRepeater = "reqs in requirements | orderBy:['categoryOrder','order'] | filterUpdates : updatedReqs | filterByTags : filteredRequirementsByTags | filter: {category: category.label} | filterByStatus : selectedStatus | filterTicketStatus : jiraStatus.selectedStatus | filter:search";
 	var moreInfo = 'More Information';
 	var javaApp = 'JAVA Application';
 	var closeButton = 'Close';
@@ -188,6 +189,52 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 		
 		element(by.buttonText('Add requirement')).click();
 		browser.sleep(8000);
+		
+		expect(element(by.binding('requirements.length')).getText()).toBeGreaterThan(requirements);
+		var count = 0;
+		
+		element(by.buttonText('Custom requirements')).click();
+		element(by.linkText('Edit')).click();
+		element(by.model('reqStat.value')).clear().then(function() {
+			element(by.model('reqStat.value')).sendKeys('Edited custom comment');
+		});
+
+		(element(by.model('requirement.description'))).clear().then(function() {
+			(element(by.model('requirement.description'))).sendKeys('Edited custom description');
+		});
+
+		element(by.id('content1')).isPresent().then(function(content) {
+			if(content) {
+				element(by.id('content1')).sendKeys('Edited custom More Information');
+			}
+		});
+
+		element(by.id('content2')).isPresent().then(function(content) {
+			if(content) {
+				element(by.id('content2')).sendKeys('Edited custom motivation');
+			}
+		});
+
+		// element(by.buttonText('Edit requirement')).click();
+		// browser.sleep(8000);
+		// element(by.buttonText('Custom requirements')).click();
+		// element(by.linkText('Edit')).click();
+		element.all(by.options('category.id as category.label for category in categories')).get(4).click();
+		element.all(by.options('value as value.name for value in statusColumn.values | orderBy: \'showOrder\'')).get(3).click();
+		
+		element(by.buttonText('Edit requirement')).click();
+		browser.sleep(2000);
+		element.all(by.repeater(requirementRepeater).column('reqs.shortName')).each(function (elem, index) {
+			elem.getText().then(function(elemText) {
+				var sn = browser.params.customRequirementShortName + '01';
+				if(elemText === sn) {
+					// tobe done.
+					expect(element.all(by.id('description')).get(index).getText()).toBe('Edited custom description');
+				}
+			});
+		});
+		browser.sleep(8000);
+		count = 0;
 		element(by.buttonText('Custom requirements')).click();
 		element(by.linkText('Add')).click();
 		
@@ -197,35 +244,21 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 			if(content) {
 				element(by.id('content1')).sendKeys('custom More Information');
 			}
-		})
+		});
+
 		element(by.id('content2')).isPresent().then(function(content) {
 			if(content) {
 				element(by.id('content2')).sendKeys('custom motivation');
 			}
-		})
+		});
 		
 		element(by.model('reqStat.value')).sendKeys('Custom some comment');
 		element.all(by.options('value as value.name for value in statusColumn.values | orderBy: \'showOrder\'')).get(2).click();
 		
 		element(by.buttonText('Add requirement')).click();
 		browser.sleep(8000);
-		expect(element(by.binding('requirements.length')).getText()).toBeGreaterThan(requirements);
-		var count = 0;
-		
 		element(by.buttonText('Custom requirements')).click();
-		element(by.linkText('Edit')).click();
-		element(by.model('reqStat.value')).sendKeys('Edited custom comment');
-		element(by.buttonText('Edit requirement')).click();
-		browser.sleep(8000);
-		element(by.buttonText('Custom requirements')).click();
-		element(by.linkText('Edit')).click();
-		element.all(by.options('requirement.id as requirement.description for requirement in crObject.requirements')).get(1).click();
-		element.all(by.options('value as value.name for value in statusColumn.values | orderBy: \'showOrder\'')).get(3).click();
-		element(by.buttonText('Edit requirement')).click();
-		browser.sleep(8000);
-		count = 0;
-		element(by.buttonText('Custom requirements')).click();
-		element(by.linkText('Remove')).click();
+		element(by.partialLinkText('Remove')).click();
 		element(by.buttonText('Delete requirement')).click();
 		
 		expect(element(by.binding('requirements.length')).getText()).toBeGreaterThan('30');

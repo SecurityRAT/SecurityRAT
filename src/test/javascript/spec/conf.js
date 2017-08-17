@@ -16,6 +16,7 @@ exports.config = {
 		   user: '#{admin username}', 
 		   password: '#{admin password}'
 	   },// this is only relevant when you use FORM authentication.
+	   customRequirementShortName: 'CUS',
 	   testHost:"https://securityrat.test.local", //FQDN of test instance of Security RAT
 	   jiraQueue : 'https://test-jira.local/browse/XYZ', //path to a JIRA Queue where test tickets can be opened
 	   jiraTicket : 'https://test-jira.local/browse/XYZ-144', //path to a JIRA Ticket to test manual linking of tickets

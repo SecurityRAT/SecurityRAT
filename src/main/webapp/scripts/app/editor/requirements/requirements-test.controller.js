@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 angular.module('sdlctoolApp')
     .controller('TestRequirements', function (entity, $scope, $uibModalInstance, $filter, appConfig, $window, testAutomation, $q,
@@ -126,15 +126,15 @@ angular.module('sdlctoolApp')
         }
 
         function fetchResult(resultStateObj) {
-            testAutomation.fetchResult(resultStateObj.resourceURI).then(function (testResults) {
-                configureDisplay('result', true, $scope.error.class, $scope.error.message)
-                $scope.testResults.self = appConfig.securityCAT + testResults.self;
+            testAutomation.fetchResult(resultStateObj.resourceURI).then(function (response) {
+                configureDisplay('result', true, $scope.error.class, $scope.error.message);
+                $scope.testResults.self = appConfig.securityCAT + response.self;
                 // var tempResults = testResults.requirements;
 
                 for (var i = 0; i < $scope.testResults.reqs.length; i++) {
                     var element = $scope.testResults.reqs[i];
                     if(element.state === 0) {
-                        angular.extend(element, $filter('filter')(testResults.requirements, {
+                        angular.extend(element, $filter('filter')(response.requirements, {
                             shortName: element.shortName
                         }).pop());
                     }
@@ -145,18 +145,19 @@ angular.module('sdlctoolApp')
                     $scope.authenticationProperties.spinnerProperty.showSpinner = true;
                 } else if (STATECONSTANT[resultStateObj.state] === STATECONSTANT.COMPLETE) {
                     $scope.authenticationProperties.spinnerProperty.showSpinner = false;
-                    $interval.cancel($scope.interval);
+                    authenticatorService.cancelPromises($scope.authenticationProperties.authenticatorpromise);
+                    cleanIntervalPromise();
                 }
             }).catch(function () {
-                if (($filter('filter')($scope.testResults.reqs, {state: 1})).length == 0) {
+                if (($filter('filter')($scope.testResults.reqs, {state: 1})).length === 0) {
                     configureDisplay('error', true, 'alert alert-danger', 'An error occurred when fetching the results.');
                 } else {
                     $scope.error.display = true;
                     configureDisplay('error', true, 'alert alert-danger', 'An error occurred when fetching the results.');
                 }
-                cleanIntervalPromise();
                 authenticatorService.cancelPromises($scope.authenticationProperties.authenticatorpromise);
                 $scope.authenticationProperties.spinnerProperty.showSpinner = false;
+                cleanIntervalPromise();
             });
         }
 
@@ -172,15 +173,15 @@ angular.module('sdlctoolApp')
                         fetchResult(data);
                     }
                 }).catch(function (response) {
-                    if (response.status === 400 && response.data.state === "NONEXISTENT") {
-                        cleanIntervalPromise()
+                    if (response.status === 400 && response.data.state === 'NONEXISTENT') {
+                        cleanIntervalPromise();
                         $timeout(function () {
                             $uibModalStack.dismissAll();
-                        })
-                        configureDisplay('error', true, 'alert alert-success', 'The test automation was successfully cancelled')
+                        });
+                        configureDisplay('error', true, 'alert alert-success', 'The test automation was successfully cancelled');
                     }
                 });
-            }, 3000);
+            }, 5000);
         }
 
         $scope.startTest = function () {
