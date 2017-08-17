@@ -1,6 +1,7 @@
 angular.module('sdlctoolApp')
     .controller('TrainingGenerateController', function ($scope, $rootScope, $stateParams, $state, $interval, $timeout,
-                                                        $uibModal, apiFactory, entity, trainingRoot, Training, TrainingTreeNode) {
+                                                        $uibModal, apiFactory, entity, trainingRoot, Training,
+                                                        TrainingTreeNode) {
         $scope.Training = entity;
         $rootScope.trainingTreeData = [];
         $scope.trainingRoot = trainingRoot;
@@ -35,7 +36,7 @@ angular.module('sdlctoolApp')
         };
 
         $scope.openSaveProgressModal = function() {
-            $scope.modalProgressbar.intervalPromise = $interval(function() { $scope.modalProgressbar.barValue += 0.65; }, 100, 99);
+            $scope.modalProgressbar.intervalPromise = $interval(function() { $scope.modalProgressbar.barValue += 1; }, 100, 99);
 
             $scope.saveProgressModalInstance = $uibModal.open({
                 size: 'md',
