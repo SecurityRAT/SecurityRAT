@@ -256,7 +256,7 @@ public class TrainingTreeNodeResource {
             case CategoryNode:
                 TrainingCategoryNode categoryNode = trainingCategoryNodeRepository.getTrainingCategoryNodeByTrainingTreeNode(result);
                 if(categoryNode != null) {
-                    ReqCategory category = reqCategoryRepository.findOne(categoryNode.getId());
+                    ReqCategory category = reqCategoryRepository.findOne(categoryNode.getCategory().getId());
                     if(category != null)
                         result.setName(category.getName());
                 }
