@@ -115,6 +115,7 @@ public class TrainingTreeNodeResource {
                 break;
             case RequirementNode:
                 TrainingRequirementNode requirementNode = new TrainingRequirementNode();
+                requirementNode.setNode(trainingTreeNode);
                 Long requirementId = trainingTreeNode.getJson_universal_id();
                 RequirementSkeleton skeleton = null;
                 if(requirementId != null)
@@ -124,6 +125,7 @@ public class TrainingTreeNodeResource {
                 break;
             case GeneratedSlideNode:
                 TrainingGeneratedSlideNode generatedSlideNode = new TrainingGeneratedSlideNode();
+                generatedSlideNode.setNode(trainingTreeNode);
                 Long optColumnId = trainingTreeNode.getJson_universal_id();
                 OptColumn optColumn = null;
                 if(optColumnId != null && optColumnId >= 0)
