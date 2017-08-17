@@ -284,6 +284,33 @@ angular.module('sdlctoolApp')
             });
         };
 
+        TrainingTreeNode.getSlidesFromJson = function(json) {
+            var slides = [];
+
+            if(json.content != null && json.content.length > 0)
+                slides.push({content: json.content, sort_order: json.sort_order});
+
+            if(json.children.length > 1) {
+                json.children.sort(function(a,b) {
+                    if (a.sort_order < b.sort_order)
+                        return -1;
+                    if (a.sort_order > b.sort_order)
+                        return 1;
+                    return 0;
+                });
+            }
+
+            if(json.children != null) {
+                json.children.forEach(function (childNode) {
+                    TrainingTreeNode.getSlidesFromJson(childNode).forEach(function(childSlide) {
+                       slides.push(childSlide);
+                    });
+                });
+            }
+
+            return slides;
+        };
+
         // load and return slides of this nodes subtree
         TrainingTreeNode.prototype.loadSlides = function() {
             var slides = [];
