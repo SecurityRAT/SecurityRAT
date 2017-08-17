@@ -62,7 +62,7 @@ angular.module('sdlctoolApp')
         };
         TrainingTreeNode.prototype.addGeneratedSlideNode = function(optColumn) {
             var newChild = this.addChildNode("GeneratedSlideNode", optColumn.name, false);
-            newChild.optColumn = {id: optColumn.id};
+            newChild.optColumn = optColumn;
             newChild.json_universal_id = optColumn.id;
             newChild.parent_id = {requirementSkeleton: this.requirementSkeleton};
             return newChild;
@@ -245,14 +245,21 @@ angular.module('sdlctoolApp')
                     case "GeneratedSlideNode":
                         var parentNode = node.parent_id;
                         if (node.optColumn == null) {
-                            var reqPromise = RequirementSkeleton.get({id: parentNode.requirementSkeleton.id}).$promise;
-                            subPromises.push(reqPromise);
-                            if (parentNode.node_type == "RequirementNode") {
-                                reqPromise.then(function (req) {
-                                    content = "<h2>" + req.shortName + "</h2>"
-                                        + req.description;
-                                });
+                            var parentReq = parentNode.requirementSkeleton;
+                            if(parentReq.description != null && parentReq.shortName != null) {
+                                content = "<h2>" + parentReq.shortName + "</h2>"
+                                    + parentReq.description;
+                            } else {
+                                var reqPromise = RequirementSkeleton.get({id: parentNode.requirementSkeleton.id}).$promise;
+                                subPromises.push(reqPromise);
+                                if (parentNode.node_type == "RequirementNode") {
+                                    reqPromise.then(function (req) {
+                                        content = "<h2>" + req.shortName + "</h2>"
+                                            + req.description;
+                                    });
+                                }
                             }
+
                         } else {
                             var optPromise = TrainingTreeUtil.OptColumnContent.query(
                                 {
@@ -394,11 +401,12 @@ angular.module('sdlctoolApp')
             node.node_type = json_data.type;
             node.children = [];
 
-            node.json_universal_id = json_data.data.json_universal_id;
-            console.log("fromJSON setting universal id for " + node.node_type + " to " + json_data.data.json_universal_id, json_data);
+            if(json_data.data != null)
+                node.json_universal_id = json_data.data.json_universal_id;
 
             switch(json_data.type) {
                 case "GeneratedSlideNode":
+                    node.optColumn = json_data.data.optColumn;
                 case "CustomSlideNode":
                     node.content = json_data.data.content;
                     break;

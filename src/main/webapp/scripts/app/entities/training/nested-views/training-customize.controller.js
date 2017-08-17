@@ -34,9 +34,8 @@ angular.module('sdlctoolApp')
 
         $scope.slideEditor(false);
 
-        // Tree selection binding
-        $("#tree").bind(
-            "select_node.jstree", function(evt, data){
+        // Tree selection callback (called when a node is selected)
+        $("#tree").bind("select_node.jstree", function(evt, data) {
                 //selected node object: data.inst.get_json()[0];
                 $scope.selectedNodeJSTree = data;
                 $scope.selectedNode = new TrainingTreeNode();
@@ -86,30 +85,36 @@ angular.module('sdlctoolApp')
             });
         };
 
-        $scope.updateSlidePreview = function(writeBack=false) {
-            if($scope.selectedNode.training_id == null || $scope.selectedNode.training_id.name == null )
-                $scope.selectedNode.training_id = $scope.training;
-            $scope.selectedNode.loadContent().then(function(content) {
+        $scope.updateSlidePreview = function() {
+            // in the generate state the content needs to be fetched for each slide on select since it has not been prepared on backend side
+            if($rootScope.toState.name == "training.new") {
+                console.log("update slide preview in generate mode");
+                if($scope.selectedNode.training_id == null || $scope.selectedNode.training_id.name == null )
+                    $scope.selectedNode.training_id = $scope.training;
+                $scope.selectedNode.loadContent().then(function(content) {
 
-                document.getElementById('previewFrameId').contentWindow.postMessage( JSON.stringify({ method: 'updateSlide', args: [ content ] }), '*' );
-                if(writeBack) {
+                    $scope.setSlidePreviewContent(content);
                     $timeout(function() {
                         $scope.selectedNode.content = content;
                         $scope.$apply();
                     });
-
-                }
+                }, function(failed_reason) {
+                    console.error("failed to load content from slide: " + failed_reason);
+                    $scope.setSlidePreviewContent("");
+                });
+            } else {
+                $scope.setSlidePreviewContent($scope.selectedNode.content);
             }
         };
 
-        $scope.updateSlidePreview = function() {
-            var content = $scope.selectedNode.content;
+        $scope.setSlidePreviewContent = function(content) {
             document.getElementById('previewFrameId').contentWindow.postMessage(
                 JSON.stringify({
                     method: 'updateSlide',
                     args: [ content ]
                 }), '*' );
         };
+
 
         // Custom Menu
         var customMenu = function(node) {
