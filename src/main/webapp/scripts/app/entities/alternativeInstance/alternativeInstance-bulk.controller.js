@@ -1,5 +1,6 @@
 'use strict';
-
+/* jshint undef: true */
+/* globals $ */
 angular.module('sdlctoolApp')
     .controller('AlternativeInstanceBulkController',function($scope, $stateParams, $uibModalInstance, $filter, entity, AlternativeInstance, 
     		RequirementSkeleton, AlternativeSet, sharedProperties) {
@@ -8,7 +9,7 @@ angular.module('sdlctoolApp')
     	$scope.requirementSkeletons = [];
     	$scope.state = {
     			active: true
-    	}
+    	};
     	$scope.selectedAlternativeSet = {
     			value: null
     	};
@@ -17,7 +18,7 @@ angular.module('sdlctoolApp')
     	};
         $scope.loadAll = function() {
         	$scope.showTypes = 'Show selected alternative instances';
-    		$scope.glyphicon = "glyphicon glyphicon-plus";
+    		$scope.glyphicon = 'glyphicon glyphicon-plus';
     		$scope.show = true;
     		$scope.alternativeInstances = sharedProperties.getProperty();
         	RequirementSkeleton.query(function(result) {
@@ -34,12 +35,12 @@ angular.module('sdlctoolApp')
         	$scope.show = !$scope.show;
         	if($scope.show) {
         		$scope.showTypes = 'Show selected alternative instances';
-        		$scope.glyphicon = "glyphicon glyphicon-plus";
+        		$scope.glyphicon = 'glyphicon glyphicon-plus';
         	} else {
         		$scope.showTypes = 'Hide selected alternative instances';
-        		$scope.glyphicon = "glyphicon glyphicon-minus";
+        		$scope.glyphicon = 'glyphicon glyphicon-minus';
         	}
-        }   	
+        };
         var onSaveFinished = function (result) {
             $scope.$emit('sdlctoolApp:alternativeInstanceUpdate', result);
             $uibModalInstance.close(result);
@@ -62,7 +63,7 @@ angular.module('sdlctoolApp')
     	        		}
     	        	});
     			}
-			if (count == $scope.alternativeInstances.length) {
+			if (count === $scope.alternativeInstances.length) {
     				AlternativeInstance.update(instance, onSaveFinished);
 			} else {
 				AlternativeInstance.update(instance);
@@ -72,13 +73,13 @@ angular.module('sdlctoolApp')
         };
         
         $scope.delete = function () {
-          $('#deleteAlternativeInstancesConfirmation').appendTo("body").modal('show');
+          $('#deleteAlternativeInstancesConfirmation').appendTo('body').modal('show');
         };
 
         $scope.confirmDeleteAll = function (instances) {
             var count = 1;
             angular.forEach(instances, function(instance) {            
-		if (count == instances.length) {
+		if (count === instances.length) {
                   AlternativeInstance.delete({id: instance.id}, function(result) {
                        $('#deleteAlternativeInstancesConfirmation').modal('hide');
                        onSaveFinished(result);

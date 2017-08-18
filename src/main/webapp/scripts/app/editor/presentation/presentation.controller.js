@@ -1,3 +1,8 @@
+'use strict';
+
+/* jshint undef: true */
+/* globals  $, document, hljs, Reveal */
+
 angular.module('sdlctoolApp')
 	.controller('PresentationController', function ($scope, $rootScope, localStorageService, $filter, $timeout, $state) {
 		$scope.values = localStorageService.get('myRevealjs');
@@ -8,7 +13,7 @@ angular.module('sdlctoolApp')
 		function hasValue(id, arrayValue) {
 			for(var i = 0; i < arrayValue.length; i++) {
 				if(arrayValue[i].id === id) {
-					return true
+					return true;
 				}
 			}
 			return false;
@@ -21,7 +26,7 @@ angular.module('sdlctoolApp')
 						name: requirement.category,
 						id: requirement.categoryId,
 						showOrder: requirement.categoryOrder
-					})
+					});
 				}
 			});
 			Reveal.initialize({

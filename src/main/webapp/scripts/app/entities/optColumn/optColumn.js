@@ -1,5 +1,5 @@
 'use strict';
-
+/* jshint unused: false */
 angular.module('sdlctoolApp')
     .config(function ($stateProvider) {
         $stateProvider
@@ -58,7 +58,7 @@ angular.module('sdlctoolApp')
                         $state.go('optColumn', null, { reload: true });
                     }, function() {
                         $state.go('optColumn');
-                    })
+                    });
                 }]
             })
             .state('optColumn.edit', {
@@ -81,7 +81,7 @@ angular.module('sdlctoolApp')
                         $state.go('optColumn', null, { reload: true });
                     }, function() {
                         $state.go('^');
-                    })
+                    });
                 }]
             })
             .state('optColumn.bulk', {
@@ -104,7 +104,7 @@ angular.module('sdlctoolApp')
                         $state.go('optColumn', null, { reload: true });
                     }, function() {
                         $state.go('optColumn');
-                    })
+                    });
                 }]
             });
     });

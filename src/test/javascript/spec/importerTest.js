@@ -1,3 +1,7 @@
+'use strict';
+/* jshint undef:true */
+/* globals describe, browser, element, by, expect, document, beforeEach, beforeAll, it */
+
 describe('Protractor Security RAT importer testsuite', function() {
 	var importArtifact = element(by.id('importArtifact'));
 	var defineArtifact = element(by.id('defineArtifact'));

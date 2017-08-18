@@ -1,5 +1,8 @@
 'use strict';
 
+/* jshint undef: true */
+/* globals $ */
+
 angular.module('sdlctoolApp')
     .controller('OptColumnContentController', function ($scope, OptColumnContent, OptColumnContentSearch, 
         RequirementSkeleton, OptColumn, sharedProperties, $filter, EntityHelper) {
@@ -75,7 +78,7 @@ angular.module('sdlctoolApp')
             contents = $filter('orderBy')(contents, ['requirementSkeleton.reqCategory.showOrder', 'requirementSkeleton.showOrder', 'optColumn.showOrder']);
             contents = $filter('filter')(contents, $scope.searchString);
             return contents;
-        }
+        };
 
         function selectAllContents () {
         	
@@ -85,16 +88,16 @@ angular.module('sdlctoolApp')
 	  	}
 	  	
 	  	function deselectAllContents () {
-            EntityHelper.deselectElements($filter('filter')($scope.filterEntity(), {selected: true}))
+            EntityHelper.deselectElements($filter('filter')($scope.filterEntity(), {selected: true}));
 	  	}
 	  	
         $scope.performSelection = function(selectionValue) {
             EntityHelper.performSelection(selectionValue, selectAllContents, deselectAllContents);
-        }
+        };
 
         $scope.bulkChange = function() {
           	sharedProperties.setProperty($filter('orderBy')($filter('filter')($scope.optColumnContents, {selected: true}), ['requirementSkeleton.reqCategory.showOrder', 'requirementSkeleton.showOrder', 'optColumn.showOrder']));
-        }
+        };
 
         $scope.refresh = function () {
             $scope.loadAll();

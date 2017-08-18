@@ -1,5 +1,8 @@
 'use strict';
 
+/* jshint undef: true */
+/* globals $ */
+
 angular.module('sdlctoolApp')
     .controller('RequirementSkeletonController', function($scope, $filter, sharedProperties, RequirementSkeleton, RequirementSkeletonSearch, ReqCategory, TagInstance, ProjectType, CollectionInstance, TagCategory, CollectionCategory, $document, EntityHelper) {
         $scope.requirementSkeletons = [];
@@ -87,6 +90,7 @@ angular.module('sdlctoolApp')
             }
         };
 
+        /* jshint unused: false */
         $scope.toggleDropdown = function(selector, $event) {
             var dropdowns = ['tag', 'coll'];
             dropdowns.splice(dropdowns.indexOf(selector), 1);
@@ -115,13 +119,13 @@ angular.module('sdlctoolApp')
             } else {
                 $scope.dropdowns[selector].open = false;
             }
-        }
+        };
 
         $scope.selectTagInstance = function(tagInstance, selector, dropdownSelector) {
             var exist = false;
             var index = 0;
             for (var i = 0; i < $scope[selector].length; i++) {
-                if ($scope[selector][i].id == tagInstance.id) {
+                if ($scope[selector][i].id === tagInstance.id) {
                     exist = true;
                     index = i;
                     break;
@@ -138,19 +142,18 @@ angular.module('sdlctoolApp')
             if ($scope[selector].length > 0) {
                 $scope.dropdowns[dropdownSelector].buttonText = '';
                 $scope.dropdowns[dropdownSelector].buttonText = $scope[selector][0].name;
-                for (var i = 1; i < $scope[selector].length && i < 2; i++) {
+                for (i = 1; i < $scope[selector].length && i < 2; i++) {
                     $scope.dropdowns[dropdownSelector].buttonText += ', ' + $scope[selector][1].name;
                 }
-                if ($scope[selector].length > 2)
-                    $scope.dropdowns[dropdownSelector].buttonText += ',...'
+                if ($scope[selector].length > 2){ $scope.dropdowns[dropdownSelector].buttonText += ',...'; }
             }
 
-        }
+        };
 
         $scope.isTagSelected = function(tagInstance, selector) {
             var exist = false;
             for (var i = 0; i < $scope[selector].length; i++) {
-                if ($scope[selector][i].id == tagInstance.id) {
+                if ($scope[selector][i].id === tagInstance.id) {
                     exist = true;
                     break;
                 }
@@ -160,7 +163,7 @@ angular.module('sdlctoolApp')
             } else {
                 return true;
             }
-        }
+        };
 
         $scope.filterEntity = function() {
             var requirements = $filter('filterCategoryForEntities')($scope.requirementSkeletons, $scope.selectedCategory, 'reqCategory');
@@ -170,7 +173,7 @@ angular.module('sdlctoolApp')
             requirements = $filter('orderBy')(requirements, ['reqCategory.showOrder', 'showOrder']);
             requirements = $filter('filter')(requirements, $scope.searchString);
             return requirements;
-        }
+        };
 
         function selectAllReqs() {
             angular.forEach($scope.filterEntity(), function(requirement) {
@@ -179,12 +182,12 @@ angular.module('sdlctoolApp')
         }
 
         function deselectAllReqs() {
-            EntityHelper.deselectElements($filter('filter')($scope.filterEntity(), { selected: true }))
+            EntityHelper.deselectElements($filter('filter')($scope.filterEntity(), { selected: true }));
         }
 
         $scope.performSelection = function(selectionValue) {
             EntityHelper.performSelection(selectionValue, selectAllReqs, deselectAllReqs);
-        }
+        };
 
         $scope.bulkChange = function() {
             var reqs = [];
@@ -194,12 +197,12 @@ angular.module('sdlctoolApp')
                 }
             });
             sharedProperties.setProperty(reqs);
-        }
+        };
 
         $scope.delete = function(id) {
             RequirementSkeleton.get({ id: id }, function(result) {
                 $scope.requirementSkeleton = result;
-                $('#deleteRequirementSkeletonConfirmation').appendTo("body").modal('show');
+                $('#deleteRequirementSkeletonConfirmation').appendTo('body').modal('show');
             });
         };
 

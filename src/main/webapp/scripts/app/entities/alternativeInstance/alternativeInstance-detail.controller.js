@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('AlternativeInstanceDetailController', function ($scope, $rootScope, $stateParams, entity, AlternativeInstance, AlternativeSet, RequirementSkeleton) {
+    .controller('AlternativeInstanceDetailController', function ($scope, $rootScope, $stateParams, entity, AlternativeInstance) {
         $scope.alternativeInstance = entity;
         $scope.load = function (id) {
             AlternativeInstance.get({id: id}, function(result) {

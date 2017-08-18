@@ -1,5 +1,8 @@
 'use strict';
 
+/* jshint undef: true */
+/* globals document */
+
 angular.module('sdlctoolApp')
     .config(function ($stateProvider) {
         $stateProvider
@@ -11,7 +14,7 @@ angular.module('sdlctoolApp')
                     pageTitle: 'Presentation'
                 },
                 params: {
-                	theme: "securityrat.css"
+                	theme: 'securityrat.css'
                 },
                 views: {
                     'content@': {
@@ -19,7 +22,7 @@ angular.module('sdlctoolApp')
                         controller: 'PresentationController'
                     }
                 },
-                onEnter: function($state, $stateParams, $timeout){
+                onEnter: function($state, $stateParams){
                 	var link = document.createElement( 'link' );
                 	link.id = 'theme';
         			link.rel = 'stylesheet';

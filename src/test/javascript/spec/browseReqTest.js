@@ -1,28 +1,32 @@
+'use strict';
+/* jshint undef:true */
+/* globals describe, browser, element, by, expect, beforeEach, it */
+
 describe('Protractor Security RAT browse requirements view testsuite', function() {
 	var browseLink = element(by.partialLinkText('Browse'));
-	var constantRepeater = "requirementSkeleton in requirementSkeletons | filterByTagForReqSkeletons : selectedTags | filterByCollsForReqSkeletons : selectedColls| filterByTypesForReqSkeletons : selectedTypes| orderBy : ['reqCategory.showOrder','showOrder'] | filter: searchQuery | limitTo:numberToDisplay track by requirementSkeleton.id";
+	var constantRepeater = 'requirementSkeleton in requirementSkeletons | filterByTagForReqSkeletons : selectedTags | filterByCollsForReqSkeletons : selectedColls| filterByTypesForReqSkeletons : selectedTypes| orderBy : [\'reqCategory.showOrder\',\'showOrder\'] | filter: searchQuery | limitTo:numberToDisplay track by requirementSkeleton.id';
 	var deleteCookie = function() {
 		browser.getAllWindowHandles().then(function(handles) {
 			expect(handles.length).toBeGreaterThan(1);
 			browser.switchTo().window(handles[1]).then(function() {
-				browser.manage().getCookie(browser.params.jiraCookieNames[0]).then(function(cookie) {
+				browser.manage().getCookie(browser.params.jiraCookieNames[0]).then(function() {
 					browser.manage().deleteCookie(browser.params.jiraCookieNames[0]);
 					browser.switchTo().window(handles[0]).then();
 				});				
 			});
 		});
-	}
+	};
 	var deleteCookie1 = function() {
 		browser.getAllWindowHandles().then(function(handles) {
 			expect(handles.length).toBeGreaterThan(1);
 			browser.switchTo().window(handles[2]).then(function() {
-				browser.manage().getCookie(browser.params.jiraCookieNames[1]).then(function(cookie) {
+				browser.manage().getCookie(browser.params.jiraCookieNames[1]).then(function() {
 					browser.manage().deleteCookie(browser.params.jiraCookieNames[1]);
 					browser.switchTo().window(handles[0]).then();
 				});				
 			});
 		});
-	}
+	};
 	
 	beforeEach(function() {
 		browser.get(browser.params.testHost);
@@ -55,7 +59,7 @@ describe('Protractor Security RAT browse requirements view testsuite', function(
 		});
 		browser.sleep(65000);
 		expect(element.all(by.css('div[marked]')).last().getText()).toBe('You could not authenticate yourself within the time interval! Please try later.');
-		element(by.buttonText("Close")).click();
+		element(by.buttonText('Close')).click();
 		browser.sleep(3000);
 		element(by.buttonText('Submit')).click();
 		browser.sleep(2000);
@@ -68,5 +72,5 @@ describe('Protractor Security RAT browse requirements view testsuite', function(
 	it('Test Requirement browser loses CSS after refresh', function() {
 		browser.get(browser.params.testHost + '/reqId/2');
 		browser.sleep(5000);
-	})
+	});
 });

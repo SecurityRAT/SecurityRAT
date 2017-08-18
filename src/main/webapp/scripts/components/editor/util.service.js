@@ -1,12 +1,14 @@
 'use strict';
-
+/** jshint undef: true */
+/* globals urlpattern, Date */
 angular.module('sdlctoolApp')
-    .service('Helper', function Auth() {
+    .service('Helper', ['$uibModal', function Auth($uibModal) {
         return {
-            searchArrayByValue: function(search, object) {
+            /* jshint unused: false */
+            searchArrayByValue: function (search, object) {
                 var bool = false;
-                angular.forEach(object, function(obj) {
-                    angular.forEach(obj, function(value, key) {
+                angular.forEach(object, function (obj) {
+                    angular.forEach(obj, function (value, key) {
                         if (value === search) {
                             bool = true;
                         }
@@ -14,51 +16,55 @@ angular.module('sdlctoolApp')
                 });
                 return bool;
             },
-            removeMarkdown: function(changedContent, controller) {
+            removeMarkdown: function (changedContent, controller) {
                 // console.log(changedContent);
                 switch (controller) {
-                    case "export":
-                        changedContent = changedContent.replace(/(\*)/g, "");
-                        changedContent = changedContent.replace(/(\s+-\s)/g, "\n");
-                        changedContent = changedContent.replace(/(-\s)/g, "");
-                        changedContent = changedContent.replace(/(\s+1\.\s)/g, "\n");
-                        changedContent = changedContent.replace(/(1\.\s)/g, "");
-                        changedContent = changedContent.replace(/#/g, "");
-                        changedContent = changedContent.replace(/`/g, "");
-                        changedContent = changedContent.replace(/([\[]\S+[\]])/g, "");
-                        changedContent = changedContent.replace(/(mailto:)/g, "");
-                        changedContent = changedContent.replace(/([\n])+/g, "\n");
+                    case 'export':
+                        changedContent = changedContent.replace(/(\*)/g, '');
+                        changedContent = changedContent.replace(/(\s+-\s)/g, '\n');
+                        changedContent = changedContent.replace(/(-\s)/g, '');
+                        changedContent = changedContent.replace(/(\s+1\.\s)/g, '\n');
+                        changedContent = changedContent.replace(/(1\.\s)/g, '');
+                        changedContent = changedContent.replace(/#/g, '');
+                        changedContent = changedContent.replace(/`/g, '');
+                        changedContent = changedContent.replace(/([\[]\S+[\]])/g, '');
+                        changedContent = changedContent.replace(/(mailto:)/g, '');
+                        changedContent = changedContent.replace(/([\n])+/g, '\n');
                         break;
                     default:
-                        changedContent = changedContent.replace(/(\*\s)/g, "- ");
-                        changedContent = changedContent.replace(/(\*)/g, "");
-                        changedContent = changedContent.replace(/(1\.\s)/g, "- ");
-                        changedContent = changedContent.replace(/#/g, "");
-                        changedContent = changedContent.replace(/`/g, "");
-                        changedContent = changedContent.replace(/(\s{3,})/g, "\n");
-                        changedContent = changedContent.replace(/([\[]\S+[\]])/g, "");
-                        changedContent = changedContent.replace(/(mailto:)/g, "");
+                        changedContent = changedContent.replace(/(\*\s)/g, '- ');
+                        changedContent = changedContent.replace(/(\*)/g, '');
+                        changedContent = changedContent.replace(/(1\.\s)/g, '- ');
+                        changedContent = changedContent.replace(/#/g, '');
+                        changedContent = changedContent.replace(/`/g, '');
+                        changedContent = changedContent.replace(/(\s{3,})/g, '\n');
+                        changedContent = changedContent.replace(/([\[]\S+[\]])/g, '');
+                        changedContent = changedContent.replace(/(mailto:)/g, '');
                         break;
                 }
                 return changedContent;
             },
-            buildJiraUrl: function(list) {
+            buildJiraUrl: function (list) {
                 var apiUrl = {};
                 apiUrl.ticketKey = [];
                 apiUrl.path = [];
                 var hostSet = false;
                 for (var i = 0; i < list.length; i++) {
-                    if (angular.equals(list[i], "")) {
+                    if (angular.equals(list[i], '')) {
                         list.splice(i, 1);
                         i--;
                     } else if (urlpattern.http.test(list[i])) {
                         //else if((list[i].indexOf("https:") > -1) || (list[i].indexOf("http:") > -1)) {
-                        angular.extend(apiUrl, { http: list[i] });
+                        angular.extend(apiUrl, {
+                            http: list[i]
+                        });
                     } else if (urlpattern.host.test(list[i]) && !hostSet) {
                         //else if(list[i].indexOf(".") > -1) 
                         hostSet = true;
-                        angular.extend(apiUrl, { host: list[i] });
-                    } else if (list[i].indexOf("-") > -1) {
+                        angular.extend(apiUrl, {
+                            host: list[i]
+                        });
+                    } else if (list[i].indexOf('-') > -1) {
                         apiUrl.ticketKey.push(list[i]);
                         //						angular.extend($scope.apiUrl, {ticketKey: list[i]});
                     } else if (i < (list.length - 1)) {
@@ -69,51 +75,55 @@ angular.module('sdlctoolApp')
                 var lastElement = list.pop();
                 //gets the project key.
                 if (angular.isUndefined(apiUrl.projectKey) && (listSize >= 4)) {
-                    if (lastElement.indexOf("-") >= 0) {
-                        angular.extend(apiUrl, { projectKey: lastElement.slice(0, lastElement.indexOf("-")) })
+                    if (lastElement.indexOf('-') >= 0) {
+                        angular.extend(apiUrl, {
+                            projectKey: lastElement.slice(0, lastElement.indexOf('-'))
+                        });
                     } else {
-                        angular.extend(apiUrl, { projectKey: lastElement });
+                        angular.extend(apiUrl, {
+                            projectKey: lastElement
+                        });
                     }
                 }
-                apiUrl.cachedUrl = apiUrl.http + "//" + apiUrl.host + "/";
-                for (var i = 0; i < apiUrl.path.length; i++) {
-                    apiUrl.cachedUrl += apiUrl.path[i] + "/";
+                apiUrl.cachedUrl = apiUrl.http + '//' + apiUrl.host + '/';
+                for (var j = 0; j < apiUrl.path.length; j++) {
+                    apiUrl.cachedUrl += apiUrl.path[j] + '/';
                 }
                 return apiUrl;
             },
-            buildYAMLFile: function(settings) {
-            	var self = this;
-            	var yamlExport = {};
-            	var projectTypeIdValue = 0;
-            	var projectTypeNameValue = '';
+            buildYAMLFile: function (settings) {
+                var self = this;
+                var yamlExport = {};
+                var projectTypeIdValue = 0;
+                var projectTypeNameValue = '';
                 var ticket = {};
-                if(angular.isDefined(settings.ticket.url)) {
+                if (angular.isDefined(settings.ticket.url)) {
                     ticket.url = settings.ticket.url;
                 }
-                if(angular.isDefined(settings.ticket.key)) {
+                if (angular.isDefined(settings.ticket.key)) {
                     ticket.key = settings.ticket.key;
                 }
-            	// this is done this way to prevent exception if the settings.project is empty
-                angular.forEach(settings.projectType, function(projectType) {
+                // this is done this way to prevent exception if the settings.project is empty
+                angular.forEach(settings.projectType, function (projectType) {
                     projectTypeIdValue = projectType.projectTypeId;
                     projectTypeNameValue = projectType.name;
                 });
                 angular.extend(yamlExport, {
                     name: settings.name,
                     ticket: ticket,
-                    projectType: [{ 
-                    	projectTypeId: projectTypeIdValue,
-                    	projectTypeName: projectTypeNameValue
+                    projectType: [{
+                        projectTypeId: projectTypeIdValue,
+                        projectTypeName: projectTypeNameValue
                     }],
                     collections: settings.collections,
                     generatedOn: settings.generatedOn,
                     lastChanged: settings.lastChanged,
                     requirementCategories: []
                 });
-                angular.forEach(settings.requirements, function(requirement) {
+                angular.forEach(settings.requirements, function (requirement) {
                     //check if category is already inside
                     if (self.searchArrayByValue(requirement.category, yamlExport.requirementCategories)) {
-                        angular.forEach(yamlExport.requirementCategories, function(requirementCategoryObject) {
+                        angular.forEach(yamlExport.requirementCategories, function (requirementCategoryObject) {
                             if (requirementCategoryObject.category === requirement.category) {
                                 requirementCategoryObject.requirements.push({
                                     id: requirement.id,
@@ -154,34 +164,52 @@ angular.module('sdlctoolApp')
                 });
                 return yamlExport;
             },
-            getCurrentDate : function() {
+            getCurrentDate: function () {
                 var d = new Date();
-                var curr_date = d.getDate();
-                var curr_month = d.getMonth() + 1; //Months are zero based
-                var curr_year = d.getFullYear();
-                if (curr_month < 10) curr_month = "0" + curr_month;
-                if (curr_date < 10) curr_date = "0" + curr_date;
-                return curr_date + "-" + curr_month + "-" + curr_year;
+                var currDate = d.getDate();
+                var currMonth = d.getMonth() + 1; //Months are zero based
+                var currYear = d.getFullYear();
+                if (currMonth < 10) {
+                    currMonth = '0' + currMonth;
+                }
+                if (currDate < 10) {
+                    currDate = '0' + currDate;
+                }
+                return currDate + '-' + currMonth + '-' + currYear;
             },
-            getDetailedCurrentDate : function() {
+            getDetailedCurrentDate: function () {
                 var d = new Date();
-                var curr_hour = d.getHours();
-                var curr_min = d.getMinutes();
-                var curr_sec = d.getSeconds();
-                var curr_date = d.getDate();
-                var curr_month = d.getMonth() + 1; //Months are zero based
-                var curr_year = d.getFullYear();
+                var currHour = d.getHours();
+                var currMin = d.getMinutes();
+                var currSec = d.getSeconds();
+                var currDate = d.getDate();
+                var currMonth = d.getMonth() + 1; //Months are zero based
+                var currYear = d.getFullYear();
                 //add a zero for hours less than 10.
-                if (curr_hour < 10) {
-                    curr_hour = "0" + curr_hour.toString();
+                if (currHour < 10) {
+                    currHour = '0' + currHour.toString();
                 }
-                if (curr_min < 10) {
-                    curr_min = "0" + curr_min.toString();
+                if (currMin < 10) {
+                    currMin = '0' + currMin.toString();
                 }
-                if (curr_sec < 10) {
-                    curr_sec = "0" + curr_sec.toString();
+                if (currSec < 10) {
+                    currSec = '0' + currSec.toString();
                 }
-                return curr_date + "-" + curr_month + "-" + curr_year + "_" + curr_hour + curr_min + curr_sec;
+                return currDate + '-' + currMonth + '-' + currYear + '_' + currHour + currMin + currSec;
+            },
+            addCheckAuthenticationModal: function (promise) {
+                angular.extend(promise, {
+                    runningModalPromise: function () {
+                        var modalInstance = $uibModal.open({
+                            template: '<div class="modal-body"><div id="UsSpinner1" class=" text-center col-sm-1" id="UsSpinner" spinner-on="true" us-spinner=' +
+                                '"{radius:6, width:4, length:6, lines:9}"></div><br/><h4 class="text-center"> JIRA Authentication running...</h4></div>',
+                            controller: function () {},
+                            size: 'sm',
+                            backdrop: false
+                        });
+                        return modalInstance;
+                    }
+                });
             }
         };
-    });
+    }]);

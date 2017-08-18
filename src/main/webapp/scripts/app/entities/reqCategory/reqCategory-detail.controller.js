@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('ReqCategoryDetailController', function ($scope, $rootScope, $stateParams, entity, ReqCategory, RequirementSkeleton) {
+    .controller('ReqCategoryDetailController', function ($scope, $rootScope, $stateParams, entity, ReqCategory) {
         $scope.reqCategory = entity;
         $scope.load = function (id) {
             ReqCategory.get({id: id}, function(result) {

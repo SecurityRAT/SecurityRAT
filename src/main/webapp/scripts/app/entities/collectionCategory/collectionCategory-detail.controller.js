@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('CollectionCategoryDetailController', function ($scope, $rootScope, $stateParams, entity, CollectionCategory, CollectionInstance) {
+    .controller('CollectionCategoryDetailController', function ($scope, $rootScope, $stateParams, entity, CollectionCategory) {
         $scope.collectionCategory = entity;
         $scope.load = function (id) {
             CollectionCategory.get({id: id}, function(result) {

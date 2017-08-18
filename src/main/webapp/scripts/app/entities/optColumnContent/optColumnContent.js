@@ -81,7 +81,7 @@ angular.module('sdlctoolApp')
                         $state.go('optColumnContent', null, { reload: true });
                     }, function() {
                         $state.go('^');
-                    })
+                    });
                 }]
             })
             .state('optColumnContent.bulk', {
@@ -104,7 +104,7 @@ angular.module('sdlctoolApp')
                         $state.go('optColumnContent', null, { reload: true });
                     }, function() {
                         $state.go('optColumnContent');
-                    })
+                    });
                 }]
             });
     });

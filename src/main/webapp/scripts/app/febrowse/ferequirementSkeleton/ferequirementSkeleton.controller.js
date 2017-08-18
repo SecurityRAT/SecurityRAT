@@ -31,20 +31,20 @@ angular.module('sdlctoolApp')
         $scope.typeLabelText = {buttonDefaultText: 'Implementation Types'};
         
         $scope.loadAll = function() {
-        	apiFactory.getAll("requirementSkeletons").then(
+        	apiFactory.getAll('requirementSkeletons').then(
         		  	function(result) {
         		    	$scope.requirementSkeletons = result;
 				    	$scope.length = $scope.requirementSkeletons.length;
         		  	});
-            apiFactory.getAll("projectTypes").then(
+            apiFactory.getAll('projectTypes').then(
         		  	function(result) {
         		  		$scope.projectTypes = result;
         		  	});
-            apiFactory.getAll("tags").then(
+            apiFactory.getAll('tags').then(
         		  	function(result) {
         		  		$scope.tagCategories = result;
         		  	});
-            apiFactory.getAll("collections").then(
+            apiFactory.getAll('collections').then(
         		  	function(result) {
         		  		$scope.collCategories = result;
         		  	});
@@ -71,8 +71,9 @@ angular.module('sdlctoolApp')
   		  });
   		  
   		  modalInstance.result.then();
-        }
-        
+        };
+		
+		/* jshint unused: false */
         $scope.toggleDropdown = function(selector, $event) {
         	var dropdowns = ['tag', 'coll'];
         	dropdowns.splice(dropdowns.indexOf(selector), 1);
@@ -101,13 +102,13 @@ angular.module('sdlctoolApp')
         	}else {
         		$scope.dropdowns[selector].open = false;
         	}
-        }
+        };
         
         $scope.selectTagInstance = function(tagInstance, selector, dropdownSelector) {
         	var exist = false;
         	var index = 0;
         	for(var i = 0; i < $scope[selector].length; i++) {
-        		if($scope[selector][i].id == tagInstance.id) {
+        		if($scope[selector][i].id === tagInstance.id) {
         			exist = true;
         			index = i;
         			break;
@@ -124,19 +125,20 @@ angular.module('sdlctoolApp')
         	if($scope[selector].length > 0) {
         		$scope.dropdowns[dropdownSelector].buttonText = '';
         		$scope.dropdowns[dropdownSelector].buttonText = $scope[selector][0].name;
-        		for(var i = 1; i < $scope[selector].length && i < 2; i++) {
+        		for(i = 1; i < $scope[selector].length && i < 2; i++) {
         			$scope.dropdowns[dropdownSelector].buttonText += ', ' + $scope[selector][1].name;
         		}
-        		if($scope[selector].length > 2 )
-        			$scope.dropdowns[dropdownSelector].buttonText += ',...'
+        		if($scope[selector].length > 2 ) {
+					$scope.dropdowns[dropdownSelector].buttonText += ',...';
+				}
         	}
         	
-        }
+        };
         
         $scope.isTagSelected = function(tagInstance, selector) {
         	var exist = false;
         	for(var i = 0; i < $scope[selector].length; i++) {
-        		if($scope[selector][i].id == tagInstance.id) {
+        		if($scope[selector][i].id === tagInstance.id) {
         			exist = true;
         			break;
         		}
@@ -146,7 +148,7 @@ angular.module('sdlctoolApp')
         	}else {
         		return true;
         	}
-        }
+        };
 
         $scope.refresh = function () {
             $scope.loadAll();

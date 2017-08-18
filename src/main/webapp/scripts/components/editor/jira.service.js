@@ -1,52 +1,47 @@
 'use strict';
 
-/**
-*  Module
-*
-
-*/
+/* jshint undef: true */
+/* globals jsyaml, Blob, FormData */
 angular.module('sdlctoolApp')
 	.factory('JiraService', ['Helper', 'apiFactory', 'appConfig', '$q', 'SDLCToolExceptionService', function(Helper, apiFactory, appConfig, $q, SDLCToolExceptionService){
 
-		var linkTypeName = "Relates";
-		var remoteRelationshipName = "relates to";
-
-		var jiraService = {};
+		var linkTypeName = 'Relates';
+		var remoteRelationshipName = 'relates to';
 
 		function buildUrlCall(selector, apiUrlInfo) {
-            var baseJiraCall = apiUrlInfo.http + "//" + apiUrlInfo.host + appConfig.jiraApiPrefix + '/';
-            var origin = apiUrlInfo.http + "//" + apiUrlInfo.host;
-            var returnValue = "";
+            var baseJiraCall = apiUrlInfo.http + '//' + apiUrlInfo.host + appConfig.jiraApiPrefix + '/';
+            var origin = apiUrlInfo.http + '//' + apiUrlInfo.host;
+            var returnValue = '';
             switch (selector) {
-                case "ticket":
+                case 'ticket':
                     returnValue = origin + appConfig.jiraApiPrefix;
                     break;
-                case "attachment":
+                case 'attachment':
                     returnValue = baseJiraCall + apiUrlInfo.ticketKey[0] + appConfig.jiraAttachment;
                     break;
-                case "comment":
+                case 'comment':
                     returnValue = baseJiraCall + apiUrlInfo.ticketKey[0] + appConfig.jiraComment;
                     break;
-                case "issueType":
+                case 'issueType':
                     returnValue = origin + appConfig.jiraApiIssueType;
                     break;
-                case "project":
+                case 'project':
                     returnValue = origin + appConfig.jiraApiProject;
                     break;
-                case "issueKey":
+                case 'issueKey':
                     returnValue = baseJiraCall + apiUrlInfo.ticketKey[0];
                     break;
-                case "search":
-                    returnValue = origin + appConfig.jiraRestApi + "/search";
+                case 'search':
+                    returnValue = origin + appConfig.jiraRestApi + '/search';
                     break;
-                case "issueLink":
-                    returnValue = origin + appConfig.jiraRestApi + "/issueLink";
+                case 'issueLink':
+                    returnValue = origin + appConfig.jiraRestApi + '/issueLink';
                     break;
-               	case "remotelink":
-                    returnValue = baseJiraCall + apiUrlInfo.ticketKey[0] + "/remotelink";
+               	case 'remotelink':
+                    returnValue = baseJiraCall + apiUrlInfo.ticketKey[0] + '/remotelink';
                     break;
-                case "field":
-                    returnValue = origin + appConfig.jiraRestApi + "/field";
+                case 'field':
+                    returnValue = origin + appConfig.jiraRestApi + '/field';
                     break;
             }
             return returnValue;
@@ -54,65 +49,65 @@ angular.module('sdlctoolApp')
 
         function sendComment(body, ticketInfo) {
             var commentData = {
-                    "body": body
-                }
+                    'body': body
+                };
                 //adds comment to ease import
-            return apiFactory.postExport(buildUrlCall("comment", ticketInfo.apiUrl), commentData, { 'X-Atlassian-Token': 'nocheck', 'Content-Type': 'application/json' });
+            return apiFactory.postExport(buildUrlCall('comment', ticketInfo.apiUrl), commentData, { 'X-Atlassian-Token': 'nocheck', 'Content-Type': 'application/json' });
         }
 
         function addAttachmentAndComment(ticketInfo, fileObject) {
             try {
                 var doc = jsyaml.safeDump(fileObject.content);
-                var filename = appConfig.filenamePrefix + "_" + fileObject.artifactName + "_" + Helper.getDetailedCurrentDate() + ".yml";
-                var blob = new Blob([doc], { type: 'application/x-yaml' })
+                var filename = appConfig.filenamePrefix + '_' + fileObject.artifactName + '_' + Helper.getDetailedCurrentDate() + '.yml';
+                var blob = new Blob([doc], { type: 'application/x-yaml' });
                 var data = new FormData();
                 data.append('file', blob, filename);
-                return apiFactory.postExport(buildUrlCall("attachment", ticketInfo.apiUrl), data, { 'X-Atlassian-Token': 'nocheck', 'Content-Type': undefined })
+                return apiFactory.postExport(buildUrlCall('attachment', ticketInfo.apiUrl), data, { 'X-Atlassian-Token': 'nocheck', 'Content-Type': undefined })
                     .then(function(response) {
                         var commentBody = appConfig.ticketComment;
                         commentBody = commentBody.replace('§artifact_name§', fileObject.artifactName);
-                        commentBody = commentBody.replace('§import_link§', appConfig.importPrefix + encodeURIComponent(response[0].self) + ".\n");
+                        commentBody = commentBody.replace('§import_link§', appConfig.importPrefix + encodeURIComponent(response[0].self) + '.\n');
                         commentBody = commentBody.replace('§filename§', filename);
 
                         //get the attachment id and save in the current requirement.
                         return sendComment(commentBody, ticketInfo);
                     }, function(error) {
-                        if(angular.isDefined(fileObject.errorHandlingProperty)) fileObject.errorHandlingProperty.spinnerProperty.showSpinner = false
+                        if(angular.isDefined(fileObject.errorHandlingProperty))  { fileObject.errorHandlingProperty.spinnerProperty.showSpinner = false; }
                         if (error.status === 403) {
                             SDLCToolExceptionService.showWarning('Adding attachment unsuccessful', 'The YAML file could not be attached to the main ticket. Please check if ticket is not closed and that you have the permission to attach files.', SDLCToolExceptionService.DANGER);
                         }
                     });
             } catch (e) {
-                if(angular.isDefined(fileObject.errorHandlingProperty)) fileObject.errorHandlingProperty.spinnerProperty.showSpinner = false
-                SDLCToolExceptionService.showWarning('Adding attachment unsuccessful', "YAML file could not be attached to main ticket due to file parsing error. Please contact the developers.", SDLCToolExceptionService.DANGER);
+                if(angular.isDefined(fileObject.errorHandlingProperty)) { fileObject.errorHandlingProperty.spinnerProperty.showSpinner = false ; }
+                SDLCToolExceptionService.showWarning('Adding attachment unsuccessful', 'YAML file could not be attached to main ticket due to file parsing error. Please contact the developers.', SDLCToolExceptionService.DANGER);
             }
         }
 
         function createRemoteLink(apiCall, issueKey, issueInfo) {
             var postData = {
-                "object": {
-                    "url": issueInfo.url,
-                    "title": issueKey,
-                    "summary": issueInfo.fields.summary,
-                    "icon": {
-                        "url16x16": issueInfo.fields.issuetype.iconUrl,
-                        "title": issueInfo.fields.issuetype.description
+                'object': {
+                    'url': issueInfo.url,
+                    'title': issueKey,
+                    'summary': issueInfo.fields.summary,
+                    'icon': {
+                        'url16x16': issueInfo.fields.issuetype.iconUrl,
+                        'title': issueInfo.fields.issuetype.description
                     },
-                    "status": {
-                        "icon": {
-                            "url16x16": issueInfo.fields.status.iconUrl,
-                            "title": issueInfo.fields.status.name
+                    'status': {
+                        'icon': {
+                            'url16x16': issueInfo.fields.status.iconUrl,
+                            'title': issueInfo.fields.status.name
                         }
                     }
                 },
-                "relationship": remoteRelationshipName
-            }
+                'relationship': remoteRelationshipName
+            };
             return apiFactory.postExport(apiCall, postData, { 'X-Atlassian-Token': 'nocheck', 'Content-Type': 'application/json' });
                 
         }
 
 		function addIssueLinks(mainIssueInfo, remoteIssueInfo) {
-            var apiCall = buildUrlCall("issueLink", remoteIssueInfo.apiUrl);
+            var apiCall = buildUrlCall('issueLink', remoteIssueInfo.apiUrl);
             var promiseArray = [];
             var postData = {
                 type: {
@@ -132,17 +127,17 @@ angular.module('sdlctoolApp')
             } else {
                 // links tickets from different JIRA instances.
                 // links ticket from main JIRA ticket to ticket in different JIRA instance
-                var inwardApiCall = buildUrlCall("remotelink", mainIssueInfo.apiUrl);
+                var inwardApiCall = buildUrlCall('remotelink', mainIssueInfo.apiUrl);
                 
                 promiseArray.push(createRemoteLink(inwardApiCall, remoteIssueInfo.key, remoteIssueInfo));
-                var outwardApiCall = buildUrlCall("remotelink", remoteIssueInfo.apiUrl);
+                var outwardApiCall = buildUrlCall('remotelink', remoteIssueInfo.apiUrl);
                 // get the summary of the main JIRA to prepare for remote linking if necessary
                 if (angular.isUndefined(mainIssueInfo.fields)) {
-                    promiseArray.push(apiFactory.getJIRAInfo(buildUrlCall("issueKey", mainIssueInfo.apiUrl)).then(function(response) {
+                    promiseArray.push(apiFactory.getJIRAInfo(buildUrlCall('issueKey', mainIssueInfo.apiUrl)).then(function(response) {
                         mainIssueInfo.fields = response.fields;
                         createRemoteLink(outwardApiCall, mainIssueInfo.key, mainIssueInfo);
                         
-                    }))
+                    }));
                 } else {
                     promiseArray.push(createRemoteLink(outwardApiCall, mainIssueInfo.key, mainIssueInfo));
                 }
@@ -166,7 +161,7 @@ angular.module('sdlctoolApp')
         	} else {
         		Promise.all([apiFactory.getJIRAInfo(buildUrlCall('remotelink', mainIssueInfo.apiUrl)), apiFactory.getJIRAInfo(buildUrlCall('remotelink', remoteIssueInfo.apiUrl))])
         		.then(function(responses) {
-        			var promiseArray = []
+        			var promiseArray = [];
         			for (var i = 0; i < responses[0].length; i++) {
         				if(responses[0][i].object.title === remoteIssueInfo.key && responses[0].relationship === remoteRelationshipName) {
         					promiseArray.push(apiFactory.deleteExport(buildUrlCall('remotelink', mainIssueInfo.apiUrl) + '/' + responses[0].id, 
@@ -174,7 +169,7 @@ angular.module('sdlctoolApp')
 
         				}
         			}
-        			for (var i = 0; i < responses[1].length; i++) {
+        			for (i = 0; i < responses[1].length; i++) {
         				if(responses[1][i].object.title === mainIssueInfo.key && responses[1].relationship === remoteRelationshipName) {
         					promiseArray.push(apiFactory.deleteExport(buildUrlCall('remotelink', remoteIssueInfo.apiUrl) + '/' + responses[1].id, 
         					{}, {'X-Atlassian-Token': 'nocheck'}));
@@ -182,7 +177,7 @@ angular.module('sdlctoolApp')
         				}
         			}
         			return Promise.all(promiseArray);
-        		}).catch()
+        		}).catch();
         	}
 
         }
@@ -192,7 +187,7 @@ angular.module('sdlctoolApp')
 			addAttachmentAndComment : addAttachmentAndComment,
 			addIssueLinks : addIssueLinks,
 			removeIssueLinks: removeIssueLinks
-		}
+		};
 
 		return jiraService;
-	}])
+	}]);

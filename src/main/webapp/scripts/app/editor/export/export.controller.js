@@ -1,5 +1,7 @@
 'use strict';
 
+/* jshint undef: true */
+/* globals urlpattern, $, window, jsyaml, document */
 angular.module('sdlctoolApp')
     .controller('ExportController', function ($scope, apiFactory, sharedProperties, $uibModalStack, $uibModalInstance, $timeout,
         appConfig, authenticatorService, $uibModal, $interval, $q, SDLCToolExceptionService, $filter, $confirm, $window, Helper, checkAuthentication, JiraService) {
@@ -389,9 +391,10 @@ angular.module('sdlctoolApp')
 
                 });
             });
-        }
+        };
 
         // watch the issue type field and gets the mandatory fields depending on he issue type selected.
+        /* jshint unused: false */
         $scope.$watch('fields.issuetype.name', function (newVal, oldVal, scope) {
             $scope.manFilterObject.projectKey = $scope.apiUrl.projectKey;
             $scope.manFilterObject.issuetypeName = newVal;
@@ -412,14 +415,14 @@ angular.module('sdlctoolApp')
             }
             // console.log($scope.jiraAlternatives.mandatoryFields)
 
-        })
+        });
         /**
          * Determines the height of the window from the element with the id given as parameter
          */
         $scope.getHeight = function (id) {
             var height = $(window).height() - ($('#' + id).offset().top - $(window).scrollTop()) - $('#' + id).height();
             $scope.maxHeight = height + 'px';
-        }
+        };
 
         $scope.$watch('fields.project.key', function (newVal, oldVal, scope) {
             if ($scope.apiUrl.http !== undefined && newVal !== undefined) {
@@ -427,7 +430,7 @@ angular.module('sdlctoolApp')
                 $scope.jiraUrl.url = $scope.apiUrl.cachedUrl + newVal;
                 $scope.backupUrl = $scope.apiUrl.cachedUrl + newVal;
             }
-        })
+        });
         // create a new ticket
         $scope.createTicket = function (fieldObject, withAttachment) {
             var derefer = $q.defer();
@@ -476,7 +479,7 @@ angular.module('sdlctoolApp')
                                 if ($scope.jiraAlternatives.mandatoryFields[i].key === key) {
                                     $scope.exportProperty.fail = true;
                                     $scope.exportProperty.failed = 'Value to field ' + $scope.jiraAlternatives.mandatoryFields[i].name + ' ' + result;
-                                    if (angular.isDefined($scope.fields[key])) $scope.fields[key] = '';
+                                    if (angular.isDefined($scope.fields[key])) { $scope.fields[key] = ''; }
                                 }
                                 // retrieves the old field values whose structure were changed to be able to create a ticket.
                                 if (angular.isDefined($scope.tempMandatoryValue[$scope.jiraAlternatives.mandatoryFields[i].key])) {
@@ -489,22 +492,22 @@ angular.module('sdlctoolApp')
                 });
 
             return derefer.promise;
-        }
+        };
 
         $scope.commentForTicketImport = function () {
             var appUrl = window.location.origin ? window.location.origin : window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
             var commentBody = 'With the following link you can import your artifact directly into the Secure SDLC Tool and select the newest version.' +
                 ' You can also use this link to share it with others: ' + appUrl + '/?ticket=' + $scope.ticketURL;
             //get the attachment id and save in the current requirement.
-            commentData = {
+            var commentData = {
                 'body': commentBody
-            }
+            };
             //adds comment to ease import
             apiFactory.postExport($scope.buildUrlCall('comment'), commentData, {
                 'X-Atlassian-Token': 'no-check',
                 'Content-Type': 'application/json'
             }).then(function () {});
-        }
+        };
 
         $scope.sendAttachment = function () {
             var file = $scope.buildYAMLFile();
@@ -534,12 +537,12 @@ angular.module('sdlctoolApp')
                     showSpinner: false
                 };
                 $scope.ticketAuthentication[apiUrl.ticketKey[0]].authenticatorProperty.url = ticketToLink;
-                $scope.ticketAuthentication[apiUrl.ticketKey[0]].authenticatorProperty.message = 'In order to link this issue, you have to authenticated. Please click on the following link to authenticate yourself. You will have one minute after a click on the link.'
+                $scope.ticketAuthentication[apiUrl.ticketKey[0]].authenticatorProperty.message = 'In order to link this issue, you have to authenticated. Please click on the following link to authenticate yourself. You will have one minute after a click on the link.';
                 $scope.ticketAuthentication[apiUrl.ticketKey[0]].promise.derefer = $q.defer();
                 checkAuthentication.jiraAuth(JiraService.buildUrlCall('issueKey', apiUrl),
                     $scope.ticketAuthentication[apiUrl.ticketKey[0]].authenticatorProperty, $scope.ticketAuthentication[apiUrl.ticketKey[0]],
                     $scope.ticketAuthentication[apiUrl.ticketKey[0]].promise).then(function (response) {
-                    linksObject[response.key].fields = response.fields
+                    linksObject[response.key].fields = response.fields;
                     JiraService.addIssueLinks($scope.exported.ticket, linksObject[response.key]).then()
                         .catch(function (exception) {
                             onIssueLinkFailure(exception, response.key);
@@ -830,14 +833,14 @@ angular.module('sdlctoolApp')
                                         onIssueLinkFailure(exception, remoteObject.key);
                                     });
                                 size--;
-                                linkStatus = {
+                                var linkStatus = {
                                     iconUrl: response.fields.status.iconUrl,
                                     name: response.fields.status.name,
                                     summary: response.fields.summary,
                                     issueKey: response.key
                                     // enableTooltip: true,
                                     // link: true
-                                }
+                                };
                                 angular.extend(requirement, {
                                     linkStatus: linkStatus
                                 });
@@ -864,8 +867,8 @@ angular.module('sdlctoolApp')
                 }).catch(function () {
                     $scope.checks.exporting = false;
                     $scope.exportProperty.authenticating = false;
-                })
-        }
+                });
+        };
 
         $scope.getTicketValue = function (req) {
             if (angular.isUndefined($scope.checks.hasReqTicket)) {

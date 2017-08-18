@@ -7,18 +7,18 @@ angular.module('sdlctoolApp')
 	$scope.detectedRestore = false;
 
 	$scope.initStarter = function() {
-		var modalInstance = $uibModal.open({
+		$uibModal.open({
 			size: 'lg',
 			backdrop: 'static',
             templateUrl: 'scripts/app/editor/starter/starter.html',
             controller: 'StarterController',
             resolve:  {
             	system: function() {
-            				return "new";
+            				return 'new';
             			}
         	}
 		});
-	}
+	};
 	$scope.initImport = function() {
 		var modalInstance = $uibModal.open({
 			size: 'lg',
@@ -30,19 +30,19 @@ angular.module('sdlctoolApp')
 		modalInstance.result.then(function() {
 			$location.path('/requirements');
 		});
-	}
+	};
 
 	$scope.restoreSession = function() {
-		sharedProperties.setProperty(new String("RESTORE"));
+		sharedProperties.setProperty(new String('RESTORE'));
 		$scope.initImport();
-	}
+	};
 	
 	$scope.deleteLocalStorage = function() {
 		if(localStorageService.isSupported) {
 			localStorageService.remove(appConfig.localStorageKey);
 			$scope.detectedRestore = false;
 		}
-	}
+	};
 
 	 //hotfix for old import feature
 	 if($location.url().indexOf('import') >= 0) {

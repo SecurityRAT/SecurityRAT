@@ -54,11 +54,11 @@ angular.module('sdlctoolApp')
                                 return {name: null, description: null, showOrder: null, active: false, id: null};
                             }
                         }
-                    }).result.then(function(result) {
+                    }).result.then(function() {
                         $state.go('alternativeSet', null, { reload: true });
                     }, function() {
                         $state.go('alternativeSet');
-                    })
+                    });
                 }]
             })
             .state('alternativeSet.edit', {
@@ -77,11 +77,11 @@ angular.module('sdlctoolApp')
                                 return AlternativeSet.get({id : $stateParams.id});
                             }]
                         }
-                    }).result.then(function(result) {
+                    }).result.then(function() {
                         $state.go('alternativeSet', null, { reload: true });
                     }, function() {
                         $state.go('^');
-                    })
+                    });
                 }]
             })
              .state('alternativeSet.bulk', {
@@ -100,11 +100,11 @@ angular.module('sdlctoolApp')
                                 return {name: null, description: null, showOrder: null, active: null, id: null};
                             }
                         }
-                    }).result.then(function(result) {
+                    }).result.then(function() {
                         $state.go('alternativeSet', null, { reload: true });
                     }, function() {
                         $state.go('alternativeSet');
-                    })
+                    });
                 }]
-            })
+            });
     });

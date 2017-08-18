@@ -1,4 +1,6 @@
 'use strict';
+/* jshint undef: true */
+/* globals document, XMLHttpRequest, hljs, jiraApiPrefix, jiraAttachment, jiraApiIssueType, importPrefix, jiraComment, jiraApiProject, jiraRestApi, localStorageKey, securityCATStartTest, securityCATStopTest*/
 
 angular.module('sdlctoolApp', ['LocalStorageModule',
     'ui.bootstrap', // for modal dialogs
@@ -16,20 +18,20 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
     'frapontillo.bootstrap-switch',
     'ui.indeterminate'
 ])
-
+/* jshint unused: false*/
 .run(function($rootScope, $location, $window, $http, $state, Auth, Principal, ENV, VERSION, Account) {
     $rootScope.ENV = ENV;
     $rootScope.VERSION = VERSION;
-    $rootScope.AUTHENTICATIONTYPE = "";
-    $rootScope.REGISTRATIONTYPE = "";
+    $rootScope.AUTHENTICATIONTYPE = '';
+    $rootScope.REGISTRATIONTYPE = '';
     $http.get('api/authentication_config').then(function(result) {
-        $rootScope.AUTHENTICATIONTYPE = result.data.type === "CAS" ? true : false;
+        $rootScope.AUTHENTICATIONTYPE = result.data.type === 'CAS' ? true : false;
         $rootScope.REGISTRATIONTYPE = result.data.registration;
-        if (result.data.type === "CAS") $rootScope.CASLOGOUTURL = result.data.casLogout;
+        if (result.data.type === 'CAS')  { $rootScope.CASLOGOUTURL = result.data.casLogout; }
     });
 
     $rootScope.back = function() {
-        var notValidState = ["activate", "logout", "finishReset", "requestReset"]
+        var notValidState = ['activate', 'logout', 'finishReset', 'requestReset'];
             // If previous state is 'activate' or do not exist go to 'editor'
         if (notValidState.indexOf($rootScope.previousStateName) !== -1 || $state.get($rootScope.previousStateName) === null) {
             $state.go('editor');
@@ -42,7 +44,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
         $rootScope.toState = toState;
         $rootScope.toStateParams = toStateParams;
         var a = document.getElementById('redirect');
-        if (a != null) {
+        if (a !== null) {
             document.body.removeChild(a);
         }
         if (Principal.isIdentityResolved()) {
@@ -68,29 +70,29 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
     function getConstants() {
         var constants = [];
         var ajax = new XMLHttpRequest();
-        ajax.open("GET", "admin-api/configConstants", true);
-        ajax.setRequestHeader("Accept", "application/json, text/plain, */*");
+        ajax.open('GET', 'admin-api/configConstants', true);
+        ajax.setRequestHeader('Accept', 'application/json, text/plain, */*');
         ajax.onreadystatechange = function() {
-            if (this.readyState == 4) {
-                if (this.status == 200) {
+            if (this.readyState === 4) {
+                if (this.status === 200) {
                     constants = JSON.parse(this.responseText);
                     angular.forEach(constants, function(constant) {
                         switch (constant.name) {
-                            case "customRequirementName":
+                            case 'customRequirementName':
                                 appConfig.customRequirement = constant.value;
                                 break;
                             default:
                                 appConfig[constant.name] = constant.value;
                                 break;
                         }
-                    })
+                    });
                 }
                 //                      else (this.status >= 400){
                 ////                            constants = this.statusText;
                 //                          
                 //                      }
             }
-        }
+        };
         ajax.send(null);
     }
     getConstants();
@@ -121,7 +123,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                 }
             ]
         }
-    })
+    });
 
     $httpProvider.interceptors.push('errorHandlerInterceptor');
     $httpProvider.interceptors.push('authExpiredInterceptor');
@@ -150,7 +152,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
     });
     markedProvider.setRenderer({
         link: function(href, title, text) {
-            return "<a href='" + href + "'" + (title ? " title='" + title + "'" : '') + " target='_blank'>" + text + "</a>";
+            return '<a href=\'' + href + '\'' + (title ? ' title=\'' + title + '\'' : '') + ' target=\'_blank\'>' + text + '</a>';
         }
     });
 })
@@ -159,43 +161,44 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
 .factory('apiFactory', function($http, $q, SDLCToolExceptionService, $timeout, appConfig) {
 
         var apiFactory = {};
-        var api_prefix = "/frontend-api/";
+        var apiPrefix = '/frontend-api/';
         var responseHeadersNeeded = false;
 
         apiFactory.testRequirementApi = function(method, restcall, data, headerConfig, headersNeeded) {
-            var uri = appConfig.securityCAT.endsWith('/') ? appConfig.securityCAT.substr(0, appConfig.securityCAT.length - 1) : appConfig.securityCAT
+            var uri = appConfig.securityCAT.endsWith('/') ? appConfig.securityCAT.substr(0, appConfig.securityCAT.length - 1) : appConfig.securityCAT;
 
             responseHeadersNeeded = headersNeeded;
             return this.execute(method, uri + restcall, data, headerConfig);
-        }
+        };
         apiFactory.getJIRAInfo = function(url) {
             return this.execute('GET', url);
-        }
+        };
         apiFactory.postExport = function(url, data, headerConfig) {
             return this.execute('POST', url, data, headerConfig);
-        }
+        };
         apiFactory.putExport = function(url, data, headerConfig) {
             return this.execute('PUT', url, data, headerConfig);
-        }
+        };
         apiFactory.deleteExport = function(url, data, headerConfig) {
             return this.execute('DELETE', url, data, headerConfig);
-        }
+        };
         apiFactory.getAll = function(api) {
-            return this.execute('GET', api_prefix + api);
-        }
+            return this.execute('GET', apiPrefix + api);
+        };
 
         apiFactory.getDetails = function(api, id1, id2) {
-            return this.execute('GET', api_prefix + api + "/" + id1 + "/" + id2);
-        }
+            return this.execute('GET', apiPrefix + api + '/' + id1 + '/' + id2);
+        };
 
         apiFactory.getById = function(api, id) {
-            return this.execute('GET', api_prefix + api + "/" + id);
-        }
+            return this.execute('GET', apiPrefix + api + '/' + id);
+        };
 
         apiFactory.getByQuery = function(api, query, requestParam) {
-            return this.execute('GET', api_prefix + api + "/" + query + "?" + requestParam);
-        }
+            return this.execute('GET', apiPrefix + api + '/' + query + '?' + requestParam);
+        };
 
+        
         apiFactory.execute = function(method, path, data, headerConfig) {
             return $http({
                     'method': method,
@@ -213,6 +216,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                         return response.data;
                     },
                     // Error
+                    /* jshint undef: false*/
                     function(response) {
 
                         if (400 === parseInt(response.status, 10)) {
@@ -298,12 +302,12 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
 
                 requirements = importObject;
 
-                dereferred.resolve("Requirements imported.");
+                dereferred.resolve('Requirements imported.');
                 return dereferred.promise;
             }
-        }
+        };
     })
-    .service('authenticatorService', function($uibModal, $q, $interval, $uibModalStack, $timeout, SDLCToolExceptionService, apiFactory) {
+    .service('authenticatorService', function($uibModal, $q, $interval, $uibModalStack, $timeout, SDLCToolExceptionService) {
         return {
             runAuthenticator: function(jira) {
                 var returnValue = $q.defer();
@@ -320,7 +324,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                         }
                     });
                     modalInstance.result.then(function() {
-                        returnValue.resolve("start");
+                        returnValue.resolve('start');
                     });
                 } else {
                     returnValue.resolve(true);
@@ -330,10 +334,10 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
 
             //cancel the interval promise want the time is up.
             startCountdown: function(promise, spinnerProperty, jira) {
-                if (jira.url !== "") {
+                if (jira.url !== '') {
                     return $timeout(function() {
-                        var header = "Authentication timeout";
-                        var message = "You could not authenticate yourself within the time interval! Please try later.";
+                        var header = 'Authentication timeout';
+                        var message = 'You could not authenticate yourself within the time interval! Please try later.';
                         //                        $uibModalStack.dismissAll('close authentication modal');
                         $interval.cancel(promise.interval);
                         spinnerProperty.showSpinner = false;
@@ -344,19 +348,21 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                 } else {
                     return $timeout(function() {
                         $interval.cancel(promise.interval);
-                    }, 90000)
+                    }, 90000);
                 }
             },
             cancelPromises: function(promise) {
-                if (angular.isDefined(promise.interval))
+                if (angular.isDefined(promise.interval)) {
                     $interval.cancel(promise.interval);
-                if (angular.isDefined(promise.timeout))
+                }
+                if (angular.isDefined(promise.timeout)) {
                     $timeout.cancel(promise.timeout);
+                }
                 if (promise.runningModalPromise !== undefined && promise.runningModalPromise.close !== undefined) { promise.runningModalPromise.close(); }
             },
             startCheckAuthenticationProcess: function(apiCall, displayProperty, spinnerProperty, promise, callback) {
-                var self = this
-                if (angular.isUndefined(promise.interval) || (promise.interval.$$state.status != 0)) {
+                var self = this;
+                if (angular.isUndefined(promise.interval) || (promise.interval.$$state.status !== 0)) {
                     self.runAuthenticator(displayProperty).then(function(data) {
                         if (angular.isDefined(spinnerProperty.authenticating)) { spinnerProperty.authenticating = true; }
                         //run the init method every 10 sec.
@@ -364,15 +370,16 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                             callback(apiCall, displayProperty, spinnerProperty, promise);
                         }, 10000);
                         promise.timeout = self.startCountdown(promise, spinnerProperty, displayProperty);
-                        if (data === "start") {
+                        if (data === 'start') {
                             spinnerProperty.showSpinner = true;
-                            if (angular.isDefined(promise.runningModalPromise))
+                            if (angular.isDefined(promise.runningModalPromise)) {
                                 promise.runningModalPromise = promise.runningModalPromise();
+                            }
                         }
                     });
                 }
             }
-        }
+        };
     })
     .service('helperService', function() {
         return {
@@ -387,7 +394,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                 });
                 return newarr;
             }
-        }
+        };
     })
     .service('SDLCToolExceptionService', function($uibModal) {
         return {
@@ -431,7 +438,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                 });
                 return modalInstance;
             }
-        }
+        };
     })
 
 .filter('filterByTags', function() {
@@ -448,7 +455,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
             }
         }
 
-    }
+    };
 })
 
 .filter('filterByCategories', function() {
@@ -467,7 +474,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                 });
                 return newView;
             }
-        }
+        };
     })
     .filter('filterByCategoriesForReqSkeletons', function() {
         return function(array, categories) {
@@ -485,7 +492,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                 });
                 return newView;
             }
-        }
+        };
     })
     .filter('filterByTagForReqSkeletons', function() {
         return function(array, tagInstances) {
@@ -498,15 +505,14 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                     angular.forEach(array, function(requirement) {
                         angular.forEach(requirement.tagInstances, function(taginstance) {
                             if (tag.id === taginstance.id) {
-                                if (newView.indexOf(requirement) === -1)
-                                    newView.push(requirement);
+                                if (newView.indexOf(requirement) === -1) { newView.push(requirement); }
                             }
                         });
                     });
                 });
                 return newView;
             }
-        }
+        };
     })
     .filter('filterByCollsForReqSkeletons', function() {
         return function(array, collsInstances) {
@@ -519,15 +525,14 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                     angular.forEach(array, function(requirement) {
                         angular.forEach(requirement.collectionInstances, function(collsInstance) {
                             if (coll.id === collsInstance.id) {
-                                if (newView.indexOf(requirement) === -1)
-                                    newView.push(requirement);
+                                if (newView.indexOf(requirement) === -1) { newView.push(requirement);}
                             }
                         });
                     });
                 });
                 return newView;
             }
-        }
+        };
     })
     .filter('filterByTypesForReqSkeletons', function() {
         return function(array, projectTypes) {
@@ -540,15 +545,14 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                     angular.forEach(array, function(requirement) {
                         angular.forEach(requirement.projectTypes, function(projectType) {
                             if (type.id === projectType.id) {
-                                if (newView.indexOf(requirement) === -1)
-                                    newView.push(requirement);
+                                if (newView.indexOf(requirement) === -1) { newView.push(requirement); }
                             }
                         });
-                    })
+                    });
                 });
                 return newView;
             }
-        }
+        };
     })
     .filter('filterByStatus', function() {
         return function(array, selectedStatus) {
@@ -569,7 +573,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                 });
                 return newView;
             }
-        }
+        };
 
     }).filter('filterTicketStatus', function() {
         return function(array, selectedTicketStatus) {
@@ -586,7 +590,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                 });
                 return newView;
             }
-        }
+        };
     })
 
 .filter('filterUpdates', function() {
@@ -607,7 +611,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
             });
             return newView;
         }
-    }
+    };
 })
 
 .filter('filterCategoryByCategory', function() {
@@ -625,7 +629,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                 });
                 return newView;
             }
-        }
+        };
     })
     .filter('filterCategoryForEntities', function() {
         return function(array, categories, selector) {
@@ -642,9 +646,10 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                 });
                 return newView;
             }
-        }
+        };
     })
     .filter('filterCategoryForEntitiesObject', function() {
+        /* jshint unused: false*/
         return function(array, categories, selector) {
             if (categories.length === 0) {
                 return array;
@@ -659,11 +664,12 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                 });
                 return newView;
             }
-        }
+        };
     })
-    .filter('trusted', function($sce, marked, $timeout) {
+    .filter('trusted', function($sce, marked) {
         return function(html) {
-            if (angular.isDefined(html) && html !== null)
+            if (angular.isDefined(html) && html !== null) {
                 return marked(html);
-        }
+            }
+        };
     });

@@ -1,5 +1,8 @@
 'use strict';
 
+/* jshint undef: true */
+/* globals $ */
+
 angular.module('sdlctoolApp')
     .controller('AlternativeInstanceController', function ($scope, AlternativeInstance, AlternativeInstanceSearch,
         AlternativeSet, sharedProperties, $filter, marked, EntityHelper) {
@@ -24,7 +27,7 @@ angular.module('sdlctoolApp')
             });
             AlternativeSet.query(function(result) {
             	$scope.alternativeSets = result;
-            })
+            });
 
         };
         $scope.loadAll();
@@ -32,7 +35,7 @@ angular.module('sdlctoolApp')
         $scope.delete = function (id) {
             AlternativeInstance.get({id: id}, function(result) {
                 $scope.alternativeInstance = result;
-                $('#deleteAlternativeInstanceConfirmation').appendTo("body").modal('show');
+                $('#deleteAlternativeInstanceConfirmation').appendTo('body').modal('show');
             });
         };
 
@@ -49,7 +52,7 @@ angular.module('sdlctoolApp')
             var instancesFilterByAlternativeSet = $filter('filterCategoryForEntities')($scope.alternativeInstances, $scope.selectedAlternativeSets, 'alternativeSet');
             instancesFilterByAlternativeSet = $filter('filter')(instancesFilterByAlternativeSet, $scope.searchString);
             return instancesFilterByAlternativeSet;
-        }
+        };
 
         function selectAllTypes () {
     		  angular.forEach($scope.filterEntity(), function(instance) {
@@ -58,16 +61,16 @@ angular.module('sdlctoolApp')
   	  	}
 
         function deselectAllTypes () {
-            EntityHelper.deselectElements($filter('filter')($scope.filterEntity(), {selected: true}))
+            EntityHelper.deselectElements($filter('filter')($scope.filterEntity(), {selected: true}));
         }
 
         $scope.performSelection = function(selectionValue) {
             EntityHelper.performSelection(selectionValue, selectAllTypes, deselectAllTypes);
-        }
+        };
 
         $scope.bulkChange = function() {
           	sharedProperties.setProperty($filter('orderBy')($filter('filter')($scope.alternativeInstances, {selected: true}), ['alternativeSet.showOrder','requirementSkeleton.reqCategory.showOrder', 'requirementSkeleton.showOrder']));
-        }
+        };
 
         $scope.refresh = function () {
             $scope.loadAll();

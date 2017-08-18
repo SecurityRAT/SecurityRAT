@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('RequirementSkeletonDetailController', function ($scope, $rootScope, $stateParams, entity, RequirementSkeleton, OptColumnContent, AlternativeInstance, ReqCategory, TagInstance, CollectionInstance, ProjectType) {
+    .controller('RequirementSkeletonDetailController', function ($scope, $rootScope, $stateParams, entity, RequirementSkeleton) {
         $scope.requirementSkeleton = entity;
         $scope.load = function (id) {
             RequirementSkeleton.get({id: id}, function(result) {

@@ -1,3 +1,7 @@
+'use strict';
+/* jshint undef:true */
+/* globals describe, browser, element, by, expect, document, beforeEach, beforeAll, it, window */
+
 describe('Protractor Security RAT general testsuite', function() {
 	var defineArtifact = element(by.id('defineArtifact'));
 	
@@ -9,9 +13,9 @@ describe('Protractor Security RAT general testsuite', function() {
 				  a.setAttribute('href', jiraQueue);
 				  a.setAttribute('target', 'blank');
 				  a.dispatchEvent((function(e){
-					  e.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, true, false, false, false, 0, null);
+					  e.initMouseEvent('click', true, true, window, 0, 0, 0, 0, 0, true, false, false, false, 0, null);
 					  return e;
-			  }(document.createEvent('MouseEvents'))))}(document.createElement('a')));
+			  }(document.createEvent('MouseEvents'))));}(document.createElement('a')));
 			}, browser.params.jiraQueue);
 		// wait for the user to log into the jira queue.
 		browser.sleep(20000);
@@ -22,9 +26,9 @@ describe('Protractor Security RAT general testsuite', function() {
 				  a.setAttribute('href', jiraRemoteLinkQueue);
 				  a.setAttribute('target', 'blank');
 				  a.dispatchEvent((function(e){
-					  e.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, true, false, false, false, 0, null);
+					  e.initMouseEvent('click', true, true, window, 0, 0, 0, 0, 0, true, false, false, false, 0, null);
 					  return e;
-			  }(document.createEvent('MouseEvents'))))}(document.createElement('a')));
+			  }(document.createEvent('MouseEvents'))));}(document.createElement('a')));
 			}, browser.params.jiraRemoteLinkQueue);
 		// wait for the user to log into the jira queue.
 		browser.sleep(20000);
@@ -51,9 +55,9 @@ describe('Protractor Security RAT general testsuite', function() {
 	it('should have an error due to / in artifact name and generate button is disabled', function() {
 		defineArtifact.click();
 		var artifactName = element(by.model('starterForm.name'));
-		artifactName.sendKeys("some artifact /");
+		artifactName.sendKeys('some artifact /');
 		var list = element.all(by.id('falsePattern')); 
-		expect(element(by.buttonText("Generate")).isEnabled()).toEqual(false);
+		expect(element(by.buttonText('Generate')).isEnabled()).toEqual(false);
 	    expect(list.count()).toBe(1);
 	});
 	

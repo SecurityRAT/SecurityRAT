@@ -1,4 +1,9 @@
 // spec.js
+
+'use strict';
+/* jshint undef:true */
+/* globals describe, browser, element, by, expect, document, beforeEach, it */
+
 describe('Protractor Security RAT bug Scenarios Testsuite', function() {
 	var entities = element(by.partialLinkText('Entities'));
 	var defineArtifact = element(by.id('defineArtifact'));

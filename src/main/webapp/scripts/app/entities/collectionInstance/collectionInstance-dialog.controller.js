@@ -19,7 +19,7 @@ angular.module('sdlctoolApp').controller('CollectionInstanceDialogController',
         };
 
         $scope.save = function () {
-            if ($scope.collectionInstance.id != null) {
+            if ($scope.collectionInstance.id !== null) {
                 CollectionInstance.update($scope.collectionInstance, onSaveFinished);
             } else {
                 CollectionInstance.save($scope.collectionInstance, onSaveFinished);

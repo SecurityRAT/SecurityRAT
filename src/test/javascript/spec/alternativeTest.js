@@ -1,3 +1,7 @@
+'use strict';
+/* jshint undef:true */
+/* globals describe, browser, element, by, expect, document, beforeEach, it */
+
 describe('Protractor Security RAT alternative set/instance entities testsuite', function() {
 	var entities = element(by.partialLinkText('Entities'));
 	var confirmDelete = element(by.css('button[ng-disabled="deleteForm.$invalid"]'));

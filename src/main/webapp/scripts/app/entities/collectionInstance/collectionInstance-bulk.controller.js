@@ -1,5 +1,7 @@
 'use strict';
 
+/* jshint undef: true */
+/* globals $ */
 angular.module('sdlctoolApp')
     .controller('CollectionInstanceBulkController',function($scope, $stateParams, $uibModalInstance, $filter, entity, CollectionInstance, CollectionCategory, sharedProperties) {
     	$scope.collectionInstance = [];
@@ -15,18 +17,18 @@ angular.module('sdlctoolApp')
         	$scope.state.active = $scope.collectionInstance[0].active;
         	angular.forEach($scope.collectionInstance, function(instance) {
     			if(instance.active === $scope.state.active) {
-    				count++
+    				count++;
     			}
         	});
         	
         	if(count !== $scope.collectionInstance.length) {
         		delete $scope.state.active;
         	}
-        }
+        };
     	
         $scope.loadAll = function() {
         	$scope.showTypes = 'Show selected collection instances';
-    		$scope.glyphicon = "glyphicon glyphicon-plus";
+    		$scope.glyphicon = 'glyphicon glyphicon-plus';
     		$scope.show = true;
         	$scope.collectionInstance = sharedProperties.getProperty();
         	$scope.getIndeterminateForActiveButton();
@@ -45,18 +47,17 @@ angular.module('sdlctoolApp')
         	$scope.show = !$scope.show;
         	if($scope.show) {
         		$scope.showTypes = 'Show selected collection instances';
-        		$scope.glyphicon = "glyphicon glyphicon-plus";
+        		$scope.glyphicon = 'glyphicon glyphicon-plus';
         	} else {
         		$scope.showTypes = 'Hide selected collection instances';
-        		$scope.glyphicon = "glyphicon glyphicon-minus";
+        		$scope.glyphicon = 'glyphicon glyphicon-minus';
         	}
-        }
+        };
         
         $scope.save = function () {
                 var count = 1;
     		angular.forEach($scope.collectionInstance, function(instance) {
-    			if(angular.isDefined($scope.state.active))
-    				instance.active = $scope.state.active;
+    			if(angular.isDefined($scope.state.active)){ instance.active = $scope.state.active; }
     			if($scope.selectedCat.value !== null) {
     				angular.forEach($scope.collectionCategories, function(cat) {
     	        		if($scope.selectedCat.value === cat.id) {
@@ -64,7 +65,7 @@ angular.module('sdlctoolApp')
     	        		}
     	        	});
     			}
-                        if (count == $scope.collectionInstance.length) {
+                        if (count === $scope.collectionInstance.length) {
     			       CollectionInstance.update(instance, onSaveFinished);
                         } else {
                                CollectionInstance.update(instance);
@@ -74,13 +75,13 @@ angular.module('sdlctoolApp')
         };
 
         $scope.delete = function () {
-          $('#deleteCollectionInstancesConfirmation').appendTo("body").modal('show');
+          $('#deleteCollectionInstancesConfirmation').appendTo('body').modal('show');
         };
 
         $scope.confirmDeleteAll = function (collInstances) {
             var count = 1;
             angular.forEach(collInstances, function(instance) {
-                if (count == collInstances.length) {
+                if (count === collInstances.length) {
                   CollectionInstance.delete({id: instance.id}, function(result) {
                        $('#deleteCollectionInstancesConfirmation').modal('hide');
                        onSaveFinished(result);

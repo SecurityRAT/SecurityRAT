@@ -1,10 +1,12 @@
 'use strict';
+/* jshint undef: true, unused: true */
+/* globals urlpattern */
 
 angular.module('sdlctoolApp')
     .controller('TestRequirements', function (entity, $scope, $uibModalInstance, $filter, appConfig, $window, testAutomation, $q,
         authenticatorService, $uibModalStack, $timeout, $interval) {
         var STATECONSTANT = {
-            INPROGRESS: 0,
+            IN_PROGRESS: 0,
             COMPLETE: 1
         };
 
@@ -25,7 +27,8 @@ angular.module('sdlctoolApp')
             myglyphicon: 'glyphicon glyphicon-plus',
             showCloseButton: true,
             inProgressMessage: 'test running...'
-        }
+        };
+
         $scope.authenticationProperties = {
             spinnerProperty: {
                 fail: false,
@@ -39,7 +42,7 @@ angular.module('sdlctoolApp')
             },
             checkerUrl: '/api/account',
             authenticatorpromise: {}
-        }
+        };
 
         $scope.error = {
             message: '',
@@ -140,7 +143,7 @@ angular.module('sdlctoolApp')
                     }
                 }
                 
-                if (STATECONSTANT[resultStateObj.state] === STATECONSTANT.INPROGRESS) {
+                if (STATECONSTANT[resultStateObj.state] === STATECONSTANT.IN_PROGRESS) {
                     $scope.authenticationProperties.spinnerProperty.text = 'Automated test still in progress...';
                     $scope.authenticationProperties.spinnerProperty.showSpinner = true;
                 } else if (STATECONSTANT[resultStateObj.state] === STATECONSTANT.COMPLETE) {
@@ -188,7 +191,7 @@ angular.module('sdlctoolApp')
             $scope.authenticationProperties.authenticatorpromise.derefer = $q.defer();
             testAutomation.checkAuthentication($scope.authenticationProperties.checkerUrl, $scope.authenticationProperties.displayProperty,
                     $scope.authenticationProperties.spinnerProperty, $scope.authenticationProperties.authenticatorpromise).then(function () {
-                    configureDisplay('loading', false, $scope.error.class, $scope.error.message)
+                    configureDisplay('loading', false, $scope.error.class, $scope.error.message);
                     $scope.animation = 'slide-animate';
 
                     // start the test automation

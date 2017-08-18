@@ -1,8 +1,11 @@
+'use strict';
+/* jshint undef:true */
+/* globals describe, browser, element, by, expect, beforeEach, it */
+
 describe('Protractor Security RAT option column contents/types entities testsuite', function() {
 	var entities = element(by.partialLinkText('Entities'));
-	var confirmDelete = element(by.css('button[ng-disabled="deleteForm.$invalid"]'));
-	var optColumnRepeater = "optColumn in optColumns | orderBy: 'showOrder' | filter:searchString";
-	var optColumnContentRepeater = "optColumnContent in optColumnContents | filterCategoryForEntities : selectedOptColumns : 'optColumn'| filter:searchString | orderBy: ['requirementSkeleton.reqCategory.showOrder', 'requirementSkeleton.showOrder', 'optColumn.showOrder'] | limitTo:numberToDisplay";
+	var optColumnRepeater = 'optColumn in optColumns | orderBy: \'showOrder\' | filter:searchString';
+	var optColumnContentRepeater = 'optColumnContent in optColumnContents | filterCategoryForEntities : selectedOptColumns : \'optColumn\'| filter:searchString | orderBy: [\'requirementSkeleton.reqCategory.showOrder\', \'requirementSkeleton.showOrder\', \'optColumn.showOrder\'] | limitTo:numberToDisplay';
 	
 	beforeEach(function() {
 		browser.get(browser.params.testHost);
@@ -10,70 +13,70 @@ describe('Protractor Security RAT option column contents/types entities testsuit
 	});
 	var deleteCollectionInstance = function() {
 		var deletes = element.all(by.css('button[class="btn btn-danger btn-sm"]'));
-		var instanceOrders = element.all(by.repeater("optColumn in optColumns | orderBy: 'showOrder' | filter:searchString")
+		var instanceOrders = element.all(by.repeater('optColumn in optColumns | orderBy: \'showOrder\' | filter:searchString')
 				.column('optColumn.showOrder'));
 		instanceOrders.each(function(elem, indexElem) {
 			elem.getText().then(function(elemText) {
-				if(elemText === "1000") {
+				if(elemText === '1000') {
 					deletes.get(indexElem).click();
 					browser.sleep(2000);
 					element.all(by.buttonText('Delete')).last().click();
 					browser.sleep(1000);
 				}
-			}, function(){})
+			}, function(){});
 		});
-	}
+	};
 	var deleteContent = function() {
 		var deletes = element.all(by.css('button[class="btn btn-danger btn-sm"]'));
-		var contents = element.all(by.id("content"));
+		var contents = element.all(by.id('content'));
 		contents.each(function(elem, indexElem) {
 			elem.getText().then(function(elemText) {
-				if(elemText === "test optColumn content modification") {
+				if(elemText === 'test optColumn content modification') {
 					deletes.get(indexElem).click();
 					browser.sleep(2000);
 					element.all(by.buttonText('Delete')).last().click();
 					browser.sleep(1000);
 				}
-			}, function(){})
+			}, function(){});
 		});
-	}
+	};
 	 
 //	it('searching an option column type', function() {
 //		entities.click();
 //		element(by.partialLinkText('Option Column Types')).click();
 //		element(by.id('searchQuery')).sendKeys('ShortText');
 //		element(by.id('searchButton')).click();
-//		expect(element.all(by.repeater("optColumnType in optColumnTypes")).count()).toBe(0);
+//		expect(element.all(by.repeater('optColumnType in optColumnTypes')).count()).toBe(0);
 //		
 //	});
 	
 	it('administering an option column type', function() {
 		entities.click();
 		element(by.partialLinkText('Option Column Types')).click();
-		element.all(by.repeater("optColumnType in optColumnTypes"))
+		element.all(by.repeater('optColumnType in optColumnTypes'))
 		.then(function(categoryArray) {
 			var count = categoryArray.length;
 			count++;
 			element(by.buttonText('Create a new Option Column Type')).click();
 			browser.sleep(2000);
-			expect(element(by.buttonText("Save")).isEnabled()).toBe(false);
+			expect(element(by.buttonText('Save')).isEnabled()).toBe(false);
 			element(by.id('field_name')).sendKeys('test option column type name <script>alert(1)</script>');
 			element(by.id('field_description')).sendKeys('test option column type  description <script>alert(1)</script>');
-			element(by.buttonText("Save")).click();
+			element(by.buttonText('Save')).click();
 			browser.sleep(3000);
-			expect(element.all(by.repeater("optColumnType in optColumnTypes")).count()).toBe(count);
+			expect(element.all(by.repeater('optColumnType in optColumnTypes')).count()).toBe(count);
 		});
-		element.all(by.buttonText("Edit")).last().click();
+		element.all(by.buttonText('Edit')).last().click();
 		browser.sleep(2000);
 		element(by.id('field_description')).clear().then(function(){
-			element(by.id('field_description')).sendKeys("test option column type  description modification <script>alert(1)</script>");
+			element(by.id('field_description')).sendKeys('test option column type  description modification <script>alert(1)</script>');
 		});
 		
-		element(by.buttonText("Save")).click();
+		element(by.buttonText('Save')).click();
 		browser.sleep(2000);
-		element.all(by.buttonText("Delete")).last().click();
+		element.all(by.buttonText('Delete')).last().click();
 		browser.sleep(2000);
-		element.all(by.buttonText("Delete")).last().click();
+		element.all(by.buttonText('Delete')).last().click();
 		browser.sleep(1500);
 	});
 	
@@ -99,12 +102,12 @@ describe('Protractor Security RAT option column contents/types entities testsuit
 			count++;
 			element(by.buttonText('Create a new Option Column')).click();
 			browser.sleep(2000);
-			expect(element(by.buttonText("Save")).isEnabled()).toBe(false);
+			expect(element(by.buttonText('Save')).isEnabled()).toBe(false);
 			element(by.id('field_name')).sendKeys('test optColumn name <script>alert(1)</script>');
 			element(by.id('field_description')).sendKeys('test optColumn description <script>alert(1)</script>');
 			element(by.id('field_showOrder')).sendKeys('1000');
 			element(by.cssContainingText('option', 'ShortText')).click();
-			element(by.buttonText("Save")).click();
+			element(by.buttonText('Save')).click();
 			browser.sleep(3000);
 			expect(element.all(by.repeater(optColumnRepeater))
 					.count()).toBe(count);
@@ -114,17 +117,17 @@ describe('Protractor Security RAT option column contents/types entities testsuit
 		var edits = element.all(by.buttonText('Edit'));
 		instanceOrders.each(function(element, index) {
 			element.getText().then(function(elemText) {
-				if(elemText === "1000") {
+				if(elemText === '1000') {
 					edits.get(index).click();
 				}
-			})
+			});
 		});
 		browser.sleep(2000);
 		element(by.id('field_description')).clear().then(function(){
-			element(by.id('field_description')).sendKeys("test optColumn description modification <script>alert(1)</script>");
+			element(by.id('field_description')).sendKeys('test optColumn description modification <script>alert(1)</script>');
 		});
 		element(by.css('span[class="bootstrap-switch-label"]')).click();
-		element(by.buttonText("Save")).click();
+		element(by.buttonText('Save')).click();
 		browser.sleep(2000);
 		deleteCollectionInstance();
 	});
@@ -135,13 +138,13 @@ describe('Protractor Security RAT option column contents/types entities testsuit
 		var selectButton = element.all(by.model('optColumn.selected'));
 		var categories = element.all(by.repeater(optColumnRepeater)
 		.column('optColumn.optColumnType.name'));
-		var category = "";
+		var category = '';
 		selectButton.first().click();
 		selectButton.get(2).click();
-		element(by.buttonText("Bulk change with selected")).click();
+		element(by.buttonText('Bulk change with selected')).click();
 		element(by.buttonText('ShortText')).click();
 		category = categories.first().getText();
-		element(by.buttonText("Save")).click();
+		element(by.buttonText('Save')).click();
 		browser.sleep(2000);
 		element.all(by.repeater(optColumnRepeater)
 				.column('optColumn.name')).each(function(elem, index) {
@@ -150,25 +153,25 @@ describe('Protractor Security RAT option column contents/types entities testsuit
 							expect(categories.get(index).getText()).toBe('ShortText');
 //							selectButton.get(index).click();
 						}
-					})
+					});
 				});
 		element.all(by.buttonText('Edit')).get(2).click();
 		element(by.cssContainingText('option', 'OnDemandText')).click();
 		element(by.buttonText('Save')).click();
 		browser.sleep(1500);
-		element(by.id("selectAll")).click();
+		element(by.id('selectAll')).click();
 		browser.sleep(1000);
-		expect(element(by.buttonText("Bulk change with selected")).isPresent()).toBe(true);
-		element(by.buttonText("Bulk change with selected")).click();
+		expect(element(by.buttonText('Bulk change with selected')).isPresent()).toBe(true);
+		element(by.buttonText('Bulk change with selected')).click();
 		element(by.css('span[class="bootstrap-switch-label"]')).click();
-		element(by.buttonText("Save")).click();
+		element(by.buttonText('Save')).click();
 		browser.sleep(6000);
-		element(by.id("selectAll")).click();
+		element(by.id('selectAll')).click();
 		browser.sleep(1000);
-		expect(element(by.buttonText("Bulk change with selected")).isPresent()).toBe(true);
-		element(by.buttonText("Bulk change with selected")).click();
+		expect(element(by.buttonText('Bulk change with selected')).isPresent()).toBe(true);
+		element(by.buttonText('Bulk change with selected')).click();
 		element(by.css('span[class="bootstrap-switch-label"]')).click();
-		element(by.buttonText("Save")).click();
+		element(by.buttonText('Save')).click();
 		browser.sleep(1500);
 	});
 	
@@ -196,17 +199,17 @@ describe('Protractor Security RAT option column contents/types entities testsuit
 			var allOptions = element.all(by.tagName('option'));
 			element(by.buttonText('Create a new OptColumnContent')).click();
 			browser.sleep(2000);
-			expect(element(by.buttonText("Save")).isEnabled()).toBe(false);
+			expect(element(by.buttonText('Save')).isEnabled()).toBe(false);
 			element(by.id('field_content')).sendKeys('test optColumn content <script>alert(1)</script>');
 			element(by.cssContainingText('option', 'More Information')).click();
-			allOptions.each(function(elem, index) {
+			allOptions.each(function(elem) {
 				elem.getText().then(function(text) {
 					if(text.indexOf('LC-01') !== -1) {
 						element(by.model('optColumnContent.requirementSkeleton')).sendKeys(text);
 					}
-				})
-			})
-			element(by.buttonText("Save")).click();
+				});
+			});
+			element(by.buttonText('Save')).click();
 			browser.sleep(5000);
 			expect(element.all(by.repeater(optColumnContentRepeater))
 					.count()).toBe(count);
@@ -216,24 +219,24 @@ describe('Protractor Security RAT option column contents/types entities testsuit
 		var edits = element.all(by.buttonText('Edit'));
 		contents.each(function(element, index) {
 			element.getText().then(function(elemText) {
-				if(elemText === "test optColumn content") {
+				if(elemText === 'test optColumn content') {
 					edits.get(index).click();
 				}
-			})
+			});
 		});
 		browser.sleep(3000);
 		var allOptions = element.all(by.tagName('option'));
 		element(by.id('field_content')).clear().then(function(){
 			element(by.id('field_content')).sendKeys('test optColumn content modification <script>alert(1)</script>');
 		});
-		allOptions.each(function(elem, index) {
+		allOptions.each(function(elem) {
 			elem.getText().then(function(text) {
 				if(text.indexOf('LC-02') !== -1) {
 					element(by.model('optColumnContent.requirementSkeleton')).sendKeys(text);
 				}
 			});
 		});
-		element(by.buttonText("Save")).click();
+		element(by.buttonText('Save')).click();
 		browser.sleep(2000);
 		deleteContent();
 	});
@@ -253,13 +256,13 @@ describe('Protractor Security RAT option column contents/types entities testsuit
 					firstCount++;
 					selectButton.get(index).click();
 				}
-			})
+			});
 			
 		});
 		
-		element(by.buttonText("Bulk change with selected")).click();
+		element(by.buttonText('Bulk change with selected')).click();
 		element(by.buttonText('More Information')).click();
-		element(by.buttonText("Save")).click();
+		element(by.buttonText('Save')).click();
 		browser.sleep(2000);
 		var count = 0;
 		requirements.each(function(elem, index) {
@@ -272,11 +275,11 @@ describe('Protractor Security RAT option column contents/types entities testsuit
 					}
 						
 				}
-			})
+			});
 			
 		});
 		expect(count).toBe(firstCount);
-		element(by.buttonText("Bulk change with selected")).click();
+		element(by.buttonText('Bulk change with selected')).click();
 		element(by.buttonText('Motivation')).click();
 		element(by.buttonText('Save')).click();
 		browser.sleep(1500);

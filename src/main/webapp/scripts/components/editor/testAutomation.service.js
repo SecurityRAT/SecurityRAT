@@ -1,17 +1,18 @@
-'use strict'
+'use strict';
+
 angular.module('sdlctoolApp')
-    .service('testAutomation', function (appConfig, apiFactory, authenticatorService, $q, $timeout) {
+    .service('testAutomation', function (appConfig, apiFactory, authenticatorService, $q) {
 
         var headerConfig = {
             'X-Securitycat-Csrf': 'nocheck',
             'Content-Type': 'application/json'
-        }
+        };
 
         /**
          *
          */
         function checkAuthentication(url, displayProperty, spinnerProperty, promise) {
-            apiFactory.testRequirementApi('GET', url, "", "", true).then(function (response) {
+            apiFactory.testRequirementApi('GET', url, '', '', true).then(function (response) {
                 if (response.status === 302) {
                     authenticatorService.startCheckAuthenticationProcess(url, displayProperty, spinnerProperty, promise, checkAuthentication);
                 } else {
@@ -32,7 +33,7 @@ angular.module('sdlctoolApp')
                     promise.derefer.reject(exception);
                     authenticatorService.cancelPromises(promise);
                 }
-            })
+            });
 
             return promise.derefer.promise;
         }
@@ -87,10 +88,10 @@ angular.module('sdlctoolApp')
                     if (angular.isDefined(headers.location)) {
                         resolve(headers.location);
                     } else {
-                        reject("error");
+                        reject('error');
                     }
                 }).catch(function (response) {
-                    reject(response)
+                    reject(response);
                 });
             });
         }
@@ -100,11 +101,11 @@ angular.module('sdlctoolApp')
          */
         function stopTest(promise, id) {
             var stopPromise = $q.defer();
-            apiFactory.testRequirementApi('POST', appConfig.securityCATStopTest, id, headerConfig, false).then(function (response) {
-                stopPromise.resolve("cancelled");
-            }, function (response) {
-                stopPromise.reject("error")
-            })
+            apiFactory.testRequirementApi('POST', appConfig.securityCATStopTest, id, headerConfig, false).then(function () {
+                stopPromise.resolve('cancelled');
+            }, function () {
+                stopPromise.reject('error');
+            });
             return stopPromise.promise;
         }
 
@@ -114,6 +115,6 @@ angular.module('sdlctoolApp')
             checkState: checkState,
             fetchResult: fetchResult,
             checkAuthentication: checkAuthentication
-        }
+        };
         return testAutomation;
     });

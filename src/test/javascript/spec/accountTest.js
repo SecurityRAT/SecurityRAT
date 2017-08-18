@@ -1,3 +1,7 @@
+'use strict';
+/* jshint undef:true */
+/* globals describe, browser, element, by, expect, document, beforeEach, it */
+
 describe('Protractor Security RAT account testsuite', function() {
 	var account = element(by.linkText('Account'));
 	var login = "testuser";

@@ -1,5 +1,8 @@
 'use strict';
 
+/* jshint undef: true, unused: true */
+/* globals urlpattern, window, diffString2, XLSX, navigator, Blob, saveAs, jsyaml */
+
 /**
  * @ngdoc function
  * @name sdlcFrontendApp.controller:RequirementsCtrl
@@ -81,8 +84,8 @@ angular.module('sdlctoolApp')
         $scope.updatesCounter = 0;
         $scope.updatesAvailable = false;
         $scope.infiniteScroll = {
-            numberToDisplay : 15,
-            length : 1000
+            numberToDisplay: 15,
+            length: 1000
         };
         //extra settings for the model for selecting categories
         $scope.selectedCategorySettings = {
@@ -125,7 +128,6 @@ angular.module('sdlctoolApp')
             optColumnTooltips: [],
             statusColumnTooltips: []
         };
-        $scope.promiseForStorage;
         $scope.selectedAlternativeSettings = {
             smartButtonMaxItems: 3,
             closeOnSelect: true,
@@ -226,7 +228,7 @@ angular.module('sdlctoolApp')
                     $scope.filterCategory = imports.filterCategory;
                     $scope.filterCategory = $filter('orderBy')($scope.filterCategory, 'showOrder');
                     $scope.selectedAlternativeSets = imports.selectedAlternativeSets;
-                    $scope.jiraStatus.allStatus = imports.jiraStatus.allStatus;
+                    $scope.jiraStatus.allStatus = [];
                     //                $scope.newRequirementParam.id = imports.lastId++; // gets the id of the last Custom requirements save
                     $scope.getAlternativeSets();
                     $scope.getCustomRequirements();
@@ -299,31 +301,59 @@ angular.module('sdlctoolApp')
             var lastElement = $scope.requirements[$scope.requirements.length - 1];
 
             // assign the default cusReqId the id of the last element after sort by id, if this condition is met.
-            if(lastElement.shortName.indexOf(appConfig.customRequirement) >= 0 && lastElement.id > $scope.newRequirementParam.id) {
+            if (lastElement.shortName.indexOf(appConfig.customRequirement) >= 0 && lastElement.id > $scope.newRequirementParam.id) {
                 $scope.newRequirementParam.id = lastElement.id + 1;
-            } 
+            }
 
-            angular.forEach($scope.requirements, function (requirement) {
-                if (requirement.shortName.indexOf(appConfig.customRequirement) >= 0) {
-                    $scope.requirementProperties.crCounts++;
-                    $scope.newRequirementParam.index++;
-                    
-                    // assign the new cusReqId to :
-                    // first cas: existing cusReq which have id less than the default id.
-                    // second case: if there are any duplicates.
-                    if (requirement.id < tempdefaultCusReqId || existingIds.indexOf(requirement.id) >= 0) {
-                        requirement.id = $scope.newRequirementParam.id;
-                        $scope.newRequirementParam.id++;
+            if ($scope.requirementProperties.hasIssueLinks) {
+                var hosts = [];
+                angular.forEach($scope.requirements, function (requirement) {
+                    if(angular.isDefined(requirement.ticket) && !angular.equals(requirement.ticket, '')) {
+                        $scope.fetchTicketStatus(requirement, hosts);
+                    }
+                    if (requirement.shortName.indexOf(appConfig.customRequirement) >= 0) {
+                        $scope.requirementProperties.crCounts++;
+                        $scope.newRequirementParam.index++;
+
+                        // assign the new cusReqId to :
+                        // first cas: existing cusReq which have id less than the default id.
+                        // second case: if there are any duplicates.
+                        if (requirement.id < tempdefaultCusReqId || existingIds.indexOf(requirement.id) >= 0) {
+                            requirement.id = $scope.newRequirementParam.id;
+                            $scope.newRequirementParam.id++;
+                        }
+
+                        if (existingIds.indexOf(requirement.id) === -1) {
+                            existingIds.push(requirement.id);
+                        }
+                        // push value after updating id.
+                        customReqFound.push(requirement);
                     }
 
-                    if(existingIds.indexOf(requirement.id) === -1) {
-                        existingIds.push(requirement.id);
-                    }
-                    // push value after updating id.
-                    customReqFound.push(requirement);
-                }
+                });
+            } else {
+                angular.forEach($scope.requirements, function (requirement) {
+                    if (requirement.shortName.indexOf(appConfig.customRequirement) >= 0) {
+                        $scope.requirementProperties.crCounts++;
+                        $scope.newRequirementParam.index++;
 
-            });
+                        // assign the new cusReqId to :
+                        // first cas: existing cusReq which have id less than the default id.
+                        // second case: if there are any duplicates.
+                        if (requirement.id < tempdefaultCusReqId || existingIds.indexOf(requirement.id) >= 0) {
+                            requirement.id = $scope.newRequirementParam.id;
+                            $scope.newRequirementParam.id++;
+                        }
+
+                        if (existingIds.indexOf(requirement.id) === -1) {
+                            existingIds.push(requirement.id);
+                        }
+                        // push value after updating id.
+                        customReqFound.push(requirement);
+                    }
+
+                });
+            }
 
             $scope.customRequirements = customReqFound;
         };
@@ -341,7 +371,7 @@ angular.module('sdlctoolApp')
                 requirements: $scope.requirements
             });
             sharedProperties.setProperty(oldSettings);
-            var modalInstance = $uibModal.open({
+            $uibModal.open({
                 size: 'lg',
                 backdrop: 'static',
                 templateUrl: 'scripts/app/editor/starter/starter.html',
@@ -354,6 +384,7 @@ angular.module('sdlctoolApp')
             });
         };
 
+        /* jshint unused: false*/
         $scope.$watch('customRequirements.length', function (newVal, oldVal, scope) {
             if (newVal !== $scope.requirementProperties.crCounts) {
                 $scope.enableSave(false);
@@ -362,7 +393,7 @@ angular.module('sdlctoolApp')
             }
         });
 
-
+        /* jshint unused: false*/
         $scope.$watch('selectOptCompare.counts', function (newVal, oldVal, scope) {
             if (newVal !== $scope.requirementProperties.selectedOptColumns.counts) {
                 $scope.enableSave(false);
@@ -373,8 +404,11 @@ angular.module('sdlctoolApp')
                         notFoundId = true;
                     }
                 }
-                if (!notFoundId) { $scope.disableSave(false); }
-                else { $scope.enableSave(false); }
+                if (!notFoundId) {
+                    $scope.disableSave(false);
+                } else {
+                    $scope.enableSave(false);
+                }
             }
             //console.log('watch');
             //console.log($scope.selectOptCompare);
@@ -393,7 +427,7 @@ angular.module('sdlctoolApp')
                     $scope.requirementSkeletons = categoriesWithRequirements;
                     $scope.buildRequirements();
                 },
-                function (exception) {});
+                function () {});
         };
 
         $scope.getOptandStatusColumns = function () {
@@ -445,7 +479,7 @@ angular.module('sdlctoolApp')
                 function (tags) {
                     $scope.tags = tags;
                 },
-                function (exception) {});
+                function () {});
         };
 
         $scope.getAlternativeSets = function () {
@@ -499,7 +533,7 @@ angular.module('sdlctoolApp')
                         $scope.selectAlternatives(altSet);
                     });
                 },
-                function (exception) {});
+                function () {});
         };
 
         $scope.selectTags = function (id, name, tagCategory) {
@@ -625,15 +659,15 @@ angular.module('sdlctoolApp')
                 backdrop: 'static',
                 templateUrl: 'scripts/app/editor/customrequirements/customRequirement.html',
                 controller: 'customRequirementController',
-                resolve : {
-                    crObject : crObject
+                resolve: {
+                    crObject: crObject
                 }
             });
             //adds the categoryOrder, id of the item and updates the filterCategory library for the filter nach category.
             modalInstance.result.then(function (item) {
                 //            console.log(item);
                 item.requirement.id = $scope.newRequirementParam.id;
-                
+
                 $scope.newRequirementParam.id++;
                 //update the order of the last element in the category filter.
                 $scope.filterCategory[item.categoryIndex].lastElemOrder = item.requirement.order;
@@ -666,24 +700,24 @@ angular.module('sdlctoolApp')
                 backdrop: 'static',
                 templateUrl: 'scripts/app/editor/customrequirements/customRequirement.html',
                 controller: 'customRequirementController',
-                resolve : {
-                    crObject : crObject
+                resolve: {
+                    crObject: crObject
                 }
             });
             //adds the categoryOrder, id of the item and updates the filterCategory library for the filter nach category.
             modalInstance.result.then(function (item) {
                 // updates the edited custom requirement in the requirements list object.
-                for(var i = 0; i < $scope.requirements.length; i++) {
-                    if($scope.requirements[i].id === item.requirement.id && $scope.requirements[i].shortName === item.requirement.shortName) {
+                for (var i = 0; i < $scope.requirements.length; i++) {
+                    if ($scope.requirements[i].id === item.requirement.id && $scope.requirements[i].shortName === item.requirement.shortName) {
                         // $scope.requirements.splice(i, 1);
                         $scope.requirements[i] = item.requirement;
                         break;
                     }
                 }
-                
+
                 // updates the edited in the customrequirements list.
-                for(var j = 0; j < $scope.customRequirements.length; j++) {
-                    if($scope.customRequirements[j].id === item.requirement.id && $scope.customRequirements[j].shortName === item.requirement.shortName) {
+                for (var j = 0; j < $scope.customRequirements.length; j++) {
+                    if ($scope.customRequirements[j].id === item.requirement.id && $scope.customRequirements[j].shortName === item.requirement.shortName) {
                         // $scope.customRequirements.splice(j, 1);
                         $scope.customRequirements[j] = item.requirement;
                         break;
@@ -718,6 +752,7 @@ angular.module('sdlctoolApp')
                 $scope.deleteObjFromArrayByValue(itemToRemove.shortName, $scope.requirements);
             });
         };
+        /* jshint loopfunc: true */
         // the objectValue must be unique in the array
         $scope.deleteObjFromArrayByValue = function (objectValue, givenArray) {
             for (var i = 0; i < givenArray.length; i++) {
@@ -766,7 +801,7 @@ angular.module('sdlctoolApp')
                         $scope.selectOptCompare.counts++;
                     }
                 },
-                function (exception) {});
+                function () {});
         };
 
         $scope.deselectAlternatives = function (item) {
@@ -802,7 +837,9 @@ angular.module('sdlctoolApp')
 
         $scope.enableSave = function (withStatColumn) {
             $scope.requirementProperties.requirementsEdited = true;
-            if (withStatColumn)  { $scope.requirementProperties.statColumnChanged = true; }
+            if (withStatColumn) {
+                $scope.requirementProperties.statColumnChanged = true;
+            }
         };
 
         $scope.disableSave = function (forceZero) {
@@ -1085,7 +1122,6 @@ angular.module('sdlctoolApp')
 
         $scope.fillEmptyOpts = function (searchObj, object) {
             var id = null;
-            var name = null;
             angular.forEach(object, function (obj) {
                 angular.forEach(obj, function (value, key) {
                     if (key === 'id') {
@@ -1147,13 +1183,12 @@ angular.module('sdlctoolApp')
                 function (categoriesWithRequirements) {
                     $scope.buildUpdatedRequirements(categoriesWithRequirements);
                 },
-                function (exception) {});
+                function () {});
         };
 
         $scope.buildUpdatedRequirements = function (skeletons) {
             var updatedRequirements = [];
             angular.forEach(skeletons, function (requirementCategory) {
-                var lastElementOrder = 0;
                 angular.forEach(requirementCategory.requirements, function (requirement) {
                     var values = buildReqOptContents(requirement.optionColumnContents);
                     var statusColumnsValues = buildStatusColumns($scope.statusColumns);
@@ -1343,7 +1378,7 @@ angular.module('sdlctoolApp')
             if (changedSettings) {
                 var message = '';
                 if ($scope.updateCounter === 0 && $scope.newCounter === 0 && $scope.deletedCounter === 0) {
-                     message = 'No Updates were found. All your requirements are up to date.';
+                    message = 'No Updates were found. All your requirements are up to date.';
                     SDLCToolExceptionService.showWarning('Change settings and update requirements successful', message, SDLCToolExceptionService.SUCCESS);
                 } else if ($scope.updateCounter === 0) {
                     message = 'Summary:<ul><li>' + $scope.updateCounter + ' requirement(s) were updated</li><li> ' + $scope.newCounter + ' new requirement(s) were added</li><li>' + $scope.deletedCounter + ' requirement(s) were removed</li></ul>';
@@ -1451,12 +1486,16 @@ angular.module('sdlctoolApp')
             // console.log($scope.updatesCounter);
         };
 
+        /* jshint loopfunc: true */
         $scope.applyChanges = function (reqId, keepNewOne) {
             // defined whether the user's choice has been finally applied in the object.
             var decisionMade = false;
-            angular.forEach($scope.requirements, function (requirement) {
+            for (var i = 0; i < $scope.requirements.length; i++) {
+                var requirement = $scope.requirements[i];
                 if (requirement.id === reqId) {
-                    if (angular.isDefined(requirement.oldDescription)) { requirement.description = requirement.oldDescription; }
+                    if (angular.isDefined(requirement.oldDescription)) {
+                        requirement.description = requirement.oldDescription;
+                    }
                     angular.forEach(requirement.optionColumns, function (optColumn) {
                         angular.forEach(optColumn.content, function (content) {
                             if (angular.isDefined(content.oldContent)) {
@@ -1468,18 +1507,16 @@ angular.module('sdlctoolApp')
                 }
                 //keep new one
                 if (requirement.id === reqId && keepNewOne && !requirement.isNew) {
-                    var idx = $scope.requirements.indexOf(requirement);
-                    $scope.requirements.splice(idx, 1);
-                    if(!decisionMade) {
+                    $scope.requirements.splice(i, 1);
+                    if (!decisionMade) {
                         $scope.updatesCounter--;
                     }
                     $scope.requirementProperties.requirementsEdited = true;
                     decisionMade = true;
                     //keep old one
                 } else if (requirement.id === reqId && !keepNewOne && requirement.isNew) {
-                    var idx = $scope.requirements.indexOf(requirement);
-                    $scope.requirements.splice(idx, 1);
-                    if(!decisionMade) {
+                    $scope.requirements.splice(i, 1);
+                    if (!decisionMade) {
                         $scope.updatesCounter--;
                     }
                     decisionMade = true;
@@ -1497,7 +1534,7 @@ angular.module('sdlctoolApp')
                     requirement.isOld = false;
                     requirement.needsUpdate = false;
                 }
-            });
+            }
             //Dirty hack for the weird case if ticket column is available, the green color is not removed by the code above
             angular.forEach($scope.requirements, function (requirement) {
                 if ((requirement.isNew) && (requirement.id === reqId)) {
@@ -1533,7 +1570,7 @@ angular.module('sdlctoolApp')
         };
         // create the presentation page.
         $scope.exportPTT = function () {
-            var modalInstance = $uibModal.open({
+            $uibModal.open({
                 size: 'lg',
                 backdrop: 'static',
                 templateUrl: 'scripts/app/editor/presentation/configuration/config-modal.html',
@@ -1606,12 +1643,12 @@ angular.module('sdlctoolApp')
                 }
             ]; // width of column description
             //        var wsrows = [{}]
-            angular.forEach($scope.optColumns, function (optColumn) {
+            angular.forEach($scope.optColumns, function () {
                 wscols.push({
                     wch: 50
                 });
             });
-            angular.forEach($scope.statusColumns, function (statColumn) {
+            angular.forEach($scope.statusColumns, function () {
                 wscols.push({
                     wch: 10
                 });
@@ -1641,7 +1678,9 @@ angular.module('sdlctoolApp')
         function s2ab(s) {
             var buf = new ArrayBuffer(s.length);
             var view = new Uint8Array(buf);
-            for (var i = 0; i !== s.length; ++i) { view[i] = s.charCodeAt(i) & 0xFF; }
+            for (var i = 0; i !== s.length; ++i) {
+                view[i] = s.charCodeAt(i) & 0xFF;
+            }
             return buf;
         }
 
@@ -1656,7 +1695,9 @@ angular.module('sdlctoolApp')
 
         // workbook object
         function Workbook() {
-            if (!(this instanceof Workbook)) { return new Workbook(); }
+            if (!(this instanceof Workbook)) {
+                return new Workbook();
+            }
             this.SheetNames = [];
             this.Sheets = {};
         }
@@ -1795,6 +1836,7 @@ angular.module('sdlctoolApp')
             counter++;
             return counter;
         };
+        /* jshint camelcase: false */
         //creates the dropdowm list worksheet.
         $scope.buildDropdownList = function (table) {
             var excelFile = {};
@@ -1810,10 +1852,10 @@ angular.module('sdlctoolApp')
             };
             for (var R = 0; R < table.length; R++) { // number of column
                 for (var C = 0; C < table[R].values.length; C++) { //number of rows
-                    if (range.s.r > C) range.s.r = C;
-                    if (range.s.c > R) range.s.c = R;
-                    if (range.e.r < C) range.e.r = C;
-                    if (range.e.c < R) range.e.c = R;
+                    if (range.s.r > C) { range.s.r = C; }
+                    if (range.s.c > R) { range.s.c = R; }
+                    if (range.e.r < C) { range.e.r = C; }
+                    if (range.e.c < R) { range.e.c = R; }
                     var cell = {};
                     if (C === 0) {
                         angular.extend(cell, {
@@ -1825,23 +1867,24 @@ angular.module('sdlctoolApp')
                     angular.extend(cell, {
                         v: table[R].values[C].name,
                     });
-                    if (cell.v == null) continue;
-                    var cell_ref = XLSX.utils.encode_cell({
+                    if (cell.v === null) { continue; }
+                    var cellRef = XLSX.utils.encode_cell({
                         c: R,
                         r: C
                     });
 
-                    if (typeof cell.v === 'number') cell.t = 'n';
-                    else if (typeof cell.v === 'boolean') cell.t = 'b';
-                    else cell.t = 's';
+                    if (typeof cell.v === 'number') { cell.t = 'n'; }
+                    else if (typeof cell.v === 'boolean') { cell.t = 'b'; }
+                    else { cell.t = 's'; }
 
-                    excelFile[cell_ref] = cell;
+                    excelFile[cellRef] = cell;
                 }
             }
 
-            if (range.s.c < 10000000) excelFile['!ref'] = XLSX.utils.encode_range(range);
+            if (range.s.c < 10000000) { excelFile['!ref'] = XLSX.utils.encode_range(range); }
             return excelFile;
-        }
+        };
+
         //creates the requirement worksheet.
         $scope.buildExcelFile = function (colspan, withStatusColumn) {
             var row = $scope.reproduceTable(withStatusColumn);
@@ -1856,40 +1899,40 @@ angular.module('sdlctoolApp')
                     r: 0
                 }
             };
-            for (var R = 0; R != row; ++R) {
+            for (var R = 0; R !== row; ++R) {
                 for (var C = 0; C < colspan; C++) {
-                    if (range.s.r > R) range.s.r = R;
-                    if (range.s.c > C) range.s.c = C;
-                    if (range.e.r < R) range.e.r = R;
-                    if (range.e.c < C) range.e.c = C;
+                    if (range.s.r > R) { range.s.r = R; }
+                    if (range.s.c > C) { range.s.c = C; }
+                    if (range.e.r < R) { range.e.r = R; }
+                    if (range.e.c < C) { range.e.c = C; }
                     var cell = {};
-                    if (angular.isUndefined($scope.tableArray[R][C])) continue;
+                    if (angular.isUndefined($scope.tableArray[R][C])) { continue; }
                     //formats the title row.
                     angular.extend(cell, {
                         v: $scope.tableArray[R][C].value,
                     });
-                    if (cell.v == null) continue;
+                    if (cell.v === null) { continue; }
                     angular.extend(cell, $scope.tableArray[R][C].format);
                     if (angular.isDefined($scope.tableArray[R][C].comment)) {
                         angular.extend(cell, {
                             c: $scope.tableArray[R][C].comment,
                         });
                     }
-                    var cell_ref = XLSX.utils.encode_cell({
+                    var cellRef = XLSX.utils.encode_cell({
                         c: C,
                         r: R
                     });
 
-                    if (typeof cell.v === 'number') cell.t = 'n';
-                    else if (typeof cell.v === 'boolean') cell.t = 'b';
-                    else cell.t = 's';
+                    if (typeof cell.v === 'number') { cell.t = 'n'; }
+                    else if (typeof cell.v === 'boolean') { cell.t = 'b'; }
+                    else { cell.t = 's'; }
 
-                    excelFile[cell_ref] = cell;
+                    excelFile[cellRef] = cell;
                 }
             }
-            if (range.s.c < 10000000) excelFile['!ref'] = XLSX.utils.encode_range(range);
+            if (range.s.c < 10000000) { excelFile['!ref'] = XLSX.utils.encode_range(range); }
             return excelFile;
-        }
+        };
 
         $scope.createTicketReqs = function () {
             var exportRequirements = {};
@@ -1920,14 +1963,15 @@ angular.module('sdlctoolApp')
                                 $scope.jiraStatus.allStatus.push(newStatus);
                             }
                         }
-                    })
+                    });
                 } else {
                     $scope.jiraStatus.allStatus.push(jiraStatus.allStatus[0]);
                 }
-                $scope.disableSave(true)
+                $scope.disableSave(true);
                 $scope.requirementProperties.hasIssueLinks = true;
             });
-        }
+        };
+
         $scope.checkExistingTickets = function () {
             var exist = false;
             $scope.existingTickets = '';
@@ -1943,7 +1987,7 @@ angular.module('sdlctoolApp')
                 }
             });
             return exist;
-        }
+        };
 
         $scope.exportSystem = function () {
             var exportRequirements = {};
@@ -1968,14 +2012,15 @@ angular.module('sdlctoolApp')
                     $scope.ticket.url = obj.ticket.url;
                     $scope.ticket.key = obj.ticket.key;
                 }
-                if (angular.isDefined(obj.hasReqTicket) && !obj.hasReqTicket)
+                if (angular.isDefined(obj.hasReqTicket) && !obj.hasReqTicket) {
                     $scope.requirementProperties.hasIssueLinks = false;
+                }
                 $scope.disableSave(true);
                 if (localStorageService.isSupported) {
                     localStorageService.remove(appConfig.localStorageKey);
                 }
             });
-        }
+        };
 
         // $scope.hideTicketStatusColumn = function(value) {
         //     $scope.requirementProperties.hasIssueLinks = value;
@@ -1987,7 +2032,7 @@ angular.module('sdlctoolApp')
                 var doc = jsyaml.safeDump(exportRequirements);
                 localStorageService.set(appConfig.localStorageKey, doc);
             }
-        }
+        };
 
         $scope.buildYAMLFile = function () {
             var objectToExport = {
@@ -2001,7 +2046,7 @@ angular.module('sdlctoolApp')
 
             };
             return Helper.buildYAMLFile(objectToExport);
-        }
+        };
 
         // setting fixed position for ng-style
         $scope.setFixedPosition = function () {
@@ -2010,12 +2055,12 @@ angular.module('sdlctoolApp')
                 top: $scope.mouseY + 5,
                 left: $scope.mouseX - 10
             };
-        }
+        };
 
         $scope.pushCoordinates = function (event) {
             $scope.mouseX = event.clientX;
             $scope.mouseY = event.clientY;
-        }
+        };
 
         $scope.routeChange = function (event, newUrl, oldUrl) {
             //Navigate to newUrl if the form isn't dirty
@@ -2031,10 +2076,10 @@ angular.module('sdlctoolApp')
                 }, {
                     templateUrl: 'scripts/app/editor/confirm-modal.html'
                 })
-                .then(function (result) {
+                .then(function () {
                     $scope.onRouteChangeOff = '';
                     $scope.requirementProperties.requirementsEdited = false;
-                    window.onbeforeunload = function (e) {}
+                    window.onbeforeunload = function (e) {};
                     window.location.href = $location.url(newUrl).hash();
                 });
 
@@ -2061,7 +2106,9 @@ angular.module('sdlctoolApp')
             }).result.then(function () {}, function () {});
         };
 
+        /* jshint unused: false*/
         function onIssueLinkFailure(exception, mainTicket, remoteTicket) {
+            var message = '';
             if (exception.status !== 500) {
                 if (exception.errorException.opened.$$state.status === 0) {
                     exception.errorException.opened.$$state.value = false;
@@ -2081,7 +2128,7 @@ angular.module('sdlctoolApp')
         function onLinkRemoveFailure(exception) {
             if (exception.status !== 500) {
                 if (parseInt(exception.status) === 404) {
-                    message = 'These issues are either not linked or the issue was not added by the SecurityRAT tool.';
+                    var message = 'These issues are either not linked or the issue was not added by the SecurityRAT tool.';
                     SDLCToolExceptionService.showWarning('Removing issue link unsuccessful', message, SDLCToolExceptionService.DANGER);
                 }
             }
@@ -2148,7 +2195,7 @@ angular.module('sdlctoolApp')
                     }).catch(function (exception) {
                         $scope.manageTicketProperty.authenticationFailureMessage = 'The authentication to the issue tracker was unsuccesful.';
                         if (exception.status === 404) {
-                            $scope.manageTicketProperty.authenticationFailureMessage += ' Please make sure that the given ticket exist.'
+                            $scope.manageTicketProperty.authenticationFailureMessage += ' Please make sure that the given ticket exist.';
                         }
                         $scope.manageTicketProperty.authenticationFailure = true;
                         $scope.manageTicketProperty.spinnerProperty.showSpinner = false;
@@ -2157,7 +2204,7 @@ angular.module('sdlctoolApp')
                     $scope.manageTicketProperty.error = true;
                 }
             }
-        }
+        };
 
         $scope.addManualTicket = function (req, mainObjectInfo, remoteObjectInfo) {
             $scope.manageTicketProperty.spinnerProperty.showSpinner = true;
@@ -2167,13 +2214,13 @@ angular.module('sdlctoolApp')
             if (req.linkStatus.link) {
                 JiraService.addIssueLinks(mainObjectInfo, remoteObjectInfo).then(function () {
                     // req.linkStatus.enableTooltip = true
-                    req.linkStatus.summary = remoteObjectInfo.fields.summary
+                    req.linkStatus.summary = remoteObjectInfo.fields.summary;
                     $scope.manageTicketProperty.spinnerProperty.showSpinner = false;
 
                 }).catch(function (exception) {
                     $scope.manageTicketProperty.spinnerProperty.showSpinner = false;
-                    onIssueLinkFailure(exception, mainObjectInfo.url, remoteObjectInfo.url)
-                })
+                    onIssueLinkFailure(exception, mainObjectInfo.url, remoteObjectInfo.url);
+                });
             }
 
             var linkStatus = {
@@ -2183,16 +2230,16 @@ angular.module('sdlctoolApp')
                 summary: remoteObjectInfo.fields.summary
                 // summary: req.linkStatus.link ? null : remoteObjectInfo.fields.summary,
                 // enableTooltip : req.linkStatus.link ? false : true
-            }
+            };
             angular.extend(req, {
                 linkStatus: linkStatus
             });
-            if ($scope.jiraStatus.allStatus.length == 0) {
-                $scope.jiraStatus.allStatus.push(linkStatus)
+            if ($scope.jiraStatus.allStatus.length === 0) {
+                $scope.jiraStatus.allStatus.push(linkStatus);
             } else {
                 if ($filter('filter')($scope.jiraStatus.allStatus, {
                         name: linkStatus.name
-                    }).length == 0) {
+                    }).length === 0) {
                     $scope.jiraStatus.allStatus.push(linkStatus);
                 }
             }
@@ -2206,12 +2253,14 @@ angular.module('sdlctoolApp')
                 $scope.manageTicketProperty.spinnerProperty.showSpinner = false;
             }
 
-        }
+        };
 
         $scope.removeManualTicket = function (req, mainObjectInfo, remoteObjectInfo) {
             req.ticket = '';
             // must be done since it deletes the enabletooltip property linked to the linkStatus property.
-            req.linkStatus = {link: true};
+            req.linkStatus = {
+                link: true
+            };
             if (($filter('filterTicketStatus')($scope.requirements, [remoteObjectInfo.fields.status.name])).length === 1) {
                 for (var i = 0; i < $scope.jiraStatus.allStatus.length; i++) {
                     if ($scope.jiraStatus.allStatus[i].name === remoteObjectInfo.fields.status.name) {
@@ -2232,7 +2281,7 @@ angular.module('sdlctoolApp')
             // JiraService.removeIssueLinks(mainObjectInfo, remoteObjectInfo).then(function() {
 
             // }).catch(function(exception) {onIssueLinkFailure(exception, mainObjectInfo.url, remoteObjectInfo.url)})
-        }
+        };
 
         $scope.$on('$destroy', function () {
             $interval.cancel($scope.promiseForStorage);
@@ -2242,5 +2291,73 @@ angular.module('sdlctoolApp')
 
         $scope.isStatusArrayEmpty = function () {
             return $scope.jiraStatus.allStatus.length === 0;
-        }
+        };
+
+        $scope.fetchTicketStatus = function (requirement, hosts) {
+            var urlSplit = requirement.ticket.split('/');
+            var apiUrl = Helper.buildJiraUrl(urlSplit);
+            var urlCall = JiraService.buildUrlCall('issueKey', apiUrl);
+            var linkStatus = {};
+
+            var jiraLink = apiUrl.http + '//' + apiUrl.host + '/' + apiUrl.path.join('/') + '/' + apiUrl.ticketKey[0];
+            apiFactory.getJIRAInfo(urlCall).then(function (response) {
+                linkStatus = {
+                    iconUrl: response.fields.status.iconUrl,
+                    name: response.fields.status.name,
+                    summary: response.fields.summary,
+                    issueKey: response.key
+                };
+                angular.extend(requirement.linkStatus, linkStatus);
+                if ($filter('filter')($scope.jiraStatus.allStatus, {
+                        name: response.fields.status.name
+                    }).length === 0) {
+                    $scope.jiraStatus.allStatus.push(linkStatus);
+                }
+            }, function (error) {
+                if (error.status === 401) {
+                    $scope[apiUrl.ticketKey[0]] = {};
+                    $scope[apiUrl.ticketKey[0]].derefer = $q.defer();
+                    var authenticatorProperty = {
+                        url: hosts.indexOf(apiUrl.host) === -1 ? jiraLink : '',
+                        message: 'The status of issue linked in your requirement set could not be determined because you are not authenticated.' +
+                            'Please click on the following link to authenticate yourself. You will have one minute after a click on the link.'
+                    };
+                    if (hosts.indexOf(apiUrl.host) === -1) {
+                        hosts.push(apiUrl.host);
+                        // adds the check authentication Modal in case the issue tracking's system session has expired
+                        // and the status of the ticket cannot be fetched.
+                        Helper.addCheckAuthenticationModal($scope[apiUrl.ticketKey[0]]);
+                    }
+                    // check if the user is authenticated to the issue tracker and starts the authentication process if this is not the case.
+                    checkAuthentication.jiraAuth(urlCall, authenticatorProperty, $scope.manageTicketProperty.spinnerProperty, $scope[apiUrl.ticketKey[0]]).then(function (response) {
+                        linkStatus = {
+                            iconUrl: response.fields.status.iconUrl,
+                            name: response.fields.status.name,
+                            summary: response.fields.summary,
+                            issueKey: response.key
+                        };
+                        angular.extend(requirement.linkStatus, linkStatus);
+                        if ($filter('filter')($scope.jiraStatus.allStatus, {
+                                name: response.fields.status.name
+                            }).length === 0) {
+                            $scope.jiraStatus.allStatus.push(linkStatus);
+                        }
+                    }).catch(function () {
+                        if (error.status === 403) {
+                            SDLCToolExceptionService.showWarning('Issue call failed', 'You do not have the permission to view the ticket ' + jiraLink, SDLCToolExceptionService.DANGER);
+                        } else if (error.status === 500) {
+                            SDLCToolExceptionService.showWarning('Internal Server Error', 'The server encountered an unexpected condition which prevented it from fulfilling the request.', SDLCToolExceptionService.DANGER);
+                        }
+                    });
+                } else if (error.status === 403) {
+                    SDLCToolExceptionService.showWarning('Issue call failed', 'You do not have the permission to view the ticket ' + jiraLink, SDLCToolExceptionService.DANGER);
+                } else if (error.status === 404) {
+                    if (error.errorException.opened.$$state.status === 0) {
+                        error.errorException.opened.$$state.value = false;
+                        error.errorException.opened.$$state.status = 1;
+                    }
+                    SDLCToolExceptionService.showWarning('Issue call failed', 'The issue ' + jiraLink + ' linked to your requirement set does not exist.', SDLCToolExceptionService.DANGER);
+                }
+            });
+        };
     });

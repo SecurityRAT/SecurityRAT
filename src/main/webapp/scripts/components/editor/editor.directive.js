@@ -1,7 +1,8 @@
-'user strict'
+'user strict';
 
 angular.module('sdlctoolApp')
     .directive('splitArray', function () {
+		'use strict';
         return {
             restrict: 'A',
             require: 'ngModel',
@@ -9,8 +10,7 @@ angular.module('sdlctoolApp')
             	var field = JSON.parse(attr.splitArray);
             	//converts the view value to controller value.
             	function fromUser(values) {
-            		if(!values)
-						return;
+            		if(!values) { return; }
             		
             		switch(field.type) {
             		case 'array':	var tempValue = values.split(',');
@@ -29,8 +29,7 @@ angular.module('sdlctoolApp')
 //            		console.log(valuesFromController);
             		var modelValue = [];
             		var i = 0;
-            		if(angular.isUndefined(valuesFromController))
-            			return;
+            		if(angular.isUndefined(valuesFromController)) { return; }
             		
             		switch(field.type) {
             		case 'array':	if(Array.isArray(valuesFromController)) {
@@ -39,7 +38,7 @@ angular.module('sdlctoolApp')
             									try {
             										modelValue.push(JSON.parse(valuesFromController[i]).name);
             									} catch(err) {
-            										modelValue.push(valuesFromController[i].name)
+            										modelValue.push(valuesFromController[i].name);
             									}
             									i++;
             								}

@@ -18,7 +18,7 @@ angular.module('sdlctoolApp').controller('CollectionCategoryDialogController',
         };
 
         $scope.save = function () {
-            if ($scope.collectionCategory.id != null) {
+            if ($scope.collectionCategory.id !== null) {
                 CollectionCategory.update($scope.collectionCategory, onSaveFinished);
             } else {
                 CollectionCategory.save($scope.collectionCategory, onSaveFinished);

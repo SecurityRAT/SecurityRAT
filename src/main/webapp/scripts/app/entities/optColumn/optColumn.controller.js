@@ -1,5 +1,8 @@
 'use strict';
 
+/* jshint undef: true */
+/* globals $ */
+
 angular.module('sdlctoolApp')
     .controller('OptColumnController', function ($scope, OptColumn, OptColumnSearch, sharedProperties, $filter, EntityHelper) {
         $scope.optColumns = [];
@@ -18,7 +21,7 @@ angular.module('sdlctoolApp')
         $scope.delete = function (id) {
             OptColumn.get({id: id}, function(result) {
                 $scope.optColumn = result;
-                $('#deleteOptColumnConfirmation').appendTo("body").modal('show');
+                $('#deleteOptColumnConfirmation').appendTo('body').modal('show');
             });
         };
 
@@ -33,7 +36,7 @@ angular.module('sdlctoolApp')
 
         $scope.filterEntity = function() {
             return $filter('filter')($scope.optColumns, $scope.searchString);
-        }
+        };
 
         function selectAllTypes () {
     		  angular.forEach($scope.filterEntity(), function(opt) {
@@ -46,11 +49,11 @@ angular.module('sdlctoolApp')
         
         $scope.performSelection = function(selectionValue) {
             EntityHelper.performSelection(selectionValue, selectAllTypes, deselectAllTypes);
-        }
+        };
 
         $scope.bulkChange = function() {
         	sharedProperties.setProperty($filter('orderBy')($filter('filter')($scope.optColumns, {selected: true}), ['showOrder']));
-        }
+        };
           
         $scope.search = function () {
             OptColumnSearch.query({query: $scope.searchQuery}, function(result) {

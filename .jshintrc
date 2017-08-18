@@ -18,5 +18,5 @@
     "trailing": true,
     "smarttabs": true,
     "white": true,
-    "predef": ["angular"]
+    "predef": ["angular", "window", "document", "$"]
 }
