@@ -152,6 +152,7 @@ angular.module('sdlctoolApp')
                         // add generated slides
                         categoriesWithRequirements.forEach(function(category) {
                             var categoryNode = contentNode.addCategoryNode(category.name, {id: category.id}, false);
+                            categoryNode.addCustomSlideNode("Title", "<h2>{{ parent.name }}</h2>");
                             sortByShowOrder(category.requirements);
                             category.requirements.forEach(function(requirement) {
                                 var requirementNode = categoryNode.addRequirementNode(requirement, false);
