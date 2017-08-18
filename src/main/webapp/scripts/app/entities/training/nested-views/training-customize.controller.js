@@ -115,6 +115,27 @@ angular.module('sdlctoolApp')
                 }), '*' );
         };
 
+        var excludeItem = function(node) {
+            var tree = $('#tree').jstree(true);
+            tree.set_icon(node, "glyphicon glyphicon-remove");
+            if(node.data == null) node.data = {};
+            node.data["active"] = false;
+            node.children.forEach(function(child_id) {
+                var childNode = $('#tree').jstree(true).get_node(child_id);
+                excludeItem(childNode);
+            });
+        };
+
+        var includeItem = function(node) {
+            var tree = $('#tree').jstree(true);
+            tree.set_icon(node, $scope.treeNodeTypes[node.type].icon);
+            if(node.data == null) node.data = {};
+            node.data["active"] = true;
+            node.children.forEach(function(child_id) {
+                var childNode = $('#tree').jstree(true).get_node(child_id);
+                includeItem(childNode);
+            });
+        };
 
         // Custom Menu
         var customMenu = function(node) {
@@ -205,27 +226,55 @@ angular.module('sdlctoolApp')
                     },
                     "icon": "glyphicon glyphicon-wrench"
                 },
-                deleteItem: { // The "delete" menu item
+                deleteItem: {
                     "label": "Delete",
-                    "action": function (node) {},
+                    "action": function(obj) {
+                        tree.delete_node(node);
+                    },
                     "icon": "glyphicon glyphicon-remove-circle"
+                },
+                excludeItem: {
+                    "label": "Exclude",
+                    "action": function(obj) {
+                        excludeItem(node);
+                    },
+                    "icon": "glyphicon glyphicon-remove"
+                },
+                includeItem: {
+                    "label": "Include",
+                    "action": function(obj) {
+                        includeItem(node);
+                    },
+                    "icon": "glyphicon glyphicon-repeat"
                 }
-                /* MORE ENTRIES ... */
             };
-            if (node.type !== "RequirementNode") {
-                delete items.add_content;
-            } else {
-                delete items.renameItem;
-            }
-            // node.li_attr.class === "slide"
-            if ((node.type === "GeneratedSlideNode") || (node.type === "CustomSlideNode")) {
-                delete items.create_branch;
-                delete items.insert_slide;
-                delete items.renameItem;
-                // items.deleteItem._disabled = true
-            } else {
-                //delete items.editItem;
-                delete items.cloneItem;
+            switch(node.type) {
+                case "CustomSlideNode":
+                    delete items.create_branch;
+                    delete items.insert_slide;
+                    delete items.renameItem;
+                    delete items.includeItem;
+                    delete items.excludeItem;
+                    break;
+                case "RootNode":
+                    delete items.renameItem;
+                    delete items.deleteItem;
+                    // fallthrough!
+                case "BranchNode":
+                    delete items.includeItem;
+                    delete items.excludeItem;
+                    break;
+                case "GeneratedSlideNode":
+                case "RequirementNode":
+                case "CategoryNode":
+                    delete items.renameItem;
+                    delete items.deleteItem;
+                    if(node.data.active == null || node.data.active) {
+                        delete items.includeItem;
+                    } else {
+                        delete items.excludeItem;
+                    }
+                    break;
             }
             return items;
         };
@@ -263,6 +312,64 @@ angular.module('sdlctoolApp')
             });
         };
 
+        $scope.treeNodeTypes = {
+            // the default type
+            "BranchNode": {
+                "max_children": -1,
+                "max_depth": -1,
+                "valid_children": [
+                    "BranchNode",
+                    "CustomSlideNode"
+                    // "GeneratedSlideNode",
+                    // "CategoryNode",
+                    // "RequirementNode"
+                ],
+                "create_node": true
+            },
+            "RootNode": {
+                "max_children": -1,
+                "max_depth": -1,
+                "valid_children": [
+                    "BranchNode",
+                    "CustomSlideNode"
+                ],
+                "create_node": true
+            },
+            "GeneratedSlideNode": {
+                "icon": "glyphicon glyphicon-file",
+                "create_node": false,
+                "valid_children": "none",
+                "li_attr": {"class": "slide"}
+            },
+            "CustomSlideNode": {
+                "icon": "jstree-file",
+                "create_node": false,
+                "valid_children": "none",
+                "li_attr": {"class": "slide"}
+            },
+            "RequirementNode": {
+                "icon": "glyphicon glyphicon-book",
+                "create_node": false,
+                "valid_children": [
+                    "GeneratedSlideNode",
+                    "CustomSlideNode",
+                    "BranchNode"
+                ],
+                "li_attr": {"class": "slide"}
+            },
+            "CategoryNode": {
+                "icon": "glyphicon glyphicon-folder-open",
+                "valid_children:": [
+                    "RequirementNode",
+                    "CustomSlideNode",
+                    "BranchNode"
+                ]
+            },
+            "#" : {
+                "max_children" : 1 // avoid dragging of elements on root level (next to the trainings root node)
+            }
+        };
+
         $rootScope.displayTree = function() {
             $rootScope.createSlideTemplateSubMenu().then(function() {
                 if($scope.firstTimeDrawingTree) {
@@ -271,54 +378,9 @@ angular.module('sdlctoolApp')
                             'check_callback': true,
                             'data': $rootScope.trainingTreeData
                         },
+                        "plugins": ["contextmenu", "dnd", "types"],
                         "contextmenu": {items: customMenu},
-                        "types": {
-                            // the default type
-                            "BranchNode": {
-                                "max_children": -1,
-                                "max_depth": -1,
-                                "valid_children": [
-                                    "BranchNode",
-                                    "GeneratedSlideNode",
-                                    "CustomSlideNode",
-                                    "CategoryNode",
-                                    "RequirementNode"
-                                ],
-                                "create_node": true
-                            },
-                            "RootNode": {
-                                "max_children": -1,
-                                "max_depth": -1,
-                                "valid_children": [
-                                    "BranchNode",
-                                    "GeneratedSlideNode",
-                                    "CustomSlideNode",
-                                    "CategoryNode",
-                                    "RequirementNode"
-                                ],
-                                "create_node": true
-                            },
-                            "GeneratedSlideNode": {
-                                "icon": "glyphicon glyphicon-file",
-                                "create_node": false,
-                                "valid_children": "none",
-                                "li_attr": {"class": "slide"}
-                            },
-                            "CustomSlideNode": {
-                                "icon": "glyphicon glyphicon-flash",
-                                "create_node": false,
-                                "valid_children": "none",
-                                "li_attr": {"class": "slide"}
-                            },
-                            "RequirementNode": {
-                                "icon": "glyphicon glyphicon-book",
-                                "create_node": false,
-                                "valid_children": "none",
-                                "li_attr": {"class": "slide"}
-                            },
-                            "CategoryNode": {}
-                        },
-                        "plugins": ["contextmenu", "dnd", "types"]
+                        "types": $scope.treeNodeTypes
                     });
                 } else {
                     // if this is not the first time the tree is drawn, redraw it to update changes
