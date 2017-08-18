@@ -8,7 +8,7 @@ angular.module('sdlctoolApp')
         TrainingTreeUtil.RootNodeOfTraining.query({id: $scope.training.id}).$promise.then(function(foundRootNode){
 
             if(foundRootNode.id != null) {
-                TrainingTreeNode.get({id: foundRootNode.id}).$promise.then(function (realRootNode) {
+                TrainingTreeUtil.TreeWithPreparedContent.query({id: foundRootNode.id}).$promise.then(function (realRootNode) {
 
                     $scope.trainingRoot = realRootNode;
 

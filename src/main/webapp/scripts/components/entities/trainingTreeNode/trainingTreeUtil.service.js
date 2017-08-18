@@ -27,6 +27,10 @@ angular.module('sdlctoolApp')
             OptColumnContent: $resource('api/optColumnContents/byOptColumnAndRequirement/:optColumnId' +
                 '/:requirementId', {}, {
                 query: { method: 'GET', isArray: false}
+            }),
+
+            TreeWithPreparedContent:  $resource('api/trainingTreeNodesWithPreparedContent/:id', {}, {
+                query: { method: 'GET', isArray: false}
             })
 
         };
