@@ -158,14 +158,20 @@ public class TrainingTreeNodeResource {
     @Timed
     public ResponseEntity<TrainingTreeNode> update(@RequestBody TrainingTreeNode trainingTreeNode) throws URISyntaxException {
         log.debug("REST request to update TrainingTreeNode : {}", trainingTreeNode);
-//        if (trainingTreeNode.getId() == null) {
-//            return create(trainingTreeNode);
-//        }
-        TrainingTreeNode result = trainingTreeNodeRepository.save(trainingTreeNode);
-        trainingTreeNodeSearchRepository.save(trainingTreeNode);
+
+        Training training = trainingRepository.findOne(trainingTreeNode.getJson_training_id());
+        TrainingTreeNode oldTree = trainingTreeNodeRepository.getTrainingRoot(training);
+
+        // 1. save the new tree to db
+        trainingTreeNode.setId(null);
+        TrainingTreeNode newTree = create(trainingTreeNode).getBody();
+
+        // 2. delete the old tree
+        trainingTreeNodeRepository.delete(oldTree.getId());
+
         return ResponseEntity.ok()
                 .headers(HeaderUtil.createEntityUpdateAlert("trainingTreeNode", trainingTreeNode.getId().toString()))
-                .body(result);
+                .body(newTree);
     }
 
     /**
