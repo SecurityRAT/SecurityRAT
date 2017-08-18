@@ -6,7 +6,6 @@ import org.appsec.securityRAT.domain.enumeration.TrainingTreeNodeType;
 import org.appsec.securityRAT.repository.*;
 import org.appsec.securityRAT.repository.search.TrainingTreeNodeSearchRepository;
 import org.appsec.securityRAT.web.rest.util.HeaderUtil;
-import org.hibernate.annotations.CascadeType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -186,15 +185,7 @@ public class TrainingTreeNodeResource {
         return trainingTreeNodeRepository.findAll();
     }
 
-    /**
-     * GET  /trainingTreeNodes/:id -> get the "id" trainingTreeNode.
-     */
-    @RequestMapping(value = "/trainingTreeNodes/{id}",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    @Timed
-    public ResponseEntity<TrainingTreeNode> get(@PathVariable Long id) {
-        log.debug("REST request to get TrainingTreeNode : {}", id);
+    TrainingTreeNode getSubTreeById(Long id, boolean prepareContent, boolean includeIds, String parentName) {
         TrainingTreeNode result = trainingTreeNodeRepository.findOne(id);
 
         // add reverse relations
@@ -203,14 +194,18 @@ public class TrainingTreeNodeResource {
                 TrainingCustomSlideNode customSlideNode = trainingCustomSlideNodeRepository.getTrainingCustomSlideNodeByTrainingTreeNode(result);
                 if(customSlideNode != null) {
                     result.setName(customSlideNode.getName());
+
                     String customSlideContent = customSlideNode.getContent();
-                    if(customSlideContent != null) {
+                    if (prepareContent && customSlideContent != null) {
                         Training training = result.getTraining_id();
-                        if(training != null && training.getName() != null)
+                        if (training != null && training.getName() != null)
                             customSlideContent = customSlideContent.replaceAll("(\\{{2} *training.name *}{2})", training.getName());
                         TrainingTreeNode parent = result.getParent_id();
-                        if(parent != null && parent.getName() != null)
-                            customSlideContent = customSlideContent.replaceAll("(\\{{2} *parent.name *}{2})", parent.getName());
+                        if (parent != null && (parent.getName() != null || parentName != null)) {
+                            String parentNameFromDb = parent.getName();
+                            parentName = parentNameFromDb != null ? parentNameFromDb : parentName;
+                            customSlideContent = customSlideContent.replaceAll("(\\{{2} *parent.name *}{2})", parentName);
+                        }
                     }
                     result.setContent(customSlideContent);
                 }
@@ -223,8 +218,11 @@ public class TrainingTreeNodeResource {
             case RequirementNode:
                 TrainingRequirementNode requirementNode = trainingRequirementNodeRepository.getTrainingRequirementNodeByTrainingTreeNode(result);
                 if(requirementNode != null) {
-                    RequirementSkeleton requirementSkeleton = requirementSkeletonRepository.findOneWithEagerRelationships(requirementNode.getRequirementSkeleton().getId());
+                    Long requirement_id = requirementNode.getRequirementSkeleton().getId();
+                    RequirementSkeleton requirementSkeleton = requirementSkeletonRepository.findOneWithEagerRelationships(requirement_id);
                     result.setName(requirementSkeleton.getShortName());
+                    if(includeIds)
+                        result.setJson_universal_id(requirement_id);
                 }
                 break;
             case GeneratedSlideNode:
@@ -232,51 +230,103 @@ public class TrainingTreeNodeResource {
                 if(generatedSlideNode != null) {
                     String generatedSlideName = "";
                     String generatedSlideContent = "";
+
                     TrainingTreeNode parent = result.getParent_id();
                     if(parent != null) {
                         TrainingRequirementNode requirementNodeOfParent = trainingRequirementNodeRepository.getTrainingRequirementNodeByTrainingTreeNode(parent);
                         RequirementSkeleton skeleton = requirementSkeletonRepository.findOne(requirementNodeOfParent.getRequirementSkeleton().getId());
                         if(skeleton != null) {
                             OptColumn optColumn = generatedSlideNode.getOptColumn();
+
                             if(optColumn == null) {
-                                generatedSlideContent = "<h2>" + skeleton.getShortName() + "</h2>"
-                                    + skeleton.getDescription();
                                 generatedSlideName = "Skeleton";
+                                if(prepareContent) {
+                                    generatedSlideContent = "<h2>" + skeleton.getShortName() + "</h2>"
+                                        + skeleton.getDescription();
+                                }
+                                if(includeIds)
+                                    result.setJson_universal_id(new Long(-1));
                             } else {
-                                OptColumnContent optColumnContent =
-                                    optColumnContentRepository.getOptColumnContentByOptColumnAndRequirement(
-                                        skeleton,
-                                        optColumn
-                                    );
-                                if(optColumn != null && optColumnContent != null)
-                                    generatedSlideContent = "<h3>"+optColumn.getName()+"</h3>"
-                                        + optColumnContent.getContent();
                                 generatedSlideName = optColumn.getName();
+                                if(prepareContent) {
+                                    OptColumnContent optColumnContent =
+                                        optColumnContentRepository.getOptColumnContentByOptColumnAndRequirement(
+                                            skeleton,
+                                            optColumn
+                                        );
+                                    if (optColumn != null && optColumnContent != null) {
+                                        generatedSlideContent = "<h3>" + optColumn.getName() + "</h3>"
+                                            + optColumnContent.getContent();
+                                    }
+                                }
+                                if(includeIds)
+                                    result.setJson_universal_id(generatedSlideNode.getOptColumn().getId());
                             }
+                            result.setContent(generatedSlideContent);
                         }
                     }
-                    result.setContent(generatedSlideContent);
                     result.setName(generatedSlideName);
                 }
                 break;
             case CategoryNode:
                 TrainingCategoryNode categoryNode = trainingCategoryNodeRepository.getTrainingCategoryNodeByTrainingTreeNode(result);
                 if(categoryNode != null) {
-                    ReqCategory category = reqCategoryRepository.findOne(categoryNode.getCategory().getId());
-                    if(category != null)
+                    Long category_id = categoryNode.getCategory().getId();
+                    ReqCategory category = reqCategoryRepository.findOne(category_id);
+                    if(category != null) {
                         result.setName(category.getName());
+                    }
+                    if(includeIds)
+                        result.setJson_universal_id(category_id);
                 }
+                break;
+            case RootNode:
+                result.setJson_training_id(result.getTraining_id().getId());
                 break;
         }
 
         List<TrainingTreeNode> children = trainingTreeNodeRepository.getChildrenOf(result);
         List<TrainingTreeNode> childrenResult = new ArrayList<>();
         for(TrainingTreeNode child : children) {
-            TrainingTreeNode childNode = get(child.getId()).getBody();
+            TrainingTreeNode childNode = getSubTreeById(child.getId(), prepareContent, includeIds, result.getName());
             childNode.setParent_id(result);
             childrenResult.add(childNode);
         }
         result.setChildren(childrenResult);
+
+        return result;
+    }
+
+    /**
+     * GET  /trainingTreeNodes/:id -> get the "id" trainingTreeNode.
+     */
+    @RequestMapping(value = "/trainingTreeNodes/{id}",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<TrainingTreeNode> get(@PathVariable Long id) {
+        log.debug("REST request to get TrainingTreeNode : {}", id);
+
+        TrainingTreeNode result = getSubTreeById(id, false, true, null);
+
+        return Optional.ofNullable(result)
+            .map(trainingTreeNode -> new ResponseEntity<>(
+                trainingTreeNode,
+                HttpStatus.OK))
+            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    /**
+     * GET  /trainingTreeNodesWithPreparedContent/:id -> get the "id" trainingTreeNode with prepared contents.
+     */
+    @RequestMapping(value = "/trainingTreeNodesWithPreparedContent/{id}",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<TrainingTreeNode> getWithContent(@PathVariable Long id) {
+        log.debug("REST request to get TrainingTreeNode : {}", id);
+
+        TrainingTreeNode result = getSubTreeById(id, true, false, null);
 
         return Optional.ofNullable(result)
             .map(trainingTreeNode -> new ResponseEntity<>(
