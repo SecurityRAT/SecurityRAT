@@ -427,9 +427,12 @@ angular.module('sdlctoolApp')
             node.name = json_data.text;
             node.node_type = json_data.type;
             node.children = [];
+            node.active = true;
 
-            if(json_data.data != null)
+            if(json_data.data != null) {
                 node.json_universal_id = json_data.data.json_universal_id;
+                node.active = json_data.data.active;
+            }
 
             switch(json_data.type) {
                 case "GeneratedSlideNode":

@@ -26,6 +26,11 @@
             "fieldId": 2,
             "fieldName": "sort_order",
             "fieldType": "Integer"
+        },
+        {
+            "fieldId": 3,
+            "fieldName": "active",
+            "fieldType": "Boolean"
         }
     ],
     "changelogDate": "20170615135611",

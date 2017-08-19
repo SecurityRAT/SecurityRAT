@@ -1,20 +1,15 @@
 package org.appsec.securityRAT.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import org.appsec.securityRAT.domain.enumeration.TrainingTreeNodeType;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
-import javax.servlet.annotation.HttpConstraint;
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.Objects;
-
-import org.appsec.securityRAT.domain.enumeration.TrainingTreeNodeType;
 
 /**
  * A TrainingTreeNode.
@@ -36,17 +31,25 @@ public class TrainingTreeNode implements Serializable {
     @Column(name = "sort_order")
     private Integer sort_order;
 
+    @Column(name = "active")
+    private Boolean active;
+
     @ManyToOne
     @JsonIgnore
     private TrainingTreeNode parent_id;
+
     @Transient
     private String content;
+
     @Transient
     private String name;
+
     @Transient
     private boolean opened;
+
     @Transient
     private List<TrainingTreeNode> children;
+
     @ManyToOne
     @JsonIgnore
     private Training training_id;
@@ -130,6 +133,14 @@ public class TrainingTreeNode implements Serializable {
         this.sort_order = sort_order;
     }
 
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
     public TrainingTreeNode getParent_id() {
         return parent_id;
     }
@@ -173,6 +184,7 @@ public class TrainingTreeNode implements Serializable {
             "id=" + id +
             ", node_type='" + node_type + "'" +
             ", sort_order='" + sort_order + "'" +
+            ", active='" + active + "'" +
             '}';
     }
 }

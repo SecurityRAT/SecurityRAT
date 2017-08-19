@@ -84,6 +84,9 @@ public class TrainingTreeNodeResource {
             Training training = trainingRepository.findOne(trainingTreeNode.getJson_training_id());
             trainingTreeNode.setTraining_id(training);
         }
+        if(trainingTreeNode.getActive() == null)
+            trainingTreeNode.setActive(true);
+
         TrainingTreeNode result = trainingTreeNodeRepository.save(trainingTreeNode);
         trainingTreeNodeSearchRepository.save(result);
 

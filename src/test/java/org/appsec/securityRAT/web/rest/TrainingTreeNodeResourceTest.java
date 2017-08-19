@@ -49,6 +49,9 @@ public class TrainingTreeNodeResourceTest {
     private static final Integer DEFAULT_SORT_ORDER = 1;
     private static final Integer UPDATED_SORT_ORDER = 2;
 
+    private static final Boolean DEFAULT_ACTIVE = false;
+    private static final Boolean UPDATED_ACTIVE = true;
+
     @Inject
     private TrainingTreeNodeRepository trainingTreeNodeRepository;
 
@@ -76,6 +79,7 @@ public class TrainingTreeNodeResourceTest {
         trainingTreeNode = new TrainingTreeNode();
         trainingTreeNode.setNode_type(DEFAULT_NODE_TYPE);
         trainingTreeNode.setSort_order(DEFAULT_SORT_ORDER);
+        trainingTreeNode.setActive(DEFAULT_ACTIVE);
     }
 
     @Test
@@ -96,6 +100,7 @@ public class TrainingTreeNodeResourceTest {
         TrainingTreeNode testTrainingTreeNode = trainingTreeNodes.get(trainingTreeNodes.size() - 1);
         assertThat(testTrainingTreeNode.getNode_type()).isEqualTo(DEFAULT_NODE_TYPE);
         assertThat(testTrainingTreeNode.getSort_order()).isEqualTo(DEFAULT_SORT_ORDER);
+        assertThat(testTrainingTreeNode.getActive()).isEqualTo(DEFAULT_ACTIVE);
     }
 
     @Test
@@ -110,7 +115,8 @@ public class TrainingTreeNodeResourceTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.[*].id").value(hasItem(trainingTreeNode.getId().intValue())))
                 .andExpect(jsonPath("$.[*].node_type").value(hasItem(DEFAULT_NODE_TYPE.toString())))
-                .andExpect(jsonPath("$.[*].sort_order").value(hasItem(DEFAULT_SORT_ORDER)));
+                .andExpect(jsonPath("$.[*].sort_order").value(hasItem(DEFAULT_SORT_ORDER)))
+                .andExpect(jsonPath("$.[*].active").value(hasItem(DEFAULT_ACTIVE.booleanValue())));
     }
 
     @Test
@@ -125,7 +131,8 @@ public class TrainingTreeNodeResourceTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.id").value(trainingTreeNode.getId().intValue()))
             .andExpect(jsonPath("$.node_type").value(DEFAULT_NODE_TYPE.toString()))
-            .andExpect(jsonPath("$.sort_order").value(DEFAULT_SORT_ORDER));
+            .andExpect(jsonPath("$.sort_order").value(DEFAULT_SORT_ORDER))
+            .andExpect(jsonPath("$.active").value(DEFAULT_ACTIVE.booleanValue()));
     }
 
     @Test
@@ -147,6 +154,7 @@ public class TrainingTreeNodeResourceTest {
         // Update the trainingTreeNode
         trainingTreeNode.setNode_type(UPDATED_NODE_TYPE);
         trainingTreeNode.setSort_order(UPDATED_SORT_ORDER);
+        trainingTreeNode.setActive(UPDATED_ACTIVE);
         
 
         restTrainingTreeNodeMockMvc.perform(put("/api/trainingTreeNodes")
@@ -160,6 +168,7 @@ public class TrainingTreeNodeResourceTest {
         TrainingTreeNode testTrainingTreeNode = trainingTreeNodes.get(trainingTreeNodes.size() - 1);
         assertThat(testTrainingTreeNode.getNode_type()).isEqualTo(UPDATED_NODE_TYPE);
         assertThat(testTrainingTreeNode.getSort_order()).isEqualTo(UPDATED_SORT_ORDER);
+        assertThat(testTrainingTreeNode.getActive()).isEqualTo(UPDATED_ACTIVE);
     }
 
     @Test

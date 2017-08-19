@@ -24,6 +24,7 @@
             </column>
             <column name="node_type" type="varchar(255)"/>
             <column name="sort_order" type="integer"/>
+            <column name="active" type="bit"/>
             <column name="parent_id_id" type="bigint"/>
             <column name="training_id_id" type="bigint"/>
         </createTable>

@@ -67,7 +67,7 @@ class TrainingTreeNodeGatlingTest extends Simulation {
             .exec(http("Create new trainingTreeNode")
             .post("/api/trainingTreeNodes")
             .headers(headers_http_authenticated)
-            .body(StringBody("""{"id":null, "node_type":null, "sort_order":"0"}""")).asJSON
+            .body(StringBody("""{"id":null, "node_type":null, "sort_order":"0", "active":null}""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_trainingTreeNode_url")))
             .pause(10)
