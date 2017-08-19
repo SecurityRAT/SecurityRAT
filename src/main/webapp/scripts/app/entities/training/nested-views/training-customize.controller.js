@@ -11,6 +11,7 @@ angular.module('sdlctoolApp')
 
         $scope.training = entity;
         $scope.firstTimeDrawingTree = true;
+        $scope.disabledIcon = "glyphicon glyphicon-remove";
 
         $scope.load = function (id) {
             Training.get({id: id}, function(result) {
@@ -117,7 +118,7 @@ angular.module('sdlctoolApp')
 
         var excludeItem = function(node) {
             var tree = $('#tree').jstree(true);
-            tree.set_icon(node, "glyphicon glyphicon-remove");
+            tree.set_icon(node, $scope.disabledIcon);
             if(node.data == null) node.data = {};
             node.data["active"] = false;
             node.children.forEach(function(child_id) {
@@ -372,6 +373,7 @@ angular.module('sdlctoolApp')
 
         $rootScope.displayTree = function() {
             $rootScope.createSlideTemplateSubMenu().then(function() {
+                var tree = $('#tree');
                 if($scope.firstTimeDrawingTree) {
                     $('#tree').jstree({
                         'core': {
@@ -384,10 +386,19 @@ angular.module('sdlctoolApp')
                     });
                 } else {
                     // if this is not the first time the tree is drawn, redraw it to update changes
-                    var tree = $('#tree');
                     tree.jstree(true).settings.core.data = $rootScope.trainingTreeData;
                     tree.jstree('refresh');
                 }
+
+                // overwrite icon for inactive nodes when tree is ready
+                tree.bind('ready.jstree', function(event, data) {
+                    $(tree.jstree().get_json(tree, {
+                        flat: true
+                    })).each(function(index, node) {
+                        if(node.data.active == false)
+                            tree.jstree(true).set_icon(node, $scope.disabledIcon);
+                    });
+                });
                 $scope.firstTimeDrawingTree = false;
             });
         };

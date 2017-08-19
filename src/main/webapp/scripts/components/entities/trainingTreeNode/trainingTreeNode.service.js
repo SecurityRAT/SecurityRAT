@@ -287,7 +287,7 @@ angular.module('sdlctoolApp')
         TrainingTreeNode.getSlidesFromJson = function(json) {
             var slides = [];
 
-            if(json.content != null && json.content.length > 0)
+            if(json.active && json.content != null && json.content.length > 0)
                 slides.push({content: json.content, sort_order: json.sort_order});
 
             if(json.children.length > 1) {
@@ -357,6 +357,7 @@ angular.module('sdlctoolApp')
                 result.data["node_id"] = json.id;
 
             result.data["json_universal_id"] = json.json_universal_id;
+            result.data["active"] = json.active;
 
             switch(json.node_type) {
                 case "BranchNode":
