@@ -148,6 +148,18 @@ public class TrainingTreeNodeResource {
             .body(result);
     }
 
+    // removes training relation and deletes specialtreenodes recursively
+    private void prepareDeletion(TrainingTreeNode trainingTreeNode) {
+        trainingTreeNode.setTraining_id(null);
+        trainingTreeNodeRepository.save(trainingTreeNode);
+        deleteSpecialTableEntry(trainingTreeNode);
+
+        List<TrainingTreeNode> children = trainingTreeNodeRepository.getChildrenOf(trainingTreeNode);
+        for(TrainingTreeNode childNode : children) {
+            prepareDeletion(childNode);
+        }
+    }
+
     /**
      * PUT  /trainingTreeNodes -> Updates an existing trainingTreeNode.
      */
@@ -166,7 +178,9 @@ public class TrainingTreeNodeResource {
         TrainingTreeNode newTree = create(trainingTreeNode).getBody();
 
         // 2. delete the old tree
-        trainingTreeNodeRepository.delete(oldTree.getId());
+        prepareDeletion(oldTree);
+        trainingTreeNodeRepository.removeParentRelationsForNull();
+        trainingTreeNodeRepository.deleteAllNullified();
 
         return ResponseEntity.ok()
                 .headers(HeaderUtil.createEntityUpdateAlert("trainingTreeNode", trainingTreeNode.getId().toString()))
@@ -335,12 +349,13 @@ public class TrainingTreeNodeResource {
             .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+
     /**
      * DELETE  /trainingTreeNodes/:id -> delete the "id" trainingTreeNode.
      */
     @RequestMapping(value = "/trainingTreeNodes/{id}",
-            method = RequestMethod.DELETE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+        method = RequestMethod.DELETE,
+        produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         log.debug("REST request to delete TrainingTreeNode : {}", id);
@@ -351,6 +366,13 @@ public class TrainingTreeNodeResource {
         trainingTreeNodeSearchRepository.delete(id);
 
         // delete special table entry
+        deleteSpecialTableEntry(trainingTreeNode);
+
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("trainingTreeNode", id.toString())).build();
+    }
+
+
+    private void deleteSpecialTableEntry(TrainingTreeNode trainingTreeNode) {
         switch(trainingTreeNode.getNode_type()) {
             case BranchNode:
                 TrainingBranchNode branchNode = trainingBranchNodeRepository.getTrainingBranchNodeByTrainingTreeNode(trainingTreeNode);
@@ -373,8 +395,6 @@ public class TrainingTreeNodeResource {
                 trainingGeneratedSlideNodeRepository.delete(generatedSlideNode);
                 break;
         }
-
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("trainingTreeNode", id.toString())).build();
     }
 
     /**

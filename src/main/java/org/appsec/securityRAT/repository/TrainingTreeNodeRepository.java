@@ -24,6 +24,16 @@ public interface TrainingTreeNodeRepository extends JpaRepository<TrainingTreeNo
     @Transactional
     void removeParentRelationsForTraining(@Param("training") Training training);
 
+    @Query("update TrainingTreeNode set parent_id = null where training_id = null ")
+    @Modifying
+    @Transactional
+    void removeParentRelationsForNull();
+
+    @Query("delete from TrainingTreeNode where training_id = null and parent_id = null ")
+    @Modifying
+    @Transactional
+    void deleteAllNullified();
+
     @Query("select distinct trainingTreeNode from TrainingTreeNode trainingTreeNode where trainingTreeNode.training_id = :training ")
     List<TrainingTreeNode> getAllByTraining(@Param("training") Training training);
 }
