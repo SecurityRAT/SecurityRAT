@@ -55,8 +55,9 @@ angular.module('sdlctoolApp')
         $scope.save = function() {
             if ($scope.training.id != null) {
                 Training.update($scope.training, onSaveFinished);
-
                 $scope.openSaveProgressModal();
+
+                $scope.trainingRoot.fromJSON($rootScope.getTreeJSON());
                 $scope.trainingRoot.json_training_id = $scope.training.id;
                 TrainingTreeNode.update($scope.trainingRoot).$promise.then(function() {
 
