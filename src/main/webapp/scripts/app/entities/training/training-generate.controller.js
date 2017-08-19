@@ -5,6 +5,7 @@ angular.module('sdlctoolApp')
         $scope.Training = entity;
         $rootScope.trainingTreeData = [];
         $scope.trainingRoot = trainingRoot;
+        $scope.treeGenerated = false;
         $scope.progressbar = { hide: true, barValue: 0, intervalPromise: undefined };
         $scope.modalProgressbar = { barValue: 0, intervalPromise: undefined };
 
@@ -173,6 +174,7 @@ angular.module('sdlctoolApp')
                         addOutro();
                         initTree();
                         $scope.finishProgressbar();
+                        $scope.treeGenerated = true;
                     }
                 );
             } else {
