@@ -132,42 +132,6 @@ public class TrainingResource {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         log.debug("REST request to delete Training : {}", id);
 
-        // step1: remove parent relations
-        Training training = trainingRepository.findOne(id);
-        trainingTreeNodeRepository.removeParentRelationsForTraining(training);
-
-        // step2: fetch all associated nodes and delete them
-        // (delete related special table entries first)
-        List<TrainingTreeNode> trainingNodes = trainingTreeNodeRepository.getAllByTraining(training);
-        for(TrainingTreeNode trainingNode : trainingNodes) {
-            // delete special table entry
-            switch(trainingNode.getNode_type()) {
-                case BranchNode:
-                    TrainingBranchNode branchNode = trainingBranchNodeRepository.getTrainingBranchNodeByTrainingTreeNode(trainingNode);
-                    trainingBranchNodeRepository.delete(branchNode.getId());
-                    break;
-                case CustomSlideNode:
-                    TrainingCustomSlideNode customSlideNode = trainingCustomSlideNodeRepository.getTrainingCustomSlideNodeByTrainingTreeNode(trainingNode);
-                    trainingCustomSlideNodeRepository.delete(customSlideNode);
-                    break;
-                case CategoryNode:
-                    TrainingCategoryNode categoryNode = trainingCategoryNodeRepository.getTrainingCategoryNodeByTrainingTreeNode(trainingNode);
-                    trainingCategoryNodeRepository.delete(categoryNode);
-                    break;
-                case RequirementNode:
-                    TrainingRequirementNode requirementNode = trainingRequirementNodeRepository.getTrainingRequirementNodeByTrainingTreeNode(trainingNode);
-                    trainingRequirementNodeRepository.delete(requirementNode);
-                    break;
-                case GeneratedSlideNode:
-                    TrainingGeneratedSlideNode generatedSlideNode = trainingGeneratedSlideNodeRepository.getTrainingGeneratedSlideNodeByTrainingTreeNode(trainingNode);
-                    trainingGeneratedSlideNodeRepository.delete(generatedSlideNode);
-                    break;
-            }
-
-            trainingTreeNodeRepository.delete(trainingNode.getId());
-        }
-
-        // step3: delete training
         trainingRepository.delete(id);
         trainingSearchRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("training", id.toString())).build();

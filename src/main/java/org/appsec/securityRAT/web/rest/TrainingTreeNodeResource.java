@@ -151,18 +151,6 @@ public class TrainingTreeNodeResource {
             .body(result);
     }
 
-    // removes training relation and deletes specialtreenodes recursively
-    private void prepareDeletion(TrainingTreeNode trainingTreeNode) {
-        trainingTreeNode.setTraining_id(null);
-        trainingTreeNodeRepository.save(trainingTreeNode);
-        deleteSpecialTableEntry(trainingTreeNode);
-
-        List<TrainingTreeNode> children = trainingTreeNodeRepository.getChildrenOf(trainingTreeNode);
-        for(TrainingTreeNode childNode : children) {
-            prepareDeletion(childNode);
-        }
-    }
-
     /**
      * PUT  /trainingTreeNodes -> Updates an existing trainingTreeNode.
      */
@@ -181,9 +169,7 @@ public class TrainingTreeNodeResource {
         TrainingTreeNode newTree = create(trainingTreeNode).getBody();
 
         // 2. delete the old tree
-        prepareDeletion(oldTree);
-        trainingTreeNodeRepository.removeParentRelationsForNull();
-        trainingTreeNodeRepository.deleteAllNullified();
+        delete(oldTree.getId());
 
         return ResponseEntity.ok()
                 .headers(HeaderUtil.createEntityUpdateAlert("trainingTreeNode", trainingTreeNode.getId().toString()))
@@ -365,11 +351,16 @@ public class TrainingTreeNodeResource {
 
         TrainingTreeNode trainingTreeNode = trainingTreeNodeRepository.findOne(id);
 
-        trainingTreeNodeRepository.delete(id);
-        trainingTreeNodeSearchRepository.delete(id);
-
         // delete special table entry
         deleteSpecialTableEntry(trainingTreeNode);
+
+        // delete children
+        for(TrainingTreeNode childNode : trainingTreeNodeRepository.getChildrenOf(trainingTreeNode)) {
+            delete(childNode.getId());
+        }
+
+        trainingTreeNodeRepository.delete(id);
+        trainingTreeNodeSearchRepository.delete(id);
 
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("trainingTreeNode", id.toString())).build();
     }

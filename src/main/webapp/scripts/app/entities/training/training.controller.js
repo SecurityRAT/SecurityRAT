@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('TrainingController', function ($scope, $filter, $state,  Training, TrainingSearch) {
+    .controller('TrainingController', function ($scope, $filter, $state,  Training, TrainingSearch, TrainingTreeUtil,
+                                                TrainingTreeNode) {
         $scope.trainings = [];
 
         $scope.today = $filter('date')(new Date(), 'mediumDate');
@@ -20,12 +21,17 @@ angular.module('sdlctoolApp')
         };
 
         $scope.confirmDelete = function (id) {
-            Training.delete({id: id},
-                function () {
-                    $scope.loadAll();
-                    $('#deleteTrainingConfirmation').modal('hide');
-                    $scope.clear();
+            TrainingTreeUtil.RootNodeOfTraining.query({id: id}).$promise.then(function(rootNode) {
+
+                TrainingTreeNode.delete(rootNode).$promise.then(function() {
+                    Training.delete({id: id},
+                        function () {
+                            $scope.loadAll();
+                            $('#deleteTrainingConfirmation').modal('hide');
+                            $scope.clear();
+                        });
                 });
+            });
         };
 
         $scope.search = function () {
