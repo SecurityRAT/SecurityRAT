@@ -19,6 +19,7 @@ angular.module('sdlctoolApp')
             },
             'update': { method:'PUT' }
         });
+
         TrainingTreeNode.prototype.getChildren = function() {
             if(this.children == null) this.children = [];
             return this.children;
@@ -29,6 +30,11 @@ angular.module('sdlctoolApp')
             newChild.name = name;
             newChild.node_type = type;
             newChild.opened = opened;
+            newChild.parent_id = {
+                name: this.name,
+                node_type: this.node_type,
+                json_universal_id: this.json_universal_id
+            };
             this.children.push(newChild);
             return newChild;
         };
@@ -56,7 +62,6 @@ angular.module('sdlctoolApp')
             var skeletonSlide = newChild.addChildNode("GeneratedSlideNode", "Skeleton", false);
             skeletonSlide.optColumn = null; // mark it as a skeleton slide!
             skeletonSlide.json_universal_id = -1;
-            skeletonSlide.parent_id = {requirementSkeleton: newChild.requirementSkeleton};
 
             return newChild;
         };
@@ -64,7 +69,7 @@ angular.module('sdlctoolApp')
             var newChild = this.addChildNode("GeneratedSlideNode", optColumn.name, false);
             newChild.optColumn = optColumn;
             newChild.json_universal_id = optColumn.id;
-            newChild.parent_id = {requirementSkeleton: this.requirementSkeleton};
+
             return newChild;
         };
 
@@ -219,17 +224,11 @@ angular.module('sdlctoolApp')
                     result = node.training_id.name;
             return result;
         };
-        var getParentName = function(node) {
-            var result = "";
-            if(node.parent_id != null)
-                if(node.parent_id.name != null)
-                    result = node.parent_id.name;
-            return result;
-        };
 
-        TrainingTreeNode.prototype.loadContent = function() {
+        TrainingTreeNode.prototype.loadContent = function(parentName) {
             var node = this;
             var content = "";
+            console.log("loading content in service ", node);
 
             return new Promise(function(resolve, reject) {
                 var subPromises = [];
@@ -239,38 +238,33 @@ angular.module('sdlctoolApp')
                         if (content != null) {
                             content = content
                                 .replace(/({{ *training.name *}})/g, getTrainingName(node))
-                                .replace(/({{ *parent.name *}})/g, getParentName(node));
+                                .replace(/({{ *parent.name *}})/g, parentName);
                         }
                         break;
                     case "GeneratedSlideNode":
                         var parentNode = node.parent_id;
-                        if (node.optColumn == null) {
-                            var parentReq = parentNode.requirementSkeleton;
-                            if(parentReq.description != null && parentReq.shortName != null) {
-                                content = "<h2>" + parentReq.shortName + "</h2>"
-                                    + parentReq.description;
-                            } else {
-                                var reqPromise = RequirementSkeleton.get({id: parentNode.requirementSkeleton.id}).$promise;
-                                subPromises.push(reqPromise);
-                                if (parentNode.node_type == "RequirementNode") {
-                                    reqPromise.then(function (req) {
-                                        content = "<h2>" + req.shortName + "</h2>"
-                                            + req.description;
-                                    });
+                        if (node.json_universal_id == null || node.json_universal_id == -1) {
+                            console.log("[SkeletonSlide] parent before fetching requirement", parentNode);
+                            var reqPromise = RequirementSkeleton.get({id: parentNode.json_universal_id}).$promise;
+                            subPromises.push(reqPromise);
+                            reqPromise.then(function (req) {
+                                if(req.description != null && req.shortName != null) {
+                                    content = "<h2>" + req.shortName + "</h2>"
+                                        + req.description;
                                 }
-                            }
+                            });
 
                         } else {
                             var optPromise = TrainingTreeUtil.OptColumnContent.query(
                                 {
-                                    optColumnId: node.optColumn.id,
-                                    requirementId: parentNode.requirementSkeleton.id
+                                    optColumnId: node.json_universal_id,
+                                    requirementId: parentNode.json_universal_id
                                 }).$promise;
 
                             subPromises.push(optPromise);
                             optPromise.then(function(optColumnContent) {
                                 if(optColumnContent.content != null) {
-                                    content = "<h3>"+node.optColumn.name+"</h3>"
+                                    content = "<h3>"+optColumnContent.optColumn.name+"</h3>"
                                         + optColumnContent.content;
                                 }
                             });
@@ -374,7 +368,13 @@ angular.module('sdlctoolApp')
 
             if(json.children != null) {
                 json.children.forEach(function(node) {
-                    result.children.push(TrainingTreeNode.JSON_to_JSTree(node));
+                    var child = TrainingTreeNode.JSON_to_JSTree(node);
+                    child.data["parent_id"] = {
+                        name: json.name,
+                        active: json.active,
+                        json_universal_id: json.json_universal_id
+                    };
+                    result.children.push(child);
                 });
             }
             return result;
@@ -433,6 +433,7 @@ angular.module('sdlctoolApp')
             if(json_data.data != null) {
                 node.json_universal_id = json_data.data.json_universal_id;
                 node.active = json_data.data.active;
+                node.parent_id = json_data.data.parent_id;
             }
 
             switch(json_data.type) {
@@ -447,8 +448,8 @@ angular.module('sdlctoolApp')
 
             if(json_data.children != null)
                 json_data.children.forEach(function(child_json) {
-                   var childNode = new TrainingTreeNode();
-                   childNode.fromJSON(child_json);
+                    var childNode = new TrainingTreeNode();
+                    childNode.fromJSON(child_json);
                     node.children.push(childNode);
                 });
         };
