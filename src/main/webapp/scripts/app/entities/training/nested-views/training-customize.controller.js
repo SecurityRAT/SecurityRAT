@@ -51,7 +51,7 @@ angular.module('sdlctoolApp')
                 if(selectedNodeType == "GeneratedSlideNode" || selectedNodeType == "CustomSlideNode") {
                     $scope.slideEditor(true);
 
-                    $scope.updateSlidePreview();
+                    $scope.updateSlidePreview(selectedNodeType == "GeneratedSlideNode");
 
                     if(selectedNodeType !== "CustomSlideNode") {
                         $('#slideTitle').prop('disabled', true);
@@ -86,26 +86,22 @@ angular.module('sdlctoolApp')
             });
         };
 
-        $scope.updateSlidePreview = function() {
-            // in the generate state the content needs to be fetched for each slide on select since it has not been prepared on backend side
-            if($rootScope.toState.name == "training.new") {
-                console.log("update slide preview in generate mode");
-                if($scope.selectedNode.training_id == null || $scope.selectedNode.training_id.name == null )
-                    $scope.selectedNode.training_id = $scope.training;
-                $scope.selectedNode.loadContent().then(function(content) {
+        $scope.updateSlidePreview = function(writeback=false, parentName="") {
+            if($scope.selectedNode.training_id == null || $scope.selectedNode.training_id.name == null )
+                $scope.selectedNode.training_id = $scope.training;
+            $scope.selectedNode.loadContent(parentName).then(function(content) {
 
-                    $scope.setSlidePreviewContent(content);
+                $scope.setSlidePreviewContent(content);
+                if(writeback) {
                     $timeout(function() {
                         $scope.selectedNode.content = content;
                         $scope.$apply();
                     });
-                }, function(failed_reason) {
-                    console.error("failed to load content from slide: " + failed_reason);
-                    $scope.setSlidePreviewContent("");
-                });
-            } else {
-                $scope.setSlidePreviewContent($scope.selectedNode.content);
-            }
+                }
+            }, function(failed_reason) {
+                console.error("failed to load content from slide: " + failed_reason);
+                $scope.setSlidePreviewContent("");
+            });
         };
 
         $scope.setSlidePreviewContent = function(content) {
