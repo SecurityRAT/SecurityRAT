@@ -235,7 +235,7 @@
         <uib-progressbar class="progress-striped active" value="progressbar.barValue" type="success" data-ng-hide="progressbar.hide">{{progressbar.barValue}}%</uib-progressbar>
     </div>
     <div>&nbsp;</div>
-    <div class="container-fluid" data-ng-show="showRequirements">
+    <div class="container-fluid" data-ng-show="progressbar.showContent">
         <div class="table-responsive myMinHeight">
             <table id="requirementTable" class="table table-hover" infinite-scroll="loadMore()" infinite-scroll-distance="1">
                 <thead>

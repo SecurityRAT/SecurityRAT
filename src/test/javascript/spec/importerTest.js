@@ -275,7 +275,7 @@ describe('Protractor Security RAT importer testsuite', function() {
 		});
 		browser.sleep(5000);
 		element(by.buttonText('Custom requirements')).click();
-		expect(element(by.linkText('Edit').isPresent())).toBe(true);
+		expect(element(by.linkText('Edit')).isPresent()).toBe(true);
 		expect(element(by.partialLinkText('Remove').isPresent())).toBe(true);
 		element(by.buttonText(SaveButton)).click();
 		browser.sleep(2000);

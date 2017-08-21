@@ -13,7 +13,7 @@
 angular.module('sdlctoolApp')
     .controller('RequirementsController', function ($scope, apiFactory, sharedProperties, $httpParamSerializer, $interval, $timeout, $uibModal, $filter,
         getRequirementsFromImport, $confirm, $location, localStorageService, appConfig, $sce, SDLCToolExceptionService, $rootScope, marked, Helper, $state,
-        checkAuthentication, JiraService, $q, $uibModalStack) {
+        checkAuthentication, JiraService, $q, $uibModalStack, ProgressBar) {
         $scope.failed = '';
         $scope.fail = false;
         $scope.checks = {
@@ -23,7 +23,8 @@ angular.module('sdlctoolApp')
         $scope.progressbar = {
             hide: true,
             barValue: 0,
-            intervalPromise: undefined
+            intervalPromise: undefined,
+            showContent: false
         };
         $scope.manageTicketProperty = {
             spinnerProperty: {
@@ -33,7 +34,7 @@ angular.module('sdlctoolApp')
             authenticatorProperty: {},
             error: false
         };
-        $scope.showRequirements = false;
+        // $scope.showRequirements = false;
         $scope.withselectedDropdown = {
             toggleExcel: false,
             testAutomation: appConfig.securityCAT !== undefined && appConfig.securityCAT !== '' ? true : false
@@ -177,24 +178,26 @@ angular.module('sdlctoolApp')
         };
 
         $scope.startProgressbar = function () {
-            $scope.progressbar.intervalPromise = $interval(function () {
-                $scope.progressbar.barValue += 1;
-            }, 100, 95);
-            $scope.progressbar.hide = false;
-            $scope.showRequirements = false;
+            // $scope.progressbar.intervalPromise = $interval(function () {
+            //     $scope.progressbar.barValue += 1;
+            // }, 100, 95);
+            // $scope.progressbar.hide = false;
+            ProgressBar.startProgressbar($scope.progressbar);
+            // $scope.progressbar.showContent = false;
         };
 
         $scope.finishProgressbar = function () {
-            if (angular.isDefined($scope.progressbar.intervalPromise)) {
-                $interval.cancel($scope.progressbar.intervalPromise);
-                $scope.progressbar.intervalPromise = undefined;
-            }
-            $scope.progressbar.barValue = 100;
-            $timeout(function () {
-                $scope.progressbar.barValue = 0;
-                $scope.progressbar.hide = true;
-                $scope.showRequirements = true;
-            }, 2500);
+            // if (angular.isDefined($scope.progressbar.intervalPromise)) {
+            //     $interval.cancel($scope.progressbar.intervalPromise);
+            //     $scope.progressbar.intervalPromise = undefined;
+            // }
+            // $scope.progressbar.barValue = 100;
+            // $timeout(function () {
+            //     $scope.progressbar.barValue = 0;
+            //     $scope.progressbar.hide = true;
+            //     $scope.progressbar.showContent = true;
+            // }, 2500);
+            ProgressBar.finishProgressbar($scope.progressbar);
         };
 
         $scope.init = function () {
@@ -232,7 +235,7 @@ angular.module('sdlctoolApp')
                     //                $scope.newRequirementParam.id = imports.lastId++; // gets the id of the last Custom requirements save
                     $scope.getAlternativeSets();
                     $scope.getCustomRequirements();
-                    $scope.showRequirements = true;
+                    $scope.progressbar.showContent = true;
                     $scope.requirementProperties.exported = true;
                     $scope.requirementProperties.requirementsEdited = false;
                     $scope.buildSettings();

@@ -123,7 +123,7 @@ angular.module('sdlctoolApp')
 
             if (angular.equals(mainIssueInfo.apiUrl.host, remoteIssueInfo.apiUrl.host)) {
                 // links tickets are from the same JIRA instance
-                promiseArray.push(apiFactory.postExport(apiCall, postData, { 'X-Atlassian-Token': 'nocheck', 'Content-Type': 'application/json' }));
+                return promiseArray.push(apiFactory.postExport(apiCall, postData, { 'X-Atlassian-Token': 'nocheck', 'Content-Type': 'application/json' }));
             } else {
                 // links tickets from different JIRA instances.
                 // links ticket from main JIRA ticket to ticket in different JIRA instance

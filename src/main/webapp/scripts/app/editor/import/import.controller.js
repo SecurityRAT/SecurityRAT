@@ -107,7 +107,8 @@ angular.module('sdlctoolApp')
                 fileParam = url;
             }
             // must be '==' and not '===' because fileParam is and object of type String but not "RESTORE"
-            if (fileParam === 'RESTORE') {
+            /* jshint eqeqeq: false */
+            if (fileParam == 'RESTORE') {
                 $scope.importProperty.importing = true;
                 angular.extend($scope.importProperty.spinner, {
                     showSpinner: false

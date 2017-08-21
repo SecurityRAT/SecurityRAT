@@ -785,9 +785,6 @@ angular.module('sdlctoolApp')
                     angular.forEach($filter('orderBy')($filter('filter')($scope.exported.requirements, {
                         selected: true
                     }), ['categoryOrder', 'order']), function (requirement) {
-                        var remoteObject = {};
-                        remoteObject.apiUrl = $scope.apiUrl;
-
                         var fieldObject = {};
                         angular.extend(fieldObject, $scope.fields);
                         var commentBody = '';
@@ -820,10 +817,16 @@ angular.module('sdlctoolApp')
                             });
                         });
 
-                        $scope.createTicket(fieldObject, false).then(function () {
+                        $scope.createTicket(fieldObject, false).then(function (ticketResponse) {
                             requirement.ticket = $scope.ticketURL;
                             // get the status of the newly created tickets and updates the filter.
-                            apiFactory.getJIRAInfo($scope.buildUrlCall('issueKey')).then(function (response) {
+                            apiFactory.getJIRAInfo(ticketResponse.self).then(function (response) {
+                                var remoteObject = {};
+                                remoteObject.apiUrl = Helper.buildJiraUrl(requirement.ticket.split('/'));
+                                // This property muss be set irrelevant of thre remoteObject.key property.
+                                remoteObject.apiUrl.ticketKey = [];
+                                remoteObject.apiUrl.ticketKey.push(response.key);
+                                remoteObject.apiUrl.projectKey = response.fields.project.key;
                                 remoteObject.fields = response.fields;
                                 remoteObject.key = response.key;
                                 remoteObject.url = $scope.jiraUrl.url + '-' + response.key.split('-').pop();

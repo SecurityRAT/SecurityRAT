@@ -14,7 +14,7 @@
 				</span>
 			</span>
 		</p>
-    <div class="table-responsive">
+    <div class="table-responsive" data-ng-show="progressbar.showContent">
         <table class="table table-striped" infinite-scroll="loadMore()" infinite-scroll-distance="1">
             <thead>
                 <tr>
@@ -107,5 +107,8 @@
                 </tr>
             </tbody>
         </table>
+	</div>
+	<div data-ng-hide="progrebar.hide">
+        <uib-progressbar class="progress-striped active" value="progressbar.barValue" type="success" data-ng-hide="progressbar.hide">{{progressbar.barValue}}%</uib-progressbar>
     </div>
 </div>
