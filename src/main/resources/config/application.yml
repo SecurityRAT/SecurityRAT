@@ -9,7 +9,7 @@ endpoints.jolokia.enabled: false
 jhipster.security.rememberme.key: c271d2839bfc8084e87cdbc4ef2982f431ad078e
 
 authentication:
-    type: CAS # possible values are CAS or FORM
+    type: FORM # possible values are CAS or FORM
     registration: true # restrict the registration only to the administrators by setting the value to 'false'
     
 async:
