@@ -63,12 +63,7 @@
             dependencies: [
                 {src: path+'revealjs/plugin/markdown/marked.js'},
                 {src: path+'revealjs/plugin/markdown/markdown.js'},
-                {src: path+'revealjs/plugin/notes/notes.js', async: true},
-                {
-                    src: path + 'highlight/highlight.pack.js', async: true, callback: function () {
-                    hljs.initHighlightingOnLoad();
-                }
-                }
+                {src: path+'revealjs/plugin/notes/notes.js', async: true}
             ]
         });
     };
