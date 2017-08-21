@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('SlideTemplateDetailController', function($scope, $stateParams, $state, $timeout, entity, SlideTemplate) {
+    .controller('SlideTemplateDetailController', function($scope, $stateParams, $state, $timeout, entity, SlideTemplate,
+                                                          marked) {
 
         $scope.slideTemplate = entity;
         $scope.load = function(id) {
@@ -36,7 +37,7 @@ angular.module('sdlctoolApp')
             document.getElementById('previewFrameId').contentWindow.postMessage(
                 JSON.stringify({
                     method: 'updateSlide',
-                    args: [ content ]
+                    args: [ marked(content) ]
                 }), '*' );
             console.log("preview updated!");
         };

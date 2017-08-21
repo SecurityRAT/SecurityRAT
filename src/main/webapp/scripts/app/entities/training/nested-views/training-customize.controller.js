@@ -3,7 +3,7 @@
 angular.module('sdlctoolApp')
     .controller('TrainingCustomizeController', function ($scope, $rootScope, $stateParams, $timeout, entity, Training,
                                                          TrainingTreeNode, TrainingCustomSlideNode, TrainingTreeUtil,
-                                                         SlideTemplate) {
+                                                         SlideTemplate, marked) {
 
         var onSaveFinished = function (result) {
             $scope.$emit('sdlctoolApp:trainingUpdate', result);
@@ -108,7 +108,7 @@ angular.module('sdlctoolApp')
             document.getElementById('previewFrameId').contentWindow.postMessage(
                 JSON.stringify({
                     method: 'updateSlide',
-                    args: [ content ]
+                    args: [ marked(content) ]
                 }), '*' );
         };
 
