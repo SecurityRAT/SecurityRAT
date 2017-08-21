@@ -41,9 +41,6 @@ angular.module('sdlctoolApp')
                 $scope.selectedNodeJSTree = data;
                 $scope.selectedNode = new TrainingTreeNode();
                 $scope.selectedNode.fromJSON(data.node);
-                // $scope.selectedNode = new TrainingTreeNode();
-                // $scope.selectedNode.name = data.node.text;
-                // $scope.selectedNode.node_type = data.node.type;
 
                 var selectedNodeType = $scope.selectedNode.node_type;
                 var selectedNodeName = $scope.selectedNode.text;
@@ -363,7 +360,10 @@ angular.module('sdlctoolApp')
                 ]
             },
             "#" : {
-                "max_children" : 1 // avoid dragging of elements on root level (next to the trainings root node)
+                "max_children" : 1, // avoid dragging of elements on root level (next to the trainings root node)
+                "valid_children:": [
+                    "RootNode"
+                ]
             }
         };
 
