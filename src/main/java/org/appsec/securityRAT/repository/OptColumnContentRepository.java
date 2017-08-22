@@ -44,7 +44,7 @@ public interface OptColumnContentRepository extends JpaRepository<OptColumnConte
             + "where optColumnContent.optColumn = :optColumn "
             + "and optColumnContent.requirementSkeleton = :skeleton")
     @Transactional
-    OptColumnContent getOptColumnContentByOptColumnAndRequirement(
+    List<OptColumnContent> getOptColumnContentByOptColumnAndRequirement(
         @Param("skeleton") RequirementSkeleton skeleton,
         @Param("optColumn")OptColumn optColumn);
 

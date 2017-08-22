@@ -171,7 +171,12 @@ public class OptColumnContentResource {
         log.debug("REST request to get OptColumnContent with RequirementSkeleton id : {} and OptColumn id : {}", requirementId, optColumnId);
         OptColumn optColumn = optColumnRepository.findOne(optColumnId);
         RequirementSkeleton skeleton = requirementSkeletonRepository.findOne(requirementId);
-        return optColumnContentRepository.getOptColumnContentByOptColumnAndRequirement(skeleton, optColumn);
+        List<OptColumnContent> result = optColumnContentRepository.getOptColumnContentByOptColumnAndRequirement(skeleton, optColumn);
+        if(result != null) {
+            return result.get(0);
+        } else {
+            return null;
+        }
     }
 
 

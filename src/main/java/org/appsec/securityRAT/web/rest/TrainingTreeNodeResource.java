@@ -252,14 +252,17 @@ public class TrainingTreeNodeResource {
                             } else {
                                 generatedSlideName = optColumn.getName();
                                 if(prepareContent) {
-                                    OptColumnContent optColumnContent =
+                                    List<OptColumnContent> optColumnContents =
                                         optColumnContentRepository.getOptColumnContentByOptColumnAndRequirement(
                                             skeleton,
                                             optColumn
                                         );
-                                    if (optColumn != null && optColumnContent != null) {
-                                        generatedSlideContent = "<h3>" + optColumn.getName() + "</h3>"
-                                            + optColumnContent.getContent();
+                                    if(optColumnContents != null) {
+                                        OptColumnContent optColumnContent = optColumnContents.get(0);
+                                        if (optColumn != null && optColumnContent != null) {
+                                            generatedSlideContent = "<h3>" + optColumn.getName() + "</h3>"
+                                                + optColumnContent.getContent();
+                                        }
                                     }
                                 }
                                 if(includeIds)
