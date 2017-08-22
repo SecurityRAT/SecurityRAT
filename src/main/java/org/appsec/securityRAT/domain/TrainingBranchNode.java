@@ -27,6 +27,9 @@ public class TrainingBranchNode implements Serializable {
     
     @Column(name = "name")
     private String name;
+    
+    @Column(name = "anchor")
+    private Integer anchor;
 
     @ManyToOne
     private TrainingTreeNode node;
@@ -45,6 +48,14 @@ public class TrainingBranchNode implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Integer getAnchor() {
+        return anchor;
+    }
+
+    public void setAnchor(Integer anchor) {
+        this.anchor = anchor;
     }
 
     public TrainingTreeNode getNode() {
@@ -81,6 +92,7 @@ public class TrainingBranchNode implements Serializable {
         return "TrainingBranchNode{" +
                 "id=" + id +
                 ", name='" + name + "'" +
+                ", anchor='" + anchor + "'" +
                 '}';
     }
 }

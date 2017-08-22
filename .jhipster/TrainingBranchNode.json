@@ -13,7 +13,13 @@
             "fieldId": 1,
             "fieldName": "name",
             "fieldType": "String"
+        },
+        {
+            "fieldId": 2,
+            "fieldName": "anchor",
+            "fieldType": "Integer"
         }
+
     ],
     "changelogDate": "20170727160224",
     "dto": "no",

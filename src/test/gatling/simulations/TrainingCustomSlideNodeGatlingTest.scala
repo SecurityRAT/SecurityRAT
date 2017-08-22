@@ -67,7 +67,7 @@ class TrainingCustomSlideNodeGatlingTest extends Simulation {
             .exec(http("Create new trainingCustomSlideNode")
             .post("/api/trainingCustomSlideNodes")
             .headers(headers_http_authenticated)
-            .body(StringBody("""{"id":null, "name":"SAMPLE_TEXT", "content":"SAMPLE_TEXT"}""")).asJSON
+            .body(StringBody("""{"id":null, "name":"SAMPLE_TEXT", "content":"SAMPLE_TEXT", "anchor":"0"}""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_trainingCustomSlideNode_url")))
             .pause(10)

@@ -44,6 +44,9 @@ public class TrainingBranchNodeResourceTest {
     private static final String DEFAULT_NAME = "SAMPLE_TEXT";
     private static final String UPDATED_NAME = "UPDATED_TEXT";
 
+    private static final Integer DEFAULT_ANCHOR = 1;
+    private static final Integer UPDATED_ANCHOR = 2;
+
     @Inject
     private TrainingBranchNodeRepository trainingBranchNodeRepository;
 
@@ -70,6 +73,7 @@ public class TrainingBranchNodeResourceTest {
     public void initTest() {
         trainingBranchNode = new TrainingBranchNode();
         trainingBranchNode.setName(DEFAULT_NAME);
+        trainingBranchNode.setAnchor(DEFAULT_ANCHOR);
     }
 
     @Test
@@ -89,6 +93,7 @@ public class TrainingBranchNodeResourceTest {
         assertThat(trainingBranchNodes).hasSize(databaseSizeBeforeCreate + 1);
         TrainingBranchNode testTrainingBranchNode = trainingBranchNodes.get(trainingBranchNodes.size() - 1);
         assertThat(testTrainingBranchNode.getName()).isEqualTo(DEFAULT_NAME);
+        assertThat(testTrainingBranchNode.getAnchor()).isEqualTo(DEFAULT_ANCHOR);
     }
 
     @Test
@@ -102,7 +107,8 @@ public class TrainingBranchNodeResourceTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.[*].id").value(hasItem(trainingBranchNode.getId().intValue())))
-                .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())));
+                .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
+                .andExpect(jsonPath("$.[*].anchor").value(hasItem(DEFAULT_ANCHOR)));
     }
 
     @Test
@@ -116,7 +122,8 @@ public class TrainingBranchNodeResourceTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.id").value(trainingBranchNode.getId().intValue()))
-            .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()));
+            .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
+            .andExpect(jsonPath("$.anchor").value(DEFAULT_ANCHOR));
     }
 
     @Test
@@ -137,6 +144,7 @@ public class TrainingBranchNodeResourceTest {
 
         // Update the trainingBranchNode
         trainingBranchNode.setName(UPDATED_NAME);
+        trainingBranchNode.setAnchor(UPDATED_ANCHOR);
         
 
         restTrainingBranchNodeMockMvc.perform(put("/api/trainingBranchNodes")
@@ -149,6 +157,7 @@ public class TrainingBranchNodeResourceTest {
         assertThat(trainingBranchNodes).hasSize(databaseSizeBeforeUpdate);
         TrainingBranchNode testTrainingBranchNode = trainingBranchNodes.get(trainingBranchNodes.size() - 1);
         assertThat(testTrainingBranchNode.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testTrainingBranchNode.getAnchor()).isEqualTo(UPDATED_ANCHOR);
     }
 
     @Test

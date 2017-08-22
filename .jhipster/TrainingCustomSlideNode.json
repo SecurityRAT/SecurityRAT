@@ -18,6 +18,11 @@
             "fieldId": 2,
             "fieldName": "content",
             "fieldType": "String"
+        },
+        {
+            "fieldId": 3,
+            "fieldName": "anchor",
+            "fieldType": "Integer"
         }
     ],
     "changelogDate": "20170726093957",

@@ -30,6 +30,9 @@ public class TrainingCustomSlideNode implements Serializable {
     
     @Column(name = "content")
     private String content;
+    
+    @Column(name = "anchor")
+    private Integer anchor;
 
     @ManyToOne
     private TrainingTreeNode node;
@@ -56,6 +59,14 @@ public class TrainingCustomSlideNode implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Integer getAnchor() {
+        return anchor;
+    }
+
+    public void setAnchor(Integer anchor) {
+        this.anchor = anchor;
     }
 
     public TrainingTreeNode getNode() {
@@ -93,6 +104,7 @@ public class TrainingCustomSlideNode implements Serializable {
                 "id=" + id +
                 ", name='" + name + "'" +
                 ", content='" + content + "'" +
+                ", anchor='" + anchor + "'" +
                 '}';
     }
 }

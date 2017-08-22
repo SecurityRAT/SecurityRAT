@@ -24,9 +24,10 @@
             </column>
             <column name="name" type="varchar(255)"/>
             <column name="content" type="varchar(255)"/>
+            <column name="anchor" type="integer"/>
             <column name="node_id" type="bigint"/>
         </createTable>
-
+        
         <addForeignKeyConstraint baseColumnNames="node_id"
                                  baseTableName="TRAININGCUSTOMSLIDENODE"
                                  constraintName="fk_trainingcustomslidenode_node_id"

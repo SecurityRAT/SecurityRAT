@@ -67,7 +67,7 @@ class TrainingBranchNodeGatlingTest extends Simulation {
             .exec(http("Create new trainingBranchNode")
             .post("/api/trainingBranchNodes")
             .headers(headers_http_authenticated)
-            .body(StringBody("""{"id":null, "name":"SAMPLE_TEXT"}""")).asJSON
+            .body(StringBody("""{"id":null, "name":"SAMPLE_TEXT", "anchor":"0"}""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_trainingBranchNode_url")))
             .pause(10)

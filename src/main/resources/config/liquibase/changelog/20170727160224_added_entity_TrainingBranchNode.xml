@@ -23,6 +23,7 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="name" type="varchar(255)"/>
+            <column name="anchor" type="integer"/>
             <column name="node_id" type="bigint"/>
         </createTable>
         
