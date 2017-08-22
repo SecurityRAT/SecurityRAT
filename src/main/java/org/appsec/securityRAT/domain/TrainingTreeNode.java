@@ -50,6 +50,9 @@ public class TrainingTreeNode implements Serializable {
     @Transient
     private List<TrainingTreeNode> children;
 
+    @Transient
+    private Integer anchor;
+
     @ManyToOne
     @JsonIgnore
     private Training training_id;
@@ -57,9 +60,18 @@ public class TrainingTreeNode implements Serializable {
     // JSON transfer attribute for training_id
     @Transient
     private Long json_training_id;
+
     // JSON transfer attribute for database links
     @Transient
     private Long json_universal_id;
+
+    public Integer getAnchor() {
+        return anchor;
+    }
+
+    public void setAnchor(Integer anchor) {
+        this.anchor = anchor;
+    }
 
     public Long getJson_universal_id() {
         return json_universal_id;

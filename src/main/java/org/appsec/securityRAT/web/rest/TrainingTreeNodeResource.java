@@ -96,12 +96,14 @@ public class TrainingTreeNodeResource {
                 TrainingCustomSlideNode customSlideNode = new TrainingCustomSlideNode();
                 customSlideNode.setNode(trainingTreeNode);
                 customSlideNode.setName(trainingTreeNode.getName());
+                customSlideNode.setAnchor(trainingTreeNode.getAnchor());
                 customSlideNode.setContent(trainingTreeNode.getContent());
                 trainingCustomSlideNodeRepository.save(customSlideNode);
                 break;
             case BranchNode:
                 TrainingBranchNode branchNode = new TrainingBranchNode();
                 branchNode.setNode(trainingTreeNode);
+                branchNode.setAnchor(trainingTreeNode.getAnchor());
                 branchNode.setName(trainingTreeNode.getName());
                 trainingBranchNodeRepository.save(branchNode);
                 break;
@@ -197,6 +199,7 @@ public class TrainingTreeNodeResource {
                 TrainingCustomSlideNode customSlideNode = trainingCustomSlideNodeRepository.getTrainingCustomSlideNodeByTrainingTreeNode(result);
                 if(customSlideNode != null) {
                     result.setName(customSlideNode.getName());
+                    result.setAnchor(customSlideNode.getAnchor());
 
                     String customSlideContent = customSlideNode.getContent();
                     if (prepareContent && customSlideContent != null) {
@@ -215,8 +218,10 @@ public class TrainingTreeNodeResource {
                 break;
             case BranchNode:
                 TrainingBranchNode branchNode = trainingBranchNodeRepository.getTrainingBranchNodeByTrainingTreeNode(result);
-                if(branchNode != null)
+                if(branchNode != null) {
                     result.setName(branchNode.getName());
+                    result.setAnchor(branchNode.getAnchor());
+                }
                 break;
             case RequirementNode:
                 TrainingRequirementNode requirementNode = trainingRequirementNodeRepository.getTrainingRequirementNodeByTrainingTreeNode(result);
