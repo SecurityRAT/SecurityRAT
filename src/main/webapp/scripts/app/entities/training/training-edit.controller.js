@@ -12,10 +12,10 @@ angular.module('sdlctoolApp')
             } else {
                 Training.save($scope.training, onSaveFinished);
             }
-            $state.go('trainings', null, { reload: true });
+            $state.go('training', null, { reload: true });
         };
 
         $scope.cancel = function() {
-            $state.go('trainings', {});
+            $state.go('training', {});
         };
     });
