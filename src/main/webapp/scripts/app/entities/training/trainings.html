@@ -67,21 +67,21 @@
                     <td>{{training.createdDate | date : "mediumDate" }} by {{training.createdBy}}</td>
                     <td>{{training.lastModifiedDate | date : "shortTime" }} by {{training.lastModifiedBy}}</td>
                     <td>
-                    <td class="col-sm-2">
+                    <td class="col-sm-5">
                         <button type="button"
                                 data-ng-click="startPresentation(training.id)"
-                                class="btn btn-primary btn-sm">
+                                class="btn btn-info btn-sm">
                             <span class="glyphicon glyphicon-film"></span>&nbsp;<span> Start</span>
                         </button>
                         <button type="submit"
-                                ui-sref="training.detail({id:training.id})"
-                                class="btn btn-info btn-sm">
-                            <span class="glyphicon glyphicon-eye-open"></span>&nbsp;<span> View</span>
-                        </button>
-                        <button type="submit"
-                                ui-sref="training.edit({id:training.id})"
+                                ui-sref="training.edit.state({id:training.id})"
                                 class="btn btn-primary btn-sm">
                             <span class="glyphicon glyphicon-pencil"></span>&nbsp;<span> Edit</span>
+                        </button>
+                        <button type="submit"
+                                ui-sref="training.editTree.state({id:training.id})"
+                                class="btn btn-primary btn-sm">
+                            <span class="glyphicon glyphicon-pencil"></span>&nbsp;<span> Edit Tree</span>
                         </button>
                         <button type="submit"
                                 ng-click="delete(training.id)"

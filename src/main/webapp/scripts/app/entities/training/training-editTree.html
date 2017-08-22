@@ -1,0 +1,13 @@
+<jh-alert></jh-alert>
+<form name="editForm" role="form" novalidate ng-submit="save()">
+    <h2 id="page-title" class="page-header">Edit Training Structure</h2>
+
+    <div class="container-fluid" style="padding-top: 30px;" ui-view="customize"></div>
+
+    <div style="padding: 15px; text-align: right;">
+        <button type="button" class="btn btn-default" data-ng-click="cancel()">
+            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span></button>
+        <button type="submit" class="btn btn-primary">
+            <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Save</span></button>
+    </div>
+</form>
