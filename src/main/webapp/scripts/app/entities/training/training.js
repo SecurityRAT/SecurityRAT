@@ -108,14 +108,6 @@ angular.module('sdlctoolApp')
                     'skeleton@training.edit': {
                         templateUrl: 'scripts/app/entities/training/nested-views/training-skeleton.html',
                         controller: 'TrainingSkeletonController'
-                    },
-                    'requirements@training.edit': {
-                        templateUrl: 'scripts/app/entities/training/nested-views/training-requirements.html',
-                        controller: 'TrainingRequirementsController'
-                    },
-                    'optcolumns@training.edit': {
-                        templateUrl: 'scripts/app/entities/training/nested-views/training-content.html',
-                        controller: 'TrainingContentController'
                     }
                 }
                 // inherits resolve von parent
@@ -125,7 +117,7 @@ angular.module('sdlctoolApp')
                 url: '/tree/{id}',
                 abstract: 'true',
                 data: {
-                    roles: ['ROLE_TRAINER'],
+                    roles: ['ROLE_TRAINER']
                 },
                 views: {
                     'content@': {
@@ -141,11 +133,45 @@ angular.module('sdlctoolApp')
             })
             .state('training.editTree.state', {
                 parent: 'training.editTree',
-                url: '/editTree',
+                url: '/edit',
                 views: {
                     'customize@training.editTree': {
                         templateUrl: 'scripts/app/entities/training/nested-views/training-customize.html',
                         controller: 'TrainingCustomizeController'
+                    }
+                }
+                // inherits resolve von parent
+            })
+            .state('training.editSelection', {
+                parent: 'training',
+                url: '/selection/{id}',
+                abstract: 'true',
+                data: {
+                    roles: ['ROLE_TRAINER']
+                },
+                views: {
+                    'content@': {
+                        templateUrl: 'scripts/app/entities/training/training-editSelection.html',
+                        controller: 'TrainingEditSelectionController'
+                    }
+                },
+                resolve: {
+                    entity: ['$stateParams', 'Training', function ($stateParams, Training) {
+                        return Training.get({id: $stateParams.id});
+                    }]
+                }
+            })
+            .state('training.editSelection.state', {
+                parent: 'training.editSelection',
+                url: '/edit',
+                views: {
+                    'requirements@training.editSelection': {
+                        templateUrl: 'scripts/app/entities/training/nested-views/training-requirements.html',
+                        controller: 'TrainingRequirementsController'
+                    },
+                    'optcolumns@training.editSelection': {
+                        templateUrl: 'scripts/app/entities/training/nested-views/training-content.html',
+                        controller: 'TrainingContentController'
                     }
                 }
                 // inherits resolve von parent
