@@ -138,7 +138,7 @@ public class TrainingBranchNodeResource {
     }
 
     /**
-     * GET TrainingCustomSlideNode by its node_id
+     * GET TrainingBranchNode by its node_id
      */
     @RequestMapping(value = "/TrainingBranchNodeByTrainingTreeNode/{id}",
         method = RequestMethod.GET,
