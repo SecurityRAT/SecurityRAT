@@ -7,8 +7,10 @@
  * # StarterCtrl
  * Controller of the sdlcFrontendApp
  */
+/* jshint undef: true */
+/* globals _ */
 angular.module('sdlctoolApp')
-    .controller('customRequirementController', function ($scope, $location, $uibModalInstance, crObject, $filter, appConfig, $interpolate) {
+    .controller('customRequirementController', function ($scope, $location, $uibModalInstance, crObject, $filter, appConfig) {
 		$scope.crObject = crObject;
         $scope.requirement = {};
         $scope.categories = $filter('orderBy')($scope.crObject.filterCategory, 'showOrder');
@@ -29,7 +31,7 @@ angular.module('sdlctoolApp')
                     }],
                     name: optColumn.name,
                     showOrder: optColumn.id
-                }
+                };
                 $scope.requirement.optionColumns.push($scope.value);
             });
         };
@@ -68,13 +70,13 @@ angular.module('sdlctoolApp')
                 } else {
                     statusColumnsValues.push({
                         id: statusColumn.id,
-                        value: "",
+                        value: '',
                         isEnum: statusColumn.isEnum
                     });
                 }
             });
             $scope.requirement.statusColumns = statusColumnsValues;
-        }
+        };
 
         $scope.init = function () {
             if (angular.isUndefined($scope.crObject.requirements)) {
@@ -91,7 +93,7 @@ angular.module('sdlctoolApp')
 				angular.extend($scope.req, $scope.crObject.requirements[0]);
                 $scope.getStatusColumn();
             }
-        }
+        };
 
         $scope.getStatusColumn = function () {
             angular.forEach($scope.requirement.statusColumns, function (statColumn) {
@@ -107,7 +109,7 @@ angular.module('sdlctoolApp')
                     });
                 }
             });
-        }
+        };
         $scope.selectRequirement = function (id) {
             angular.forEach($scope.crObject.requirements, function (req) {
 				

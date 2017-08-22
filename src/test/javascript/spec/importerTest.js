@@ -177,7 +177,7 @@ describe('Protractor Security RAT importer testsuite', function() {
 		    element(by.buttonText('Close')).click();
 		    browser.sleep(3000);
 		    element(by.buttonText('Updates available')).isPresent().then(function() {
-		    	acceptReq = element.all(by.id('acceptReq'));
+		    	var acceptReq = element.all(by.id('acceptReq'));
 		    	if(acceptReq.count() > 0) {
 				    element.all(by.id('acceptReq')).isPresent().then(function() {
 					    expect(element(by.buttonText('Updates available')).isEnabled()).toBe(false);
@@ -276,7 +276,7 @@ describe('Protractor Security RAT importer testsuite', function() {
 		browser.sleep(5000);
 		element(by.buttonText('Custom requirements')).click();
 		expect(element(by.linkText('Edit')).isPresent()).toBe(true);
-		expect(element(by.partialLinkText('Remove').isPresent())).toBe(true);
+		expect(element(by.partialLinkText('Remove')).isPresent()).toBe(true);
 		element(by.buttonText(SaveButton)).click();
 		browser.sleep(2000);
 		element(by.partialLinkText('Export into File')).click();

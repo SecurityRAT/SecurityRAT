@@ -123,7 +123,7 @@ angular.module('sdlctoolApp')
 
             if (angular.equals(mainIssueInfo.apiUrl.host, remoteIssueInfo.apiUrl.host)) {
                 // links tickets are from the same JIRA instance
-                return promiseArray.push(apiFactory.postExport(apiCall, postData, { 'X-Atlassian-Token': 'nocheck', 'Content-Type': 'application/json' }));
+                promiseArray.push(apiFactory.postExport(apiCall, postData, { 'X-Atlassian-Token': 'nocheck', 'Content-Type': 'application/json' }));
             } else {
                 // links tickets from different JIRA instances.
                 // links ticket from main JIRA ticket to ticket in different JIRA instance
@@ -135,7 +135,7 @@ angular.module('sdlctoolApp')
                 if (angular.isUndefined(mainIssueInfo.fields)) {
                     promiseArray.push(apiFactory.getJIRAInfo(buildUrlCall('issueKey', mainIssueInfo.apiUrl)).then(function(response) {
                         mainIssueInfo.fields = response.fields;
-                        createRemoteLink(outwardApiCall, mainIssueInfo.key, mainIssueInfo);
+                        return createRemoteLink(outwardApiCall, mainIssueInfo.key, mainIssueInfo);
                         
                     }));
                 } else {

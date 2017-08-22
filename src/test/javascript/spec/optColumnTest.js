@@ -52,12 +52,12 @@ describe('Protractor Security RAT option column contents/types entities testsuit
 	
 	it('administering an option column type', function() {
 		entities.click();
-		element(by.partialLinkText('Option Column Types')).click();
+		element(by.partialLinkText('Optional Column Types')).click();
 		element.all(by.repeater('optColumnType in optColumnTypes'))
 		.then(function(categoryArray) {
 			var count = categoryArray.length;
 			count++;
-			element(by.buttonText('Create a new Option Column Type')).click();
+			element(by.buttonText('Create a new Optional Column Type')).click();
 			browser.sleep(2000);
 			expect(element(by.buttonText('Save')).isEnabled()).toBe(false);
 			element(by.id('field_name')).sendKeys('test option column type name <script>alert(1)</script>');
@@ -94,13 +94,13 @@ describe('Protractor Security RAT option column contents/types entities testsuit
 	
 	it('administering a opticon column', function() {
 		entities.click();
-		element(by.partialLinkText('Option Columns')).click();
+		element(by.partialLinkText('Optional Columns')).click();
 		browser.sleep(2000);
 		element.all(by.repeater(optColumnRepeater))
 		.then(function(instanceArray) {
 			var count = instanceArray.length;
 			count++;
-			element(by.buttonText('Create a new Option Column')).click();
+			element(by.buttonText('Create a new Optional Column')).click();
 			browser.sleep(2000);
 			expect(element(by.buttonText('Save')).isEnabled()).toBe(false);
 			element(by.id('field_name')).sendKeys('test optColumn name <script>alert(1)</script>');
@@ -134,7 +134,7 @@ describe('Protractor Security RAT option column contents/types entities testsuit
 	
 	it('bulk change option column', function() {
 		entities.click();
-		element(by.partialLinkText('Option Columns')).click();
+		element(by.partialLinkText('Optional Columns')).click();
 		var selectButton = element.all(by.model('optColumn.selected'));
 		var categories = element.all(by.repeater(optColumnRepeater)
 		.column('optColumn.optColumnType.name'));
@@ -190,14 +190,14 @@ describe('Protractor Security RAT option column contents/types entities testsuit
 	
 	it('administering a opticon column content', function() {
 		entities.click();
-		element(by.partialLinkText('Option Column Contents')).click();
+		element(by.partialLinkText('Optional Column Contents')).click();
 		browser.sleep(2000);
 		element.all(by.repeater(optColumnContentRepeater))
 		.then(function(instanceArray) {
 			var count = instanceArray.length;
 			count++;
 			var allOptions = element.all(by.tagName('option'));
-			element(by.buttonText('Create a new OptColumnContent')).click();
+			element(by.buttonText('Create a new Optional Column Content')).click();
 			browser.sleep(2000);
 			expect(element(by.buttonText('Save')).isEnabled()).toBe(false);
 			element(by.id('field_content')).sendKeys('test optColumn content <script>alert(1)</script>');
@@ -243,7 +243,7 @@ describe('Protractor Security RAT option column contents/types entities testsuit
 		
 	it('bulk change option column content', function() {
 		entities.click();
-		element(by.partialLinkText('Option Column Contents')).click();
+		element(by.partialLinkText('Optional Column Contents')).click();
 		var selectButton = element.all(by.model('optColumnContent.selected'));
 		var optColumns = element.all(by.repeater(optColumnContentRepeater)
 							.column('optColumnContent.optColumn.name'));
