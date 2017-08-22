@@ -7,6 +7,7 @@ angular.module('sdlctoolApp')
         authenticatorService, $uibModalStack, $timeout, $interval) {
         var STATECONSTANT = {
             IN_PROGRESS: 0,
+            INPROGRESS: 0,
             COMPLETE: 1
         };
 
@@ -96,19 +97,18 @@ angular.module('sdlctoolApp')
                     shortName: req.shortName,
                     showOrder: req.showOrder,
                     description: req.description,
-                    limitDesc: LETTERLIMIT,
                     state: 0
                 });
                 $scope.testObject.reqs.push(req.shortName);
             });
         };
 
-        $scope.showLongdesc = function(req) {
-            req.limitDesc = undefined;
+        $scope.showLongdesc = function(result) {
+            result.limitDesc = undefined;
         };
 
-        $scope.hideLongdesc = function(req) {
-            req.limitDesc = LETTERLIMIT;
+        $scope.hideLongdesc = function(result) {
+            result.limitDesc = LETTERLIMIT;
         };
 
         function cleanIntervalPromise() {
@@ -134,12 +134,21 @@ angular.module('sdlctoolApp')
                 $scope.testResults.self = appConfig.securityCAT + response.self;
                 // var tempResults = testResults.requirements;
 
+                /* jshint loopfunc: true */
                 for (var i = 0; i < $scope.testResults.reqs.length; i++) {
                     var element = $scope.testResults.reqs[i];
                     if(element.state === 0) {
+                        element.state = 1;
                         angular.extend(element, $filter('filter')(response.requirements, {
                             shortName: element.shortName
                         }).pop());
+                        angular.forEach(element.results, function(result) {
+                            result.limitDesc = LETTERLIMIT;
+                            // marks a requirement as completely tested if all its tests have completed.
+                            if(result.state === 0) {
+                                element.state = 0;
+                            }
+                        });
                     }
                 }
                 
@@ -184,7 +193,7 @@ angular.module('sdlctoolApp')
                         configureDisplay('error', true, 'alert alert-success', 'The test automation was successfully cancelled');
                     }
                 });
-            }, 5000);
+            }, 10000);
         }
 
         $scope.startTest = function () {

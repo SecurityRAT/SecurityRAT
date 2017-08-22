@@ -47,10 +47,10 @@
                             <div data-ng-if="error.display">N/A</div>
                             <div data-ng-if="!error.display">
                                 <div data-ng-if="result.state === 0" style="color:gray">{{displayProperties.inProgressMessage}}</div>
-                                <div data-ng-if="result.state === 1" marked="result.message | limitTo:test.limitDesc"></div>
+                                <div data-ng-if="result.state === 1" marked="result.message | limitTo:result.limitDesc"></div>
                                 <span data-ng-if="result.state === 1" class="pull-right">
-                                    <button data-ng-if="result.message.length > test.limitDesc" data-ng-click="showLongdesc(test)" class="btn btn-primary btn-xs" uib-tooltip="Show complete message." tooltip-append-to-body="true">Show more</button>
-                                    <button data-ng-if="!test.limitDesc" data-ng-click="hideLongdesc(test)" class="btn btn-primary btn-xs" uib-tooltip="Hide part of the message." tooltip-append-to-body="true">Show less</button>
+                                    <button data-ng-if="result.message.length > result.limitDesc" data-ng-click="showLongdesc(result)" class="btn btn-primary btn-xs" uib-tooltip="Show complete message." tooltip-append-to-body="true">Show more</button>
+                                    <button data-ng-if="!result.limitDesc" data-ng-click="hideLongdesc(result)" class="btn btn-primary btn-xs" uib-tooltip="Hide part of the message." tooltip-append-to-body="true">Show less</button>
                                 </span>
                             </div>
                         </td>
