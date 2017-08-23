@@ -126,10 +126,15 @@ angular.module('sdlctoolApp')
             // update content
             $scope.selectedNodeJSTree.node.data["content"] = $scope.selectedNode.content;
 
-            TrainingTreeUtil.CustomSlideNode.query({id: $scope.selectedNodeJSTree.node.data.node_id}).$promise.then(function(customSlideNode) {
-                customSlideNode.content = $scope.selectedNode.content;
-                TrainingCustomSlideNode.update(customSlideNode, onSaveFinished);
-            });
+            if($scope.selectedNodeJSTree.node.data.node_id != null) {
+                TrainingTreeUtil.CustomSlideNode.query({id: $scope.selectedNodeJSTree.node.data.node_id}).$promise.then(function(customSlideNode) {
+                    customSlideNode.content = $scope.selectedNode.content;
+                    TrainingCustomSlideNode.update(customSlideNode, onSaveFinished);
+                });
+            }
+
+            if($selectedNode.node_type == "CustomSlideNode")
+                $scope.updateSlidePreview();
         };
 
         $scope.updateSlidePreview = function(writeback=false, parentName="") {
