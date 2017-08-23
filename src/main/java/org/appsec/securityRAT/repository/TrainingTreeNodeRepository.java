@@ -36,4 +36,7 @@ public interface TrainingTreeNodeRepository extends JpaRepository<TrainingTreeNo
 
     @Query("select distinct trainingTreeNode from TrainingTreeNode trainingTreeNode where trainingTreeNode.training_id = :training ")
     List<TrainingTreeNode> getAllByTraining(@Param("training") Training training);
+
+    @Query(value = "select max(sort_order) from TRAININGTREENODE where parent_id_id = ?1", nativeQuery = true)
+    int getHighestSortOrder(Long id);
 }
