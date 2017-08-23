@@ -244,7 +244,8 @@ angular.module('sdlctoolApp')
         TrainingTreeNode.prototype.loadContent = function(parentName) {
             var node = this;
             var content = "";
-            console.log("loading content in service ", node);
+            if(node.parent_id != null && node.parent_id.name != null)
+                parentName = node.parent_id.name;
 
             return new Promise(function(resolve, reject) {
                 var subPromises = [];
