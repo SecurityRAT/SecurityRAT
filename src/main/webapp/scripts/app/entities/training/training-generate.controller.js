@@ -106,7 +106,7 @@ angular.module('sdlctoolApp')
 
         var initTree = function() {
             // add tree JSON data to the scope
-            $rootScope.trainingTreeData[0] = trainingRoot.getJSON();
+            $rootScope.trainingTreeData[0] = TrainingTreeNode.JSON_to_JSTree(trainingRoot);
             $rootScope.displayTree();
         };
 

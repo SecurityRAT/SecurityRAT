@@ -380,46 +380,6 @@ angular.module('sdlctoolApp')
             return result;
         };
 
-        // Generate JSON for the jstree-library
-        TrainingTreeNode.prototype.getJSON = function() {
-            var result = {
-                "text" : this.name,
-                "state" : { "opened": this.opened },
-                "type" : this.node_type,
-                children: []
-            };
-
-            if(result.data == null) result.data = {};
-
-            if(this.id != null)
-                result.data["node_id"] = this.id;
-
-            result.data["json_universal_id"] = this.json_universal_id;
-
-            switch(this.node_type) {
-                case "CustomSlideNode":
-                    result.data["content"] = this.content;
-                    break;
-                case "CategoryNode":
-                    result.data["category"] = this.category;
-                    break;
-                case "RequirementNode":
-                    result.data["requirementSkeleton"] = this.requirementSkeleton;
-                    break;
-                case "GeneratedSlideNode":
-                    result.data["optColumn"] = this.optColumn;
-                    break;
-            }
-            result.data["parent_id"] = this.parent_id;
-
-            if(this.children != null) {
-                this.children.forEach(function(node) {
-                    result.children.push(node.getJSON());
-                });
-            }
-            return result;
-        };
-
         // LOAD Tree out of jstree-library's JSON format to get the changes the user made to the tree
         // load everything into 'this' object
         TrainingTreeNode.prototype.fromJSON = function(json_data) {
