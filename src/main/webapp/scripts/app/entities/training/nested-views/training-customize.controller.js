@@ -35,39 +35,88 @@ angular.module('sdlctoolApp')
 
         $scope.slideEditor(false);
 
+        var tree = $("#tree");
         // Tree selection callback (called when a node is selected)
-        $("#tree").bind("select_node.jstree", function(evt, data) {
-                //selected node object: data.inst.get_json()[0];
-                $scope.selectedNodeJSTree = data;
-                $scope.selectedNode = new TrainingTreeNode();
-                $scope.selectedNode.fromJSON(data.node);
+        tree.bind("select_node.jstree", function(evt, data) {
+            //selected node object: data.inst.get_json()[0];
+            $scope.selectedNodeJSTree = data;
+            $scope.selectedNode = new TrainingTreeNode();
+            $scope.selectedNode.fromJSON(data.node);
+            console.log("SELECTED id "+ data.node.id, data.node);
+            $scope.$apply();
 
-                var selectedNodeType = $scope.selectedNode.node_type;
-                var selectedNodeName = $scope.selectedNode.text;
+            var selectedNodeType = $scope.selectedNode.node_type;
+            var selectedNodeName = $scope.selectedNode.text;
 
-                if(selectedNodeType == "GeneratedSlideNode" || selectedNodeType == "CustomSlideNode") {
-                    $scope.slideEditor(true);
+            if(selectedNodeType == "GeneratedSlideNode" || selectedNodeType == "CustomSlideNode") {
+                $scope.slideEditor(true);
 
-                    $scope.updateSlidePreview(selectedNodeType == "GeneratedSlideNode");
+                $scope.updateSlidePreview(selectedNodeType == "GeneratedSlideNode");
 
-                    if(selectedNodeType !== "CustomSlideNode") {
-                        $('#slideTitle').prop('disabled', true);
-                        $('#slideContent').prop('disabled', true);
-                        $('#saveSlideButton').prop('disabled', true);
-                        $('#updateSlideButton').prop('disabled', true);
-                        // $('#customSlideWarning').fadeIn();
-                    } else {
-                        $('#slideTitle').prop('disabled', false);
-                        $('#slideContent').prop('disabled', false);
-                        $('#saveSlideButton').prop('disabled', false);
-                        $('#updateSlideButton').prop('disabled', false);
-                        // $('#customSlideWarning').hide();
-                    }
+                if(selectedNodeType !== "CustomSlideNode") {
+                    $('#slideTitle').prop('disabled', true);
+                    $('#slideContent').prop('disabled', true);
+                    $('#saveSlideButton').prop('disabled', true);
+                    $('#updateSlideButton').prop('disabled', true);
+                    // $('#customSlideWarning').fadeIn();
                 } else {
-                    $scope.slideEditor(false);
+                    $('#slideTitle').prop('disabled', false);
+                    $('#slideContent').prop('disabled', false);
+                    $('#saveSlideButton').prop('disabled', false);
+                    $('#updateSlideButton').prop('disabled', false);
+                    // $('#customSlideWarning').hide();
                 }
+            } else {
+                $scope.slideEditor(false);
             }
-        );
+        });
+
+        // Tree move node callback (triggered when a node is moved)
+        tree.bind("move_node.jstree", function(e, data) {
+
+            var node = data.node;
+            var new_parent = tree.jstree(true).get_node(data.parent);
+
+            // update parent
+            var parent = new TrainingTreeNode();
+            parent.fromJSON(new_parent);
+            node.data.parent_id = parent;
+
+            // update anchor
+            var new_anchor = -2;
+            if(new_parent.children != null) {
+                var previousChildren = [];
+                for(var i = 0; i < new_parent.children.length; i++) {
+                    if(node.id != new_parent.children[i])
+                        previousChildren.push(new_parent.children[i]);
+                    else break;
+                }
+                console.log("previousChildren", previousChildren);
+                previousChildren.forEach(function(child_id) {
+                    var child_node = tree.jstree(true).get_node(child_id);
+                    if(child_node.type == "CategoryNode" || child_node.type == "RequirementNode" || child_node.type == "GeneratedSlideNode") {
+                        if(child_node.data.json_universal_id != null)
+                            new_anchor = child_node.data.json_universal_id
+                    }
+                });
+            } else {
+                console.error("error in move_node.jstree callback: new parent has no children");
+            }
+            node.data.anchor = new_anchor;
+            console.log("new anchor is ", new_anchor);
+
+            if(node.type == "CustomSlideNode" || node.type == "GeneratedSlideNode") {
+                // update the content;
+                var nodeObj = new TrainingTreeNode();
+                nodeObj.fromJSON(node);
+                nodeObj.loadContent(new_parent.name).then(function(new_content) {
+
+                    console.log("new content would be", new_content);
+                    node.content = new_content;
+                });
+                //$scope.setSlidePreviewContent(nodeObj.loadContent(new_parent.name));
+            }
+        });
 
         $scope.saveSlide = function() {
             // rename node
