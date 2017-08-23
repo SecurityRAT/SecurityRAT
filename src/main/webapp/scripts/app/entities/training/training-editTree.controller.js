@@ -31,20 +31,38 @@ angular.module('sdlctoolApp')
                 $state.go('training', null, { reload: true });
             }, 2500);
         };
+        $scope.openFeedbackModal = function(title, message) {
+            $scope.feedback = { title: title, message: message };
+            $scope.feedbackModalInstance = $uibModal.open({
+                size: 'md',
+                backdrop: 'static',
+                templateUrl: 'scripts/app/entities/training/training-feedbackModal.html',
+                scope: $scope
+            });
+        };
+        $scope.closeFeedbackModal = function() {
+            $scope.feedbackModalInstance.close();
+        };
 
         $scope.init = function() {
             TrainingTreeUtil.RootNodeOfTraining.query({id: $scope.training.id}).$promise.then(function(foundRootNode) {
                 console.log("The foundRootNode", foundRootNode);
-                TrainingTreeNode.get({id: foundRootNode.id}).$promise.then(function (realRootNode) {
+                TrainingTreeUtil.CheckUpdate.query({id: foundRootNode.id}).$promise.then(function(treeStatus) {
+                    console.log("treeStatus", treeStatus);
+                    if(treeStatus.hasUpdates) {
+                        $scope.openFeedbackModal("Structural Updates found", "This training has been updated due to changes to the database. Please check your structure and modify it accordingly.");
+                    }
+                    TrainingTreeNode.get({id: foundRootNode.id}).$promise.then(function (realRootNode) {
 
-                    $scope.trainingRoot = realRootNode;
-                    $scope.trainingRoot.name = $scope.training.name;
-                    $scope.trainingRoot.opened = true;
+                        $scope.trainingRoot = realRootNode;
+                        $scope.trainingRoot.name = $scope.training.name;
+                        $scope.trainingRoot.opened = true;
 
-                    console.log("TREE LOADING FINISHED", $scope.trainingRoot);
-                    $rootScope.trainingTreeData[0] = TrainingTreeNode.JSON_to_JSTree($scope.trainingRoot);
-                    console.log("the real json", $rootScope.trainingTreeData[0]);
-                    $rootScope.displayTree();
+                        console.log("TREE LOADING FINISHED", $scope.trainingRoot);
+                        $rootScope.trainingTreeData[0] = TrainingTreeNode.JSON_to_JSTree($scope.trainingRoot);
+                        console.log("the real json", $rootScope.trainingTreeData[0]);
+                        $rootScope.displayTree();
+                    });
                 });
             });
         };

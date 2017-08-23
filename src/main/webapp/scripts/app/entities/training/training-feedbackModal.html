@@ -1,0 +1,16 @@
+<div class="modal-header" >
+    <button type="button" class="close" data-ng-click="cancel()" aria-hidden="true">×</button>
+    <div class="form-group">
+        <h3 class="modal-title">{{ feedback.title }}</h3>
+    </div>
+</div>
+<div class="modal-body">
+    <div>
+        {{ feedback.message }}
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-success" data-ng-click="closeFeedbackModal()">
+        &nbsp;<span>OK</span>
+    </button>
+</div>

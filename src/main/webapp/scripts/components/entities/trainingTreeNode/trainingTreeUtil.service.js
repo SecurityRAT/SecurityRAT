@@ -31,6 +31,10 @@ angular.module('sdlctoolApp')
 
             TreeWithPreparedContent:  $resource('api/trainingTreeNodesWithPreparedContent/:id', {}, {
                 query: { method: 'GET', isArray: false}
+            }),
+
+            CheckUpdate: $resource('api/trainingTreeNodeUpdate/:id', {}, {
+                query: { method: 'GET', isArray: false}
             })
 
         };
