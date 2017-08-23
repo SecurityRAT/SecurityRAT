@@ -422,8 +422,19 @@ angular.module('sdlctoolApp')
                 if($scope.firstTimeDrawingTree) {
                     $('#tree').jstree({
                         'core': {
-                            'check_callback': true,
+                            'check_callback': function(operation, node, node_parent, node_position, more) {
+                                var operation_allowed = true;
+                                if(operation == "move_node") {
+                                    // workaround to prevent moving of GeneratedSlideNodes into CategoryNodes
+                                    if(node.type == "GeneratedSlideNode" && node_parent.type == "CategoryNode")
+                                        operation_allowed = false;
+                                }
+                                return operation_allowed;
+                            },
                             'data': $rootScope.trainingTreeData
+                        },
+                        "dnd": {
+                            check_while_dragging: true
                         },
                         "plugins": ["contextmenu", "dnd", "types"],
                         "contextmenu": {items: customMenu},
