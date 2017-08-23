@@ -214,7 +214,8 @@ public class TrainingTreeNodeResource {
         log.debug("REST request to apply structural updates to TrainingTreeNode : {} and subtree", id);
         TrainingTreeNode trainingTreeNode = trainingTreeNodeRepository.findOne(id);
 
-        Training training = trainingTreeNode.getTraining_id();
+        Training training = trainingRepository.findOneWithEagerRelationships(trainingTreeNode.getTraining_id().getId());
+
         // build categories with requirements for selection
         List<CollectionInstance> collectionInstances = new ArrayList<>();
         List<ProjectType> projectTypes = new ArrayList<>();
@@ -229,7 +230,13 @@ public class TrainingTreeNodeResource {
         }
         List<ReqCategory> reqCategories = reqCategoryRepository.findEagerlyCategoriesWithRequirements(collectionInstances, projectTypes);
 
-        boolean hasUpdates = updateSubTree(trainingTreeNode, reqCategories);
+        // get selected OptColumns
+        List<OptColumn> selectedOptColumns = new ArrayList<>();
+        for(OptColumn optColumn : training.getOptColumns()) {
+            selectedOptColumns.add(optColumn);
+        }
+
+        boolean hasUpdates = updateSubTree(trainingTreeNode, reqCategories, selectedOptColumns);
 
         TrainingTreeStatus result = new TrainingTreeStatus();
         result.setHasUpdates(hasUpdates);
@@ -301,7 +308,7 @@ public class TrainingTreeNodeResource {
         return result;
     }
 
-    boolean updateSubTree(TrainingTreeNode trainingTreeNode, List<ReqCategory> reqCategories) {
+    boolean updateSubTree(TrainingTreeNode trainingTreeNode, List<ReqCategory> reqCategories, List<OptColumn> selectedOptColumns) {
         boolean hasUpdates = false;
 
         List<TrainingTreeNode> children = trainingTreeNodeRepository.getChildrenOf(trainingTreeNode);
@@ -411,27 +418,155 @@ public class TrainingTreeNodeResource {
                                 trainingTreeNodeRepository.delete(baseNode);
                                 trainingCategoryNodeRepository.delete(categoryNodeToRemove);
                             }
+                            //TODO delete requirementNodes + contents
                         }
-                    }
-
-                    childrenNewOrder = reorder_children(customNodes, databaseNodes);
-
-                    // update sort_order in database
-                    int new_sortOrder = 0;
-                    for(TrainingTreeNode child : childrenNewOrder) {
-                        if(child.getSort_order() != new_sortOrder)
-                            hasUpdates = true;
-                        child.setSort_order(new_sortOrder++);
-                        trainingTreeNodeRepository.save(child);
                     }
 
                     break;
                 case CategoryNode:
-                    //TODO check if requirement subset changed
+                    // fetch requirement nodes inside this branch
+                    List<TrainingRequirementNode> requirementNodes = new ArrayList<>();
+                    for(TrainingTreeNode databaseNode : databaseNodes.values()) {
+                        requirementNodes.add(trainingRequirementNodeRepository.getTrainingRequirementNodeByTrainingTreeNode(databaseNode));
+                    }
+
+                    // find the matching category by linear search
+                    TrainingCategoryNode thisCategoryNode = trainingCategoryNodeRepository.getTrainingCategoryNodeByTrainingTreeNode(trainingTreeNode);
+                    ReqCategory thisCategory = null;
+                    for(ReqCategory category : reqCategories) {
+                        if(thisCategoryNode.getCategory() != null && thisCategoryNode.getCategory().getId().equals(category.getId())) {
+                            thisCategory = category;
+                            break;
+                        }
+                    }
+                    if(thisCategory != null) {
+                        // search for each selected requirement and delete / add to match the lists
+                        for(RequirementSkeleton selectedRequirement : thisCategory.getRequirementSkeletons()) {
+                            boolean foundSelectedRequirement = false;
+                            TrainingRequirementNode foundNode = null;
+                            for(TrainingRequirementNode requirementNode : requirementNodes) {
+                                if(requirementNode.getRequirementSkeleton().getId().equals(selectedRequirement.getId())) {
+                                    foundSelectedRequirement = true;
+                                    foundNode = requirementNode;
+                                    break;
+                                }
+                            }
+                            if(foundSelectedRequirement) {
+                                requirementNodes.remove(foundNode); // no need to check this node again
+                            } else {
+                                hasUpdates = true;
+                                // add the missing requirement to the tree in database
+                                TrainingTreeNode new_baseNode = new TrainingTreeNode();
+                                new_baseNode.setNode_type(RequirementNode);
+
+                                int nextSortOrder = trainingTreeNodeRepository.getHighestSortOrder(trainingTreeNode.getId()) + 1;
+                                new_baseNode.setSort_order(nextSortOrder);
+                                new_baseNode.setActive(true);
+                                new_baseNode.setParent_id(trainingTreeNode);
+                                new_baseNode.setTraining_id(trainingTreeNode.getTraining_id());
+                                trainingTreeNodeRepository.save(trainingTreeNode);
+                                TrainingRequirementNode new_requirementNode = new TrainingRequirementNode();
+                                new_requirementNode.setNode(new_baseNode);
+                                new_requirementNode.setRequirementSkeleton(selectedRequirement);
+                                trainingRequirementNodeRepository.save(new_requirementNode);
+                                //TODO add GeneratedSlideNodes
+
+                                databaseNodes.put(nextSortOrder, new_baseNode);
+
+                            }
+                        }
+                        if(requirementNodes.size() > 0) {
+                            hasUpdates = true;
+                            for(TrainingRequirementNode requirementNodeToRemove : requirementNodes) {
+                                TrainingTreeNode baseNode = requirementNodeToRemove.getNode();
+                                List<TrainingTreeNode> childrenOfNode = trainingTreeNodeRepository.getChildrenOf(baseNode);
+                                if(childrenOfNode.size() == 0) {
+                                    // requirement is empty and can be removed
+                                    trainingTreeNodeRepository.delete(baseNode);
+                                    trainingRequirementNodeRepository.delete(requirementNodeToRemove);
+                                } else {
+                                    //TODO move the CustomNodes one level up
+                                }
+                            }
+                        }
+                    }
                     break;
                 case RequirementNode:
-                    //TODO check if optcolumn subset changed
+                    // fetch GeneratedSlideNodes inside this RequirementNode
+                    List<TrainingGeneratedSlideNode> generatedSlideNodes = new ArrayList<>();
+                    for(TrainingTreeNode databaseNode : databaseNodes.values()) {
+                        generatedSlideNodes.add(trainingGeneratedSlideNodeRepository.getTrainingGeneratedSlideNodeByTrainingTreeNode(databaseNode));
+                    }
+
+                    // search for the skeleton (it should always be there)
+                    // TODO insert skeleton if not present
+                    TrainingGeneratedSlideNode skeletonNode = null;
+                    for(TrainingGeneratedSlideNode generatedSlideNode : generatedSlideNodes) {
+                        if (generatedSlideNode.getOptColumn() == null) {
+                            skeletonNode = generatedSlideNode;
+                            break;
+                        }
+                    }
+                    if(skeletonNode != null)
+                        generatedSlideNodes.remove(skeletonNode);
+
+                    // search for each selected optColumn and delete / add GenerateSlideNodes to match the lists
+                    for(OptColumn selectedOptColumn : selectedOptColumns) {
+                        boolean foundSelectedOptColumn = false;
+                        TrainingGeneratedSlideNode foundNode = null;
+                        for(TrainingGeneratedSlideNode generatedSlideNode : generatedSlideNodes) {
+                            if(generatedSlideNode.getOptColumn().getId().equals(selectedOptColumn.getId())) {
+                                foundSelectedOptColumn = true;
+                                foundNode = generatedSlideNode;
+                                break;
+                            }
+                        }
+                        if(foundSelectedOptColumn) {
+                            generatedSlideNodes.remove(foundNode); // no need to check this node again
+                        } else {
+                            hasUpdates = true;
+                            // add the missing requirement to the tree in database
+                            TrainingTreeNode new_baseNode = new TrainingTreeNode();
+                            new_baseNode.setNode_type(GeneratedSlideNode);
+
+                            int nextSortOrder = trainingTreeNodeRepository.getHighestSortOrder(trainingTreeNode.getId()) + 1;
+                            new_baseNode.setSort_order(nextSortOrder);
+                            new_baseNode.setActive(true);
+                            new_baseNode.setParent_id(trainingTreeNode);
+                            new_baseNode.setTraining_id(trainingTreeNode.getTraining_id());
+                            trainingTreeNodeRepository.save(trainingTreeNode);
+                            TrainingGeneratedSlideNode new_generatedSlideNode = new TrainingGeneratedSlideNode();
+                            new_generatedSlideNode.setNode(new_baseNode);
+                            new_generatedSlideNode.setOptColumn(selectedOptColumn);
+                            trainingGeneratedSlideNodeRepository.save(new_generatedSlideNode);
+
+                            databaseNodes.put(nextSortOrder, new_baseNode);
+
+                        }
+                    }
+                    if(generatedSlideNodes.size() > 0) {
+                        hasUpdates = true;
+                        for(TrainingGeneratedSlideNode generatedSlideNodeToRemove : generatedSlideNodes) {
+                            TrainingTreeNode baseNode = generatedSlideNodeToRemove.getNode();
+                            trainingTreeNodeRepository.delete(baseNode);
+                            trainingGeneratedSlideNodeRepository.delete(generatedSlideNodeToRemove);
+                            // TODO what happens to nodes anchored here?
+                        }
+                    }
+
                     break;
+            }
+
+            // 2. reorder children
+            childrenNewOrder = reorder_children(customNodes, databaseNodes);
+
+            // update sort_order in database
+            int new_sortOrder = 0;
+            for(TrainingTreeNode child : childrenNewOrder) {
+                if(child.getSort_order() != new_sortOrder)
+                    hasUpdates = true;
+                child.setSort_order(new_sortOrder++);
+                trainingTreeNodeRepository.save(child);
             }
 
         }
@@ -440,7 +575,7 @@ public class TrainingTreeNodeResource {
         for(TrainingTreeNode child : children) {
             TrainingTreeNodeType node_type = child.getNode_type();
             if(node_type == BranchNode || node_type == CategoryNode || node_type == RequirementNode) {
-                if(updateSubTree(child, reqCategories)) {
+                if(updateSubTree(child, reqCategories, selectedOptColumns)) {
                     hasUpdates = true;
                 }
             }
