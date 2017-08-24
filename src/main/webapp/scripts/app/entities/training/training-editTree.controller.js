@@ -61,8 +61,7 @@ angular.module('sdlctoolApp')
             $scope.startLoadingProgressBar();
 
             if(executeUpdates) {
-                alert("executing!");
-                TrainingTreeUtil.ExecuteUpdate.query({id: $scope.rootNode.id}).$promise.then(function(treeStatus) {
+                TrainingTreeUtil.ExecuteUpdate.save({id: $scope.rootNode.id}).$promise.then(function(treeStatus) {
                     $scope.getAndDisplayTree();
                 });
             } else

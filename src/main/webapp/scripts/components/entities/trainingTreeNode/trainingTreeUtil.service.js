@@ -36,7 +36,7 @@ angular.module('sdlctoolApp')
             CheckUpdate: $resource('api/trainingTreeNodeUpdate/:id', {}, {
                 query: { method: 'GET', isArray: false}
             }),
-            ExecuteUpdate: $resource('api/trainingTreeNodeUpdate/:id', {}, {
+            ExecuteUpdate: $resource('api/trainingTreeNodeUpdate/', {}, {
                 query: { method: 'POST', isArray: false}
             })
 

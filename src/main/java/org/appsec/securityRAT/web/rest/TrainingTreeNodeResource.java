@@ -226,13 +226,13 @@ public class TrainingTreeNodeResource {
      * POST  /trainingTreeNodeUpdate/{id} -> apply structural updates to the subtree
      *  return info if structural updates were applied
      */
-    @RequestMapping(value = "/trainingTreeNodeUpdate/{id}",
+    @RequestMapping(value = "/trainingTreeNodeUpdate",
         method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<TrainingTreeStatus> updateTree(@PathVariable Long id) {
-        log.debug("REST request to apply structural updates to TrainingTreeNode : {} and subtree", id);
-        TrainingTreeNode trainingTreeNode = trainingTreeNodeRepository.findOne(id);
+    public ResponseEntity<TrainingTreeStatus> updateTree(@RequestBody TrainingTreeNode id_wrapped) {
+        log.debug("REST request to apply structural updates to TrainingTreeNode : {} and subtree", id_wrapped.getId());
+        TrainingTreeNode trainingTreeNode = trainingTreeNodeRepository.findOne(id_wrapped.getId());
 
         TrainingTreeStatus result = startTreeUpdate(false, trainingTreeNode);
 
