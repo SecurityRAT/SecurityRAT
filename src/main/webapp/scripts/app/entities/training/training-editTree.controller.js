@@ -13,7 +13,16 @@ angular.module('sdlctoolApp')
         $scope.startLoadingProgressBar = function() {
             $scope.loadingProgressbar.intervalPromise = $interval(function() { $scope.loadingProgressbar.barValue += 1; }, 100, 99);
         };
+        $scope.pauseLoadingProgressBar = function(value) {
+            if (angular.isDefined($scope.loadingProgressbar.intervalPromise)) {
+                $interval.cancel($scope.loadingProgressbar.intervalPromise);
+            }
+            $scope.loadingProgressbar.barValue = value;
+        };
         $scope.stopLoadingProgresBar = function() {
+            if (angular.isDefined($scope.loadingProgressbar.intervalPromise)) {
+                $interval.cancel($scope.loadingProgressbar.intervalPromise);
+            }
             $scope.loadingProgressbar.barValue = 100;
             $scope.loadingProgressbar.hide = true;
         };
@@ -30,7 +39,6 @@ angular.module('sdlctoolApp')
         $scope.closeSaveProgressModal = function() {
             if (angular.isDefined($scope.modalProgressbar.intervalPromise)) {
                 $interval.cancel($scope.modalProgressbar.intervalPromise);
-                $scope.modalProgressbar.intervalPromise = undefined;
             }
             $scope.modalProgressbar.barValue = 100;
             $timeout(function() {
@@ -48,31 +56,50 @@ angular.module('sdlctoolApp')
                 scope: $scope
             });
         };
-        $scope.closeFeedbackModal = function() {
+        $scope.closeFeedbackModal = function(executeUpdates) {
             $scope.feedbackModalInstance.close();
+            $scope.startLoadingProgressBar();
+
+            if(executeUpdates) {
+                alert("executing!");
+                TrainingTreeUtil.ExecuteUpdate.query({id: $scope.rootNode.id}).$promise.then(function(treeStatus) {
+                    $scope.getAndDisplayTree();
+                });
+            } else
+                $scope.getAndDisplayTree();
+        };
+
+        $scope.getAndDisplayTree = function() {
+            TrainingTreeNode.get({id: $scope.rootNode.id}).$promise.then(function (realRootNode) {
+
+                $scope.stopLoadingProgresBar();
+                $scope.trainingRoot = realRootNode;
+                $scope.trainingRoot.name = $scope.training.name;
+                $scope.trainingRoot.opened = true;
+
+                console.log("TREE LOADING FINISHED", $scope.trainingRoot);
+                $rootScope.trainingTreeData[0] = TrainingTreeNode.JSON_to_JSTree($scope.trainingRoot);
+                console.log("the real json", $rootScope.trainingTreeData[0]);
+                $rootScope.displayTree();
+            });
         };
 
         $scope.init = function() {
             $scope.startLoadingProgressBar();
             TrainingTreeUtil.RootNodeOfTraining.query({id: $scope.training.id}).$promise.then(function(foundRootNode) {
-                console.log("The foundRootNode", foundRootNode);
+                $scope.rootNode = foundRootNode;
+
                 TrainingTreeUtil.CheckUpdate.query({id: foundRootNode.id}).$promise.then(function(treeStatus) {
                     console.log("treeStatus", treeStatus);
                     if(treeStatus.hasUpdates) {
-                        $scope.openFeedbackModal("Structural Updates found", "This training has been updated due to changes to the database. Please check your structure and modify it accordingly.");
+                        $scope.pauseLoadingProgressBar(50);
+                        $scope.openFeedbackModal("Structural updates found",
+                            "The database has changed so that the structure of your training is not longer up to date." +
+                            "Do you want to apply the changes to the training structure?"
+                        );
+                    } else {
+                        $scope.getAndDisplayTree();
                     }
-                    TrainingTreeNode.get({id: foundRootNode.id}).$promise.then(function (realRootNode) {
-
-                        $scope.stopLoadingProgresBar();
-                        $scope.trainingRoot = realRootNode;
-                        $scope.trainingRoot.name = $scope.training.name;
-                        $scope.trainingRoot.opened = true;
-
-                        console.log("TREE LOADING FINISHED", $scope.trainingRoot);
-                        $rootScope.trainingTreeData[0] = TrainingTreeNode.JSON_to_JSTree($scope.trainingRoot);
-                        console.log("the real json", $rootScope.trainingTreeData[0]);
-                        $rootScope.displayTree();
-                    });
                 });
             });
         };
