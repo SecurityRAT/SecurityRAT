@@ -91,7 +91,7 @@ angular.module('sdlctoolApp')
                 TrainingTreeUtil.CheckUpdate.query({id: foundRootNode.id}).$promise.then(function(treeStatus) {
                     console.log("treeStatus", treeStatus);
                     if(treeStatus.hasUpdates) {
-                        $scope.pauseLoadingProgressBar(50);
+                        $scope.pauseLoadingProgressBar(40);
                         $scope.openFeedbackModal("Structural updates found",
                             "The database has changed so that the structure of your training is not longer up to date." +
                             "Do you want to apply the changes to the training structure?"
