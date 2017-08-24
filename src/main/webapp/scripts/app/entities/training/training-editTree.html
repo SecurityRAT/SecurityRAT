@@ -2,6 +2,16 @@
 <form name="editForm" role="form" novalidate ng-submit="save()">
     <h2 id="page-title" class="page-header">Edit Training Structure</h2>
 
+    <div data-ng-hide="loadingProgressbar.hide">
+        loading...
+        <uib-progressbar
+            class="progress-striped active"
+            value="loadingProgressbar.barValue"
+            type="success">
+            {{loadingProgressbar.barValue}}%
+        </uib-progressbar>
+    </div>
+
     <div class="container-fluid" style="padding-top: 30px;" ui-view="customize"></div>
 
     <div style="padding: 15px; text-align: right;">

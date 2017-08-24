@@ -3,12 +3,20 @@ angular.module('sdlctoolApp')
                                                     $uibModal, entity, Training, TrainingTreeNode, TrainingTreeUtil) {
         $scope.training = entity;
         $rootScope.trainingTreeData = [];
+        $scope.loadingProgressbar = { hide: false, barValue: 0, intervalPromise: undefined };
         $scope.modalProgressbar = { barValue: 0, intervalPromise: undefined };
 
         var onSaveFinished = function (result) {
             $scope.$emit('sdlctoolApp:trainingUpdate', result);
         };
 
+        $scope.startLoadingProgressBar = function() {
+            $scope.loadingProgressbar.intervalPromise = $interval(function() { $scope.loadingProgressbar.barValue += 1; }, 100, 99);
+        };
+        $scope.stopLoadingProgresBar = function() {
+            $scope.loadingProgressbar.barValue = 100;
+            $scope.loadingProgressbar.hide = true;
+        };
         $scope.openSaveProgressModal = function() {
             $scope.modalProgressbar.intervalPromise = $interval(function() { $scope.modalProgressbar.barValue += 1; }, 100, 99);
 
@@ -45,6 +53,7 @@ angular.module('sdlctoolApp')
         };
 
         $scope.init = function() {
+            $scope.startLoadingProgressBar();
             TrainingTreeUtil.RootNodeOfTraining.query({id: $scope.training.id}).$promise.then(function(foundRootNode) {
                 console.log("The foundRootNode", foundRootNode);
                 TrainingTreeUtil.CheckUpdate.query({id: foundRootNode.id}).$promise.then(function(treeStatus) {
@@ -54,6 +63,7 @@ angular.module('sdlctoolApp')
                     }
                     TrainingTreeNode.get({id: foundRootNode.id}).$promise.then(function (realRootNode) {
 
+                        $scope.stopLoadingProgresBar();
                         $scope.trainingRoot = realRootNode;
                         $scope.trainingRoot.name = $scope.training.name;
                         $scope.trainingRoot.opened = true;
