@@ -1,40 +1,34 @@
 <div data-ng-controller="RequirementsController" data-ng-init="init()" data-ng-cloak="">
     <div class="container-fluid">
+        <div class="col-lg-8">
+            <h2>{{systemSettings.name}}<span data-ng-if="ticket.url">: <a id="ticketUrl" data-ng-href="{{ticket.url}}" target="_blank">{{ticket.key}}</a></span></h2>
+        </div>
         <div class="row">
             <div class="col-lg-8">
                 <uib-accordion style="z-index:100000">
                     <uib-accordion-group class="panel panel-info" is-open="status.settings">
                         <uib-accordion-heading>
-                            Artifact Settings<i class="pull-right glyphicon" data-ng-class="{'glyphicon-chevron-down':status.settings , 'glyphicon-chevron-right':!status.settings}"></i>
+                            Artifact Settings<i class="pull-right glyphicon" data-ng-class="{'glyphicon-chevron-up':status.settings , 'glyphicon-chevron-down':!status.settings}"></i>
                         </uib-accordion-heading>
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <h4>Name: <strong>{{systemSettings.name}}</strong></h4>
-                                </div>
-                                <div class="col-sm-3">
-                                    <h4>Created on: <strong>{{generatedOn}}</strong></h4>
-                                </div>
-                                <div class="col-sm-3">
-                                    <button class="btn btn-primary pull-right" data-ng-click="changeSettings()" confirm="By changing the settings and automatic update of the requirements will be done. You can review the updates afterwards. No data will be lost."
-                                        data-ng-disabled="systemSettings.name == null">
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <h4>Created on: <strong>{{generatedOn}}</strong></h4>
+                            </div>
+                            <div class="col-sm-5" data-ng-if="lastChanged != null">
+                                <h4>Last changed: <strong>{{lastChanged}}</strong></h4>
+                            </div>
+                            <div class="col-sm-2">
+                                <button class="btn btn-primary pull-right" data-ng-click="changeSettings()" confirm="By changing the settings and automatic update of the requirements will be done. You can review the updates afterwards. No data will be lost."
+                                    data-ng-disabled="systemSettings.name == null">
                                         <strong>Change Settings</strong>
                                     </button>
-                                </div>
                             </div>
-                            <div class="row">
-                                <div class="col-sm-6" data-ng-repeat="type in systemSettings.project">
-                                    <h4>Implementation Type: <strong>{{type.name}}</strong></h4>
-                                </div>
-                                <div class="col-sm-6" data-ng-if="lastChanged != null">
-                                    <h4>Last changed: <strong>{{lastChanged}}</strong></h4>
-                                </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-{{12 / systemSettings.project.length}}" data-ng-repeat="type in systemSettings.project">
+                                <h4>Implementation Type: <strong>{{type.name}}</strong></h4>
                             </div>
-                            <div class="row" data-ng-if="ticket.url != null">
-                                <div class="col-sm-6" data-ng-repeat="type in systemSettings.project">
-                                    <h4>Ticket: <strong><div marked="ticket.url"></div></strong></h4>
-                                </div>
-                            </div>
+
                         </div>
                         <BR>
                         <div class="table-responsive">
@@ -60,7 +54,7 @@
                     </uib-accordion-group>
                     <uib-accordion-group class="panel panel-info" is-open="status.tags">
                         <uib-accordion-heading>
-                            Tags<i class="pull-right glyphicon" data-ng-class="{'glyphicon-chevron-down':status.tags , 'glyphicon-chevron-right':!status.tags}"></i>
+                            Tags<i class="pull-right glyphicon" data-ng-class="{'glyphicon-chevron-up':status.tags , 'glyphicon-chevron-down':!status.tags}"></i>
                         </uib-accordion-heading>
                         <div class="table-responsive">
                             <table class="table">
@@ -77,8 +71,8 @@
                                                             <strong style="color:yellow">{{categories.name}}: {{categories.description}}</strong>
                                                             <BR>
                                                             <span data-ng-repeat="instances in categories.tagInstances | orderBy:'showOrder'">
-																			<span style="color:#cc6600;">{{instances.name}}:</span>                                                            {{instances.description}}
-                                                            <BR>
+																<span style="color:#cc6600;">{{instances.name}}:</span> {{instances.description}}
+                                                                <BR>
                                                             </span>
                                                         </p>
                                                     </div>
@@ -123,10 +117,15 @@
                 </span>
             </div>
             <div class="pull-right" data-ng-hide="!updatesAvailable">
-                <span uib-tooltip="Please apply the updates first." tooltip-enable="{{updatedReqs}}">
-					<span uib-tooltip="Updates for your current requirement set are available." tooltip-enable="!{{updatedReqs}}">
-					<button id="updateReq" class="btn btn-danger"  data-ng-click="updatesAvailableClicked()" data-ng-disabled="systemSettings.name == null || updatedReqs"  >
-							<span class="glyphicon glyphicon-refresh"></span> Updates available
+                <span>
+					<span >
+                        <button class="btn btn-danger" data-ng-click="revertUpdates()" data-ng-if="updatedReqs" uib-tooltip="This will discard all the updates already made.">
+                            <span class="glyphicon glyphicon-remove-circle" />
+                            <span> Cancel the updates</span>
+                </button>
+                <button id="updateReq" data-ng-if="!(systemSettings.name == null || updatedReqs)" class="btn btn-danger" uib-tooltip="Updates for your current requirement set are available."
+                    tooltip-enable="!{{updatedReqs}}" data-ng-click="updatesAvailableClicked()">
+                            <span class="glyphicon glyphicon-refresh"></span> Updates available
                 </button>
                 </span>
                 </span>
@@ -135,13 +134,14 @@
     </div>
     <div>
         <p><strong>{{requirements.length}}</strong> Requirements found
-            <span data-ng-if="requirements.length > (filterRequirements()).length">,
-				<span style="color:red;"><strong id="requirementInRed">{{(filterRequirements()).length}}</strong> Requirements shown
-				</span>
+            <span data-ng-if="requirements.length > filterRequirements().length && !updatedReqs">,
+                    <span style="color:red;"><strong id="requirementInRed">{{filterRequirements().length}}</strong> Requirements shown
+                    </span>
             </span>
+            <span data-ng-if="updatedReqs" style="color:red;"><strong>{{updatesCounter + newCounter + deletedReqs.length}}</strong> Requirements shown</span>
             <span data-ng-if="(requirements | filter: {selected:true}).length">and
-				<span style="color:#cc7a00;"><strong id="requirementInRed">{{(requirements | filter: {selected:true}).length}}</strong> Requirements selected.
-				</span>
+                    <span style="color:#cc7a00;"><strong id="requirementInRed">{{(requirements | filter: {selected:true}).length}}</strong> Requirements selected.
+                    </span>
             </span>
         </p>
     </div>
@@ -241,46 +241,73 @@
                 <thead>
                     <tr>
                         <th data-ng-if="updatedReqs">Updates</th>
-                        <th class="text-center">Short Name</th>
-                        <th class="text-center">Description</th>
-                        <th class="text-center" data-ng-repeat="opt in optColumns | orderBy:'showOrder'">
+                        <th class="text-center">Short Name <span data-ng-if="textFilters.shortName" style="color: red" class="glyphicon glyphicon-filter"></span></th>
+                        <th class="text-center">Description <span data-ng-if="textFilters.description" style="color: red" class="glyphicon glyphicon-filter"></span></th>
+                        <th class="text-center col-md-{{5 / optColumns.length}}" data-ng-repeat="opt in optColumns | orderBy:'showOrder'">
                             <span data-ng-if="!opt.alternativeSets  && optToHide.indexOf(opt.id) == -1">
-		    					<span data-ng-show="optToHide.indexOf(opt.id) == -1">{{opt.name}}</span>
-                            <span class="glyphicon glyphicon-chevron-down positionChevron" data-ng-if="optToHide.indexOf(opt.id) == -1" uib-tooltip="Hide {{opt.name}}"
+                                <span data-ng-show="optToHide.indexOf(opt.id) == -1">{{opt.name}}</span>
+                            <span class="glyphicon glyphicon-eye-close positionChevron" data-ng-if="optToHide.indexOf(opt.id) == -1" uib-tooltip="Hide {{opt.name}}"
                                 style="cursor:pointer;" data-ng-click="hideColumn(opt.id)"></span>
                             </span>
                             <span data-ng-if="opt.alternativeSets && optToHide.indexOf(opt.id) == -1">
-			    					<span data-ng-repeat="optTooltip in htmlTooltips.optColumnTooltips" >
-			    						<span data-ng-if="opt.id == optTooltip.optId" ng-dropdown-multiselect="" options="opt.alternativeSets" selected-model="opt.selectedAlternativeSets"
-				    					translation-texts="opt.optColumnLabelText" extra-settings="selectedAlternativeSettings" events="selectedAlternativeEvents"
-				    					uib-tooltip-html="optTooltip.tooltip" tooltip-append-to-body>
-				    					</span>
+                                <span data-ng-repeat="optTooltip in htmlTooltips.optColumnTooltips">
+                                    <span data-ng-if="opt.id == optTooltip.optId" ng-dropdown-multiselect="" options="opt.alternativeSets" selected-model="opt.selectedAlternativeSets"
+                                        translation-texts="opt.optColumnLabelText" extra-settings="selectedAlternativeSettings"
+                                        events="selectedAlternativeEvents" uib-tooltip-html="optTooltip.tooltip" tooltip-append-to-body>
+                                    </span>
                             </span>
-                            <span class="glyphicon glyphicon-chevron-down positionChevron hide-chevron" data-ng-if="optToHide.indexOf(opt.id) == -1"
+                            <span class="glyphicon glyphicon-eye-close positionChevron" style="margin-top:15px;cursor:pointer;" data-ng-if="optToHide.indexOf(opt.id) == -1"
                                 uib-tooltip="Hide {{opt.name}}" data-ng-click="hideColumn(opt.id)"></span>
                             </span>
-                            <p data-ng-if="optToHide.indexOf(opt.id) != -1" data-ng-click="hideColumn(opt.id)">
-                                ...<span class="glyphicon glyphicon-chevron-right show-chevron" uib-tooltip="Show {{opt.name}}"
+                            <span data-ng-if="textFilters.optColumns[opt.id]" style="color: red" class="glyphicon glyphicon-filter"></span>
+
+                            <p data-ng-if="optToHide.indexOf(opt.id) != -1" style="cursor:pointer;" data-ng-click="hideColumn(opt.id)">
+                                ...<span class="glyphicon glyphicon-eye-open" style="display:inline" uib-tooltip="Show {{opt.name}}"
                                     tooltip-append-to-body></span>
                             </p>
                         </th>
-                        <th data-ng-repeat="status in statusColumns | orderBy:'showOrder'">
-                            <div class="text-center" data-ng-if="!status.isEnum">
-                                {{status.name}}
-                            </div>
-                            <div data-ng-if="status.isEnum">
-                                <span data-ng-repeat="statTooltip in htmlTooltips.statusColumnTooltips">
-				    				<span data-ng-if="status.id == statTooltip.statId" ng-dropdown-multiselect="" options="status.values" selected-model="selectedStatus"
-					    				translation-texts="status.statColumnLabelText" extra-settings="selectedStatusSettings"
-					    				uib-tooltip-html="statTooltip.tooltip" tooltip-append-to-body>
+                        <th class="text-center" data-ng-repeat="status in statusColumns | orderBy:'showOrder'">
+                            <span class="text-center" data-ng-if="!status.isEnum">
+                                {{status.name}}<span data-ng-if="textFilters.statusColumns[status.id]" style="color: red" class="glyphicon glyphicon-filter"></span>
+                            </span>
+                            <span data-ng-if="status.isEnum">
+                                {{status.name}}<span data-ng-if="selectedStatusColumn[status.id].length > 0" style="color: red" class="glyphicon glyphicon-filter"></span>
+                            </span>
 
-					    			</span>
-                                </span>
-                            </div>
                         </th>
                         <th class="text-center" data-ng-if="ticket.url">
-                            <div data-ng-dropdown-multiselect="" options="jiraStatus.allStatus" selected-model="jiraStatus.selectedStatus" translation-texts="jiraStatus.jiraStatusLabelText"
-                                extra-settings="selectedJiraStatusSettings" disabled="isStatusArrayEmpty()" >
+                            Status<span data-ng-if="jiraStatus.selectedStatus.length > 0" style="color: red" class="glyphicon glyphicon-filter"></span>
+                        </th>
+                        <th class="text-center"></th>
+                    </tr>
+                    <tr>
+                        <td data-ng-if="updatedReqs"></td>
+                        <td class="text-center"><input placeholder="Filter" type="text" class="form-control" data-ng-model="textFilters.shortName"
+                            /></td>
+                        <td class="text-center"><input placeholder="Filter" type="text" class="form-control" data-ng-model="textFilters.description"
+                            /></td>
+                        <td class="text-center" data-ng-class="" data-ng-repeat="opt in optColumns | orderBy:'showOrder'">
+                            <input placeholder="Filter" type="text" class="form-control" data-ng-model="textFilters.optColumns[opt.id]" data-ng-if="optToHide.indexOf(opt.id) == -1"
+                            />
+                        </td>
+                        <td class="text-center col-md-2" data-ng-repeat="status in statusColumns | orderBy:'showOrder'">
+                            <div data-ng-if="status.isEnum">
+                                <div data-ng-repeat="statTooltip in htmlTooltips.statusColumnTooltips">
+                                    <div data-ng-if="status.id == statTooltip.statId" ng-dropdown-multiselect="" options="status.values" selected-model="selectedStatusColumn[status.id]"
+                                        translation-texts="requirementProperties.defaultLabelFilterObject" extra-settings="selectedStatusSettings"
+                                        uib-tooltip-html="statTooltip.tooltip" tooltip-append-to-body>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div data-ng-if="!status.isEnum">
+                                <input placeholder="Filter" type="text" class="form-control" data-ng-model="textFilters.statusColumns[status.id]" />
+                            </div>
+
+                        </td>
+                        <td class="text-center col-md-1" data-ng-if="ticket.url" id="StatusFilter">
+                            <div data-ng-dropdown-multiselect="" options="jiraStatus.allStatus" selected-model="jiraStatus.selectedStatus" extra-settings="selectedJiraStatusSettings"
+                                translation-texts="requirementProperties.defaultLabelFilterObject" disabled="isStatusArrayEmpty()">
                             </div>
                             <!-- <p uib-collapse="!requirementProperties.hasIssueLinks" data-ng-click="requirementProperties.hasIssueLinks = !requirementProperties.hasIssueLinks">
                                 <span class="glyphicon glyphicon-chevron-down positionChevron hide-chevron" uib-tooltip="Hide this column" tooltip-append-to-body></span>
@@ -290,19 +317,20 @@
                                 uib-tooltip="Show ticket status column">
                                 ...<span class="glyphicon glyphicon-chevron-right show-chevron"></span>
                             </p> -->
-                        </th>
-                        <th class="text-center">
+                        </td>
+                        <td class="text-center">
                             <select-all filter-length="{{filterRequirements().length}}" on-change="performSelection(selectionValue)" selected-length="{{(filterRequirements() | filter: {selected: true}).length}}"></select-all>
-                        </th>
+                        </td>
                     </tr>
                 </thead>
                 <tbody data-ng-repeat="category in filterCategory | orderBy: 'showOrder' | filterCategoryByCategory : selectedCategory | filter: {isNew : '!'}">
                     <tr>
-                        <td class="text-center titleSize" colspan="{{3 + optColumns.length + statusColumns.length}}"><b>{{category.label}}</b>
+                        <td class="text-center titleSize" colspan="{{3 + optColumns.length + statusColumns.length + 1}}"><b>{{category.label}}</b>
                             <br/>
                         </td>
                     </tr>
-                    <tr class="animate-repeat" data-ng-repeat="reqs in requirements | orderBy:['categoryOrder','order'] | filterUpdates : updatedReqs | filterByTags : filteredRequirementsByTags | filter: {category: category.label} | filterByStatus : selectedStatus | filterTicketStatus : jiraStatus.selectedStatus | filter:search">
+                    <tr class="animate-repeat" data-ng-repeat="reqs in (filteredReqs = (requirements | orderBy:['categoryOrder','order'] | filterUpdates : updatedReqs | filterByTags : filteredRequirementsByTags | filter: {category: category.label, description: textFilters.description, shortName: textFilters.shortName} | filterByStatus : selectedStatusColumn: statusColumns | filterTicketStatus : jiraStatus.selectedStatus | filter:search | filterOptColumnByText: textFilters.optColumns : optColumns | filterStatusColumnByText: textFilters.statusColumns : statusColumns))"
+                        uib-tooltip="{{reqs.updateTooltip}}" data-ng-style="updatedReqs && reqs.shortName!==filteredReqs[$index+1].shortName && {'border-bottom':'solid 3px'}">
                         <td data-ng-if="updatedReqs && !reqs.isNew">{{reqs.applyUpdate}}</td>
                         <td data-ng-if="updatedReqs && reqs.isNew">
                             <div>
@@ -338,7 +366,17 @@
                         <td data-ng-repeat="opt in optColumns | orderBy:'showOrder'" data-ng-style="(reqs.isNew && {'background-color':'rgb(204, 255, 204)'}) || reqs.isOld && {'background-color':'rgb(255, 204, 204)'}">
                             <span data-ng-repeat-start="optionColumn in reqs.optionColumns | filter: {showOrder : opt.id}" data-ng-hide="true"></span>
                             <div data-ng-repeat-end data-ng-repeat="optionColumnContent in optionColumn.content" data-ng-show="optToHide.indexOf(optionColumn.showOrder) == -1">
-                                <div data-ng-if="!(reqs.isNew || reqs.isOld)" data-ng-bind-html="optionColumnContent.content | trusted"></div>
+                                <div data-ng-if="!(reqs.isNew || reqs.isOld)">
+                                    <div data-ng-if="!optionColumnContent.setId" data-ng-bind-html="optionColumnContent.content | trusted"></div>
+                                    <div data-ng-if="optionColumnContent.setId" class="panel panel-info">
+                                        <div class="panel-heading" style="padding-top: 1px; padding-bottom: 0px">
+                                            <div data-ng-bind-html="newStyleAlternativeInstances[reqs.id][optionColumnContent.id].title | trusted"></div>
+                                        </div>
+                                        <div class="panel-body">
+                                            <div data-ng-bind-html="newStyleAlternativeInstances[reqs.id][optionColumnContent.id].body | trusted"></div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div data-ng-if="reqs.isNew || reqs.isOld" marked="optionColumnContent.content"></div>
                             </div>
                         </td>
@@ -360,8 +398,8 @@
                         <td class="text-center" data-ng-style="reqs.isNew && {'background-color':'rgb(204, 255, 204)'} || reqs.isOld && {'background-color':'rgb(255, 204, 204)'}"
                             data-ng-if="ticket.url">
                             <div data-ng-if="reqs.linkStatus.issueKey">
-                                <a href="{{reqs.ticket}}" target="_blank" uib-popover-template="jiraStatus.displayStatusTemplateUrl"
-                                    popover-trigger="mouseenter" popover-append-to-body="true">
+                                <a href="{{reqs.ticket}}" target="_blank" uib-popover-template="jiraStatus.displayStatusTemplateUrl" popover-trigger="mouseenter"
+                                    popover-append-to-body="true">
                                     <img data-ng-src="{{reqs.linkStatus.iconUrl}}" data-ng-if="reqs.linkStatus.iconUrl != null" popover-append-to-body="true" /> {{reqs.linkStatus.name}}
                                 </a>
                                 <div>

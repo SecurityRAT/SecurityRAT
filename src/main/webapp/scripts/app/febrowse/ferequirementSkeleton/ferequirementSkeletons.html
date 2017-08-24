@@ -30,7 +30,7 @@
                    					<a href="#" tabindex="-1" role="presentation">{{category.name}}</a>
                    					<ul class="dropdown-menu" aria-labelledby="list{{category.id}}">
                    						<li data-ng-repeat="instance in category.tagInstances | orderBy : 'showOrder'">
-                   							<a href="#" data-ng-click="selectTagInstance(instance, 'selectedTags', 'tag')" tabindex="-1">
+                   							<a href="#" data-ng-click="selectTagInstance(instance, 'selectedTags', 'tag')" tabindex="-1"  >
                    							<span data-ng-class="{'glyphicon glyphicon-ok':isTagSelected(instance, 'selectedTags')}"></span>
                    							 {{instance.name}}</a>
                    						</li>
@@ -48,8 +48,8 @@
                    					<a href="#" tabindex="-1" role="presentation">{{category.name}}</a>
                    					<ul class="dropdown-menu" aria-labelledby="list{{category.id}}">
                    						<li data-ng-repeat="instance in category.collectionInstances">
-                   							<a href="#" data-ng-click="selectTagInstance(instance, 'selectedColls', 'coll')" tabindex="-1">
-                   							<span data-ng-class="{'glyphicon glyphicon-ok':isTagSelected(instance, 'selectedColls')}"></span>
+                   							<a href="#" data-ng-click="selectTagInstance(instance, 'selectedColls', 'coll')" tabindex="-1" >
+                   							<span data-ng-class="{'glyphicon glyphicon-ok':isTagSelected(instance, 'selectedColls')}" ></span>
                    							 {{instance.name}}</a>
                    						</li>
                    					</ul>

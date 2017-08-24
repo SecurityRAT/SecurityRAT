@@ -25,7 +25,7 @@ angular.module('sdlctoolApp')
 	  $scope.regex = new XRegExp('^[\\p{Latin}\\pN+\\s\\-\\.\\:\\+\\(\\)\\[\\]\\,\\!\\#\\$\\%\\\'\\*\\=\\?\\^\\`\\{\\}\\|\\~\\;\\@\\&]+$');
 	  getRequirementsFromImport.setProperty({});
 	  $scope.selectedCollectionSettings = {
-			  smartButtonMaxItems: 7,
+			  smartButtonMaxItems: 7, styleActive: true,
 			  closeOnSelect: true, closeOnDeselect: true,
 			  showCheckAll: false, showUncheckAll: false,
 			  displayProp: 'name', idProp: 'id', externalIdProp: ''

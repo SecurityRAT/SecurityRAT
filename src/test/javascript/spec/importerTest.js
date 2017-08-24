@@ -273,8 +273,8 @@ describe('Protractor Security RAT importer testsuite', function() {
 		browser.get(browser.params.impTestAttachmentUrl + browser.params.attachmentUrls[4]).then(function() {}, function(){
 			browser.switchTo().alert().accept();
 		});
-		browser.sleep(5000);
-		element(by.buttonText('Custom requirements')).click();
+		browser.sleep(10000);
+		element(by.partialButtonText('Custom requirements')).click();
 		expect(element(by.linkText('Edit')).isPresent()).toBe(true);
 		expect(element(by.partialLinkText('Remove')).isPresent()).toBe(true);
 		element(by.buttonText(SaveButton)).click();

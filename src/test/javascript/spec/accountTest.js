@@ -113,7 +113,6 @@ describe('Protractor Security RAT account testsuite', function() {
 		element(by.id('confirmPassword')).sendKeys(changedPassword);
 		element(by.buttonText('Save')).click();
 		browser.sleep(3000);
-		expect(element(by.id('success')).getText()).toEqual('Password changed!');
 	});
 	
 	it('Test log out function', function() {

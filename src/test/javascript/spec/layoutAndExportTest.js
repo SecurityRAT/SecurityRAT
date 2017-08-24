@@ -5,7 +5,7 @@
 
 describe('Protractor Security RAT editor and export testsuites', function() {
 	var defineArtifact = element(by.id('defineArtifact'));
-	var requirementRepeater = 'reqs in requirements | orderBy:[\'categoryOrder\',\'order\'] | filterUpdates : updatedReqs | filterByTags : filteredRequirementsByTags | filter: {category: category.label} | filterByStatus : selectedStatus | filterTicketStatus : jiraStatus.selectedStatus | filter:search';
+	var requirementRepeater = 'reqs in (filteredReqs = (requirements | orderBy:[\'categoryOrder\',\'order\'] | filterUpdates : updatedReqs | filterByTags : filteredRequirementsByTags | filter: {category: category.label, description: textFilters.description, shortName: textFilters.shortName} | filterByStatus : selectedStatusColumn: statusColumns | filterTicketStatus : jiraStatus.selectedStatus | filter:search | filterOptColumnByText: textFilters.optColumns : optColumns | filterStatusColumnByText: textFilters.statusColumns : statusColumns))';
 	var moreInfo = 'More Information';
 	var javaApp = 'JAVA Application';
 	var closeButton = 'Close';
@@ -298,9 +298,10 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 		element(by.buttonText(closeButton)).click();
 		browser.sleep(3000);
 		removeRibbon();
-		(element.all(by.className('accordion-toggle'))).first().click();
-		var list3 = element.all(by.partialLinkText(browser.params.jiraQueue));
-		expect(list3.count()).toBe(1);
+		expect(element(by.id('ticketUrl')).isPresent()).toBe(true);
+		// (element.all(by.className('accordion-toggle'))).first().click();
+		// var list3 = element.all(by.partialLinkText(browser.params.jiraQueue));
+		// expect(list3.count()).toBe(1);
 		
 		browser.sleep(3000);
 		
@@ -352,11 +353,11 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 		browser.sleep(3000);
 		
 		//checks the status column is present after the ticket is created.
-		element(by.buttonText('Status')).isPresent().then(function(v){ 
+		element(by.id('StatusFilter')).isPresent().then(function(v){ 
 		    expect(v).toBe(true);
 		});
 		//should filter the requirement set.
-		expect(element(by.buttonText('Status')).isPresent()).toBe(true);
+		expect(element(by.id('StatusFilter')).isPresent()).toBe(true);
 		
 		// modal pops up to warn the existence of a ticket for the selected requirement.
 		element(by.buttonText('Action with selected')).click();
@@ -649,7 +650,7 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 		element(by.id('ticket_field')).sendKeys(browser.params.jiraRemoteLinkTicket);
 		element(by.model('reqs.linkStatus.link')).click();
 		element(by.id('addTicket')).click();
-		browser.sleep(5000);
+		browser.sleep(8000);
 		var removeList2 = element.all(by.id('removeManualTicket'));
 		expect(removeList1.count()).toBe(removeList2.count() - 1);
 

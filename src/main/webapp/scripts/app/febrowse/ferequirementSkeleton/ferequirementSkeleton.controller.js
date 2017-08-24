@@ -31,17 +31,7 @@ angular.module('sdlctoolApp')
             idProp: 'id',
             externalIdProp: ''
         };
-        $scope.selectedTagSettings = {
-            smartButtonMaxItems: 2,
-            showCheckAll: false,
-            showUncheckAll: false,
-            displayProp: 'name',
-            idProp: 'id',
-            externalIdProp: '',
-            groupByTextProvider: function (groupValue) {
-                return groupValue.name;
-            }
-        };
+        
         $scope.typeLabelText = {
             buttonDefaultText: 'Implementation Types'
         };

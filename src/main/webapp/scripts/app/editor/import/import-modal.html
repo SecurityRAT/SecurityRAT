@@ -10,7 +10,7 @@
         <uib-accordion>
             <uib-accordion-group is-open="status.jira" panel-class="panel panel-info">
                 <uib-accordion-heading class="">
-                    Import from JIRA <i class="pull-right glyphicon" data-ng-class="{'glyphicon-chevron-down':status.jira , 'glyphicon-chevron-right': !status.jira}"></i>
+                    Import from JIRA <i class="pull-right glyphicon" data-ng-class="{'glyphicon-chevron-up':status.jira , 'glyphicon-chevron-down': !status.jira}"></i>
                 </uib-accordion-heading>
                 <div data-ng-if="status.jira">
                     <div>
@@ -56,7 +56,7 @@
             </uib-accordion-group>
             <uib-accordion-group is-open="status.file" panel-class="panel panel-info">
                 <uib-accordion-heading>
-                    Import from File <i class="pull-right glyphicon" data-ng-class="{'glyphicon-chevron-down':status.file , 'glyphicon-chevron-right':!status.file}"></i>
+                    Import from File <i class="pull-right glyphicon" data-ng-class="{'glyphicon-chevron-up':status.file , 'glyphicon-chevron-down':!status.file}"></i>
                 </uib-accordion-heading>
                 <div data-ng-if="status.file">
                     <div class="row">

@@ -1,12 +1,14 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('FeRequirementSkeletonDetailController', function ($scope, $filter, $rootScope, entity, apiFactory) {
+    .controller('FeRequirementSkeletonDetailController', function ($scope, $filter, $rootScope, entity, apiFactory, $window) {
         $scope.requirementSkeleton = entity;
         $scope.optColumnContents = [];
         $scope.altInstances = [];
         $scope.tagCategories = [];
-        $scope.collCategories = [];
+		$scope.collCategories = [];
+		
+		$window.document.title = 'Browse requirement [' + entity.shortName + ']';
         
         angular.forEach($scope.requirementSkeleton.collectionInstances, function(collInstance) {
     		var isPresent = $filter('filter')($scope.collCategories, {'id' : collInstance.collectionCategory.id});

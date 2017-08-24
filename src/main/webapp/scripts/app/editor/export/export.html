@@ -10,7 +10,7 @@
         <uib-accordion>
             <uib-accordion-group is-open="selection.jira" panel-class="panel panel-info">
                 <uib-accordion-heading>
-                    Export to JIRA <i class="pull-right glyphicon" data-ng-class="{'glyphicon-chevron-down':selection.jira, 'glyphicon-chevron-right': !selection.jira}"></i>
+                    Export to JIRA <i class="pull-right glyphicon" data-ng-class="{'glyphicon-chevron-up':selection.jira, 'glyphicon-chevron-down': !selection.jira}"></i>
                 </uib-accordion-heading>
                 <div data-ng-if="selection.jira">
                     <div class="row form-group">
@@ -94,7 +94,7 @@
             </uib-accordion-group>
             <uib-accordion-group is-open="selection.file" panel-class="panel panel-info">
                 <uib-accordion-heading>
-                    Export into File <i class="pull-right glyphicon" data-ng-class="{'glyphicon-chevron-down':selection.file, 'glyphicon-chevron-right':!selection.file}"></i>
+                    Export into File <i class="pull-right glyphicon" data-ng-class="{'glyphicon-chevron-up':selection.file, 'glyphicon-chevron-down':!selection.file}"></i>
                 </uib-accordion-heading>
                 <div data-ng-if="selection.file">
                     <div class="btn-group panel-info" data-toggle="buttons">

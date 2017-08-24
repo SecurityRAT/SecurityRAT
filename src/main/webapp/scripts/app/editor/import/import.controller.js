@@ -395,6 +395,7 @@ angular.module('sdlctoolApp')
             jiraStatus.allStatus = [];
             var hasIssueLinks = false;
             var reqCounter = 0;
+            var newStyleAlternativeInstances = {};
 
             angular.forEach(requirementCategories, function (category) {
                 var lastElementOrder = 0;
@@ -402,9 +403,13 @@ angular.module('sdlctoolApp')
                     reqCounter++;
                     var values = [];
                     // var linkStatus = {};
+                    newStyleAlternativeInstances[requirement.id] = {};
                     angular.forEach(requirement.optColumns, function (optColumn) {
                         angular.forEach(optColumn.content, function (content) {
                             if (content.setId !== undefined) {
+                                var split = content.content.split('**\n\n');
+                                // this is to make panels in editor view possible. This is done to better the performance.
+                                newStyleAlternativeInstances[requirement.id][content.id] = { title: split[0] + '**', body: split[1]};
                                 if ($scope.selectedAlternativeSets.indexOf(content.setId) === -1) {
                                     $scope.selectedAlternativeSets.push(content.setId);
                                 }
@@ -488,6 +493,7 @@ angular.module('sdlctoolApp')
             });
 
             angular.extend($scope.importObject, {
+                newStyleAlternativeInstances: newStyleAlternativeInstances,
                 requirement: $scope.requirements,
                 filterCategory: $scope.filterCategory,
                 selectedAlternativeSets: $scope.selectedAlternativeSets,

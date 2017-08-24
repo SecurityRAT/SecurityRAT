@@ -35,32 +35,6 @@
                         <li ui-sref-active="active" ><a ui-sref="ferequirementSkeleton"><span class="glyphicon glyphicon-asterisk"></span>&#xA0;<span>Requirements</span></a></li>
                    </ul>
                 </li>
-                <li data-ng-class="{active: $state.includes('account')}" class="dropdown pointer">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="">
-                                <span>
-                                    <span class="glyphicon glyphicon-user"></span>
-                                    <span class="hidden-tablet">
-                                        Account
-                                    </span>
-                                    <b class="caret"></b>
-                                </span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li ui-sref-active="active"  data-ng-switch-when="true" data-ng-class="{hidden: AUTHENTICATIONTYPE}"><a ui-sref="settings"><span class="glyphicon glyphicon-cog"></span>
-                            &#xA0;<span>Settings</span></a></li>
-                        <li ui-sref-active="active" data-ng-switch-when="true" data-ng-class="{hidden: AUTHENTICATIONTYPE}"><a ui-sref="password"><span class="glyphicon glyphicon-lock"></span>
-                            &#xA0;<span>Password</span></a></li>
-                        <li ui-sref-active="active"  data-ng-switch-when="true" data-ng-class="{hidden: AUTHENTICATIONTYPE}"><a ui-sref="sessions"><span class="glyphicon glyphicon-cloud"></span>
-                            &#xA0;<span>Sessions</span></a></li>
-                        <li ui-sref-active="active" data-ng-switch-when="true" ><a ui-sref="logout"><span class="glyphicon glyphicon-log-out"></span>
-                            &#xA0;<span>Log out</span></a></li>
-                        <li ui-sref-active="active" data-ng-switch-when="false" data-ng-class="{hidden: AUTHENTICATIONTYPE}"><a ui-sref="login"><span class="glyphicon glyphicon-log-in"></span>
-                            &#xA0;<span>Authenticate</span></a></li>
-
-                        <li ui-sref-active="active" data-ng-switch-when="false" data-ng-class="{hidden: (!REGISTRATIONTYPE && !AUTHENTICATIONTYPE)}"> <a ui-sref="register" id="register"><span class="glyphicon glyphicon-plus-sign"></span>
-                            &#xA0;<span>Register</span></a></li>
-                    </ul>
-                </li>
                 <li ui-sref-active="{active: $state.includes('entity')}" data-ng-switch-when="true" has-any-role="ROLE_USER, ROLE_ADMIN" class="dropdown pointer">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="">
                                 <span>
@@ -136,6 +110,32 @@
                             &#xA0;<span>Logs</span></a></li>
                         <li ng-hide="inProduction" ui-sref-active="active"><a ui-sref="docs"><span class="glyphicon glyphicon-book"></span>
                             &#xA0;<span>API</span></a></li>
+                    </ul>
+                </li>
+                <li data-ng-class="{active: $state.includes('account')}" class="dropdown pointer">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="">
+                                <span>
+                                    <span class="glyphicon glyphicon-user"></span>
+                                    <span class="hidden-tablet">
+                                        Account
+                                    </span>
+                                    <b class="caret"></b>
+                                </span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li ui-sref-active="active"  data-ng-switch-when="true" data-ng-class="{hidden: AUTHENTICATIONTYPE}"><a ui-sref="settings"><span class="glyphicon glyphicon-cog"></span>
+                            &#xA0;<span>Settings</span></a></li>
+                        <li ui-sref-active="active" data-ng-switch-when="true" data-ng-class="{hidden: AUTHENTICATIONTYPE}"><a ui-sref="password"><span class="glyphicon glyphicon-lock"></span>
+                            &#xA0;<span>Password</span></a></li>
+                        <li ui-sref-active="active"  data-ng-switch-when="true" data-ng-class="{hidden: AUTHENTICATIONTYPE}"><a ui-sref="sessions"><span class="glyphicon glyphicon-cloud"></span>
+                            &#xA0;<span>Sessions</span></a></li>
+                        <li ui-sref-active="active" data-ng-switch-when="true" ><a ui-sref="logout"><span class="glyphicon glyphicon-log-out"></span>
+                            &#xA0;<span>Log out</span></a></li>
+                        <li ui-sref-active="active" data-ng-switch-when="false" data-ng-class="{hidden: AUTHENTICATIONTYPE}"><a ui-sref="login"><span class="glyphicon glyphicon-log-in"></span>
+                            &#xA0;<span>Authenticate</span></a></li>
+
+                        <li ui-sref-active="active" data-ng-switch-when="false" data-ng-class="{hidden: (!REGISTRATIONTYPE && !AUTHENTICATIONTYPE)}"> <a ui-sref="register" id="register"><span class="glyphicon glyphicon-plus-sign"></span>
+                            &#xA0;<span>Register</span></a></li>
                     </ul>
                 </li>
             </ul>

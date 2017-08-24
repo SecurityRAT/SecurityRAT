@@ -178,7 +178,7 @@ describe('Protractor Security RAT bug Scenarios Testsuite', function() {
 		element(by.buttonText('Search')).click();
 		element(by.model('search')).sendKeys('test broken view in editor');
 		browser.sleep(2000);
-		expect(element(by.binding('filterRequirements()).length')).getText()).toBe('1');
+		expect(element(by.binding('filterRequirements().length')).getText()).toBe('1');
 
 		// clean up
 		refreshBrowser();
@@ -225,13 +225,12 @@ describe('Protractor Security RAT bug Scenarios Testsuite', function() {
 		    browser.sleep(3000);
 		    element(by.buttonText('Close')).click();
 		    browser.sleep(3000);
-		    element(by.buttonText('Updates available')).isPresent().then(function() {
+		    element(by.buttonText('Cancel the updates')).isPresent().then(function() {
 		    	var acceptReq = element.all(by.id('acceptReq'));
 		    	expect(acceptReq.count()).toBeGreaterThan(0);
 		    	expect(element.all(by.id('removeReq')).count()).toBeGreaterThan(0);
 		    	
 			    element.all(by.id('acceptReq')).isPresent().then(function() {
-				    expect(element(by.buttonText('Updates available')).isEnabled()).toBe(false);
 				    expect(element(by.buttonText(SaveButton)).isEnabled()).toBe(false);
 				    var acceptList = element.all(by.id('acceptReq'));
 				    
@@ -257,13 +256,12 @@ describe('Protractor Security RAT bug Scenarios Testsuite', function() {
 		    browser.sleep(3000);
 		    element(by.buttonText('Close')).click();
 		    browser.sleep(3000);
-		    element(by.buttonText('Updates available')).isPresent().then(function() {
+		    element(by.buttonText('Cancel the updates')).isPresent().then(function() {
 				var acceptReq = element.all(by.id('acceptReq'));
 		    	expect(acceptReq.count()).toBeGreaterThan(0);
 		    	expect(element.all(by.id('acceptReq')).count()).toBeGreaterThan(0);
 		    	
 			    element.all(by.id('removeReq')).isPresent().then(function() {
-				    expect(element(by.buttonText('Updates available')).isEnabled()).toBe(false);
 				    expect(element(by.buttonText(SaveButton)).isEnabled()).toBe(false);
 				    var removeList = element.all(by.id('removeReq'));
 				    
@@ -272,6 +270,29 @@ describe('Protractor Security RAT bug Scenarios Testsuite', function() {
 				    });
 				    browser.sleep(5000);
 				});
+			});
+		});
+
+		refreshBrowser();
+		browser.get(browser.params.impTestAttachmentUrl + browser.params.attachmentUrls[3]).then(function() {}, function(){
+			browser.switchTo().alert().accept();
+		});
+		browser.sleep(5000);
+		(element(by.buttonText('Close'))).click();
+		browser.sleep(3000);
+		var requirementCounts = element(by.binding('requirements.length')).getText();
+		element(by.buttonText('Updates available')).isPresent().then(function(){ 
+		    element(by.buttonText('Updates available')).click();
+		    browser.wait(function() {
+				return element(by.buttonText('Close')).isPresent();
+			});
+		    browser.sleep(3000);
+		    element(by.buttonText('Close')).click();
+		    browser.sleep(3000);
+		    element(by.buttonText('Cancel the updates')).isPresent().then(function() {
+				element(by.buttonText('Cancel the updates')).click();
+				browser.sleep(3000);
+				expect(element(by.binding('requirements.length')).getText()).toBe(requirementCounts);
 			});
 		});
 
