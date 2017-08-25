@@ -16,6 +16,7 @@
     "frontendBuilder": "grunt",
     "javaVersion": "8",
     "enableTranslation": false,
-    "rememberMeKey": "c271d2839bfc8084e87cdbc4ef2982f431ad078e"
+    "rememberMeKey": "c271d2839bfc8084e87cdbc4ef2982f431ad078e",
+    "herokuAppName": "securityrat"
   }
 }
