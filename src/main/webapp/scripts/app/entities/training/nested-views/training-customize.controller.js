@@ -335,6 +335,16 @@ angular.module('sdlctoolApp')
                     delete items.excludeItem;
                     break;
                 case "GeneratedSlideNode":
+                    delete items.create_branch;
+                    delete items.insert_slide;
+                    delete items.renameItem;
+                    delete items.deleteItem;
+                    if(node.data.active == null || node.data.active) {
+                        delete items.includeItem;
+                    } else {
+                        delete items.excludeItem;
+                    }
+                    break;
                 case "RequirementNode":
                 case "CategoryNode":
                     delete items.renameItem;
