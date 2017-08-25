@@ -133,7 +133,7 @@ angular.module('sdlctoolApp')
                 });
             }
 
-            if($selectedNode.node_type == "CustomSlideNode")
+            if($scope.selectedNode.node_type == "CustomSlideNode")
                 $scope.updateSlidePreview();
         };
 
