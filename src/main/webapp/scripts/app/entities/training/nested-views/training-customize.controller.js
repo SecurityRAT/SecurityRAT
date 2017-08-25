@@ -433,6 +433,8 @@ angular.module('sdlctoolApp')
                                     // workaround to prevent moving of GeneratedSlideNodes into CategoryNodes
                                     if(node.type == "GeneratedSlideNode" && node_parent.type == "CategoryNode")
                                         operation_allowed = false;
+                                    if(node.type == "CategoryNode" && node_parent.type == "CategoryNode")
+                                        operation_allowed = false;
                                 }
                                 return operation_allowed;
                             },
