@@ -8,8 +8,6 @@ angular.module('sdlctoolApp')
             // $scope.$emit('sdlctoolApp:trainingUpdate', result);
         };
 
-        var PARENT_ANCHOR = -2;
-
         var TrainingTreeNode = $resource('api/trainingTreeNodes/:id', {}, {
             'query': { method: 'GET', isArray: true},
             'get': {
@@ -22,12 +20,14 @@ angular.module('sdlctoolApp')
             'update': { method:'PUT' }
         });
 
+        TrainingTreeNode.prototype.PARENT_ANCHOR = -2;
+
         TrainingTreeNode.prototype.getChildren = function() {
             if(this.children == null) this.children = [];
             return this.children;
         };
-        TrainingTreeNode.prototype.getLastAnchor = function() {
-            var result = PARENT_ANCHOR; // mark the parent as anchor if no later anchor node can be found
+        TrainingTreeNode.prototype.getAnchorForPosition = function() {
+            var result = this.PARENT_ANCHOR; // mark the parent as anchor if no later anchor node can be found
             if(this.children != null) {
                 this.children.forEach(function(child) {
                    if(child.node_type == "CategoryNode" || child.node_type == "RequirementNode" || child.node_type == "GeneratedSlideNode") {
@@ -36,7 +36,6 @@ angular.module('sdlctoolApp')
                 });
             }
             return result;
-            console.log("getLastAnchor returned ", result);
         };
         TrainingTreeNode.prototype.addChildNode = function (type, name, opened) {
             if(this.children == null) this.children = [];
@@ -54,12 +53,12 @@ angular.module('sdlctoolApp')
         };
         TrainingTreeNode.prototype.addBranchNode = function(name, content) {
             var newChild = this.addChildNode("BranchNode", name, true);
-            newChild.anchor = this.getLastAnchor();
+            newChild.anchor = this.getAnchorForPosition();
             return newChild;
         };
         TrainingTreeNode.prototype.addCustomSlideNode = function(name, content) {
             var newChild = this.addChildNode("CustomSlideNode", name, false);
-            newChild.anchor = this.getLastAnchor();
+            newChild.anchor = this.getAnchorForPosition();
             newChild.content = content;
             return newChild;
         };

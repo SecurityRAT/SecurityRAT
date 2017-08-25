@@ -71,42 +71,64 @@ angular.module('sdlctoolApp')
             }
         });
 
-        // Tree move node callback (triggered when a node is moved)
+        // callback on jstree's move_node event (triggered when a node was moved)
         tree.bind("move_node.jstree", function(e, data) {
 
             var node = data.node;
             var new_parent = tree.jstree(true).get_node(data.parent);
+            var old_parent = tree.jstree(true).get_node(data.old_parent);
 
             // update parent
             var parent = new TrainingTreeNode();
             parent.fromJSON(new_parent);
             node.data.parent_id = parent;
 
-            // update anchor
-            var new_anchor = -2;
-            if(new_parent.children != null) {
-                var previousChildren = [];
-                for(var i = 0; i < new_parent.children.length; i++) {
-                    if(node.id != new_parent.children[i])
-                        previousChildren.push(new_parent.children[i]);
-                    else break;
-                }
-                console.log("previousChildren", previousChildren);
-                previousChildren.forEach(function(child_id) {
-                    var child_node = tree.jstree(true).get_node(child_id);
-                    if(child_node.type == "CategoryNode" || child_node.type == "RequirementNode" || child_node.type == "GeneratedSlideNode") {
-                        if(child_node.data.json_universal_id != null)
-                            new_anchor = child_node.data.json_universal_id
+
+            if(node.type === "CustomSlideNode" || node.type === "BranchNode") {
+                // set new anchor
+                var new_anchor = -2;
+                if(new_parent.children != null) {
+                    var previousChildren = [];
+                    for(var i = 0; i < new_parent.children.length; i++) {
+                        if(node.id != new_parent.children[i])
+                            previousChildren.push(new_parent.children[i]);
+                        else break;
                     }
-                });
-            } else {
-                console.error("error in move_node.jstree callback: new parent has no children");
+                    previousChildren.forEach(function(child_id) {
+                        var child_node = tree.jstree(true).get_node(child_id);
+                        if(child_node.type === "CategoryNode" || child_node.type === "RequirementNode" || child_node.type === "GeneratedSlideNode") {
+                            if(child_node.data.json_universal_id != null)
+                                new_anchor = child_node.data.json_universal_id;
+                        }
+                    });
+                } else {
+                    console.error("error in move_node.jstree callback: new parent has no children");
+                }
+                node.data.anchor = new_anchor;
+            } else if(node.type === "CategoryNode" || node.type === "RequirementNode" || node.type === "GeneratedSlideNode") {
+                // find nodes with anchor on this node, and update their anchor
+                // note: it makes no difference if old_parent == new_parent
+                var thisAnchor = node.data.json_universal_id;
+                if(thisAnchor !== null && old_parent.children !== null) {
+                    var newAnchor = TrainingTreeNode.PARENT_ANCHOR;
+                    old_parent.children.forEach(function(childId) {
+                        var node = tree.jstree(true).get_node(childId);
+                        if(node != null && node.data != null) {
+                            if(node.type === "CustomSlideNode" || node.type === "BranchNode") {
+                                if(node.data.anchor === thisAnchor)
+                                    node.data.anchor = newAnchor;
+                            } else if(node.type === "CategoryNode" || node.type === "RequirementNode" || node.type === "GeneratedSlideNode") {
+                                // this anchor can be used for replacement as it is more recent
+                                newAnchor = node.data.json_universal_id;
+                            }
+                        }
+                    });
+                }
             }
-            node.data.anchor = new_anchor;
             console.log("new anchor is ", new_anchor);
 
-            if(node.type == "CustomSlideNode" || node.type == "GeneratedSlideNode") {
-                // update the content;
+            // update slide content
+            if(node.type === "CustomSlideNode" || node.type === "GeneratedSlideNode") {
                 var nodeObj = new TrainingTreeNode();
                 nodeObj.fromJSON(node);
                 nodeObj.loadContent(new_parent.name).then(function(new_content) {
