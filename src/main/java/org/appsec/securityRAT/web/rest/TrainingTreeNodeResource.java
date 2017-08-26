@@ -257,10 +257,14 @@ public class TrainingTreeNodeResource {
         } else {
             collectionInstances.addAll(training.getCollections());
             projectTypes.addAll(training.getProjectTypes());
-            if(projectTypes.size() == 0)
+            if(projectTypes.size() == 0 && collectionInstances.size() > 0)
                 projectTypes = projectTypeRepository.findAll();
         }
-        List<ReqCategory> reqCategories = reqCategoryRepository.findEagerlyCategoriesWithRequirements(collectionInstances, projectTypes);
+        List<ReqCategory> reqCategories;
+        if(projectTypes.size() > 0 && collectionInstances.size() > 0 )
+            reqCategories = reqCategoryRepository.findEagerlyCategoriesWithRequirements(collectionInstances, projectTypes);
+        else
+            reqCategories = new ArrayList<>();
 
         // get selected OptColumns
         List<OptColumn> selectedOptColumns = new ArrayList<>();
@@ -363,10 +367,81 @@ public class TrainingTreeNodeResource {
         }
     }
 
+    // return a child with given anchor or null
+    private TrainingTreeNode findChildWithAnchor(List<TrainingTreeNode> children, int anchor) {
+        TrainingTreeNode result = null;
+        for(TrainingTreeNode child : children) {
+
+        }
+        return result;
+    }
+    private int getAnchor(TrainingTreeNode node) {
+        switch(node.getNode_type()) {
+            case RequirementNode:
+
+        }
+        return 0;
+    }
+
+    // finds children with given anchor and parent, sets their anchor to PARENT_ANCHOR
+    private void removeAnchor(TrainingTreeNode anchoredNode) {
+        TrainingTreeNodeType type = anchoredNode.getNode_type();
+        if(type == CustomSlideNode) {
+            TrainingCustomSlideNode customSlideNode = trainingCustomSlideNodeRepository
+                .getTrainingCustomSlideNodeByTrainingTreeNode(anchoredNode);
+            customSlideNode.setAnchor(PARENT_ANCHOR);
+            trainingCustomSlideNodeRepository.save(customSlideNode);
+        } else if(type == BranchNode) {
+            TrainingBranchNode branchNode = trainingBranchNodeRepository
+                .getTrainingBranchNodeByTrainingTreeNode(anchoredNode);
+            branchNode.setAnchor(PARENT_ANCHOR);
+            trainingBranchNodeRepository.save(branchNode);
+        }
+    }
 
     private int getHighestSortOrder(Long nodeId) {
         Integer highestSortOrder = trainingTreeNodeRepository.getHighestSortOrder(nodeId);
         return highestSortOrder != null ? highestSortOrder + 1 : 0;
+    }
+
+    // get the last anchor for a parent node
+    private int getLastAnchor(TrainingTreeNode parentNode) {
+        int lastAnchor = PARENT_ANCHOR;
+        List<TrainingTreeNode> children = trainingTreeNodeRepository.getChildrenOf(parentNode);
+
+        for(int i = children.size(); i > 0; i--) {
+            TrainingTreeNode child = children.get(i);
+            TrainingTreeNodeType child_type = child.getNode_type();
+            if(child.getJson_universal_id() != null) {
+                lastAnchor = Math.toIntExact(child.getJson_universal_id());
+                break;
+            }
+            if(child_type == GeneratedSlideNode) {
+                TrainingGeneratedSlideNode generatedSlideNode = trainingGeneratedSlideNodeRepository
+                    .getTrainingGeneratedSlideNodeByTrainingTreeNode(child);
+                if(generatedSlideNode != null) {
+                    if(generatedSlideNode.getOptColumn() == null)
+                        lastAnchor = SKELETON_UNIVERSAL_ID;
+                    else
+                        lastAnchor = Math.toIntExact(generatedSlideNode.getOptColumn().getId());
+                    break;
+                }
+            } else if(child_type == RequirementNode) {
+                TrainingRequirementNode requirementNode = trainingRequirementNodeRepository
+                    .getTrainingRequirementNodeByTrainingTreeNode(child);
+                if(requirementNode != null) {
+                    lastAnchor = Math.toIntExact(requirementNode.getRequirementSkeleton().getId());
+                    break;
+                }
+            } else if(child_type == CategoryNode) {
+                TrainingCategoryNode categoryNode = trainingCategoryNodeRepository
+                    .getTrainingCategoryNodeByTrainingTreeNode(child);
+                if(categoryNode != null) {
+                    lastAnchor = Math.toIntExact(categoryNode.getCategory().getId());
+                }
+            }
+        }
+        return lastAnchor;
     }
 
     private boolean updateSubTree(TrainingTreeNode trainingTreeNode, List<ReqCategory> reqCategories, List<OptColumn> selectedOptColumns, boolean readOnly) {
@@ -480,6 +555,12 @@ public class TrainingTreeNodeResource {
                         else {
                             for (TrainingCategoryNode categoryNodeToRemove : categoryNodes) {
                                 TrainingTreeNode baseNode = categoryNodeToRemove.getNode();
+                                Long anchor = categoryNodeToRemove.getCategory().getId();
+                                List<TrainingTreeNode> anchoredNodes = customNodes.get(anchor);
+                                if(anchoredNodes != null && anchoredNodes.size() > 0) {
+                                    for(TrainingTreeNode anchoredNode : anchoredNodes) {
+                                        removeAnchor(anchoredNode);
+                                    }
                                 }
                                 delete(baseNode.getId());
                                 extractCustomNodes(baseNode, baseNode.getParent_id());
