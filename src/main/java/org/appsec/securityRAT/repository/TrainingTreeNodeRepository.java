@@ -38,5 +38,5 @@ public interface TrainingTreeNodeRepository extends JpaRepository<TrainingTreeNo
     List<TrainingTreeNode> getAllByTraining(@Param("training") Training training);
 
     @Query(value = "select max(sort_order) from TRAININGTREENODE where parent_id_id = ?1", nativeQuery = true)
-    int getHighestSortOrder(Long id);
+    Integer getHighestSortOrder(Long id);
 }

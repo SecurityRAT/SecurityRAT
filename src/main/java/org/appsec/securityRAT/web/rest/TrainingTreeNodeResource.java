@@ -341,8 +341,7 @@ public class TrainingTreeNodeResource {
     // toDelete should not be of type RootNode and parameters should not be the same node
     private void extractCustomNodes(TrainingTreeNode toDelete, TrainingTreeNode newParent) {
         List<TrainingTreeNode> children = trainingTreeNodeRepository.getChildrenOf(toDelete);
-
-        int nextFreeSortOrder = trainingTreeNodeRepository.getHighestSortOrder(newParent.getId()) + 1;
+        int nextFreeSortOrder = getHighestSortOrder(newParent.getId());
 
         for (TrainingTreeNode child : children) {
             TrainingTreeNodeType child_type = child.getNode_type();
@@ -362,6 +361,12 @@ public class TrainingTreeNodeResource {
                 extractCustomNodes(child, newParent);
             }
         }
+    }
+
+
+    private int getHighestSortOrder(Long nodeId) {
+        Integer highestSortOrder = trainingTreeNodeRepository.getHighestSortOrder(nodeId);
+        return highestSortOrder != null ? highestSortOrder + 1 : 0;
     }
 
     private boolean updateSubTree(TrainingTreeNode trainingTreeNode, List<ReqCategory> reqCategories, List<OptColumn> selectedOptColumns, boolean readOnly) {
@@ -453,7 +458,7 @@ public class TrainingTreeNodeResource {
                                 TrainingTreeNode new_baseNode = new TrainingTreeNode();
                                 new_baseNode.setNode_type(CategoryNode);
 
-                                int nextSortOrder = trainingTreeNodeRepository.getHighestSortOrder(trainingTreeNode.getId()) + 1;
+                                int nextSortOrder = getHighestSortOrder(trainingTreeNode.getId()) + 1;
                                 new_baseNode.setSort_order(nextSortOrder);
                                 new_baseNode.setActive(true);
                                 new_baseNode.setParent_id(trainingTreeNode);
@@ -522,7 +527,7 @@ public class TrainingTreeNodeResource {
                                     TrainingTreeNode new_baseNode = new TrainingTreeNode();
                                     new_baseNode.setNode_type(RequirementNode);
 
-                                    int nextSortOrder = trainingTreeNodeRepository.getHighestSortOrder(trainingTreeNode.getId()) + 1;
+                                    int nextSortOrder = getHighestSortOrder(trainingTreeNode.getId()) + 1;
                                     new_baseNode.setSort_order(nextSortOrder);
                                     new_baseNode.setActive(true);
                                     new_baseNode.setParent_id(trainingTreeNode);
@@ -595,7 +600,7 @@ public class TrainingTreeNodeResource {
                                 TrainingTreeNode new_baseNode = new TrainingTreeNode();
                                 new_baseNode.setNode_type(GeneratedSlideNode);
 
-                                int nextSortOrder = trainingTreeNodeRepository.getHighestSortOrder(trainingTreeNode.getId()) + 1;
+                                int nextSortOrder = getHighestSortOrder(trainingTreeNode.getId()) + 1;
                                 new_baseNode.setSort_order(nextSortOrder);
                                 new_baseNode.setActive(true);
                                 new_baseNode.setParent_id(trainingTreeNode);
