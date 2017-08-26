@@ -336,6 +336,18 @@ public class TrainingTreeNodeResource {
             databaseNodes.remove(nextDatabaseNodeEntry.getKey());
             nextDatabaseNodeEntry = databaseNodes.firstEntry();
         }
+        if(customNodes.size() > 0) {
+            List<TrainingTreeNode> invalidAnchoredNodes = new ArrayList<>();
+            Map.Entry<Integer, List<TrainingTreeNode>> nextCustomNodeEntry = customNodes.firstEntry();
+            while(nextCustomNodeEntry != null) {
+                invalidAnchoredNodes.addAll(nextCustomNodeEntry.getValue());
+                customNodes.remove(nextCustomNodeEntry.getKey());
+                nextCustomNodeEntry = customNodes.firstEntry();
+            }
+            invalidAnchoredNodes.sort(new SortOrderComparator());
+            result.addAll(invalidAnchoredNodes);
+        }
+
 
         return result;
     }
