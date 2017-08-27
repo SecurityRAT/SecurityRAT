@@ -269,6 +269,7 @@ public class TrainingTreeNodeResource {
 
         // get selected OptColumns
         List<OptColumn> selectedOptColumns = new ArrayList<>();
+        selectedOptColumns.add(null); // this represents the "skeleton" slide
         for(OptColumn optColumn : training.getOptColumns()) {
             selectedOptColumns.add(optColumn);
         }
@@ -662,24 +663,14 @@ public class TrainingTreeNodeResource {
                         generatedSlideNodes.add(trainingGeneratedSlideNodeRepository.getTrainingGeneratedSlideNodeByTrainingTreeNode(databaseNode));
                     }
 
-                    // search for the skeleton (it should always be there)
-                    // TODO insert skeleton if not present
-                    TrainingGeneratedSlideNode skeletonNode = null;
-                    for(TrainingGeneratedSlideNode generatedSlideNode : generatedSlideNodes) {
-                        if (generatedSlideNode.getOptColumn() == null) {
-                            skeletonNode = generatedSlideNode;
-                            break;
-                        }
-                    }
-                    if(skeletonNode != null)
-                        generatedSlideNodes.remove(skeletonNode);
-
                     // search for each selected optColumn and delete / add GenerateSlideNodes to match the lists
                     for(OptColumn selectedOptColumn : selectedOptColumns) {
                         boolean foundSelectedOptColumn = false;
                         TrainingGeneratedSlideNode foundNode = null;
                         for(TrainingGeneratedSlideNode generatedSlideNode : generatedSlideNodes) {
-                            if(generatedSlideNode.getOptColumn().getId().equals(selectedOptColumn.getId())) {
+                            if((generatedSlideNode.getOptColumn() == null && selectedOptColumn == null)
+                                || ((generatedSlideNode.getOptColumn() != null && selectedOptColumn != null)
+                                    && (generatedSlideNode.getOptColumn().getId().equals(selectedOptColumn.getId())))) {
                                 foundSelectedOptColumn = true;
                                 foundNode = generatedSlideNode;
                                 break;
@@ -707,7 +698,10 @@ public class TrainingTreeNodeResource {
                                 new_generatedSlideNode.setOptColumn(selectedOptColumn);
                                 trainingGeneratedSlideNodeRepository.save(new_generatedSlideNode);
 
-                                databaseNodes.put(selectedOptColumn.getShowOrder(), new_baseNode);
+                                Integer showOrder = 0;
+                                if(selectedOptColumn != null)
+                                    showOrder = selectedOptColumn.getShowOrder();
+                                databaseNodes.put(showOrder, new_baseNode);
                             }
                         }
                     }
