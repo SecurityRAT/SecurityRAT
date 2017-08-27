@@ -423,36 +423,37 @@ public class TrainingTreeNodeResource {
     private int getLastAnchor(TrainingTreeNode parentNode) {
         int lastAnchor = PARENT_ANCHOR;
         List<TrainingTreeNode> children = trainingTreeNodeRepository.getChildrenOf(parentNode);
-
-        for(int i = children.size(); i > 0; i--) {
-            TrainingTreeNode child = children.get(i);
-            TrainingTreeNodeType child_type = child.getNode_type();
-            if(child.getJson_universal_id() != null) {
-                lastAnchor = Math.toIntExact(child.getJson_universal_id());
-                break;
-            }
-            if(child_type == GeneratedSlideNode) {
-                TrainingGeneratedSlideNode generatedSlideNode = trainingGeneratedSlideNodeRepository
-                    .getTrainingGeneratedSlideNodeByTrainingTreeNode(child);
-                if(generatedSlideNode != null) {
-                    if(generatedSlideNode.getOptColumn() == null)
-                        lastAnchor = SKELETON_UNIVERSAL_ID;
-                    else
-                        lastAnchor = Math.toIntExact(generatedSlideNode.getOptColumn().getId());
+        if(children != null) {
+            for (int i = children.size()-1; i > 0; i--) {
+                TrainingTreeNode child = children.get(i);
+                TrainingTreeNodeType child_type = child.getNode_type();
+                if (child.getJson_universal_id() != null) {
+                    lastAnchor = Math.toIntExact(child.getJson_universal_id());
                     break;
                 }
-            } else if(child_type == RequirementNode) {
-                TrainingRequirementNode requirementNode = trainingRequirementNodeRepository
-                    .getTrainingRequirementNodeByTrainingTreeNode(child);
-                if(requirementNode != null) {
-                    lastAnchor = Math.toIntExact(requirementNode.getRequirementSkeleton().getId());
-                    break;
-                }
-            } else if(child_type == CategoryNode) {
-                TrainingCategoryNode categoryNode = trainingCategoryNodeRepository
-                    .getTrainingCategoryNodeByTrainingTreeNode(child);
-                if(categoryNode != null) {
-                    lastAnchor = Math.toIntExact(categoryNode.getCategory().getId());
+                if (child_type == GeneratedSlideNode) {
+                    TrainingGeneratedSlideNode generatedSlideNode = trainingGeneratedSlideNodeRepository
+                        .getTrainingGeneratedSlideNodeByTrainingTreeNode(child);
+                    if (generatedSlideNode != null) {
+                        if (generatedSlideNode.getOptColumn() == null)
+                            lastAnchor = SKELETON_UNIVERSAL_ID;
+                        else
+                            lastAnchor = Math.toIntExact(generatedSlideNode.getOptColumn().getId());
+                        break;
+                    }
+                } else if (child_type == RequirementNode) {
+                    TrainingRequirementNode requirementNode = trainingRequirementNodeRepository
+                        .getTrainingRequirementNodeByTrainingTreeNode(child);
+                    if (requirementNode != null) {
+                        lastAnchor = Math.toIntExact(requirementNode.getRequirementSkeleton().getId());
+                        break;
+                    }
+                } else if (child_type == CategoryNode) {
+                    TrainingCategoryNode categoryNode = trainingCategoryNodeRepository
+                        .getTrainingCategoryNodeByTrainingTreeNode(child);
+                    if (categoryNode != null) {
+                        lastAnchor = Math.toIntExact(categoryNode.getCategory().getId());
+                    }
                 }
             }
         }
