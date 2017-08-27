@@ -274,7 +274,7 @@ public class TrainingTreeNodeResource {
             selectedOptColumns.add(optColumn);
         }
 
-        // do the update
+        // start the update
         boolean hasUpdates = updateSubTree(trainingTreeNode, reqCategories, selectedOptColumns, readOnly);
         result.setHasUpdates(hasUpdates);
 
@@ -283,8 +283,8 @@ public class TrainingTreeNodeResource {
 
     /*
         helper function "order_children":
-        combines separate lists of a) customNodes and b) databaseNodes, which together are a complete list of children
-        of a parent node
+        combines separate lists of a) customNodes and b) databaseNodes, which together form the complete list of children
+        of their parent node
 
         expected input:
             * customNodes contains all CustomSlidesNodes and BranchNodes, mapped by their anchor
@@ -298,7 +298,8 @@ public class TrainingTreeNodeResource {
 
     private List<TrainingTreeNode> reorder_children(
         TreeMap<Integer, List<TrainingTreeNode>> customNodes,
-        TreeMap<Integer, TrainingTreeNode> databaseNodes) {
+        TreeMap<Integer, TrainingTreeNode> databaseNodes
+    ) {
 
         if(customNodes == null && databaseNodes == null)
             return null;
