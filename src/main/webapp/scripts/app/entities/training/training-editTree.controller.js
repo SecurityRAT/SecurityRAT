@@ -93,7 +93,7 @@ angular.module('sdlctoolApp')
                     if(treeStatus.hasUpdates) {
                         $scope.pauseLoadingProgressBar(40);
                         $scope.openFeedbackModal("Structural updates found",
-                            "The structure of your training is not longer up to date." +
+                            "The structure of your training is not longer up to date. " +
                             "Do you want to apply the changes?"
                         );
                     } else {
