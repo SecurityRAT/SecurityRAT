@@ -3,6 +3,7 @@ package org.appsec.securityRAT.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import org.appsec.securityRAT.domain.*;
 import org.appsec.securityRAT.domain.enumeration.TrainingTreeNodeType;
+import org.appsec.securityRAT.domain.util.TrainingNodePool;
 import org.appsec.securityRAT.repository.*;
 import org.appsec.securityRAT.repository.search.TrainingTreeNodeSearchRepository;
 import org.appsec.securityRAT.web.rest.util.HeaderUtil;
@@ -278,6 +279,44 @@ public class TrainingTreeNodeResource {
         boolean hasUpdates = updateSubTree(trainingTreeNode, reqCategories, selectedOptColumns, readOnly);
         result.setHasUpdates(hasUpdates);
 
+        // update has finished, try to assign custom nodes which belong to moved (or deleted) requirements
+        TrainingNodePool pool = TrainingNodePool.getInstance(training.getId());
+        HashMap<Long, List<TrainingTreeNode>> nodesToAssign = pool.getAll();
+        for(Long requirementId : nodesToAssign.keySet()) {
+            TrainingTreeNode newParent = findRequirementNode(trainingTreeNode, requirementId);
+            if(newParent != null) {
+                for(TrainingTreeNode nodeToAssign : nodesToAssign.get(requirementId)) {
+                    nodeToAssign.setParent_id(newParent);
+                    trainingTreeNodeRepository.save(nodeToAssign);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    // helper function to find a TrainingTreeNode in a subtree
+    private TrainingTreeNode findRequirementNode(TrainingTreeNode subtree, Long requirementId) {
+        TrainingTreeNode result = null;
+        TrainingTreeNodeType type = subtree.getNode_type();
+        if(type == RequirementNode) {
+            TrainingRequirementNode reqNode = trainingRequirementNodeRepository.getTrainingRequirementNodeByTrainingTreeNode(subtree);
+            if(reqNode.getRequirementSkeleton().getId().equals(requirementId))
+                result = subtree; // found!
+        } else {
+            if(type == ContentNode || type == CategoryNode) {
+                List<TrainingTreeNode> children = trainingTreeNodeRepository.getChildrenOf(subtree);
+                if(children != null) {
+                    for (TrainingTreeNode child : children) {
+                        TrainingTreeNode subResult = findRequirementNode(child, requirementId);
+                        if(subResult != null) {
+                            result = subResult;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
         return result;
     }
 
@@ -462,6 +501,7 @@ public class TrainingTreeNodeResource {
 
     private boolean updateSubTree(TrainingTreeNode trainingTreeNode, List<ReqCategory> reqCategories, List<OptColumn> selectedOptColumns, boolean readOnly) {
         boolean hasUpdates = false;
+        TrainingNodePool pool = TrainingNodePool.getInstance(trainingTreeNode.getTraining_id().getId());
 
         List<TrainingTreeNode> children = trainingTreeNodeRepository.getChildrenOf(trainingTreeNode);
         TreeMap<Integer, List<TrainingTreeNode>> customNodes = new TreeMap<>(); // <anchor,list_of_nodes>
@@ -572,16 +612,49 @@ public class TrainingTreeNodeResource {
                             return true;
                         else {
                             for (TrainingCategoryNode categoryNodeToRemove : categoryNodes) {
+                                // delete Category for update
+
                                 TrainingTreeNode baseNode = categoryNodeToRemove.getNode();
                                 Long anchor = categoryNodeToRemove.getCategory().getId();
                                 List<TrainingTreeNode> anchoredNodes = customNodes.get(anchor);
+                                // remove anchors of anchored nodes
                                 if(anchoredNodes != null && anchoredNodes.size() > 0) {
                                     for(TrainingTreeNode anchoredNode : anchoredNodes) {
                                         removeAnchor(anchoredNode);
                                     }
                                 }
-                                delete(baseNode.getId());
+                                // add custom nodes inside RequirementNodes to TrainingNodePool
+                                List<TrainingTreeNode> catChildren = trainingTreeNodeRepository.getChildrenOf(baseNode);
+                                if(catChildren != null)
+                                    for(TrainingTreeNode child : catChildren) {
+                                        if(child.getNode_type() == RequirementNode) {
+                                            List<TrainingTreeNode> grandChildren = trainingTreeNodeRepository.getChildrenOf(child);
+                                            if(grandChildren != null) {
+                                                for(TrainingTreeNode grandchild : grandChildren) {
+                                                    TrainingTreeNodeType type = grandchild.getNode_type();
+                                                    if(type == CustomSlideNode || type == BranchNode) {
+
+                                                        // this grandchild needs to be saved,
+                                                        // find requirementSkeleton id and add to pool
+                                                        TrainingRequirementNode parentReqNode = trainingRequirementNodeRepository
+                                                            .getTrainingRequirementNodeByTrainingTreeNode(child);
+                                                        if(parentReqNode != null && parentReqNode.getRequirementSkeleton() != null) {
+                                                            Long requirementId = parentReqNode.getRequirementSkeleton().getId();
+                                                            pool.addCustomNode(requirementId, grandchild);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                /*
+                                    note that extractCustomNodes() will move all customNodes in the subtree to the parent -
+                                    this prevents loss of custom nodes as they are not deleted. If a better position is
+                                    found later on, they will be moved again. Therefore they were added to the pool.
+                                 */
+                                // move remaining custom nodes and delete hole subtree
                                 extractCustomNodes(baseNode, baseNode.getParent_id());
+                                delete(baseNode.getId());
                             }
                         }
                     }
@@ -637,6 +710,16 @@ public class TrainingTreeNodeResource {
                                     new_requirementNode.setRequirementSkeleton(selectedRequirement);
                                     trainingRequirementNodeRepository.save(new_requirementNode);
 
+                                    // check the pool if there are custom nodes which need to be placed inside the new node
+                                    List<TrainingTreeNode> nodesToRestore = pool.getCustomNodes(selectedRequirement.getId());
+                                    if(nodesToRestore != null) {
+                                        for(TrainingTreeNode nodeToRestore : nodesToRestore) {
+                                            nodeToRestore.setParent_id(new_baseNode);
+                                            trainingTreeNodeRepository.save(nodeToRestore);
+                                        }
+                                        pool.removeCustomNodes(selectedRequirement.getId());
+                                    }
+
                                     databaseNodes.put(selectedRequirement.getShowOrder(), new_baseNode);
                                 }
                             }
@@ -647,9 +730,20 @@ public class TrainingTreeNodeResource {
                                 return true;
                             else {
                                 for (TrainingRequirementNode requirementNodeToRemove : requirementNodes) {
-                                    //TODO check if the requirement moved to another category -> if yes, move it there
 
-                                    // requirement can be deleted
+                                    // add custom nodes to the pool (so they can be moved to a new place if the requirement
+                                    // needs to be added somewhere else (in another category)
+                                    List<TrainingTreeNode> reqChildren = trainingTreeNodeRepository.getChildrenOf(requirementNodeToRemove.getNode());
+                                    for(TrainingTreeNode child : reqChildren) {
+                                        TrainingTreeNodeType type = child.getNode_type();
+                                        if(type == CustomSlideNode || type == BranchNode) {
+                                            if (requirementNodeToRemove.getRequirementSkeleton() != null) {
+                                                Long requirementId = requirementNodeToRemove.getRequirementSkeleton().getId();
+                                                pool.addCustomNode(requirementId, child);
+                                            }
+                                        }
+                                    }
+
                                     TrainingTreeNode baseNode = requirementNodeToRemove.getNode();
                                     extractCustomNodes(baseNode, baseNode.getParent_id());
                                     delete(baseNode.getId());
