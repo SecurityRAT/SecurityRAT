@@ -345,6 +345,7 @@ angular.module('sdlctoolApp')
                         delete items.excludeItem;
                     }
                     break;
+                case "ContentNode":
                 case "RequirementNode":
                 case "CategoryNode":
                     delete items.renameItem;
@@ -443,6 +444,13 @@ angular.module('sdlctoolApp')
                     "RequirementNode",
                     "CustomSlideNode",
                     "BranchNode"
+                ]
+            },
+            "ContentNode": {
+                "valid_children": [
+                    "BranchNode",
+                    "CustomSlideNode",
+                    "CategoryNode"
                 ]
             },
             "#" : {

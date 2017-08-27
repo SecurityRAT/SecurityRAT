@@ -21,6 +21,7 @@ angular.module('sdlctoolApp')
         });
 
         TrainingTreeNode.prototype.PARENT_ANCHOR = -2;
+        TrainingTreeNode.prototype.CONTENT_NODE_NAME = "Contents";
 
         TrainingTreeNode.prototype.getChildren = function() {
             if(this.children == null) this.children = [];
@@ -51,7 +52,7 @@ angular.module('sdlctoolApp')
             this.children.push(newChild);
             return newChild;
         };
-        TrainingTreeNode.prototype.addBranchNode = function(name, content) {
+        TrainingTreeNode.prototype.addBranchNode = function(name) {
             var newChild = this.addChildNode("BranchNode", name, true);
             newChild.anchor = this.getAnchorForPosition();
             return newChild;
@@ -85,6 +86,10 @@ angular.module('sdlctoolApp')
             newChild.optColumn = optColumn;
             newChild.json_universal_id = optColumn.id;
 
+            return newChild;
+        };
+        TrainingTreeNode.prototype.addContentNode = function() {
+            var newChild = this.addChildNode("ContentNode", this.CONTENT_NODE_NAME, true);
             return newChild;
         };
 

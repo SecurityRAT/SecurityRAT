@@ -20,7 +20,7 @@
             "fieldId": 1,
             "fieldName": "node_type",
             "fieldType": "TrainingTreeNodeType",
-            "fieldValues": "RequirementNode,GeneratedSlideNode,CustomSlideNode,CategoryNode,BranchNode,RootNode"
+            "fieldValues": "RequirementNode,GeneratedSlideNode,CustomSlideNode,CategoryNode,BranchNode,RootNode,ContentNode"
         },
         {
             "fieldId": 2,

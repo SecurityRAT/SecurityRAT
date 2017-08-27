@@ -148,7 +148,7 @@ angular.module('sdlctoolApp')
                         $scope.requirementSkeletons = categoriesWithRequirements;
 
                         // create content node which holds all generated slides
-                        var contentNode = trainingRoot.addBranchNode("Contents");
+                        var contentNode = trainingRoot.addContentNode();
 
                         // add generated slides
                         categoriesWithRequirements.forEach(function(category) {

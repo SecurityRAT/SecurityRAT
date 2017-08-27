@@ -79,6 +79,7 @@ public class TrainingTreeNodeResource {
     private static final int PARENT_ANCHOR = -2;
     // json_universal_id = -1 for an TrainingGeneratedSlideNode means that this is a skeleton slide
     private static final int SKELETON_UNIVERSAL_ID = -1;
+    private static final String CONTENT_NODE_NAME = "Contents";
 
     // comparator to sort nodes by their sort_order
     private class SortOrderComparator implements Comparator<TrainingTreeNode> {
@@ -484,6 +485,9 @@ public class TrainingTreeNodeResource {
                     customNodes.put(anchor, new ArrayList<>());
                 customNodes.get(anchor).add(child);
             }
+            else if(child_type == ContentNode) {
+                customNodes.get(PARENT_ANCHOR).add(child);
+            }
             else if(child_type == CategoryNode) {
                 TrainingCategoryNode categoryNode = trainingCategoryNodeRepository
                     .getTrainingCategoryNodeByTrainingTreeNode(child);
@@ -511,11 +515,10 @@ public class TrainingTreeNodeResource {
             }
         }
 
-        if(databaseNodes.size() > 0) {
             List<TrainingTreeNode> childrenNewOrder;
 
             switch (trainingTreeNode.getNode_type()) {
-                case BranchNode:
+                case ContentNode:
 
                     // fetch category nodes inside this branch
                     List<TrainingCategoryNode> categoryNodes = new ArrayList<>();
@@ -743,13 +746,12 @@ public class TrainingTreeNodeResource {
                 new_sortOrder++;
             }
 
-        }
 
         // process (updated) children recursively
         children = trainingTreeNodeRepository.getChildrenOf(trainingTreeNode);
         for(TrainingTreeNode child : children) {
             TrainingTreeNodeType node_type = child.getNode_type();
-            if(node_type == BranchNode || node_type == CategoryNode || node_type == RequirementNode) {
+            if(node_type == ContentNode || node_type == CategoryNode || node_type == RequirementNode) {
                 if(updateSubTree(child, reqCategories, selectedOptColumns, readOnly)) {
                     hasUpdates = true;
                     if(readOnly)
@@ -876,6 +878,9 @@ public class TrainingTreeNodeResource {
                 break;
             case RootNode:
                 result.setJson_training_id(result.getTraining_id().getId());
+                break;
+            case ContentNode:
+                result.setName(CONTENT_NODE_NAME);
                 break;
         }
 
