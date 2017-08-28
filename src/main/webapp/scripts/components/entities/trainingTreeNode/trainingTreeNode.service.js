@@ -288,6 +288,8 @@ angular.module('sdlctoolApp')
                                     content = "<h3>"+optColumnContent.optColumn.name+"</h3>"
                                         + optColumnContent.content;
                                 }
+                            }, function(exception) {
+                                content = "";
                             });
                         }
                         break;
