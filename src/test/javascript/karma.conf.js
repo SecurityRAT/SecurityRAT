@@ -46,6 +46,7 @@ module.exports = function (config) {
             'main/webapp/bower_components/angular-ui-indeterminate/dist/indeterminate.js',
             'main/webapp/bower_components/angular-confirm-modal/angular-confirm.js',
             'main/webapp/bower_components/highlightjs/highlight.pack.js',
+            'main/webapp/bower_components/jstree/dist/jstree.js',
             'main/webapp/bower_components/angular-mocks/angular-mocks.js',
             // endbower
 	    'main/webapp/scripts/app/editor/config.js',
