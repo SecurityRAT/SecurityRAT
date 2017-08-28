@@ -51,7 +51,7 @@ angular.module('sdlctoolApp')
             if(selectedNodeType == "GeneratedSlideNode" || selectedNodeType == "CustomSlideNode") {
                 $scope.slideEditor(true);
 
-                $scope.updateSlidePreview(selectedNodeType == "GeneratedSlideNode");
+                $scope.updateSlidePreview(selectedNodeType == "GeneratedSlideNode", "");
 
                 if(selectedNodeType !== "CustomSlideNode") {
                     $('#slideTitle').prop('disabled', true);
@@ -156,10 +156,10 @@ angular.module('sdlctoolApp')
             }
 
             if($scope.selectedNode.node_type == "CustomSlideNode")
-                $scope.updateSlidePreview();
+                $scope.updateSlidePreview(false, "");
         };
 
-        $scope.updateSlidePreview = function(writeback=false, parentName="") {
+        $scope.updateSlidePreview = function(writeback, parentName) {
             if($scope.selectedNode.training_id == null || $scope.selectedNode.training_id.name == null )
                 $scope.selectedNode.training_id = $scope.training;
             $scope.selectedNode.loadContent(parentName).then(function(content) {

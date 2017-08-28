@@ -160,7 +160,7 @@ angular.module('sdlctoolApp')
             });
         };
 
-        TrainingTreeNode.prototype.loadSubTree = function(loadNames=true) {
+        TrainingTreeNode.prototype.loadSubTree = function(loadNames) {
             var node = this;
             return new Promise(function(resolve, reject) {
                 var subPromises = [TrainingTreeUtil.ChildrenOfNode.query({id: node.id}).$promise];

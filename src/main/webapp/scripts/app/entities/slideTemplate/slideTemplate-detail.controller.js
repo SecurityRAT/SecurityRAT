@@ -16,7 +16,7 @@ angular.module('sdlctoolApp')
         };
 
         $scope.save = function () {
-            $scope.updateSlidePreview();
+            $scope.updateSlidePreview(false, "");
             if ($scope.slideTemplate.id != null) {
                 SlideTemplate.update($scope.slideTemplate, onSaveFinished);
             } else {
@@ -44,6 +44,6 @@ angular.module('sdlctoolApp')
 
         $timeout(function() {
             // this must be done _after_ the iframe content loaded or has no effect
-            $scope.updateSlidePreview();
+            $scope.updateSlidePreview(false, "");
         }, 2500);
 });
