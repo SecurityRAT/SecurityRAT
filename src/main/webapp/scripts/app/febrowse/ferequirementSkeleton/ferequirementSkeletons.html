@@ -1,6 +1,6 @@
 <div>
 	<br />
-    <h2 class="page-header">Requirements</h2>
+    <h2 class="page-header">Requirement Browser</h2>
     <div class="container col-md-10">
             <input type="text" class="form-control" data-ng-model="searchQuery" id="fesearchQuery" placeholder="Search for a requirement" aria-describedby="sizing-addon1">
     </div>
@@ -14,7 +14,7 @@
 				</span>
 			</span>
 		</p>
-    <div class="table-responsive">
+    <div class="table-responsive" data-ng-show="progressbar.showContent">
         <table class="table table-striped" infinite-scroll="loadMore()" infinite-scroll-distance="1">
             <thead>
                 <tr>
@@ -30,7 +30,7 @@
                    					<a href="#" tabindex="-1" role="presentation">{{category.name}}</a>
                    					<ul class="dropdown-menu" aria-labelledby="list{{category.id}}">
                    						<li data-ng-repeat="instance in category.tagInstances | orderBy : 'showOrder'">
-                   							<a href="#" data-ng-click="selectTagInstance(instance, 'selectedTags', 'tag')" tabindex="-1">
+                   							<a href="#" data-ng-click="selectTagInstance(instance, 'selectedTags', 'tag')" tabindex="-1"  >
                    							<span data-ng-class="{'glyphicon glyphicon-ok':isTagSelected(instance, 'selectedTags')}"></span>
                    							 {{instance.name}}</a>
                    						</li>
@@ -48,8 +48,8 @@
                    					<a href="#" tabindex="-1" role="presentation">{{category.name}}</a>
                    					<ul class="dropdown-menu" aria-labelledby="list{{category.id}}">
                    						<li data-ng-repeat="instance in category.collectionInstances">
-                   							<a href="#" data-ng-click="selectTagInstance(instance, 'selectedColls', 'coll')" tabindex="-1">
-                   							<span data-ng-class="{'glyphicon glyphicon-ok':isTagSelected(instance, 'selectedColls')}"></span>
+                   							<a href="#" data-ng-click="selectTagInstance(instance, 'selectedColls', 'coll')" tabindex="-1" >
+                   							<span data-ng-class="{'glyphicon glyphicon-ok':isTagSelected(instance, 'selectedColls')}" ></span>
                    							 {{instance.name}}</a>
                    						</li>
                    					</ul>
@@ -107,5 +107,8 @@
                 </tr>
             </tbody>
         </table>
+	</div>
+	<div data-ng-hide="progrebar.hide">
+        <uib-progressbar class="progress-striped active" value="progressbar.barValue" type="success" data-ng-hide="progressbar.hide">{{progressbar.barValue}}%</uib-progressbar>
     </div>
 </div>

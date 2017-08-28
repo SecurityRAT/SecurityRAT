@@ -1,3 +1,7 @@
+'use strict';
+/* jshint undef:true */
+/* globals describe, browser, element, by, expect, document, beforeEach, beforeAll, it */
+
 describe('Protractor Security RAT importer testsuite', function() {
 	var importArtifact = element(by.id('importArtifact'));
 	var defineArtifact = element(by.id('defineArtifact'));
@@ -129,15 +133,15 @@ describe('Protractor Security RAT importer testsuite', function() {
 			browser.get(browser.params.testHost);
 			importArtifact.click();
 			browser.sleep(1000);
-			(element(by.linkText('Import from File'))).click();
-			var fileToUpload = '../../../../../Downloads/' + value;
-			 var absolutePath = path.resolve(__dirname, fileToUpload);
+			// (element(by.linkText('Import from File'))).click();
+			// var fileToUpload = '../../../../../Downloads/' + value;
+			//  var absolutePath = path.resolve(__dirname, fileToUpload);
 			
-			var input = element(by.id('fileUpload'));
+			// var input = element(by.id('fileUpload'));
 			
-			input.sendKeys(absolutePath);
-			browser.sleep(3000);
-			(element(by.buttonText("Import"))).click();
+			// input.sendKeys(absolutePath);
+			// browser.sleep(3000);
+			// (element(by.buttonText("Import"))).click();
 			browser.sleep(2000);
 			browser.wait(function() {
 				return element(by.buttonText('Close')).isPresent();
@@ -173,7 +177,7 @@ describe('Protractor Security RAT importer testsuite', function() {
 		    element(by.buttonText('Close')).click();
 		    browser.sleep(3000);
 		    element(by.buttonText('Updates available')).isPresent().then(function() {
-		    	acceptReq = element.all(by.id('acceptReq'));
+		    	var acceptReq = element.all(by.id('acceptReq'));
 		    	if(acceptReq.count() > 0) {
 				    element.all(by.id('acceptReq')).isPresent().then(function() {
 					    expect(element(by.buttonText('Updates available')).isEnabled()).toBe(false);
@@ -263,5 +267,20 @@ describe('Protractor Security RAT importer testsuite', function() {
 		element(by.binding('jira.url')).click();
 		browser.sleep(20000);
 		element(by.buttonText("Close")).click();
+	});
+
+	it('Import file with custom requirements', function() {
+		browser.get(browser.params.impTestAttachmentUrl + browser.params.attachmentUrls[4]).then(function() {}, function(){
+			browser.switchTo().alert().accept();
+		});
+		browser.sleep(10000);
+		element(by.partialButtonText('Custom requirements')).click();
+		expect(element(by.linkText('Edit')).isPresent()).toBe(true);
+		expect(element(by.partialLinkText('Remove')).isPresent()).toBe(true);
+		element(by.buttonText(SaveButton)).click();
+		browser.sleep(2000);
+		element(by.partialLinkText('Export into File')).click();
+		browser.sleep(1000);
+		element(by.buttonText(exportButton)).click();
 	});
 });

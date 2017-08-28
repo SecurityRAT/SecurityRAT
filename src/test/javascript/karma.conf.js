@@ -27,7 +27,6 @@ module.exports = function (config) {
             'main/webapp/bower_components/angular-ui-router/release/angular-ui-router.js',
             'main/webapp/bower_components/jquery-ui/jquery-ui.js',
             'main/webapp/bower_components/angular-ui-sortable/sortable.js',
-            'main/webapp/bower_components/lodash/dist/lodash.compat.js',
             'main/webapp/bower_components/angularjs-dropdown-multiselect/src/angularjs-dropdown-multiselect.js',
             'main/webapp/bower_components/bootstrap/dist/js/bootstrap.js',
             'main/webapp/bower_components/js-yaml/dist/js-yaml.js',

@@ -5,9 +5,9 @@ angular.module('sdlctoolApp').controller('RequirementSkeletonDialogController',
         function($scope, $stateParams, $uibModalInstance, entity, RequirementSkeleton, OptColumnContent, AlternativeInstance, ReqCategory, TagInstance, CollectionInstance, ProjectType, CollectionCategory, TagCategory) {
 
         $scope.requirementSkeleton = entity;
-        if(typeof $scope.requirementSkeleton.tagInstances === 'undefined') $scope.requirementSkeleton.tagInstances=[];
-        if(typeof $scope.requirementSkeleton.collectionInstances === 'undefined') $scope.requirementSkeleton.collectionInstances=[];
-        if(typeof $scope.requirementSkeleton.projectTypes === 'undefined') $scope.requirementSkeleton.projectTypes=[];
+        if(typeof $scope.requirementSkeleton.tagInstances === 'undefined')  { $scope.requirementSkeleton.tagInstances=[]; }
+        if(typeof $scope.requirementSkeleton.collectionInstances === 'undefined') { $scope.requirementSkeleton.collectionInstances=[]; }
+        if(typeof $scope.requirementSkeleton.projectTypes === 'undefined') { $scope.requirementSkeleton.projectTypes=[]; }
         $scope.optcolumncontents = OptColumnContent.query();
         $scope.alternativeinstances = AlternativeInstance.query();
         $scope.reqcategorys = ReqCategory.query();
@@ -26,36 +26,36 @@ angular.module('sdlctoolApp').controller('RequirementSkeletonDialogController',
         $scope.getCollectionInstancesForCategory = function(collectionCategoryId) {
         	var collectionInstances = [];
         	collectionInstances = $scope.collectioninstances.filter(function (el) {
-        		return el.collectionCategory.id == collectionCategoryId;
+        		return el.collectionCategory.id === collectionCategoryId;
         	});
         	return collectionInstances;
-        }
+        };
         
         $scope.getTagInstancesForCategory = function(tagCategoryId) {
         	var tagInstances = [];
         	tagInstances = $scope.taginstances.filter(function (el) {
-        		return el.tagCategory.id == tagCategoryId;
+        		return el.tagCategory.id === tagCategoryId;
         	});
         	return tagInstances;
-        }
+        };
         
         $scope.arrayObjectIndexOf = function(myArray, searchTerm, property) {
-            if(typeof myArray === 'undefined') return -1;
+            if(typeof myArray === 'undefined') { return -1; }
         	for(var i = 0, len = myArray.length; i < len; i++) {
-                if (myArray[i][property] === searchTerm) return i;
+                if (myArray[i][property] === searchTerm) { return i; }
             }
             return -1;
-        }
+        };
         
         $scope.toggleSelection = function (myArray, myObject) {
-        	if(typeof myArray === 'undefined') myArray = [];
-        	var idx = $scope.arrayObjectIndexOf(myArray, myObject.id, "id"); 
+        	if(typeof myArray === 'undefined')  { myArray = []; }
+        	var idx = $scope.arrayObjectIndexOf(myArray, myObject.id, 'id'); 
         	if (idx > -1) {
         		myArray.splice(idx, 1);
         	} else {
         		myArray.push(myObject);
         	}
-        }
+        };
 		
         var onSaveFinished = function (result) {
             $scope.$emit('sdlctoolApp:requirementSkeletonUpdate', result);
@@ -63,7 +63,7 @@ angular.module('sdlctoolApp').controller('RequirementSkeletonDialogController',
         };
 
         $scope.save = function () {
-            if ($scope.requirementSkeleton.id != null) {
+            if ($scope.requirementSkeleton.id !== null) {
                 RequirementSkeleton.update($scope.requirementSkeleton, onSaveFinished);
             } else {
                 RequirementSkeleton.save($scope.requirementSkeleton, onSaveFinished);

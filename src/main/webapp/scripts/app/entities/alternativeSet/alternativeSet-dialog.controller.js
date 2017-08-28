@@ -19,7 +19,7 @@ angular.module('sdlctoolApp').controller('AlternativeSetDialogController',
         };
 
         $scope.save = function () {
-            if ($scope.alternativeSet.id != null) {
+            if ($scope.alternativeSet.id !== null) {
                 AlternativeSet.update($scope.alternativeSet, onSaveFinished);
             } else {
                 AlternativeSet.save($scope.alternativeSet, onSaveFinished);

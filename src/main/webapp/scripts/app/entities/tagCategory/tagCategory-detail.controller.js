@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('TagCategoryDetailController', function ($scope, $rootScope, $stateParams, entity, TagCategory, TagInstance) {
+    .controller('TagCategoryDetailController', function ($scope, $rootScope, $stateParams, entity, TagCategory) {
         $scope.tagCategory = entity;
         $scope.load = function (id) {
             TagCategory.get({id: id}, function(result) {

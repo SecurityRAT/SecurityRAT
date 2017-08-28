@@ -1,5 +1,8 @@
 'use strict';
 
+/* jshint undef: true */
+/* globals $ */
+
 angular.module('sdlctoolApp')
     .controller('AlternativeSetController', function ($scope, AlternativeSet, AlternativeSetSearch, OptColumn, 
         sharedProperties, $filter, EntityHelper) {
@@ -23,14 +26,14 @@ angular.module('sdlctoolApp')
             });
             OptColumn.query(function(result){
             	$scope.optColumns = result;
-            })
+            });
         };
         $scope.loadAll();
         
         $scope.delete = function (id) {
             AlternativeSet.get({id: id}, function(result) {
                 $scope.alternativeSet = result;
-                $('#deleteAlternativeSetConfirmation').appendTo("body").modal('show');
+                $('#deleteAlternativeSetConfirmation').appendTo('body').modal('show');
             });
         };
 
@@ -44,9 +47,9 @@ angular.module('sdlctoolApp')
         };
 
         $scope.filterEntity = function() {
-            var setFilteredByOptColumns = $filter('filterCategoryForEntities')($scope.alternativeSets, $scope.selectedOptColumns, 'optColumn')
+            var setFilteredByOptColumns = $filter('filterCategoryForEntities')($scope.alternativeSets, $scope.selectedOptColumns, 'optColumn');
             return $filter('filter')(setFilteredByOptColumns, $scope.searchString);
-        }
+        };
 
         function selectAllTypes () {
             
@@ -55,16 +58,16 @@ angular.module('sdlctoolApp')
             });
 	  	}
         function deselectAllTypes () {
-            EntityHelper.deselectElements($filter('filter')($scope.filterEntity(), {selected: true}))
+            EntityHelper.deselectElements($filter('filter')($scope.filterEntity(), {selected: true}));
         }
         
         $scope.performSelection = function(selectionValue) {
             EntityHelper.performSelection(selectionValue, selectAllTypes, deselectAllTypes);
-        }
+        };
 
         $scope.bulkChange = function() {
         	sharedProperties.setProperty($filter('orderBy')($filter('filter')($scope.alternativeSets, {selected: true}), ['optColumn.showOrder','showOrder']));
-        }
+        };
 
         $scope.refresh = function () {
             $scope.loadAll();

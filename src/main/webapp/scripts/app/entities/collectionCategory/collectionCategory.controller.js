@@ -1,5 +1,7 @@
 'use strict';
 
+/* jshint undef: true */
+/* globals $ */
 angular.module('sdlctoolApp')
     .controller('CollectionCategoryController', function ($scope, CollectionCategory, CollectionCategorySearch, sharedProperties, $filter, EntityHelper) {
         $scope.collectionCategorys = [];
@@ -19,8 +21,8 @@ angular.module('sdlctoolApp')
         $scope.delete = function (id) {
             CollectionCategory.get({id: id}, function(result) {
                 $scope.collectionCategory = result;
-                $('#deleteCollectionCategoryConfirmation').appendTo("body").modal('show');
-            }, function(error) {
+                $('#deleteCollectionCategoryConfirmation').appendTo('body').modal('show');
+            }, function() {
             	
             });
         };
@@ -36,7 +38,7 @@ angular.module('sdlctoolApp')
         
         $scope.filterEntity = function() {
             return $filter('filter')($scope.collectionCategorys, $scope.searchString);
-        }
+        };
 
         function selectAllTypes () {
         	angular.forEach($scope.filterEntity(), function(category) {
@@ -45,16 +47,16 @@ angular.module('sdlctoolApp')
 	  	}
         
         function deselectAllTypes () {
-            EntityHelper.deselectElements($filter('filter')($scope.filterEntity(), {selected: true}))
+            EntityHelper.deselectElements($filter('filter')($scope.filterEntity(), {selected: true}));
         }
 
         $scope.performSelection = function(selectionValue) {
             EntityHelper.performSelection(selectionValue, selectAllTypes, deselectAllTypes);
-        }
+        };
       
         $scope.bulkChange = function() {
         	sharedProperties.setProperty($filter('orderBy')($filter('filter')($scope.collectionCategorys, {selected: true}), ['showOrder']));
-        }
+        };
       
         $scope.search = function () {
         	CollectionCategorySearch.query({query: $scope.searchQuery}, function(result) {

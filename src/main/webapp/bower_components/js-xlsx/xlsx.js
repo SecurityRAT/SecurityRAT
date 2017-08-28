@@ -7219,7 +7219,7 @@ function get_cell_style(styles, cell, opts) {
 	//&& (styles[i].fontId === 1 ? cell.bold : !cell.bold added.
 	console.log("styles")
 	console.log(styles);
-	for(var i = 0, len = styles.length; i != len; ++i) if(styles[i].numFmtId === z && (styles[i].fontId === 1) return i;
+	for(var i = 0, len = styles.length; i != len; ++i) if(styles[i].numFmtId === z && (styles[i].fontId === 1)) return i;
 	
 	styles[len] = {
 		numFmtId:z,

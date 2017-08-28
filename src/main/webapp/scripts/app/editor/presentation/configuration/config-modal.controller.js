@@ -1,3 +1,7 @@
+'use strict';
+
+/* jshint undef: true */
+/* globals window */
 angular.module('sdlctoolApp')
 	.controller('EditPresentation', function ($scope, $uibModalInstance, $rootScope, $state, entity, localStorageService, Account) {
 		var params = {};
@@ -6,7 +10,7 @@ angular.module('sdlctoolApp')
 		$scope.config = {};
 		$scope.config.theme = 'securityrat';
 		$scope.config.transition = 'concave';
-		$scope.config.end = 'Thank you.'
+		$scope.config.end = 'Thank you.';
 		$scope.init = function() {
 			$scope.themes = ['beige', 'black', 'blood', 'league', 'moon', 'night', 'securityrat', 'serif', 'simple', 'sky', 'solarized', 'white'];
 			$scope.transitions = ['none', 'fade', 'slide', 'convex', 'concave', 'zoom'];
@@ -19,26 +23,27 @@ angular.module('sdlctoolApp')
 			$scope.config.statusColumns = {};
 			angular.forEach($scope.optionColumns, function(optColumn) {
 				$scope.config.optionColumns[optColumn.id] = true;
-			})
+			});
 			angular.forEach($scope.statusColumns, function(statColumn) {
 				$scope.config.statusColumns[statColumn.id] = true;
-			})
+			});
 			Account.get().$promise.then(function(account) {
 				$scope.config.presenter = account.data.firstName + ' ' + account.data.lastName; 
 			});
-			$scope.config.subtitle = "Security requirements";
-		}
+			$scope.config.subtitle = 'Security requirements';
+		};
 		
 		$scope.cancel = function() {
 			$uibModalInstance.dismiss('cancel');
-		}
+		};
 		
+		/* jshint loopfunc: true */
 		$scope.confirm = function() {
 			params.config = $scope.config;
 //			console.log(params.requirements)
 			angular.forEach(params.requirements, function(requirement) {
 				if(!$scope.config.description) {
-					delete requirement.description
+					delete requirement.description;
 				}
 				for(var i = 0; i < requirement.optionColumns.length; i++) {
 					if(!$scope.config.optionColumns[requirement.optionColumns[i].showOrder]) {
@@ -46,22 +51,23 @@ angular.module('sdlctoolApp')
 						i--;
 					}
 				}
-				for(var i = 0; i < requirement.statusColumns.length; i++) {
-					if(!$scope.config.statusColumns[requirement.statusColumns[i].id]) {
-						requirement.statusColumns.splice(i, 1);
-						i--;
+				for(var j = 0; j < requirement.statusColumns.length; j++) {
+					if(!$scope.config.statusColumns[requirement.statusColumns[j].id]) {
+						requirement.statusColumns.splice(j, 1);
+						j--;
 					} else {
 						angular.forEach($scope.statusColumns, function(stat) {
-							if(requirement.statusColumns[i].id === stat.id)
-								requirement.statusColumns[i].name = stat.name;
-						})
+							if(requirement.statusColumns[j].id === stat.id) {
+								requirement.statusColumns[j].name = stat.name;
+							}
+						});
 					}
 				}
-			})
+			});
 			if (localStorageService.isSupported) {
 				localStorageService.set('myRevealjs', JSON.stringify(params));
 				window.open($state.href('presentation', {theme: $scope.config.theme + '.css'}), '_blank');
 			}
 			$uibModalInstance.close('closed');
-		}
+		};
 	});

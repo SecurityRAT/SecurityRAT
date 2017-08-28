@@ -85,7 +85,7 @@
 		<button type="button" class="btn btn-default" data-dismiss="modal" data-ng-click="clear()">
             <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span>
         </button>
-        <button type="submit" data-ng-disabled="startTestForm.$invalid || startTestForm.$submitted" class="btn btn-primary">
+        <button type="submit" data-ng-disabled="startTestForm.$invalid || authenticationProperties.spinnerProperty.showSpinner" class="btn btn-primary">
             <span class="glyphicon glyphicon-play"></span>&nbsp;<span>Start</span>
         </button>
 	</div>

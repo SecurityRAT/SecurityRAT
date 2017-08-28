@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('TagInstanceDetailController', function ($scope, $rootScope, $stateParams, entity, TagInstance, TagCategory, RequirementSkeleton) {
+    .controller('TagInstanceDetailController', function ($scope, $rootScope, $stateParams, entity, TagInstance) {
         $scope.tagInstance = entity;
         $scope.load = function (id) {
             TagInstance.get({id: id}, function(result) {

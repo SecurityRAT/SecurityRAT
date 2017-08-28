@@ -1,7 +1,10 @@
 'use strict';
 
+/* jshint undef: true */
+/* globals $ */
+
 angular.module('sdlctoolApp')
-    .controller('OptColumnTypeController', function ($scope, OptColumnType, OptColumnTypeSearch) {
+    .controller('OptColumnTypeController', function ($scope, OptColumnType) {
         $scope.optColumnTypes = [];
 	$scope.searchString = '';
         $scope.loadAll = function() {

@@ -1,38 +1,68 @@
-<div class="modal-body">
-  <p>Alternatively is the result available at <a href="{{testResults.self}}" target="_blank">{{testResults.self}}</a> for a week as from now.</p>
-  <div class="table-responsive">
-    <table class='table table-hover'>
-      <thead>
-        <tr>
-          <th>Short Name</th>
-          <th class="text-center">Description</th>
-          <th>Result</th>
-          <th class="text-center">Confidence level</th>
-          <th class="text-center">Message</th>
-          <th class="text-center">Tool</th>
-        </tr>
-      </thead>
-      <tbody data-ng-repeat="test in testResults.reqs | orderBy : 'showOrder'">
-        <tr data-ng-repeat="result in test.results">
-            <td rowspan="{{test.results.length}}" data-ng-if="$first"><strong>{{test.shortName}}</strong></td>
-            <td rowspan="{{test.results.length}}" data-ng-if="$first">{{test.description}}</td>
-            <td>
-              <button class="btn btn-circle" data-ng-class="{'btn-success':result.result == 'PASSED', 'btn-danger': result.result == 'FAILED'}"
-                uib-tooltib="result.result" tooltip-placement="top" tooltip-trigger="mouseenter" data-ng-if="result.result != ''">
-                <span class="glyphicon" data-ng-class="{'glyphicon-ok':result.result == 'PASSED', 'glyphicon-remove': result.result == 'FAILED'}"></span>
-              </button>
-              <span data-ng-if="result.result == ''" class="text-center"> N/A</span>
-            </td>
-            <td>
-              <uib-progressbar class="progress-striped" value="result.confidentiality" type="{{getProgressbarType(result.confidentiality)}}">
-                <span style="color:white; white-space:nowrap;" data-ng-if="result.confidentiality >= 0">{{result.confidentiality}}%</span>
-                <span style="color:black; white-space:nowrap;" data-ng-if="result.confidentiality < 0">{{result.confidentiality}}%</span>
-              </uib-progressbar>
-            </td>
-            <td>{{result.message}}</td>
-            <td>{{result.tool}}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
+<form name="stopTestForm" role="form" novalidate data-ng-submit="stopTest()">
+    <div class="modal-body">
+        <p>Alternatively is the result available at <a href="{{testResults.self}}" target="_blank">{{testResults.self}}</a> for a week as from now.</p>
+        <div data-ng-if="error.display" class="error.class">{{error.message}}</div>
+        <div class="table-responsive">
+            <table class='table table-hover'>
+                <thead>
+                    <tr>
+                        <th>Short Name</th>
+                        <th class="text-center">Description</th>
+                        <th>Result</th>
+                        <th class="text-center">Confidence level</th>
+                        <th class="text-center">Message</th>
+                        <th class="text-center">Tool</th>
+                    </tr>
+                </thead>
+                <tbody data-ng-repeat="test in testResults.reqs | orderBy : 'showOrder'">
+                    <tr data-ng-repeat="result in test.results">
+                        <td rowspan="{{test.results.length}}" data-ng-if="$first"><strong>{{test.shortName}}</strong></td>
+                        <td rowspan="{{test.results.length}}" data-ng-if="$first">{{test.description}}</td>
+                        <td>
+                            <div data-ng-if="error.display">N/A</div>
+                            <div data-ng-if="!error.display">
+                                <div data-ng-if="result.state === 0" style="color:gray">{{displayProperties.inProgressMessage}}</div>
+                                <div data-ng-if="result.state === 1">
+                                    <button class="btn btn-circle" data-ng-class="{'btn-success':result.result == 'PASSED', 'btn-danger': result.result == 'FAILED'}"
+                                        uib-tooltib="result.result" tooltip-placement="top" tooltip-trigger="mouseenter" data-ng-if="result.result != ''">
+                                      <span class="glyphicon" data-ng-class="{'glyphicon-ok':result.result == 'PASSED', 'glyphicon-remove': result.result == 'FAILED'}"></span>
+                                    </button>
+                                    <div data-ng-if="result.result == ''" class="text-center"> N/A</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div data-ng-if="error.display">N/A</div>
+                            <div data-ng-if="!error.display">
+                                <div data-ng-if="result.state === 0" style="color:gray">{{displayProperties.inProgressMessage}}</div>
+                                <div data-ng-if="result.state === 1">
+                                    <uib-progressbar class="progress-striped" value="result.confidentiality" type="{{getProgressbarType(result.confidentiality)}}">
+                                        <span style="color:white; white-space:nowrap;" data-ng-if="result.confidentiality >= 0">{{result.confidentiality}}%</span>
+                                        <span style="color:black; white-space:nowrap;" data-ng-if="result.confidentiality < 0">{{result.confidentiality}}%</span>
+                                    </uib-progressbar>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div data-ng-if="error.display">N/A</div>
+                            <div data-ng-if="!error.display">
+                                <div data-ng-if="result.state === 0" style="color:gray">{{displayProperties.inProgressMessage}}</div>
+                                <div data-ng-if="result.state === 1" marked="result.message | limitTo:result.limitDesc"></div>
+                                <span data-ng-if="result.state === 1" class="pull-right">
+                                    <button data-ng-if="result.message.length > result.limitDesc" data-ng-click="showLongdesc(result)" class="btn btn-primary btn-xs" uib-tooltip="Show complete message." tooltip-append-to-body="true">Show more</button>
+                                    <button data-ng-if="!result.limitDesc" data-ng-click="hideLongdesc(result)" class="btn btn-primary btn-xs" uib-tooltip="Hide part of the message." tooltip-append-to-body="true">Show less</button>
+                                </span>
+                            </div>
+                        </td>
+                        <td>{{result.tool}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="modal-footer" data-ng-if="authenticationProperties.spinnerProperty.showSpinner">
+        <button type="submit" class="btn btn-danger col-md-offset-2 text-center" data-ng-disabled="stopTestForm.$submitted" uib-tooltip="You will loose all results by stopping the test. Just close this modal if these results will later be needed.">
+          Stop running test
+      </button>
+    </div>
+</form>

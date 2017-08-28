@@ -1,5 +1,8 @@
 'use strict';
 
+/* jshint undef: true */
+/* globals $ */
+
 angular.module('sdlctoolApp')
     .controller('OptColumnContentBulkController',function($scope, $stateParams, $uibModalInstance, $filter, entity, OptColumnContent, 
     		RequirementSkeleton, OptColumn, sharedProperties) {
@@ -8,7 +11,7 @@ angular.module('sdlctoolApp')
     	$scope.requirementSkeletons = [];
     	$scope.state = {
     			active: true
-    	}
+    	};
     	$scope.selectedOptColumn = {
     			value: null
     	};
@@ -39,7 +42,7 @@ angular.module('sdlctoolApp')
         		$scope.showTypes = 'Hide selected contents';
         		$scope.glyphicon = "glyphicon glyphicon-minus";
         	}
-        }   	
+        };   	
         var onSaveFinished = function (result) {
             $scope.$emit('sdlctoolApp:optColumnContentUpdate', result);
             $uibModalInstance.close(result);
@@ -62,7 +65,7 @@ angular.module('sdlctoolApp')
     	        		}
     	        	});
     			}
- 			if (count == $scope.optColumnContents.length) {
+ 			if (count === $scope.optColumnContents.length) {
     				OptColumnContent.update(content, onSaveFinished);
  			} else {
 				OptColumnContent.update(content);
@@ -78,7 +81,7 @@ angular.module('sdlctoolApp')
         $scope.confirmDeleteAll = function (optColumnContents) {
             var count = 1;
             angular.forEach(optColumnContents, function(columnContent) {
-                if (count == optColumnContents.length) {
+                if (count === optColumnContents.length) {
                   OptColumnContent.delete({id: columnContent.id}, function(result) {
                        $('#deleteOptColumnContentsConfirmation').modal('hide');
                        onSaveFinished(result);

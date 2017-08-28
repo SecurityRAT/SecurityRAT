@@ -58,7 +58,7 @@ angular.module('sdlctoolApp')
                         $state.go('requirementSkeleton', null, { reload: true });
                     }, function() {
                         $state.go('requirementSkeleton');
-                    })
+                    });
                 }]
             })
             .state('requirementSkeleton.edit', {
@@ -81,7 +81,7 @@ angular.module('sdlctoolApp')
                         $state.go('requirementSkeleton', null, { reload: true });
                     }, function() {
                         $state.go('^');
-                    })
+                    });
                 }]
             })
             .state('requirementSkeleton.bulk', {
@@ -104,7 +104,7 @@ angular.module('sdlctoolApp')
                         $state.go('requirementSkeleton', null, { reload: true });
                     }, function() {
                         $state.go('requirementSkeleton');
-                    })
+                    });
                 }]
             });
     });

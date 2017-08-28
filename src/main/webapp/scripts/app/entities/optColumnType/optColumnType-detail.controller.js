@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('OptColumnTypeDetailController', function ($scope, $rootScope, $stateParams, entity, OptColumnType, OptColumn) {
+    .controller('OptColumnTypeDetailController', function ($scope, $rootScope, $stateParams, entity, OptColumnType) {
         $scope.optColumnType = entity;
         $scope.load = function (id) {
             OptColumnType.get({id: id}, function(result) {

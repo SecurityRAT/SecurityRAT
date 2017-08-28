@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('AlternativeSetDetailController', function ($scope, $rootScope, $stateParams, entity, AlternativeSet, OptColumn, AlternativeInstance) {
+    .controller('AlternativeSetDetailController', function ($scope, $rootScope, $stateParams, entity, AlternativeSet) {
         $scope.alternativeSet = entity;
         $scope.load = function (id) {
             AlternativeSet.get({id: id}, function(result) {

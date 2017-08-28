@@ -1,27 +1,35 @@
 <form class="form-inline" name="formAddTicket" role="form" show-validation>
-	<div class="input-group input-group-sm">
-		<span class="input-group-addon">
-			<input type="checkbox" data-ng-model="reqs.linkStatus.link" uib-tooltip="Link the tickets" tooltip-append-to-body />
+    <div class="alert alert-danger" data-ng-show="manageTicketProperty.sameTicketError" >
+        You cannot link a ticket to itself.
+    </div>
+    <div class="alert alert-danger" data-ng-show="manageTicketProperty.authenticationFailure" >
+        {{manageTicketProperty.authenticationFailureMessage}}
+    </div>
+    <div class="input-group input-group-sm">
+        <span class="input-group-addon">
+			<input type="checkbox" data-ng-model="reqs.linkStatus.link" uib-tooltip="Link the tickets in JIRA" tooltip-append-to-body />
 		</span>
-		<input id="ticket_field" type="text" name="ticket" placeholder="Enter existing ticket" class="form-control" data-ng-model="reqs.ticket" data-ng-class="{wrongInput:manageTicketProperty.error}" uib-tooltip="Please enter a valid ticket url." tooltip-enable="{{manageTicketProperty.error}}" tooltip-append-to-body tooltip-class="wrongPasswordTooltip" data-ng-pattern="checks.urlPattern" required>
-	</div>
-	<div class="form-group">
-		<div data-ng-show="formAddTicket.ticket.$dirty && formAddTicket.ticket.$invalid">
-			<p class="help-block"
-	               data-ng-show="formAddTicket.ticket.$error.required">
-	            Please specify a value.
-	        </p>
-	        <p class="help-block"
-	               data-ng-show="formAddTicket.ticket.$error.pattern">
-	            Please specify a conform URL.
-	        </p>
-		</div>
-	</div>
-	<div class="btn-group-sm" data-ng-if="!manageTicketProperty.spinnerProperty.showSpinner">
-		<label id="addTicket" type="submit" data-ng-disabled="formAddTicket.$invalid" data-ng-click="doIssueLinking(reqs, addManualTicket)" class="btn btn-default"><i class="glyphicon glyphicon-ok"></i></label>
-		<label id="cancelAddTicket" data-ng-click="reqs.linkStatus.enableTooltip = !reqs.linkStatus.enableTooltip" class="btn btn-default"><i class="glyphicon glyphicon-remove"></i></label>
-	</div>
-	<div class="btn-group" data-ng-if="manageTicketProperty.spinnerProperty.showSpinner">
-		<label class="btn btn-default"><img src="assets/images/ellipsis.gif" /></label>
-	</div>
+        <input id="ticket_field" type="text" name="ticket" placeholder="Enter existing ticket URL" class="form-control" data-ng-model="reqs.tempTicket"
+            data-ng-class="{wrongInput:manageTicketProperty.error}" uib-tooltip="Please enter a valid ticket url." tooltip-enable="{{manageTicketProperty.error}}"
+            tooltip-append-to-body tooltip-class="wrongPasswordTooltip" data-ng-pattern="checks.urlPattern" required>
+    </div>
+    <div class="form-group">
+        <div data-ng-show="formAddTicket.ticket.$dirty && formAddTicket.ticket.$invalid">
+            <p class="help-block" data-ng-show="formAddTicket.ticket.$error.required">
+                Please specify a value.
+            </p>
+            <p class="help-block" data-ng-show="formAddTicket.ticket.$error.pattern">
+                Please specify a conform URL.
+            </p>
+        </div>
+    </div>
+    <div class="btn-group-sm" data-ng-if="!manageTicketProperty.spinnerProperty.showSpinner">
+        <label id="addTicket" type="submit" data-ng-disabled="formAddTicket.$invalid" uib-tooltip="Confirm" tooltip-placement="right-bottom"
+            data-ng-click="doIssueLinking(reqs, addManualTicket, 0)" class="btn btn-default"><i class="glyphicon glyphicon-ok"></i></label>
+        <label id="cancelAddTicket" uib-tooltip="Cancel" tooltip-placement="right-bottom" data-ng-click="cleanUpIssueLinking(reqs)"
+            class="btn btn-default"><i class="glyphicon glyphicon-remove"></i></label>
+    </div>
+    <div class="btn-group" data-ng-if="manageTicketProperty.spinnerProperty.showSpinner">
+        <label class="btn btn-default"><img src="assets/images/ellipsis.gif" /></label>
+    </div>
 </form>

@@ -1,5 +1,8 @@
 'use strict';
 
+/* jshint undef: true */
+/* globals $ */
+
 angular.module('sdlctoolApp')
     .controller('CollectionCategoryBulkController',function($scope, $stateParams, $uibModalInstance, $filter, entity, CollectionCategory, sharedProperties) {
     	$scope.collectionCategorys = [];
@@ -12,18 +15,18 @@ angular.module('sdlctoolApp')
         	$scope.state.active = $scope.collectionCategorys[0].active;
         	angular.forEach($scope.collectionCategorys, function(instance) {
     			if(instance.active === $scope.state.active) {
-    				count++
+    				count++;
     			}
         	});
         	
         	if(count !== $scope.collectionCategorys.length) {
         		delete $scope.state.active;
         	}
-        }
+        };
     	
         $scope.loadAll = function() {
         	$scope.showTypes = 'Show selected collection categories';
-    		$scope.glyphicon = "glyphicon glyphicon-plus";
+    		$scope.glyphicon = 'glyphicon glyphicon-plus';
     		$scope.show = true;
         	$scope.collectionCategorys = sharedProperties.getProperty();
         	$scope.getIndeterminateForActiveButton();
@@ -53,21 +56,21 @@ angular.module('sdlctoolApp')
         	$scope.show = !$scope.show;
         	if($scope.show) {
         		$scope.showTypes = 'Show selected collection categories';
-        		$scope.glyphicon = "glyphicon glyphicon-plus";
+        		$scope.glyphicon = 'glyphicon glyphicon-plus';
         	} else {
         		$scope.showTypes = 'Hide selected collection categories';
-        		$scope.glyphicon = "glyphicon glyphicon-minus";
+        		$scope.glyphicon = 'glyphicon glyphicon-minus';
         	}
-        }
+        };
 
         $scope.delete = function () {
-          $('#deleteCollectionCategoriesConfirmation').appendTo("body").modal('show');
+          $('#deleteCollectionCategoriesConfirmation').appendTo('body').modal('show');
         };
 
         $scope.confirmDeleteAll = function (collCategories) {
             var count = 1;
             angular.forEach(collCategories, function(collCat) {
-                if (count == collCategories.length) {
+                if (count === collCategories.length) {
                   CollectionCategory.delete({id: collCat.id}, function(result) {
                        $('#deleteCollectionCategoriesConfirmation').modal('hide');
                        onSaveFinished(result);

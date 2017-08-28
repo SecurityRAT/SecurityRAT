@@ -1,8 +1,5 @@
 package org.appsec.securityRAT.service.util;
 
-import java.security.SecureRandom;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang.RandomStringUtils;
 

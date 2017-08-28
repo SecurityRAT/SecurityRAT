@@ -21,7 +21,7 @@ angular.module('sdlctoolApp').controller('OptColumnDialogController',
         };
 
         $scope.save = function () {
-            if ($scope.optColumn.id != null) {
+            if ($scope.optColumn.id !== null) {
                 OptColumn.update($scope.optColumn, onSaveFinished);
             } else {
                 OptColumn.save($scope.optColumn, onSaveFinished);

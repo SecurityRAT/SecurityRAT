@@ -1,5 +1,8 @@
 'use strict';
 
+/* jshint undef: true */
+/* globals $ */
+
 angular.module('sdlctoolApp')
     .controller('RequirementSkeletonBulkController', function($scope, $stateParams, $uibModalInstance, sharedProperties, $filter, entity, RequirementSkeleton, ReqCategory, TagInstance, 
     		TagCategory, CollectionCategory, CollectionInstance, ProjectType) {
@@ -24,20 +27,20 @@ angular.module('sdlctoolApp')
         
     	$scope.state = {
     			active: true
-    	}
+    	};
     	$scope.getIndeterminateForActiveButton = function() {
         	var count = 0;
         	$scope.state.active = $scope.requirements[0].active;
         	angular.forEach($scope.requirements, function(requirement) {
     			if(requirement.active === $scope.state.active) {
-    				count++
+    				count++;
     			}
         	});
         	
         	if(count !== $scope.requirements.length) {
         		delete $scope.state.active;
         	}
-        }
+        };
         $scope.loadAll = function() {
         	$scope.requirements = sharedProperties.getProperty();
         	$scope.count = $scope.requirements.length;
@@ -87,25 +90,25 @@ angular.module('sdlctoolApp')
         $scope.getCollectionInstancesForCategory = function(collectionCategoryId) {
         	var collectionInstances = [];
         	collectionInstances = $scope.collectionInstances.filter(function (el) {
-        		return el.collectionCategory.id == collectionCategoryId;
+        		return el.collectionCategory.id === collectionCategoryId;
         	});
         	return collectionInstances;
-        }
+        };
         
         $scope.getTagInstancesForCategory = function(tagCategoryId) {
         	var tagInstances = [];
         	tagInstances = $scope.tagInstances.filter(function (el) {
-        		return el.tagCategory.id == tagCategoryId;
+        		return el.tagCategory.id === tagCategoryId;
         	});
         	return tagInstances;
-        }
+        };
         
         $scope.getCheckedForTagInstances = function(tagInstanceId) {
         	var count = 0;
         	angular.forEach($scope.requirements, function(requirement) {
         		angular.forEach(requirement.tagInstances, function(tag) {
         			if(tagInstanceId === tag.id) {
-        				count++
+        				count++;
         			}
         		});
         	});
@@ -114,14 +117,14 @@ angular.module('sdlctoolApp')
         	} else if(count !== $scope.count && count !== 0) {
         		$scope.selectedTagInstances[tagInstanceId].isKnown = true;
         	}
-        }
+        };
         
         $scope.getCheckedForCollectionInstances = function(collectionInstanceId) {
         	var count = 0;
         	angular.forEach($scope.requirements, function(requirement) {
         		angular.forEach(requirement.collectionInstances, function(collection) {
         			if(collectionInstanceId === collection.id) {
-        				count++
+        				count++;
         			}
         		});
         	});
@@ -130,14 +133,14 @@ angular.module('sdlctoolApp')
         	} else if(count !== $scope.count && count !== 0) {
         		$scope.selectedCollectionInstances[collectionInstanceId].isKnown = true;
         	}
-        }
+        };
         
         $scope.getCheckedForProjectTypes = function(projectTypeId) {
         	var count = 0;
         	angular.forEach($scope.requirements, function(requirement) {
         		angular.forEach(requirement.projectTypes, function(projectType) {
         			if(projectTypeId === projectType.id) {
-        				count++
+        				count++;
         			}
         		});
         	});
@@ -147,12 +150,12 @@ angular.module('sdlctoolApp')
         	} else if(count !== $scope.count && count !== 0){
         		$scope.selectedProjectTypes[projectTypeId].isKnown = true;
         	}
-        }
+        };
         
         // Desactivate the indeterminate state of the given property id of the selector
         $scope.removeIndeterminate = function(propertyId, selector) {
         	$scope[selector][propertyId].isKnown = false;
-        }
+        };
         
         $scope.toggleShowHide = function() {
         	$scope.show = !$scope.show;
@@ -163,7 +166,7 @@ angular.module('sdlctoolApp')
         		$scope.showRequirement = 'Hide selected requirements';
         		$scope.glyphicon = "glyphicon glyphicon-minus";
         	}
-        }
+        };
       	  		  
         var onSaveFinished = function (result) {
             $scope.$emit('sdlctoolApp:requirementSkeletonUpdate', result);
@@ -181,7 +184,7 @@ angular.module('sdlctoolApp')
 							hasInstance = true;
 							index = i;
 						}
-					};
+					}
 					if(!$scope.selectedTagInstances[tag.id].isKnown){
 						if ($scope.selectedTagInstances[tag.id].value !== '' && !hasInstance) {
 							requirement.tagInstances.push(tag);
@@ -199,7 +202,7 @@ angular.module('sdlctoolApp')
 							hasInstance = true;
 							index = i;
 						}
-					};
+					}
 					if(!$scope.selectedCollectionInstances[coll.id].isKnown){
 						if ($scope.selectedCollectionInstances[coll.id].value !== '' && !hasInstance) {
 							requirement.collectionInstances.push(coll);
@@ -216,7 +219,7 @@ angular.module('sdlctoolApp')
 							hasInstance = true;
 							index = i;
 						}
-					};
+					}
 					if(!$scope.selectedProjectTypes[type.id].isKnown){
 						if ($scope.selectedProjectTypes[type.id].value !== '' && !hasInstance) {
 							requirement.projectTypes.push(type);
@@ -232,9 +235,8 @@ angular.module('sdlctoolApp')
     	        		}
     	        	});
     			}
-        		if(angular.isDefined($scope.state.active))
-        			requirement.active = $scope.state.active;
-        		if (count == $scope.requirements.length) {
+        		if(angular.isDefined($scope.state.active)){ requirement.active = $scope.state.active; }
+        		if (count === $scope.requirements.length) {
                             RequirementSkeleton.update(requirement, onSaveFinished);
                         } else {
                             RequirementSkeleton.update(requirement);
@@ -250,7 +252,7 @@ angular.module('sdlctoolApp')
         $scope.confirmDeleteAll = function (requirements) {
             var count = 1;
             angular.forEach(requirements, function(req) {
-                if (count == requirements.length) {
+                if (count === requirements.length) {
                   RequirementSkeleton.delete({id: req.id}, function(result) {
                        $('#deleteRequirementSkeletonsConfirmation').modal('hide');
                        onSaveFinished(result);

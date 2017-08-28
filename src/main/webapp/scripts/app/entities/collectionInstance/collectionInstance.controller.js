@@ -1,5 +1,8 @@
 'use strict';
 
+/* jshint undef: true */
+/* globals $ */
+
 angular.module('sdlctoolApp')
     .controller('CollectionInstanceController', function ($scope, CollectionInstance, CollectionInstanceSearch, 
         sharedProperties, $filter, CollectionCategory, EntityHelper) {
@@ -18,7 +21,7 @@ angular.module('sdlctoolApp')
             });
             CollectionCategory.query(function(result) {
             	$scope.collectionCategories = result;
-            })
+            });
         };
         $scope.loadAll();
         $scope.categoryLabelText = {buttonDefaultText: 'Collection Category'};
@@ -31,7 +34,7 @@ angular.module('sdlctoolApp')
         $scope.delete = function (id) {
             CollectionInstance.get({id: id}, function(result) {
                 $scope.collectionInstance = result;
-                $('#deleteCollectionInstanceConfirmation').appendTo("body").modal('show');
+                $('#deleteCollectionInstanceConfirmation').appendTo('body').modal('show');
             });
         };
 
@@ -47,7 +50,7 @@ angular.module('sdlctoolApp')
         $scope.filterEntity = function() {
             var instanceFilteredByCategory = $filter('filterCategoryForEntities')($scope.collectionInstances, $scope.selectedCategory, 'collectionCategory');
             return $filter('filter')(instanceFilteredByCategory, $scope.searchString);
-        }
+        };
 
         function selectAllTypes() {
             angular.forEach($scope.filterEntity(), function(instance) {
@@ -55,16 +58,17 @@ angular.module('sdlctoolApp')
             });
 	  	}
         function deselectAllTypes() {
-            EntityHelper.deselectElements($scope.filterEntity())
+            EntityHelper.deselectElements($scope.filterEntity());
         }
 
         $scope.performSelection = function(selectionValue) {
             EntityHelper.performSelection(selectionValue, selectAllTypes, deselectAllTypes);
-        }
+        };
 
         $scope.bulkChange = function() {
         	sharedProperties.setProperty($filter('orderBy')($filter('filter')($scope.collectionInstances, {selected: true}), ['collectionCategory.showOrder','showOrder']));
-        }
+        };
+
         $scope.search = function () {
             CollectionInstanceSearch.query({query: $scope.searchQuery}, function(result) {
                 $scope.collectionInstances = result;

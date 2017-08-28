@@ -1,5 +1,7 @@
 'use strict';
 
+/* jshint undef: true */
+/* globals XRegExp */
 /**
  * @ngdoc function
  * @name sdlcFrontendApp.controller:StarterCtrl
@@ -10,7 +12,7 @@
 angular.module('sdlctoolApp')
   .controller('StarterController', function ($scope, $http, apiFactory, sharedProperties, $location, $uibModalInstance, $state, $filter, system, getRequirementsFromImport) {
 	  $scope.starterForm = {};
-	  $scope.failed = "";
+	  $scope.failed = '';
 	  $scope.fail = false;
 	  $scope.selectedCollection = [];
 	  $scope.selectedProjectType = [];
@@ -20,10 +22,10 @@ angular.module('sdlctoolApp')
 	  $scope.oldAlternativeSets = [];
 	  $scope.oldHasIssueLinks = false;
 	  $scope.disabled = false;
-	  $scope.regex = new XRegExp("^[\\p{Latin}\\pN+\\s\\-\\.\\:\\+\\(\\)\\[\\]\\,\\!\\#\\$\\%\\'\\*\\=\\?\\^\\`\\{\\}\\|\\~\\;\\@\\&]+$");
+	  $scope.regex = new XRegExp('^[\\p{Latin}\\pN+\\s\\-\\.\\:\\+\\(\\)\\[\\]\\,\\!\\#\\$\\%\\\'\\*\\=\\?\\^\\`\\{\\}\\|\\~\\;\\@\\&]+$');
 	  getRequirementsFromImport.setProperty({});
 	  $scope.selectedCollectionSettings = {
-			  smartButtonMaxItems: 7,
+			  smartButtonMaxItems: 7, styleActive: true,
 			  closeOnSelect: true, closeOnDeselect: true,
 			  showCheckAll: false, showUncheckAll: false,
 			  displayProp: 'name', idProp: 'id', externalIdProp: ''
@@ -37,7 +39,7 @@ angular.module('sdlctoolApp')
 			  }
 	  };
 	  
-	  apiFactory.getAll("collections").then(
+	  apiFactory.getAll('collections').then(
 			  function(collections) {
 				  $scope.categories = collections;
 				  angular.forEach($scope.categories, function(category) {
@@ -47,25 +49,25 @@ angular.module('sdlctoolApp')
 				  });
 				  $scope.init();
 			  },
-			  function(exception) {
+			  function() {
 				  
 			  });
 	   
-		   apiFactory.getAll("projectTypes").then(
+		   apiFactory.getAll('projectTypes').then(
 		   	function(projectTypes) {
 			   $scope.projectType = $filter('orderBy')(projectTypes, 'showOrder');
 			   if($scope.selectedProjectType.length > 0) {
 				   $scope.selectOldProjectTypeSettings();
 			   }
 		   	},
-		   	function(exception) {
+		   	function() {
 
 	        });
 	   
 	   $scope.init = function() {	   
 		   $scope.projectTypeModel.name = 'Select';
 		   $scope.oldSettings = sharedProperties.getProperty();
-		   if($scope.oldSettings != undefined && angular.equals(system, "old")) {
+		   if($scope.oldSettings !== undefined && angular.equals(system, 'old')) {
 			   $scope.disabled = true;
 			   $scope.starterForm.name = $scope.oldSettings.name;
 			   $scope.selectedCollection = $scope.oldSettings.colls;
@@ -93,7 +95,8 @@ angular.module('sdlctoolApp')
 				   }
 			   });
 		   });
-	   } 
+	   };
+
 	   $scope.getCategoryObject = function(collection) {
 		   angular.forEach($scope.categories, function(category) {
 			   if(angular.equals(category.name, collection.categoryName)) {
@@ -106,7 +109,8 @@ angular.module('sdlctoolApp')
 				   });
 			   }
 		   });
-	   }
+	   };
+
 	   $scope.selectProject = function(item) {
 		   $scope.projectTypeModel = item;
 		   var optsColumn = [];
@@ -126,7 +130,7 @@ angular.module('sdlctoolApp')
 	   }; 
 		
 		$scope.selectCollections = function(item) {
-			var categoryName = "";
+			var categoryName = '';
 			angular.forEach($scope.categories, function(category) {
 				angular.forEach(category.collectionInstances, function(instance) {
 					if(instance.id === item.id) {
@@ -167,20 +171,21 @@ angular.module('sdlctoolApp')
 		};
 		
 		$scope.deselectCollections = function(item) {
-			angular.forEach($scope.selectedCollection, function(collection) {
-				angular.forEach(collection.values, function(instance) {
+			for (var i = 0; i < $scope.selectedCollection.length; i++) {
+				var collection = $scope.selectedCollection[i];
+				for (var j = 0; j < collection.values.length; j++) {
+					var instance = collection.values[j];
 					if(instance.collectionInstanceId === item.id) {
-						var idx = collection.values.indexOf(instance);
-						collection.values.splice(idx,1);
+						collection.values.splice(j,1);
 						if(collection.values.length === 0) {
-							var idx = $scope.selectedCollection.indexOf(collection);
-							$scope.selectedCollection.splice(idx,1);
+							$scope.selectedCollection.splice(i,1);
 						} 
 					}
-				});
-			});
+				}
+			}
 		};
 		
+		/* jshint unused: false */
 		$scope.searchObjectbyValue = function(search, object) {
 			  var bool = false;
 			  angular.forEach(object, function(obj) {
@@ -194,27 +199,27 @@ angular.module('sdlctoolApp')
 		  };
 		
 		$scope.finish = function() {
-			if ($scope.starterForm.name == undefined) {
+			if ($scope.starterForm.name === undefined) {
 				$scope.fail = true;
-		    	$scope.failed = "Please specify the name of the System";
+		    	$scope.failed = 'Please specify the name of the System';
 		    } else if (!$scope.selectedCollection.length === 0) {
 				$scope.fail = true;
-		    	$scope.failed = "Please select at least one Collection of the System";
+		    	$scope.failed = 'Please select at least one Collection of the System';
 			} else if ($scope.selectedProjectType.length === 0) {
 				$scope.fail = true;
-		    	$scope.failed = "Please select who is developing the System";
+		    	$scope.failed = 'Please select who is developing the System';
 			} else {
 				$scope.starterForm.colls = $scope.selectedCollection;
 				$scope.starterForm.project = $scope.selectedProjectType;
 				$scope.starterForm.ticket = $scope.ticket;
-				if(angular.equals(system, "old")) {
+				if(angular.equals(system, 'old')) {
 					$scope.starterForm.alternativeSets = $scope.oldAlternativeSets;
 					$scope.starterForm.hasIssueLinks = $scope.oldHasIssueLinks;
 					$scope.starterForm.oldRequirements = $scope.oldRequirements;
 				}
 				sharedProperties.setProperty($scope.starterForm);
 				$scope.cancel();
-				if($location.path() === "/requirements") {
+				if($location.path() === '/requirements') {
 					$state.forceReload();
 					$location.path('/requirements');
 				} else {
@@ -229,5 +234,5 @@ angular.module('sdlctoolApp')
 		};
 		$scope.close = function() {
 			$uibModalInstance.close();
-		}
+		};
   });

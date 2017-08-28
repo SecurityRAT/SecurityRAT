@@ -16,7 +16,7 @@
     "angular-touch": "1.4.4",
     "angular-ui-router": "0.2.15",
     "angular-ui-sortable": "~0.13.4",
-    "angularjs-dropdown-multiselect": "~1.5.2",
+    "angularjs-dropdown-multiselect": "^1.11.8",
     "bootstrap": "3.3.5",
     "jquery": "2.1.4",
     "jquery-ui": "~1.11.4",

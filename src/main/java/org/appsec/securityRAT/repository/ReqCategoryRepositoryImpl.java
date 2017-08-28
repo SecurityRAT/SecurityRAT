@@ -26,9 +26,6 @@ public class ReqCategoryRepositoryImpl implements ReqCategoryRepositoryCustom{
 	private OptColumnRepository optColumnRepository;
 
 	@Autowired
-	private CollectionCategoryRepository collectionCategoryRepository;
-
-	@Autowired
 	private CollectionInstanceRepository collectionInstanceRepository;
 
 	@Autowired

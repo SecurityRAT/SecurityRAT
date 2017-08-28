@@ -54,11 +54,11 @@ angular.module('sdlctoolApp')
                                 return {content: null, id: null};
                             }
                         }
-                    }).result.then(function(result) {
+                    }).result.then(function() {
                         $state.go('alternativeInstance', null, { reload: true });
                     }, function() {
                         $state.go('alternativeInstance');
-                    })
+                    });
                 }]
             })
             .state('alternativeInstance.edit', {
@@ -77,11 +77,11 @@ angular.module('sdlctoolApp')
                                 return AlternativeInstance.get({id : $stateParams.id});
                             }]
                         }
-                    }).result.then(function(result) {
+                    }).result.then(function() {
                         $state.go('alternativeInstance', null, { reload: true });
                     }, function() {
                         $state.go('^');
-                    })
+                    });
                 }]
             })
             .state('alternativeInstance.bulk', {
@@ -100,11 +100,11 @@ angular.module('sdlctoolApp')
                                 return {name: null, description: null, showOrder: null, active: null, id: null};
                             }
                         }
-                    }).result.then(function(result) {
+                    }).result.then(function() {
                         $state.go('alternativeInstance', null, { reload: true });
                     }, function() {
                         $state.go('alternativeInstance');
-                    })
+                    });
                 }]
             });
     });

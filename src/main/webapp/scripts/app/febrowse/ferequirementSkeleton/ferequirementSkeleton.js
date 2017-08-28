@@ -8,7 +8,7 @@ angular.module('sdlctoolApp')
                 url: '/reqId',
                 data: {
                     roles: ['ROLE_USER', 'ROLE_FRONTEND_USER', 'ROLE_ADMIN'],
-                    pageTitle: 'Browse requirementSkeletons'
+                    pageTitle: 'Browse requirements'
                 },
                 views: {
                     'content@': {
@@ -24,7 +24,7 @@ angular.module('sdlctoolApp')
                 url: '/{id}',
                 data: {
                     roles: ['ROLE_USER', 'ROLE_FRONTEND_USER', 'ROLE_ADMIN'],
-                    pageTitle: 'Browse requirementSkeleton'
+                    pageTitle: 'Browse requirement'
                 },
                 views: {
                     'content@': {
@@ -33,7 +33,7 @@ angular.module('sdlctoolApp')
                     }
                 },
                 resolve: {
-                    entity: ['$stateParams', 'apiFactory', function($stateParams, apiFactory) {
+                    entity: ['$stateParams', 'apiFactory', '$state', function($stateParams, apiFactory, $state) {
                        return apiFactory.getAll('requirementSkeletons/' + $stateParams.id).then(function(result) {
                         	return result;
                         });

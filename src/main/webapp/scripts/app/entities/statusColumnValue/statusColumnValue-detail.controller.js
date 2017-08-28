@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('StatusColumnValueDetailController', function ($scope, $rootScope, $stateParams, entity, StatusColumnValue, StatusColumn) {
+    .controller('StatusColumnValueDetailController', function ($scope, $rootScope, $stateParams, entity, StatusColumnValue) {
         $scope.statusColumnValue = entity;
         $scope.load = function (id) {
             StatusColumnValue.get({id: id}, function(result) {

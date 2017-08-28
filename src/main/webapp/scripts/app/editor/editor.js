@@ -18,5 +18,5 @@ angular.module('sdlctoolApp')
                 resolve: {
                     
                 }
-            })
+            });
     });

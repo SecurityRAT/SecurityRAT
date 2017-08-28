@@ -1,7 +1,7 @@
-'use strict'
+'use strict';
 
 angular.module('sdlctoolApp')
-    .factory('checkAuthentication', function(authenticatorService, apiFactory, appConfig) {
+    .factory('checkAuthentication', function(authenticatorService, apiFactory) {
         var checkRoutines = {};
 
         function jiraAuth(apiCall, displayProperty, spinnerProperty, promise) {
@@ -35,7 +35,7 @@ angular.module('sdlctoolApp')
 
         checkRoutines = {
             jiraAuth: jiraAuth
-        }
+        };
 
         return checkRoutines;
     });
