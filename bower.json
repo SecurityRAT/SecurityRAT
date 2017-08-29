@@ -36,12 +36,12 @@
     "angular-bootstrap-switch": "^0.4.1",
     "angular-ui-indeterminate": "^1.0.0",
     "angular-confirm-modal": "~1.2.3",
-    "highlightjs": "~9.6.0",
-    "jstree": "^3.3.4"
+    "highlightjs": "~9.6.0"
   },
   "devDependencies": {
     "angular-mocks": "1.4.4",
-    "angular-scenario": "1.4.4"
+    "angular-scenario": "1.4.4",
+    "jstree": "^3.3.4"
   },
   "overrides": {
     "bootstrap": {
