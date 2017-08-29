@@ -1,6 +1,6 @@
 <div data-ng-controller="RequirementsController" data-ng-init="init()" data-ng-cloak="">
     <div class="container-fluid">
-        <div class="col-lg-8">
+        <div class="col-lg-8" data-ng-if="systemSettings">
             <h2>{{systemSettings.name}}<span data-ng-if="ticket.url">: <a id="ticketUrl" data-ng-href="{{ticket.url}}" target="_blank">{{ticket.key}}</a></span></h2>
         </div>
         <div class="row">
@@ -18,7 +18,7 @@
                                 <h4>Last changed: <strong>{{lastChanged}}</strong></h4>
                             </div>
                             <div class="col-sm-2">
-                                <button class="btn btn-primary pull-right" data-ng-click="changeSettings()" confirm="By changing the settings and automatic update of the requirements will be done. You can review the updates afterwards. No data will be lost."
+                                <button class="btn btn-primary pull-right" data-ng-click="changeSettings()" confirm="By changing the settings, an automatic update of the requirements will be done. You can review the updates afterwards. No data will be lost."
                                     data-ng-disabled="systemSettings.name == null">
                                         <strong>Change Settings</strong>
                                     </button>

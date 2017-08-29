@@ -53,7 +53,7 @@ angular.module('sdlctoolApp')
         $scope.optToHide = [];
         $scope.showSpinner = false;
         $scope.systemSettings = sharedProperties.getProperty();
-        $window.document.title = $scope.systemSettings.name;
+
         $scope.requirements = [];
         $scope.requirementsSettings = {};
         $scope.search = '';
@@ -230,62 +230,60 @@ angular.module('sdlctoolApp')
                 }
             });
             var imports = getRequirementsFromImport.getProperty();
-            if ($scope.systemSettings !== undefined) {
-                if ($scope.systemSettings.ticket !== undefined) {
-                    $scope.ticket = $scope.systemSettings.ticket;
-                    if (angular.isDefined($scope.ticket.key)) {
-                        $window.document.title += ': ' + $scope.ticket.key;
-                    }
-                }
-                $scope.generatedOn = $scope.systemSettings.generatedOn;
-                $scope.lastChanged = $scope.systemSettings.lastChanged;
-
-                if (imports.requirement !== undefined) {
-                    if ($location.$$search.file !== undefined || $location.$$search.ticket !== undefined) {
-                        $location.search('');
-                    }
-                    // console.log('import object');
-                    // console.log(imports);
-                    $scope.requirementProperties.hasIssueLinks = imports.hasIssueLinks;
-                    $scope.requirements = imports.requirement;
-                    $scope.requirementProperties.selectedOptColumns.counts = imports.selectedAlternativeSets.length;
-                    $scope.selectOptCompare.counts = imports.selectedAlternativeSets.length;
-                    $scope.filterCategory = imports.filterCategory;
-                    $scope.filterCategory = $filter('orderBy')($scope.filterCategory, 'showOrder');
-                    $scope.selectedAlternativeSets = imports.selectedAlternativeSets;
-                    $scope.newStyleAlternativeInstances = imports.newStyleAlternativeInstances;
-                    $scope.jiraStatus.allStatus = [];
-                    //                $scope.newRequirementParam.id = imports.lastId++; // gets the id of the last Custom requirements save
-                    $scope.getAlternativeSets();
-                    $scope.getCustomRequirements();
-                    $scope.progressbar.showContent = true;
-                    $scope.requirementProperties.exported = true;
-                    $scope.requirementProperties.requirementsEdited = false;
-                    $scope.buildSettings();
-                    //do a initial localBackup
-                    $scope.onTimeout();
-                    $scope.promiseForStorage = $interval($scope.onTimeout, 60000);
-                    $scope.updateRequirements();
-                    $uibModalStack.dismissAll();
-                    SDLCToolExceptionService.showWarning('Import successful', 'The Secure SDLC artifact ' + $scope.systemSettings.name + ' was successfully imported.', SDLCToolExceptionService.SUCCESS);
-                } else {
-                    $scope.startProgressbar();
-                    $scope.generatedOn = Helper.getCurrentDate();
-                    $scope.buildSettings();
-                    $scope.getRequirements();
-                    //if($scope.systemSettings.oldRequirements === undefined) {
-                    //    $scope.getAlternativeSets();
-                    //} else {
-                    $scope.getAlternativeSets();
-                    $scope.alternativeSets = $scope.systemSettings.alternativeSets;
-                    $scope.requirementProperties.hasIssueLinks = $scope.systemSettings.hasIssueLinks;
-                    //}
-                }
-                $scope.getOptandStatusColumns();
-                $scope.getTagCategories();
+            if (angular.isDefined($scope.systemSettings.name)) {
+                $window.document.title = $scope.systemSettings.name;
             }
-            //        console.log($scope.customRequirements);
-            //        console.log($scope.requirements);
+            if ($scope.systemSettings.ticket !== undefined) {
+                $scope.ticket = $scope.systemSettings.ticket;
+                if (angular.isDefined($scope.ticket.key)) {
+                    $window.document.title += ': ' + $scope.ticket.key;
+                }
+            }
+            $scope.generatedOn = $scope.systemSettings.generatedOn;
+            $scope.lastChanged = $scope.systemSettings.lastChanged;
+
+            if (angular.isDefined(imports) && imports.requirement !== undefined) {
+                if ($location.$$search.file !== undefined || $location.$$search.ticket !== undefined) {
+                    $location.search('');
+                }
+                $scope.requirementProperties.hasIssueLinks = imports.hasIssueLinks;
+                $scope.requirements = imports.requirement;
+                $scope.requirementProperties.selectedOptColumns.counts = imports.selectedAlternativeSets.length;
+                $scope.selectOptCompare.counts = imports.selectedAlternativeSets.length;
+                $scope.filterCategory = imports.filterCategory;
+                $scope.filterCategory = $filter('orderBy')($scope.filterCategory, 'showOrder');
+                $scope.selectedAlternativeSets = imports.selectedAlternativeSets;
+                $scope.newStyleAlternativeInstances = imports.newStyleAlternativeInstances;
+                // getRequirementsFromImport.setProperty(undefined);
+                $scope.jiraStatus.allStatus = [];
+                //                $scope.newRequirementParam.id = imports.lastId++; // gets the id of the last Custom requirements save
+                $scope.getAlternativeSets();
+                $scope.getCustomRequirements();
+                $scope.progressbar.showContent = true;
+                $scope.requirementProperties.exported = true;
+                $scope.requirementProperties.requirementsEdited = false;
+                $scope.buildSettings();
+                //do a initial localBackup
+                $scope.onTimeout();
+                $scope.promiseForStorage = $interval($scope.onTimeout, 60000);
+                $scope.updateRequirements();
+                $uibModalStack.dismissAll();
+                SDLCToolExceptionService.showWarning('Import successful', 'The Secure SDLC artifact ' + $scope.systemSettings.name + ' was successfully imported.', SDLCToolExceptionService.SUCCESS);
+            } else {
+                $scope.startProgressbar();
+                $scope.generatedOn = Helper.getCurrentDate();
+                $scope.buildSettings();
+                $scope.getRequirements();
+                //if($scope.systemSettings.oldRequirements === undefined) {
+                //    $scope.getAlternativeSets();
+                //} else {
+                $scope.getAlternativeSets();
+                $scope.alternativeSets = $scope.systemSettings.alternativeSets;
+                $scope.requirementProperties.hasIssueLinks = $scope.systemSettings.hasIssueLinks;
+                //}
+            }
+            $scope.getOptandStatusColumns();
+            $scope.getTagCategories();
         };
 
         $scope.loadMore = function () {
@@ -1045,6 +1043,7 @@ angular.module('sdlctoolApp')
 
             if ($scope.systemSettings.oldRequirements !== undefined) {
                 //$scope.mergeOldAndNewRequirements();
+                // list of old requirements.
                 var retOld = $scope.systemSettings.oldRequirements;
                 var retNew = $scope.requirements;
                 $scope.requirements = retOld;
@@ -1283,13 +1282,15 @@ angular.module('sdlctoolApp')
             requirementToInsert.linkStatus = oldRequirement.linkStatus;
             // $scope.updatesCounter++;
             $scope.updateCounter++;
-            if (afterImport) {
-                $scope.updatesAvailable = true;
-                // $scope.oldRequirements.push(oldRequirement);
-            } else if (changedSettings) {
-                $scope.updatedReqs = true;
-                oldRequirement.isOld = true;
-            }
+
+            $scope.updatesAvailable = true;
+            // if (afterImport) {
+            //     $scope.updatesAvailable = true;
+            //     // $scope.oldRequirements.push(oldRequirement);
+            // } else if (changedSettings) {
+            //     $scope.updatedReqs = true;
+            // oldRequirement.isOld = true;
+            // }
         }
 
         $scope.mergeUpdatedRequirements = function (updatedRequirements, changedSettings, afterImport) {
@@ -1297,6 +1298,7 @@ angular.module('sdlctoolApp')
             $scope.newCounter = 0;
             $scope.deletedCounter = 0;
             $scope.newRequirements = [];
+            var onlyNewRequirements = [];
             // $scope.oldRequirements = [];
             angular.forEach(updatedRequirements, function (newRequirement) {
                 if (($filter('filter')($scope.filterCategory, {
@@ -1380,11 +1382,19 @@ angular.module('sdlctoolApp')
                     }
                     // });
                 }
-                if (foundOne && !afterImport) {
-                    $scope.requirements.push(requirementToInsert);
-                } else if (foundOne && afterImport) {
+                // uncomment the block below to go back to the old functionality.
+                // if (foundOne && !afterImport) {
+                //     console.log("Not after import");
+                //     $scope.requirements.push(requirementToInsert);
+                // } else if (foundOne && afterImport) {
+                //     $scope.newRequirements.push(requirementToInsert);
+                // }
+
+                // push the updated requirement to the newRequirements array in order to differentiate the change settings from updates functionality.
+                if (foundOne) {
                     $scope.newRequirements.push(requirementToInsert);
                 }
+
                 //a new requirement was added
                 if (!$scope.searchRequirementInArray(newRequirement, $scope.requirements)) {
                     //if the user changed the settings we do not need to let him apply the updates for new requirements
@@ -1394,6 +1404,8 @@ angular.module('sdlctoolApp')
                             isOld: false
                         });
                         $scope.requirements.push(newRequirement);
+                        // this is just needed to display information to the new requirements in modal.
+                        onlyNewRequirements.push(newRequirement);
                         $scope.newCounter++;
                     } else if (afterImport) {
                         angular.extend(newRequirement, {
@@ -1409,9 +1421,10 @@ angular.module('sdlctoolApp')
                     }
                 }
             });
-            //check if an old requirement was removed, so we need to reiterate through the new requirements
+            //checks if an old requirement was removed, so we need to reiterate through the new requirements
             $scope.deletedReqs = [];
             angular.forEach($scope.requirements, function (oldRequirement) {
+                // check for requirement with id less than 10000 is to avoid removing custom requirements from the scope.
                 if (!$scope.searchRequirementInArray(oldRequirement, updatedRequirements) && oldRequirement.id < 10000) {
                     $scope.deletedReqs.push(oldRequirement);
                     if (changedSettings) {
@@ -1426,33 +1439,45 @@ angular.module('sdlctoolApp')
 
             if (changedSettings) {
                 var message = '';
-                if ($scope.updateCounter === 0 && $scope.newCounter === 0 && $scope.deletedCounter === 0) {
+                if ($scope.newCounter === 0 && $scope.deletedCounter === 0) {
                     message = 'No Updates were found. All your requirements are up to date.';
                     SDLCToolExceptionService.showWarning('Change settings and update requirements successful', message, SDLCToolExceptionService.SUCCESS);
-                } else if ($scope.updateCounter === 0) {
-                    message = 'Summary:<ul><li>' + $scope.updateCounter + ' requirement(s) were updated</li><li> ' + $scope.newCounter + ' new requirement(s) were added</li><li>' + $scope.deletedCounter + ' requirement(s) were removed</li></ul>';
-                    if ($scope.deletedReqs.length > 0) {
-                        message += '<BR>The following requirement(s) were removed:<BR><BR><table class=\'table table-responsive\'><tr><th>Short Name</th><th>Description</th></tr>';
-                        angular.forEach($scope.deletedReqs, function (req) {
+                } else {
+                    message = 'Summary:<ul><li> ' + $scope.newCounter + ' new requirement(s) were added</li><li>' + $scope.deletedCounter + ' requirement(s) were removed</li></ul>';
+                    if (onlyNewRequirements.length > 0) {
+                        message += '<BR>The following requirement(s) were <font color=\'green\'>added</font>:<BR><BR><table class=\'table table-responsive\'><tr><th>Short Name</th><th>Description</th></tr>';
+                        angular.forEach($filter('orderBy')(onlyNewRequirements, ['categoryOrder', 'order']), function (req) {
                             message += '<tr><td>' + req.shortName + '</td><td>' + req.description + '</td></tr>';
                         });
                         message += '</table>';
                     }
-                    SDLCToolExceptionService.showWarning('Change settings and update requirements successful', message, SDLCToolExceptionService.INFO);
-                } else if ($scope.updateCounter > 0) {
-                    message = 'Summary:<ul><li>' + $scope.updateCounter + ' requirement(s) were updated</li><li> ' + $scope.newCounter + ' new requirement(s) were added</li><li>' + $scope.deletedCounter + ' requirement(s) were removed</li></ul><BR>You can now review the updates. ' +
-                        'The old requirement is marked in <font color=\'rgb(247, 93, 89)\'>light red</font> and the new requirement in <font color=\'rgb(144,238,144)\'>light green</font>. Please accept the change by clicking on the <button class=\'btn btn-success\'>' +
-                        '<span class=\'glyphicon glyphicon-ok\'></span></button> button to keep the new requirement or by clicking on the <button class=\'btn btn-danger\'><span class=\'glyphicon glyphicon-remove\'></span></button> ' +
-                        'to keep the old requirement.';
                     if ($scope.deletedReqs.length > 0) {
-                        message += '<BR>The following requirement(s) were removed:<BR><BR><table class=\'table table-responsive\'><tr><th>Short Name</th><th>Description</th></tr>';
-                        angular.forEach($scope.deletedReqs, function (req) {
+                        message += '<BR>The following requirement(s) were <font color=\'red\'>removed</font>:<BR><BR><table class=\'table table-responsive\'><tr><th>Short Name</th><th>Description</th></tr>';
+                        angular.forEach($filter('orderBy')($scope.deletedReqs, ['categoryOrder', 'order']), function (req) {
                             message += '<tr><td>' + req.shortName + '</td><td>' + req.description + '</td></tr>';
                         });
                         message += '</table>';
                     }
+                    // reinitialise this array so it should not affect the updates functionality.
+                    // this is because, these requirements have already been removed from the requirements object.
+                    $scope.deletedReqs = [];
+                    $scope.newCounter = 0;
                     SDLCToolExceptionService.showWarning('Change settings and update requirements successful', message, SDLCToolExceptionService.INFO);
                 }
+                // else if ($scope.updateCounter > 0) {
+                //     message = 'Summary:<ul><li>' + $scope.updateCounter + ' requirement(s) were updated</li><li> ' + $scope.newCounter + ' new requirement(s) were added</li><li>' + $scope.deletedCounter + ' requirement(s) were removed</li></ul><BR>You can now review the updates. ' +
+                //         'The old requirement is marked in <font color=\'rgb(247, 93, 89)\'>light red</font> and the new requirement in <font color=\'rgb(144,238,144)\'>light green</font>. Please accept the change by clicking on the <button class=\'btn btn-success\'>' +
+                //         '<span class=\'glyphicon glyphicon-ok\'></span></button> button to keep the new requirement or by clicking on the <button class=\'btn btn-danger\'><span class=\'glyphicon glyphicon-remove\'></span></button> ' +
+                //         'to keep the old requirement.';
+                //     if ($scope.deletedReqs.length > 0) {
+                //         message += '<BR>The following requirement(s) were removed:<BR><BR><table class=\'table table-responsive\'><tr><th>Short Name</th><th>Description</th></tr>';
+                //         angular.forEach($scope.deletedReqs, function (req) {
+                //             message += '<tr><td>' + req.shortName + '</td><td>' + req.description + '</td></tr>';
+                //         });
+                //         message += '</table>';
+                //     }
+                //     SDLCToolExceptionService.showWarning('Change settings and update requirements successful', message, SDLCToolExceptionService.INFO);
+                // }
             }
             $scope.updatesCounter = $scope.updateCounter + $scope.newCounter;
         };
@@ -1486,7 +1511,6 @@ angular.module('sdlctoolApp')
                 angular.forEach($filter('filter')($scope.requirements, {
                     markAsOld: true
                 }), function (oldRequirement) {
-
                     // makes sures the changes in the old requirments are highlighted
                     if (angular.isDefined(oldRequirement.oldDescription)) {
                         var tempValue = oldRequirement.description;
@@ -1506,7 +1530,7 @@ angular.module('sdlctoolApp')
                     oldRequirement.updateTooltip = 'Obsolete requirement in your YAML file';
                 });
             }
-
+            console.log($filter('orderBy')($scope.requirements, ['categoryOrder', 'order']));
             var message = '';
 
             if ($scope.deletedReqs.length > 0) {
@@ -1520,31 +1544,17 @@ angular.module('sdlctoolApp')
             if ($scope.updatesCounter === 0 && $scope.newCounter === 0) {
                 SDLCToolExceptionService.showWarning('Update requirements successful', 'No Updates were found. All your requirements are up to date.', SDLCToolExceptionService.SUCCESS);
             } else if ($scope.updateCounter === 0 && $scope.newCounter === 0) { // newCounter compare with 0 removed to resolve github issue #44
-                message = 'Summary:<ul><li>' + $scope.updateCounter + ' requirement(s) were updated</li><li> ' + $scope.newCounter + ' new requirement(s) were added</li><li> 0 requirement(s) were removed</li></ul>';
-                if ($scope.deletedReqs.length > 0) {
-                    message += '<BR>The following requirement(s) were removed:<BR><BR><table class=\'table table-responsive\'><tr><th>Short Name</th><th>Description</th></tr>';
-                    angular.forEach($scope.deletedReqs, function (req) {
-                        message += '<tr><td>' + req.shortName + '</td><td>' + req.description + '</td></tr>';
-                    });
-                    message += '</table>';
-                }
+                message = 'Summary:<ul><li>' + $scope.updateCounter + ' requirement(s) updates were found</li><li> ' + $scope.newCounter + ' new requirement(s) were found</li><li> ' + $scope.deletedReqs.length + ' removable requirement(s) were found.</li></ul>';
                 SDLCToolExceptionService.showWarning('Update requirements successful', message, SDLCToolExceptionService.INFO);
                 $scope.updatesAvailable = false;
                 $scope.requirementProperties.requirementsEdited = true;
             } else if ($scope.updateCounter > 0) {
 
-                message = 'Summary:<ul><li>' + $scope.updateCounter + ' requirement(s) were updated</li><li> ' + $scope.newCounter + ' new requirement(s) were added</li><li> 0 requirement(s) were removed</li></ul><BR>You can now review the updates. ' +
+                message = 'Summary:<ul><li>' + $scope.updateCounter + ' requirement(s) updates were found</li><li> ' + $scope.newCounter + ' new requirement(s) were found</li><li> ' + $scope.deletedReqs.length + ' removable requirement(s) were found.</li></ul><BR>You can now review the updates. ' +
                     'The old requirement is marked in <span style=\'background-color:rgb(255, 204, 204);\'>light red</span> and the new requirement in <span style=\'background-color:rgb(204, 255, 204);\'>light green</span>' +
                     ' Please accept the change by clicking on the <button class=\'btn btn-success\'>' +
                     '<span class=\'glyphicon glyphicon-ok\'></span></button> button to keep the new requirement or by clicking on the <button class=\'btn btn-danger\'><span class=\'glyphicon glyphicon-remove\'></span></button> ' +
                     'to keep the old requirement.';
-                // if ($scope.deletedReqs.length > 0) {
-                //     message += '<BR>The following requirement(s) were removed:<BR><BR><table class=\'table table-responsive\'><tr><th>Short Name</th><th>Description</th></tr>';
-                //     angular.forEach($scope.deletedReqs, function (req) {
-                //         message += '<tr><td>' + req.shortName + '</td><td>' + req.description + '</td></tr>';
-                //     });
-                //     message += '</table>';
-                // }
                 SDLCToolExceptionService.showWarning('Update requirements successful', message, SDLCToolExceptionService.INFO);
             }
             // console.log("updates available clicked");
@@ -1567,9 +1577,9 @@ angular.module('sdlctoolApp')
             for (var i = 0; i < $scope.requirements.length; i++) {
                 var requirement = $scope.requirements[i];
                 if (requirement.id === reqId) {
+                    requirement.updateTooltip = '';
                     if (angular.isDefined(requirement.oldDescription)) {
                         requirement.description = requirement.oldDescription;
-                        requirement.updateTooltip = '';
                     }
                     angular.forEach(requirement.optionColumns, function (optColumn) {
                         angular.forEach(optColumn.content, function (content) {

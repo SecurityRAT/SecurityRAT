@@ -103,11 +103,11 @@ angular.module('sdlctoolApp')
             });
         };
 
-        $scope.showLongdesc = function(result) {
+        $scope.showLongdesc = function (result) {
             result.limitDesc = undefined;
         };
 
-        $scope.hideLongdesc = function(result) {
+        $scope.hideLongdesc = function (result) {
             result.limitDesc = LETTERLIMIT;
         };
 
@@ -137,21 +137,21 @@ angular.module('sdlctoolApp')
                 /* jshint loopfunc: true */
                 for (var i = 0; i < $scope.testResults.reqs.length; i++) {
                     var element = $scope.testResults.reqs[i];
-                    if(element.state === 0) {
+                    if (element.state === 0) {
                         element.state = 1;
                         angular.extend(element, $filter('filter')(response.requirements, {
                             shortName: element.shortName
                         }).pop());
-                        angular.forEach(element.results, function(result) {
+                        angular.forEach(element.results, function (result) {
                             result.limitDesc = LETTERLIMIT;
                             // marks a requirement as completely tested if all its tests have completed.
-                            if(result.state === 0) {
+                            if (result.state === 0) {
                                 element.state = 0;
                             }
                         });
                     }
                 }
-                
+
                 if (STATECONSTANT[resultStateObj.state] === STATECONSTANT.IN_PROGRESS) {
                     $scope.authenticationProperties.spinnerProperty.text = 'Automated test still in progress...';
                     $scope.authenticationProperties.spinnerProperty.showSpinner = true;
@@ -161,7 +161,9 @@ angular.module('sdlctoolApp')
                     cleanIntervalPromise();
                 }
             }).catch(function () {
-                if (($filter('filter')($scope.testResults.reqs, {state: 1})).length === 0) {
+                if (($filter('filter')($scope.testResults.reqs, {
+                        state: 1
+                    })).length === 0) {
                     configureDisplay('error', true, 'alert alert-danger', 'An error occurred when fetching the results.');
                 } else {
                     $scope.error.display = true;
@@ -198,8 +200,9 @@ angular.module('sdlctoolApp')
 
         $scope.startTest = function () {
             $scope.authenticationProperties.authenticatorpromise.derefer = $q.defer();
-            testAutomation.checkAuthentication($scope.authenticationProperties.checkerUrl, $scope.authenticationProperties.displayProperty,
+            testAutomation.checkAuthentication('/serviceapi/starttest', $scope.authenticationProperties.displayProperty,
                     $scope.authenticationProperties.spinnerProperty, $scope.authenticationProperties.authenticatorpromise).then(function () {
+                    // TODO change loading display to result display should be shown
                     configureDisplay('loading', false, $scope.error.class, $scope.error.message);
                     $scope.animation = 'slide-animate';
 
