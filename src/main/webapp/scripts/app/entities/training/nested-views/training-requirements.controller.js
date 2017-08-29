@@ -92,11 +92,9 @@ angular.module('sdlctoolApp')
                 || $scope.training.collections.length > 0
                 || $scope.training.projectTypes.length > 0) {
                 var requestString = $rootScope.buildQueryParams();
-                console.log("requestString", requestString);
                 apiFactory.getByQuery("numberOfRequirements", "filter", requestString).then(
                     function (numberOfRequirements) {
                         $rootScope.requirementsSelected = numberOfRequirements;
-                        console.log("$rootScope.requirementsSelected", $rootScope.requirementsSelected);
                     });
             } else {
                 $rootScope.requirementsSelected = 0;
@@ -236,7 +234,6 @@ angular.module('sdlctoolApp')
             });
         };
         $scope.selectProjectType = function(item) {
-            console.log("BEFORE $scope.selectedProjectType", $scope.selectedProjectType);
             $scope.projectTypeModel = item;
 
             var saved_in_training = false;

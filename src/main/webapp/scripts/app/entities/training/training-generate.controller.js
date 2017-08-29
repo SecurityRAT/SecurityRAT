@@ -72,8 +72,6 @@ angular.module('sdlctoolApp')
                 trainingRoot.fromJSON($rootScope.getTreeJSON());
                 trainingRoot.json_training_id = result.id;
 
-                console.log("trainingRoot to save", trainingRoot);
-
                 $scope.openSaveProgressModal();
                 TrainingTreeNode.save(trainingRoot).$promise.then(function() {
                     $scope.closeSaveProgressModal();
@@ -111,7 +109,6 @@ angular.module('sdlctoolApp')
         };
 
         var sortByShowOrder = function(array) {
-            console.log("array", array);
             if(array.length > 1) {
                 array.sort(function(a,b) {
                     if (a.showOrder < b.showOrder)

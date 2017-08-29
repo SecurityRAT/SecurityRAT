@@ -4,7 +4,6 @@ angular.module('sdlctoolApp')
                                                     apiFactory, entity, TrainingTreeNode, TrainingTreeUtil) {
         $scope.training = entity;
         $scope.slides = [];
-        console.log("parameter for query: ", $scope.training.id);
         TrainingTreeUtil.RootNodeOfTraining.query({id: $scope.training.id}).$promise.then(function(foundRootNode){
 
             if(foundRootNode.id != null) {
@@ -12,10 +11,7 @@ angular.module('sdlctoolApp')
 
                     $scope.trainingRoot = realRootNode;
 
-                    console.log("TREE LOADING FINISHED", $scope.trainingRoot);
-
                     $scope.slides = TrainingTreeNode.getSlidesFromJson($scope.trainingRoot);
-
 
                     Reveal.initialize({
                         loop: false,

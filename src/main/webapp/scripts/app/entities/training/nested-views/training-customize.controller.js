@@ -23,7 +23,6 @@ angular.module('sdlctoolApp')
         });
 
         $scope.slideEditor = function(state) {
-            console.log("slideEditor set to "+state);
             if(state) {
                 $("#editBlock").fadeIn();
                 $("#previewBlock").fadeIn();
@@ -42,7 +41,6 @@ angular.module('sdlctoolApp')
             $scope.selectedNodeJSTree = data;
             $scope.selectedNode = new TrainingTreeNode();
             $scope.selectedNode.fromJSON(data.node);
-            console.log("SELECTED id "+ data.node.id, data.node);
             $scope.$apply();
 
             var selectedNodeType = $scope.selectedNode.node_type;
@@ -125,7 +123,6 @@ angular.module('sdlctoolApp')
                     });
                 }
             }
-            console.log("new anchor is ", new_anchor);
 
             // update slide content
             if(node.type === "CustomSlideNode" || node.type === "GeneratedSlideNode") {
@@ -133,7 +130,6 @@ angular.module('sdlctoolApp')
                 nodeObj.fromJSON(node);
                 nodeObj.loadContent(new_parent.name).then(function(new_content) {
 
-                    console.log("new content would be", new_content);
                     node.content = new_content;
                 });
                 //$scope.setSlidePreviewContent(nodeObj.loadContent(new_parent.name));
@@ -209,7 +205,6 @@ angular.module('sdlctoolApp')
 
         // Custom Menu
         var customMenu = function(node) {
-            console.log("custom Menu", node);
             var tree = $('#tree').jstree(true);
             // The default set of all items
             var items = {
@@ -369,7 +364,6 @@ angular.module('sdlctoolApp')
                             "label": slideTemplate.name,
                             "icon": "glyphicon glyphicon-flash",
                             "action": function (obj) {
-                                console.log("$scope.selectedNodeJSTree", $scope.selectedNodeJSTree);
 
                                 var tree = $('#tree').jstree(true);
                                 var newChild = tree.create_node($scope.selectedNodeJSTree.node.id,

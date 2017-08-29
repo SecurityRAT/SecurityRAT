@@ -76,9 +76,7 @@ angular.module('sdlctoolApp')
                 $scope.trainingRoot.name = $scope.training.name;
                 $scope.trainingRoot.opened = true;
 
-                console.log("TREE LOADING FINISHED", $scope.trainingRoot);
                 $rootScope.trainingTreeData[0] = TrainingTreeNode.JSON_to_JSTree($scope.trainingRoot);
-                console.log("the real json", $rootScope.trainingTreeData[0]);
                 $rootScope.displayTree();
             });
         };
@@ -89,7 +87,6 @@ angular.module('sdlctoolApp')
                 $scope.rootNode = foundRootNode;
 
                 TrainingTreeUtil.CheckUpdate.query({id: foundRootNode.id}).$promise.then(function(treeStatus) {
-                    console.log("treeStatus", treeStatus);
                     if(treeStatus.hasUpdates) {
                         $scope.pauseLoadingProgressBar(40);
                         $scope.openFeedbackModal("Structural updates found",

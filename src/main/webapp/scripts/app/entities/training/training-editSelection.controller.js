@@ -30,7 +30,6 @@ angular.module('sdlctoolApp')
         };
 
         $scope.save = function() {
-            console.log("TrainingEditSelectionController.save()", $scope.training);
             if ($scope.training.id != null) {
                 $scope.openSaveProgressModal();
                 Training.update($scope.training, onSaveFinished).$promise.then(function(training) {

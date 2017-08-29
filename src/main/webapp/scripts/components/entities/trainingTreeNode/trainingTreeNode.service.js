@@ -265,7 +265,6 @@ angular.module('sdlctoolApp')
                     case "GeneratedSlideNode":
                         var parentNode = node.parent_id;
                         if (node.json_universal_id == null || node.json_universal_id == -1) {
-                            console.log("[SkeletonSlide] parent before fetching requirement", parentNode);
                             var reqPromise = RequirementSkeleton.get({id: parentNode.json_universal_id}).$promise;
                             subPromises.push(reqPromise);
                             reqPromise.then(function (req) {
