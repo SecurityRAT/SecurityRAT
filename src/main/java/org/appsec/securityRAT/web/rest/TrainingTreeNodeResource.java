@@ -937,7 +937,7 @@ public class TrainingTreeNodeResource {
                                             skeleton,
                                             optColumn
                                         );
-                                    if(optColumnContents != null && optColumnContents.size() > 1) {
+                                    if(optColumnContents != null && optColumnContents.size() > 0) {
                                         OptColumnContent optColumnContent = optColumnContents.get(0);
                                         if (optColumn != null && optColumnContent != null) {
                                             generatedSlideContent = "<h3>" + optColumn.getName() + "</h3>"
