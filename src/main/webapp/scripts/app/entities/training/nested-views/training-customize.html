@@ -8,10 +8,10 @@
 <div class="col-sm-6 col-md-5">
     <div id="editBlock">
         <h2 class="page-header" style="margin-top: 0px">Edit Slide</h2>
-        <form name="form" data-ng-submit="save()">
+        <form name="slideEditorform" data-ng-submit="save()">
             <div class="form-group">
                 <label for="slideTitle">Slide Title</label>
-                <input class="form-control" name="slideTitle" id="slideTitle" data-ng-model="selectedNode.name">
+                <input class="form-control" name="slideTitle" id="slideTitle" data-ng-model="selectedNode.name" data-ng-change="disableSaveSlideButton = false">
             </div>
 
             <div class="form-group">
@@ -20,7 +20,8 @@
                           class="form-control"
                           name="slideContent"
                           id="slideContent"
-                          data-ng-model="selectedNode.content"></textarea>
+                          data-ng-model="selectedNode.content"
+                          data-ng-change="disableSaveSlideButton = false"></textarea>
             </div>
             <div class="form-group">
                 <!--
@@ -40,7 +41,7 @@
                 <button id="updateSlideButton" type="button" class="btn btn-info" data-ng-click="updateSlidePreview(false, '')">
                     <span class="glyphicon glyphicon-eye-open"></span>&nbsp;<span>Update Preview</span>
                 </button>
-                <button id="saveSlideButton" type="button" class="btn btn-primary" data-ng-click="saveSlide()">
+                <button id="saveSlideButton" type="button" class="btn btn-primary" data-ng-click="saveSlide()" data-ng-disabled="disableSaveSlideButton">
                     <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Save Slide</span></button>
             </div>
         </form>

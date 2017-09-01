@@ -12,6 +12,7 @@ angular.module('sdlctoolApp')
         $scope.training = entity;
         $scope.firstTimeDrawingTree = true;
         $scope.disabledIcon = "glyphicon glyphicon-remove";
+        $scope.disableSaveSlideButton = false; // if true, the saveSlide button gets disabled
 
         $scope.load = function (id) {
             Training.get({id: id}, function(result) {
@@ -147,7 +148,13 @@ angular.module('sdlctoolApp')
             if($scope.selectedNodeJSTree.node.data.node_id != null) {
                 TrainingTreeUtil.CustomSlideNode.query({id: $scope.selectedNodeJSTree.node.data.node_id}).$promise.then(function(customSlideNode) {
                     customSlideNode.content = $scope.selectedNode.content;
-                    TrainingCustomSlideNode.update(customSlideNode, onSaveFinished);
+                    TrainingCustomSlideNode.update(customSlideNode, onSaveFinished).$promise.then(function() {
+                        $scope.disableSaveSlideButton = true;
+                    }, function() {
+                        $scope.disableSaveSlideButton = false;
+                    });
+                }, function() {
+                    $scope.disableSaveSlideButton = false;
                 });
             }
 
