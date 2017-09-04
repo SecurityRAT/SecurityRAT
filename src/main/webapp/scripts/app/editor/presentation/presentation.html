@@ -19,13 +19,15 @@
 		</section>
 		<section data-ng-repeat="optColumn in requirement.optionColumns | orderBy : 'showOrder'" data-ng-if="optColumn.content.length > 0 && !regex.test(optColumn.content[0].content)">
 			<h6>{{optColumn.name}}</h6>
-			<p style="font-size: 55%" data-ng-repeat="content in optColumn.content" data-markdown>
-				{{content.content}}
+			<p style="font-size: 55%" data-ng-repeat="content in optColumn.content">
+				<span  data-ng-bind-html="content.content | trusted"></span>
 			</p>
 		</section>
 		<section data-ng-repeat="statColumn in requirement.statusColumns | orderBy : 'showOrder'" data-ng-if="statColumn.value !== ''">
 			<h6>{{statColumn.name}}</h6>
-			<p style="font-size: 55%" data-markdown>{{statColumn.value}}</p>
+			<p style="font-size: 55%">
+				<span data-ng-bind-html="statColumn.value | trusted" ></span>
+			</p>
 		</section>
 	</section>
 	<div  data-ng-repeat-end></div>
