@@ -1530,9 +1530,10 @@ angular.module('sdlctoolApp')
                     oldRequirement.updateTooltip = 'Obsolete requirement in your YAML file';
                 });
             }
-            console.log($filter('orderBy')($scope.requirements, ['categoryOrder', 'order']));
+            // console.log($filter('orderBy')($scope.requirements, ['categoryOrder', 'order']));
             var message = '';
-
+            console.log($scope.newRequirements);
+            console.log($scope.deletedReqs);
             if ($scope.deletedReqs.length > 0) {
                 angular.forEach($scope.deletedReqs, function (deleteRequirement) {
                     var idx = $scope.requirements.indexOf(deleteRequirement);
@@ -1543,12 +1544,7 @@ angular.module('sdlctoolApp')
             // don't check for $scope.deletedCounter === 0 since these obsolete requirements are not deleted. The choice is left in the hands of the user.
             if ($scope.updatesCounter === 0 && $scope.newCounter === 0) {
                 SDLCToolExceptionService.showWarning('Update requirements successful', 'No Updates were found. All your requirements are up to date.', SDLCToolExceptionService.SUCCESS);
-            } else if ($scope.updateCounter === 0 && $scope.newCounter === 0) { // newCounter compare with 0 removed to resolve github issue #44
-                message = 'Summary:<ul><li>' + $scope.updateCounter + ' requirement(s) updates were found</li><li> ' + $scope.newCounter + ' new requirement(s) were found</li><li> ' + $scope.deletedReqs.length + ' removable requirement(s) were found.</li></ul>';
-                SDLCToolExceptionService.showWarning('Update requirements successful', message, SDLCToolExceptionService.INFO);
-                $scope.updatesAvailable = false;
-                $scope.requirementProperties.requirementsEdited = true;
-            } else if ($scope.updateCounter > 0) {
+            } else if ($scope.updatesCounter > 0) {
 
                 message = 'Summary:<ul><li>' + $scope.updateCounter + ' requirement(s) updates were found</li><li> ' + $scope.newCounter + ' new requirement(s) were found</li><li> ' + $scope.deletedReqs.length + ' removable requirement(s) were found.</li></ul><BR>You can now review the updates. ' +
                     'The old requirement is marked in <span style=\'background-color:rgb(255, 204, 204);\'>light red</span> and the new requirement in <span style=\'background-color:rgb(204, 255, 204);\'>light green</span>' +

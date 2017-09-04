@@ -1,6 +1,6 @@
 'use strict';
 /* jshint undef: true */
-/* globals document, XMLHttpRequest, hljs, jiraApiPrefix, jiraAttachment, jiraApiIssueType, importPrefix, jiraComment, jiraApiProject, jiraRestApi, localStorageKey, securityCATStartTest, securityCATStopTest*/
+/* globals document, XMLHttpRequest, hljs, jiraApiPrefix, jiraAttachment, jiraApiIssueType, importPrefix, jiraComment, jiraApiProject, jiraRestApi, localStorageKey, securityCATTestApi */
 
 angular.module('sdlctoolApp', ['LocalStorageModule',
         'ui.bootstrap', // for modal dialogs
@@ -167,10 +167,14 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
         var responseHeadersNeeded = false;
 
         apiFactory.testRequirementApi = function (method, restcall, data, headerConfig, headersNeeded) {
-            var uri = appConfig.securityCAT.endsWith('/') ? appConfig.securityCAT.substr(0, appConfig.securityCAT.length - 1) : appConfig.securityCAT;
+            var url = '';
+            if(!re_weburl.test(restcall)) {
+                url += appConfig.securityCAT.endsWith('/') ? appConfig.securityCAT.substr(0, appConfig.securityCAT.length - 1) : appConfig.securityCAT;
+            }
 
+            url += restcall;
             responseHeadersNeeded = headersNeeded;
-            return this.execute(method, uri + restcall, data, headerConfig);
+            return this.execute(method, url, data, headerConfig.config, headerConfig.withCredentials);
         };
         apiFactory.getJIRAInfo = function (url) {
             return this.execute('GET', url);
@@ -201,12 +205,13 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
         };
 
 
-        apiFactory.execute = function (method, path, data, headerConfig) {
+        apiFactory.execute = function (method, path, data, headerConfig, withCredentials) {
+            
             return $http({
                     'method': method,
                     'url': path,
                     'data': data,
-                    'withCredentials': true,
+                    'withCredentials': angular.isDefined(withCredentials) ? withCredentials : true,
                     'headers': headerConfig
                 })
                 .then(
@@ -277,8 +282,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
         jiraApiProject: jiraApiProject,
         jiraRestApi: jiraRestApi,
         localStorageKey: localStorageKey,
-        securityCATStartTest: securityCATStartTest,
-        securityCATStopTest: securityCATStopTest
+        securityCATTestApi: securityCATTestApi
     })
 
     .service('sharedProperties', function () {
@@ -349,6 +353,8 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                         if (promise.runningModalPromise !== undefined) {
                             promise.runningModalPromise.close();
                         }
+                        if(promise.derefer) { promise.derefer.reject('Authentication failed'); }
+                        
                         SDLCToolExceptionService.showWarning(header, message, SDLCToolExceptionService.DANGER);
                     }, 61000);
                 } else {

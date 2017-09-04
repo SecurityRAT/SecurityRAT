@@ -138,7 +138,7 @@
                     <span style="color:red;"><strong id="requirementInRed">{{filterRequirements().length}}</strong> Requirements shown
                     </span>
             </span>
-            <span data-ng-if="updatedReqs" style="color:red;"><strong>{{updatesCounter + newCounter + deletedReqs.length}}</strong> Requirements shown</span>
+            <span data-ng-if="updatedReqs" style="color:red;"><strong>{{newRequirements.length + deletedReqs.length}}</strong> Requirements shown</span>
             <span data-ng-if="(requirements | filter: {selected:true}).length">and
                     <span style="color:#cc7a00;"><strong id="requirementInRed">{{(requirements | filter: {selected:true}).length}}</strong> Requirements selected.
                     </span>

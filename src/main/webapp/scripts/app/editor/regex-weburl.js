@@ -91,7 +91,9 @@ var re_weburl = new RegExp(
       // TLD identifier
       "(?:\\.(?:[a-z\\u00a1-\\uffff]{2,}))" +
       // TLD may end with dot
-      "\\.?" +
+	  "\\.?" +
+	"|" +
+	  "(?:localhost)" +
     ")" +
     // port number
     "(?::\\d{2,5})?" +
@@ -100,7 +102,7 @@ var re_weburl = new RegExp(
   "$", "i"
 );
 
-urlpattern = {
+var urlpattern = {
 
 host : new RegExp("^(?:" +
 	      // IP address dotted notation octets
@@ -119,7 +121,9 @@ host : new RegExp("^(?:" +
 	      // TLD identifier
 	      "(?:\\.(?:[a-z\\u00a1-\\uffff]{2,}))" +
 	      // TLD may end with dot
-	      "\\.?" +
+		  "\\.?" +
+		"|" +
+		  "(?:localhost)" +
 	    ")" +
 	    // port number
 	    "(?::\\d{2,5})?$",'i'),
@@ -153,10 +157,12 @@ javascriptStringRegex: "^" +
 			  "(?:\\.(?:[a-z\\u00a1-\\uffff]{2,}))" +
 			  // TLD may end with dot
 			  "\\.?" +
+			"|" +
+			  "(?:localhost)" +
 			")" +
 			// port number
 			"(?::\\d{2,5})?" +
 			// resource path
 			"(?:[/?#]\\S*)?" +
 			"$"
-}
+};

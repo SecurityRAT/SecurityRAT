@@ -1,14 +1,16 @@
 'use strict';
 /* jshint undef: true, unused: true */
-/* globals urlpattern */
+/* globals urlpattern, re_weburl */
 
 angular.module('sdlctoolApp')
     .controller('TestRequirements', function (entity, $scope, $uibModalInstance, $filter, appConfig, $window, testAutomation, $q,
-        authenticatorService, $uibModalStack, $timeout, $interval) {
-        var STATECONSTANT = {
-            IN_PROGRESS: 0,
-            INPROGRESS: 0,
-            COMPLETE: 1
+        authenticatorService, $uibModalStack, $timeout, AlertService) {
+        var stopped = false;
+        $scope.STATUSCONSTANT = {
+            'ERROR': -1,
+            'IN_PROGRESS': 0,
+            'PASSED': 1,
+            'FAILED': 2
         };
 
         var LETTERLIMIT = 200;
@@ -69,7 +71,7 @@ angular.module('sdlctoolApp')
             {
                 name: 'error',
                 url: 'scripts/app/editor/requirements/testRequirementsTemplates/errorTemplate.html',
-                title: 'Test requirements'
+                title: 'Error'
             }
         ];
 
@@ -89,18 +91,24 @@ angular.module('sdlctoolApp')
             }
         };
 
+
+
         $scope.parseEntity = function () {
-            $scope.testObject.reqs = [];
+            $scope.testObject.requirements = [];
             $scope.testResults.reqs = [];
             angular.forEach($scope.entity, function (req) {
                 $scope.testResults.reqs.push({
                     shortName: req.shortName,
-                    showOrder: req.showOrder,
+                    showOrder: req.order,
                     description: req.description,
-                    state: 0
+                    testResults: [],
+                    status: 0
                 });
-                $scope.testObject.reqs.push(req.shortName);
+                $scope.testObject.requirements.push(req.shortName);
             });
+            stopped = false;
+            $scope.error.display = false;
+            $scope.authenticationProperties.showSpinner = false;
         };
 
         $scope.showLongdesc = function (result) {
@@ -110,12 +118,6 @@ angular.module('sdlctoolApp')
         $scope.hideLongdesc = function (result) {
             result.limitDesc = LETTERLIMIT;
         };
-
-        function cleanIntervalPromise() {
-            if (angular.isDefined($scope.interval)) {
-                $interval.cancel($scope.interval);
-            }
-        }
 
         function configureDisplay(actualTemplateName, showCloseButton, errorAlertType, errorMessage) {
             $scope.displayProperties.showCloseButton = showCloseButton;
@@ -128,108 +130,135 @@ angular.module('sdlctoolApp')
             $scope.error.message = errorMessage;
         }
 
-        function fetchResult(resultStateObj) {
-            testAutomation.fetchResult(resultStateObj.resourceURI).then(function (response) {
+        function fetchResult(location) {
+
+            testAutomation.fetchResult(location, $scope.acceptedHeaderConfig).then(function (response) {
                 configureDisplay('result', true, $scope.error.class, $scope.error.message);
-                $scope.testResults.self = appConfig.securityCAT + response.self;
+
+                $scope.testResults.self = location;
+                var testComplete = true;
                 // var tempResults = testResults.requirements;
 
                 /* jshint loopfunc: true */
                 for (var i = 0; i < $scope.testResults.reqs.length; i++) {
                     var element = $scope.testResults.reqs[i];
-                    if (element.state === 0) {
-                        element.state = 1;
-                        angular.extend(element, $filter('filter')(response.requirements, {
-                            shortName: element.shortName
-                        }).pop());
-                        angular.forEach(element.results, function (result) {
+                    if (element.status === 0) {
+                        var requirement = $filter('filter')(response, {
+                            requirement: element.shortName
+                        }).pop();
+                        if (angular.isDefined(requirement)) {
+                            angular.copy(requirement.testResults, element.testResults);
+                        }
+                        element.status = 1;
+                        angular.forEach(element.testResults, function (result) {
                             result.limitDesc = LETTERLIMIT;
                             // marks a requirement as completely tested if all its tests have completed.
-                            if (result.state === 0) {
-                                element.state = 0;
+                            if ($scope.STATUSCONSTANT[result.status] === $scope.STATUSCONSTANT.IN_PROGRESS) {
+                                element.status = 0;
+                                testComplete = false;
                             }
                         });
                     }
                 }
 
-                if (STATECONSTANT[resultStateObj.state] === STATECONSTANT.IN_PROGRESS) {
+                if (testComplete || stopped) {
+                    console.log('Test stopped');
+                    $scope.authenticationProperties.spinnerProperty.showSpinner = false;
+                    // console.log($scope.testResults);
+                    authenticatorService.cancelPromises($scope.authenticationProperties.authenticatorpromise);
+                } else {
                     $scope.authenticationProperties.spinnerProperty.text = 'Automated test still in progress...';
                     $scope.authenticationProperties.spinnerProperty.showSpinner = true;
-                } else if (STATECONSTANT[resultStateObj.state] === STATECONSTANT.COMPLETE) {
-                    $scope.authenticationProperties.spinnerProperty.showSpinner = false;
-                    authenticatorService.cancelPromises($scope.authenticationProperties.authenticatorpromise);
-                    cleanIntervalPromise();
+                    $timeout(function () {
+                        if (!stopped) {
+                            fetchResult(location);
+                        }
+                    }, 3000);
                 }
             }).catch(function () {
                 if (($filter('filter')($scope.testResults.reqs, {
-                        state: 1
+                        status: 1
                     })).length === 0) {
                     configureDisplay('error', true, 'alert alert-danger', 'An error occurred when fetching the results.');
                 } else {
-                    $scope.error.display = true;
-                    configureDisplay('error', true, 'alert alert-danger', 'An error occurred when fetching the results.');
+                    AlertService.clear();
+                    AlertService.error('An error occurred when fetching the remaining result.', '');
+                    configureDisplay('result', true, '', '');
                 }
                 authenticatorService.cancelPromises($scope.authenticationProperties.authenticatorpromise);
                 $scope.authenticationProperties.spinnerProperty.showSpinner = false;
-                cleanIntervalPromise();
             });
         }
 
-        function checkState(location) {
-            // start a promise and get the queue Id of the test in case the test is stopped.
-            $scope.checkStatePromise = $q.defer();
-            $scope.testId = location.split('/').pop();
-            // Checks the state every 3secs and fetches the available test results until the test is complete.
-            $scope.interval = $interval(function () {
-                testAutomation.checkState(location).then(function (data) {
-                    if (data.resourceURI !== null) {
-                        $scope.displayProperties.showCloseButton = true;
-                        fetchResult(data);
-                    }
-                }).catch(function (response) {
-                    if (response.status === 400 && response.data.state === 'NONEXISTENT') {
-                        cleanIntervalPromise();
-                        $timeout(function () {
-                            $uibModalStack.dismissAll();
-                        });
-                        configureDisplay('error', true, 'alert alert-success', 'The test automation was successfully cancelled');
-                    }
-                });
-            }, 10000);
+        function successCallbackAfterStart(headers) {
+            $scope.animation = 'slide-animate';
+            $scope.testId = headers.location.split('/').pop();
+            var url = '';
+            $scope.acceptedHeaderConfig = headers.config;
+            if (!re_weburl.test(headers.location)) {
+                url += appConfig.securityCAT.endsWith('/') ? appConfig.securityCAT.substr(0, appConfig.securityCAT.length - 1) : appConfig.securityCAT;
+            }
+            url += headers.location;
+            fetchResult(url);
         }
 
         $scope.startTest = function () {
+            $scope.error.display = false;
             $scope.authenticationProperties.authenticatorpromise.derefer = $q.defer();
-            testAutomation.checkAuthentication('/serviceapi/starttest', $scope.authenticationProperties.displayProperty,
-                    $scope.authenticationProperties.spinnerProperty, $scope.authenticationProperties.authenticatorpromise).then(function () {
-                    // TODO change loading display to result display should be shown
-                    configureDisplay('loading', false, $scope.error.class, $scope.error.message);
-                    $scope.animation = 'slide-animate';
-
-                    // start the test automation
-                    testAutomation.startTest($scope.testObject).then(function (checkURI) {
-                        checkState(checkURI);
-                    }, function () {
-                        configureDisplay('error', true, 'alert alert-danger', 'An error occurred when executing the test.');
-                    });
-                })
-                .catch(function (exception) { // onRejected checker function
-                    var errorMessage = 'The authentication to the securityCAT tool was unsuccessful.';
-                    if (exception === 'CORS') {
-                        errorMessage = 'Communication with the SecurityCAT Server was not possible due to Cross origin policy.';
+            testAutomation.headerConfig.withCredentials = false;
+            // check authentication by running sending the request to start the test.
+            testAutomation.startTest($scope.testObject)
+                .then(successCallbackAfterStart)
+                .catch(function (exception) {
+                    if (exception.status !== 500 && exception.status !== 403) {
+                        testAutomation.checkAuthentication($scope.testObject, $scope.authenticationProperties.displayProperty,
+                                $scope.authenticationProperties.spinnerProperty, $scope.authenticationProperties.authenticatorpromise)
+                            .then(successCallbackAfterStart)
+                            .catch(function (exception) { // onRejected checker function
+                                var errorMessage = 'The authentication to the securityCAT tool was unsuccessful. ' +
+                                    'This can sometimes be due to wrong CORS header configurations. Please check this and try again.';
+                                if (exception === 'CORS') {
+                                    errorMessage = 'Communication with the SecurityCAT Server was not possible due to Cross origin policy. Please make sure this is properly set.';
+                                }
+                                configureDisplay('error', true, 'alert alert-danger', errorMessage);
+                            });
+                    } else {
+                        $scope.error.display = true;
+                        $scope.error.class = 'alert alert-danger';
+                        $scope.error.message = 'An error occured when starting the test.';
                     }
-                    configureDisplay('error', true, 'alert alert-danger', errorMessage);
                 });
+
         };
 
-        $scope.stopTest = function () {
-            // stops the running checkstate operation.
-            cleanIntervalPromise();
-            testAutomation.stopTest($scope.checkStatePromise, $scope.testId).then(function () {
-                //configureDisplay('error', true, "alert alert-success", "The test automation was successfully cancelled")
-                $scope.clear();
-            }).catch(function () {});
+        function callbackAfterStop() {
 
+            if (($filter('filter')($scope.testResults.reqs, {
+                    status: 1
+                })).length === 0) {
+                $scope.clear();
+            } else {
+                configureDisplay('result', true, '', '');
+            }
+        }
+
+        $scope.stopTest = function () {
+            stopped = true;
+            // stops the running checkstate operation.
+            testAutomation.stopTest($scope.testId, $scope.acceptedHeaderConfig).then(function () {
+                AlertService.success('The test was successfully cancelled.', '');
+                callbackAfterStop();
+            }).catch(function () {
+                AlertService.add({
+                    type: 'danger',
+                    msg: 'The running test could not be cancelled.',
+                    params: []
+                });
+                callbackAfterStop();
+
+            });
+            $scope.displayProperties.inProgressMessage = 'N/A';
+            $scope.authenticationProperties.spinnerProperty.showSpinner = false;
         };
 
         $scope.getProgressbarType = function (value) {
@@ -244,6 +273,13 @@ angular.module('sdlctoolApp')
             return type;
         };
 
+        $scope.backToInfo = function () {
+            stopped = false;
+            $scope.parseEntity();
+            $scope.authenticationProperties.spinnerProperty.showSpinner = false;
+            configureDisplay('info', true, '', '');
+        };
+
         $scope.pushCoordinates = function (event) {
             $scope.mouseX = event.clientX;
             $scope.mouseY = event.clientY;
@@ -252,7 +288,7 @@ angular.module('sdlctoolApp')
         $scope.clear = function () {
             authenticatorService.cancelPromises($scope.authenticationProperties.authenticatorpromise);
             $scope.authenticationProperties.spinnerProperty.showSpinner = false;
-            cleanIntervalPromise();
             $uibModalInstance.dismiss();
         };
+
     });

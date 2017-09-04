@@ -186,14 +186,14 @@ describe('Protractor Security RAT importer testsuite', function() {
 					    var acceptList = element.all(by.id('acceptReq'));
 					    
 					    var x = 0;
-					    acceptList.each(function(element, index) {
+					    acceptList.each(function(element) {
 					    	if(x <= 5)
 					    		element.click();
 					    	x++;
 					    });
 					    browser.sleep(3000);
 					    var removeList = element.all(by.id('removeReq'));
-					    removeList.each(function(element, index) {
+					    removeList.each(function(element) {
 					    		element.click();
 					    });
 					    browser.sleep(10000);

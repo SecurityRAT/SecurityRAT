@@ -6,7 +6,7 @@ angular.module('sdlctoolApp')
             
             progressbar.intervalPromise = $interval(function () {
                 progressbar.barValue += 1;
-            }, 0, 95);
+            }, 150, 95);
             progressbar.hide = false;
             progressbar.showContent = false;
         };
