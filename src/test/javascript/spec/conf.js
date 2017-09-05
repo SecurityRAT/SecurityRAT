@@ -27,9 +27,10 @@ exports.config = {
 	   impTestUrl2: 'https://securityrat.test.local/?ticket=https://test-jira.local/browse/XYZ-123', // the specied ticket in the "ticket" parameter should preferably have different attachment types. For e.g .yml, .xlsx.
 	   impTestFileUrl: 'https://securityrat.test.local/?file=https:%2F%2Ftest-jira.local%2Fsecure%2Fattachment%2F685933%2FSSDLC_sfgsfgsfg_17-2-2016_134738.yml', // copy the link address to an attached file in a JIRA ticket
 	   attachmentUrls: ['#{id1}', //Any attachment id. See file query parameter of exported attachments in JIRA Queue
-	                    '#{id2}', //The file attachment corresponding to this "id" muss be deleted in JIRA Tickets.
-	                    '#{id3}', // The attachment corresponding to this Id should have issues links.
-	                    '#{id4}' // this attachment must display the update available button. That means some requirements muss have changes
+						'#{id2}', //The file attachment corresponding to this "id" muss be deleted in JIRA Tickets.
+						'#{id3}', // this attachment must display the update available button. That means some requirements from the yaml file muss need changes .
+						'#{id4}', // The attachment corresponding to this Id should have issues links.
+	                    '#{id5}' // this attachment must display the update available button. That means some requirements muss have changes
 	                    ],
 	   issueNumbers : ['#{issuenum1}', // JIRA issue number from "jiraQueue" containing an attachment added through by SecurityRAT
 	                   '#{issuenum2}' // JIRA issue number from "jiraQueue" containing more than one attachment added through SecurityRAT

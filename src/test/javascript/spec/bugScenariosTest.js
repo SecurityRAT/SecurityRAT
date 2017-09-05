@@ -257,8 +257,8 @@ describe('Protractor Security RAT bug Scenarios Testsuite', function() {
 		    element(by.buttonText('Close')).click();
 		    browser.sleep(3000);
 		    element(by.buttonText('Cancel the updates')).isPresent().then(function() {
-				var acceptReq = element.all(by.id('acceptReq'));
-		    	expect(acceptReq.count()).toBeGreaterThan(0);
+				var removeReq = element.all(by.id('removeReq'));
+		    	expect(removeReq.count()).toBeGreaterThan(0);
 		    	expect(element.all(by.id('acceptReq')).count()).toBeGreaterThan(0);
 		    	
 			    element.all(by.id('removeReq')).isPresent().then(function() {

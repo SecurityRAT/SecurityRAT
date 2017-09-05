@@ -26,6 +26,7 @@ angular.module('sdlctoolApp')
             intervalPromise: undefined,
             showContent: false
         };
+
         $scope.manageTicketProperty = {
             spinnerProperty: {
                 showSpinner: false

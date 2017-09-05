@@ -1,6 +1,6 @@
 'use strict';
 /* jshint undef: true */
-/* globals document, XMLHttpRequest, hljs, jiraApiPrefix, jiraAttachment, jiraApiIssueType, importPrefix, jiraComment, jiraApiProject, jiraRestApi, localStorageKey, securityCATTestApi */
+/* globals document, re_weburl, XMLHttpRequest, hljs, jiraApiPrefix, jiraAttachment, jiraApiIssueType, importPrefix, jiraComment, jiraApiProject, jiraRestApi, localStorageKey, securityCATTestApi */
 
 angular.module('sdlctoolApp', ['LocalStorageModule',
         'ui.bootstrap', // for modal dialogs
@@ -168,7 +168,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
 
         apiFactory.testRequirementApi = function (method, restcall, data, headerConfig, headersNeeded) {
             var url = '';
-            if(!re_weburl.test(restcall)) {
+            if (!re_weburl.test(restcall)) {
                 url += appConfig.securityCAT.endsWith('/') ? appConfig.securityCAT.substr(0, appConfig.securityCAT.length - 1) : appConfig.securityCAT;
             }
 
@@ -206,7 +206,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
 
 
         apiFactory.execute = function (method, path, data, headerConfig, withCredentials) {
-            
+
             return $http({
                     'method': method,
                     'url': path,
@@ -353,8 +353,10 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                         if (promise.runningModalPromise !== undefined) {
                             promise.runningModalPromise.close();
                         }
-                        if(promise.derefer) { promise.derefer.reject('Authentication failed'); }
-                        
+                        if (promise.derefer) {
+                            promise.derefer.reject('Authentication failed');
+                        }
+
                         SDLCToolExceptionService.showWarning(header, message, SDLCToolExceptionService.DANGER);
                     }, 61000);
                 } else {
@@ -582,12 +584,12 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
 
             for (var i = 0; i < statusColumns.length; i++) {
                 var element = statusColumns[i];
-                if(element.isEnum && selectedStatus[element.id].length > 0) {
+                if (element.isEnum && selectedStatus[element.id].length > 0) {
                     isFilterPresent = true;
                     break;
                 }
             }
-            
+
             // filter is empty return original array.
             if (!isFilterPresent) {
                 return array;
@@ -596,7 +598,10 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                 angular.forEach(array, function (requirement) {
                     for (var j = 0; j < requirement.statusColumns.length; j++) {
                         var statColumn = requirement.statusColumns[j];
-                        if(statColumn.isEnum && $filter('filter')(selectedStatus[statColumn.id], { id: statColumn.valueId, name : statColumn.value}).length > 0){
+                        if (statColumn.isEnum && $filter('filter')(selectedStatus[statColumn.id], {
+                                id: statColumn.valueId,
+                                name: statColumn.value
+                            }).length > 0) {
                             newView.push(requirement);
                             break;
                         }
@@ -704,70 +709,61 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
     })
     .filter('filterOptColumnByText', function ($filter) {
         return function (array, textfilterObject, optColumns) {
-            if ($.isEmptyObject(textfilterObject)) {
-                return array;
-            }
-            var filterPresent = false;
 
-            for (var i = 0; i < optColumns.length; i++) {
-                var element = optColumns[i];
-                if (angular.isDefined(textfilterObject[element.id]) && textfilterObject[element.id] !== '') {
-                    filterPresent = true;
+            /* jshint loopfunc: true */
+            if (!$.isEmptyObject(textfilterObject) && array.length > 0) {
+                for (var i = 0; i < optColumns.length; i++) {
+                    var element = optColumns[i];
+                    if (angular.isDefined(textfilterObject[element.id]) && textfilterObject[element.id] !== '') {
+                        // filter is present in object, so do filter.
+                        var newArray = [];
+                        angular.forEach(array, function (req) {
+                            for (var j = 0; j < req.optionColumns.length; j++) {
+                                var optColumn = req.optionColumns[j];
+                                if (angular.isDefined(textfilterObject[optColumn.showOrder]) && textfilterObject[optColumn.id] !== '') {
+                                    if ($filter('filter')(optColumn.content, {
+                                            content: textfilterObject[optColumn.showOrder]
+                                        }).length > 0) {
+                                        newArray.push(req);
+                                        // break is need to prevent duplicate requirements in new array.
+                                        break;
+                                    }
+                                }
+                            }
+                        });
+                        return newArray;
+                    }
                 }
             }
 
-            if (filterPresent) {
-                var newArray = [];
-                angular.forEach(array, function (req) {
-                    for (var j = 0; j < req.optionColumns.length; j++) {
-                        var optColumn = req.optionColumns[j];
-                        if (angular.isDefined(textfilterObject[optColumn.showOrder]) && textfilterObject[optColumn.id] !== '') {
-                            if ($filter('filter')(optColumn.content, {
-                                    content: textfilterObject[optColumn.showOrder]
-                                }).length > 0) {
-                                newArray.push(req);
-                                break;
-                            }
-                        }
-                    }
-                });
-                return newArray;
-            } else {
-                return array;
-            }
+            return array;
         };
     })
     .filter('filterStatusColumnByText', function ($filter) {
         return function (array, textfilterObject, statusColumns) {
-            if ($.isEmptyObject(textfilterObject)) {
-                return array;
-            }
+            /* jshint loopfunc: true */
+            if (!$.isEmptyObject(textfilterObject)  && array.length > 0) {
+                for (var i = 0; i < statusColumns.length; i++) {
+                    var element = statusColumns[i];
+                    if (!element.isEnum && angular.isDefined(textfilterObject[element.id]) && textfilterObject[element.id] !== '') {
+                        var newArray = [];
+                        angular.forEach(array, function (req) {
+                            for (var j = 0; j < req.statusColumns.length; j++) {
+                                var statusColumn = req.statusColumns[j];
+                                if (!statusColumn.isEnum && angular.isDefined(textfilterObject[statusColumn.id]) && textfilterObject[statusColumn.id] !== '' &&
+                                    statusColumn.value.indexOf(textfilterObject[statusColumn.id]) !== -1) {
+                                    newArray.push(req);
+                                    // break is need to prevent duplicate requirements in new array.
+                                    break;
+                                }
+                            }
+                        });
 
-            var filterPresent = false;
-
-            for (var i = 0; i < statusColumns.length; i++) {
-                var element = statusColumns[i];
-                if (!element.isEnum && angular.isDefined(textfilterObject[element.id]) && textfilterObject[element.id] !== '') {
-                    filterPresent = true;
+                        return newArray;
+                    }
                 }
             }
 
-            if (filterPresent) {
-                var newArray = [];
-                angular.forEach(array, function (req) {
-                    for (var j = 0; j < req.statusColumns.length; j++) {
-                        var statusColumn = req.statusColumns[j];
-                        if (!statusColumn.isEnum && angular.isDefined(textfilterObject[statusColumn.id]) && textfilterObject[statusColumn.id] !== '' &&
-                            statusColumn.value.indexOf(textfilterObject[statusColumn.id]) !== -1) {
-                                newArray.push(req);
-                            break;
-                        }
-                    }
-                });
-
-                return newArray;
-            } else {
-                return array;
-            }
+            return array;
         };
     });

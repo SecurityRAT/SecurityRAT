@@ -652,7 +652,8 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 		element(by.id('addTicket')).click();
 		browser.sleep(8000);
 		var removeList2 = element.all(by.id('removeManualTicket'));
-		expect(removeList1.count()).toBe(removeList2.count() - 1);
+		removeList2 = removeList2.count() - 1;
+		expect(removeList1.count()).toBe(removeList2);
 
 		removeList.first().click();
 		browser.sleep(1000);
