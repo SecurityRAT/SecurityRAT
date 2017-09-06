@@ -618,6 +618,21 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 		// sleep for the user to authenticated.
 		browser.sleep(20000);
 		expect(removeList.count() + 1, element.all(by.id('removeManualTicket')).count());
+
+		// add a second ticket to the requirement
+		list.first().click();
+
+		// Test adding already existing ticket to requirement.
+		element(by.id('ticket_field')).sendKeys(browser.params.jiraTicket);
+		element(by.id('addTicket')).click();
+		expect(element(by.binding('manageTicketProperty.jhError.msg')).getText(9)).toBe('This ticket is already linked to this requirement. Please provide another one.');
+		element(by.id('ticket_field')).clear().then(function() {
+			element(by.id('ticket_field')).sendKeys(browser.params.jiraRemoteLinkTicket);
+		});
+		element(by.id('addTicket')).click();
+		browser.sleep(5000);
+		element(by.buttonText(closeButton)).click();
+
 		list.get(1).click();
 
 		// Test that queue are not allowed
@@ -653,7 +668,7 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 		browser.sleep(8000);
 		var removeList2 = element.all(by.id('removeManualTicket'));
 		removeList2 = removeList2.count() - 1;
-		expect(removeList1.count()).toBe(removeList2);
+		expect(removeList1.count(), removeList2.count() - 1);
 
 		removeList.first().click();
 		browser.sleep(1000);

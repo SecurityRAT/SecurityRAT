@@ -611,7 +611,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
             }
         };
 
-    }).filter('filterTicketStatus', function () {
+    }).filter('filterTicketStatus', function ($filter) {
         return function (array, selectedTicketStatus) {
             if (selectedTicketStatus.length === 0) {
                 return array;
@@ -619,7 +619,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                 var newView = [];
                 angular.forEach(array, function (requirement) {
                     angular.forEach(selectedTicketStatus, function (value) {
-                        if (angular.equals(requirement.linkStatus.name, value.name)) {
+                        if ($filter('filter')(requirement.linkStatus.ticketStatus, {name: value.name}).length > 0) {
                             newView.push(requirement);
                         }
                     });

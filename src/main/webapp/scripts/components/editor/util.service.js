@@ -120,6 +120,7 @@ angular.module('sdlctoolApp')
                     lastChanged: settings.lastChanged,
                     requirementCategories: []
                 });
+                
                 angular.forEach(settings.requirements, function (requirement) {
                     //check if category is already inside
                     if (self.searchArrayByValue(requirement.category, yamlExport.requirementCategories)) {
@@ -131,7 +132,7 @@ angular.module('sdlctoolApp')
                                     showOrder: requirement.order,
                                     universalId: requirement.universalId,
                                     description: requirement.description,
-                                    ticket: requirement.ticket,
+                                    tickets: requirement.tickets,
                                     tagInstances: requirement.tagInstances,
                                     optColumns: requirement.optionColumns,
                                     statusColumns: requirement.statusColumns
@@ -149,7 +150,7 @@ angular.module('sdlctoolApp')
                             showOrder: requirement.order,
                             universalId: requirement.universalId,
                             description: requirement.description,
-                            ticket: requirement.ticket,
+                            tickets: requirement.tickets,
                             tagInstances: requirement.tagInstances,
                             optColumns: requirement.optionColumns,
                             statusColumns: requirement.statusColumns
@@ -162,6 +163,7 @@ angular.module('sdlctoolApp')
                         });
                     }
                 });
+                // console.log('yaml export', yamlExport);
                 return yamlExport;
             },
             getCurrentDate: function () {

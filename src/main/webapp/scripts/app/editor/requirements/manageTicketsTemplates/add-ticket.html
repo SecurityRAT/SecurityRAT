@@ -1,10 +1,11 @@
 <form class="form-inline" name="formAddTicket" role="form" show-validation>
-    <div class="alert alert-danger" data-ng-show="manageTicketProperty.sameTicketError" >
-        You cannot link a ticket to itself.
+    <div uib-alert class="alert alert-danger" data-ng-show="manageTicketProperty.jhError.show" >
+        {{manageTicketProperty.jhError.msg}}
     </div>
-    <div class="alert alert-danger" data-ng-show="manageTicketProperty.authenticationFailure" >
+    <div uib-alert class="alert alert-danger" data-ng-show="manageTicketProperty.authenticationFailure" >
         {{manageTicketProperty.authenticationFailureMessage}}
     </div>
+    <jh-alert></jh-alert>
     <div class="input-group input-group-sm">
         <span class="input-group-addon">
 			<input type="checkbox" data-ng-model="reqs.linkStatus.link" uib-tooltip="Link the tickets in JIRA" tooltip-append-to-body />
@@ -25,7 +26,7 @@
     </div>
     <div class="btn-group-sm" data-ng-if="!manageTicketProperty.spinnerProperty.showSpinner">
         <label id="addTicket" type="submit" data-ng-disabled="formAddTicket.$invalid" uib-tooltip="Confirm" tooltip-placement="right-bottom"
-            data-ng-click="doIssueLinking(reqs, addManualTicket, 0)" class="btn btn-default"><i class="glyphicon glyphicon-ok"></i></label>
+            data-ng-click="doIssueLinking(reqs, addManualTicket, reqs.tempTicket)" class="btn btn-default"><i class="glyphicon glyphicon-ok"></i></label>
         <label id="cancelAddTicket" uib-tooltip="Cancel" tooltip-placement="right-bottom" data-ng-click="cleanUpIssueLinking(reqs)"
             class="btn btn-default"><i class="glyphicon glyphicon-remove"></i></label>
     </div>

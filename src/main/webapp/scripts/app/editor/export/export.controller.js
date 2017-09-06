@@ -88,8 +88,12 @@ angular.module('sdlctoolApp')
 
         // initialises the labels according to the use case.
         $scope.initLabels = function () {
-            if ($scope.selection.jira) { $scope.fields.labels = [appConfig.summaryPrefix]; }
-            if ($scope.selection.createTickets) { $scope.fields.labels = [appConfig.summaryPrefix + '_REQUIREMENT']; }
+            if ($scope.selection.jira) {
+                $scope.fields.labels = [appConfig.summaryPrefix];
+            }
+            if ($scope.selection.createTickets) {
+                $scope.fields.labels = [appConfig.summaryPrefix + '_REQUIREMENT'];
+            }
         };
 
         // Dirty Dirty Dirty Hack.
@@ -344,7 +348,7 @@ angular.module('sdlctoolApp')
                 url += '&issuetypeNames=' + filterObject.issuetypeName;
             }
             url += '&expand=projects.issuetypes.fields';
-            var dateType = ['date', 'datetime'];// jira date schemas.
+            var dateType = ['date', 'datetime']; // jira date schemas.
             apiFactory.getJIRAInfo(url).then(function (response) {
                 angular.forEach(response.projects, function (project) {
                     angular.forEach(project.issuetypes[0].fields, function (value, key) {
@@ -353,8 +357,11 @@ angular.module('sdlctoolApp')
                         var sync = $q.defer();
                         if ((fatalFields.indexOf(key) === -1) && (excludedFields.indexOf(key) === -1) && !(angular.equals(value.schema.type, 'array') && (value.operations.length === 1) && value.operations.indexOf('set') !== -1) && !angular.equals(value.schema.type, 'any')) {
                             if (angular.isDefined(value.allowedValues)) {
-                                if (value.allowedValues.length > 0) { allowedValues = value.allowedValues; }
-                                else { sync.reject(false); } // slice out field without values in the allowedValues property.
+                                if (value.allowedValues.length > 0) {
+                                    allowedValues = value.allowedValues;
+                                } else {
+                                    sync.reject(false);
+                                } // slice out field without values in the allowedValues property.
                                 if (angular.equals(value.schema.type, 'array')) {
                                     $scope.fields[key] = [];
                                 }
@@ -371,7 +378,9 @@ angular.module('sdlctoolApp')
                                 var autoCompleteUrl = value.autoCompleteUrl;
                                 // console.log(autoCompleteUrl)
                                 // exclude autoComplete with issueKey=null. 
-                                if (angular.isDefined(autoCompleteUrl) && autoCompleteUrl.indexOf('=null') !== -1) { autoCompleteUrl = undefined; }
+                                if (angular.isDefined(autoCompleteUrl) && autoCompleteUrl.indexOf('=null') !== -1) {
+                                    autoCompleteUrl = undefined;
+                                }
                                 $scope.jiraAlternatives.mandatoryFields.push({
                                     key: key,
                                     name: value.name,
@@ -479,7 +488,9 @@ angular.module('sdlctoolApp')
                                 if ($scope.jiraAlternatives.mandatoryFields[i].key === key) {
                                     $scope.exportProperty.fail = true;
                                     $scope.exportProperty.failed = 'Value to field ' + $scope.jiraAlternatives.mandatoryFields[i].name + ' ' + result;
-                                    if (angular.isDefined($scope.fields[key])) { $scope.fields[key] = ''; }
+                                    if (angular.isDefined($scope.fields[key])) {
+                                        $scope.fields[key] = '';
+                                    }
                                 }
                                 // retrieves the old field values whose structure were changed to be able to create a ticket.
                                 if (angular.isDefined($scope.tempMandatoryValue[$scope.jiraAlternatives.mandatoryFields[i].key])) {
@@ -582,7 +593,7 @@ angular.module('sdlctoolApp')
         $scope.checkForTicketInReqSet = function () {
             var requirements = [];
             angular.forEach($scope.exported.requirements, function (requirement) {
-                if (angular.isDefined(requirement.ticket) && requirement.ticket !== '' && requirement.ticket !== null) {
+                if (angular.isDefined(requirement.tickets) && requirement.tickets.length > 0) {
                     requirements.push(requirement.shortName);
                 }
             });
@@ -818,11 +829,11 @@ angular.module('sdlctoolApp')
                         });
 
                         $scope.createTicket(fieldObject, false).then(function (ticketResponse) {
-                            requirement.ticket = $scope.ticketURL;
+                            var reqTicket = $scope.ticketURL;
                             // get the status of the newly created tickets and updates the filter.
                             apiFactory.getJIRAInfo(ticketResponse.self).then(function (response) {
                                 var remoteObject = {};
-                                remoteObject.apiUrl = Helper.buildJiraUrl(requirement.ticket.split('/'));
+                                remoteObject.apiUrl = Helper.buildJiraUrl(reqTicket.split('/'));
                                 // This property muss be set irrelevant of thre remoteObject.key property.
                                 remoteObject.apiUrl.ticketKey = [];
                                 remoteObject.apiUrl.ticketKey.push(response.key);
@@ -830,6 +841,8 @@ angular.module('sdlctoolApp')
                                 remoteObject.fields = response.fields;
                                 remoteObject.key = response.key;
                                 remoteObject.url = $scope.jiraUrl.url + '-' + response.key.split('-').pop();
+
+                                requirement.tickets.push(remoteObject.url);
                                 //links the newly created ticket to the main ticket
                                 JiraService.addIssueLinks($scope.exported.ticket, remoteObject).then()
                                     .catch(function (exception) {
@@ -840,14 +853,17 @@ angular.module('sdlctoolApp')
                                     iconUrl: response.fields.status.iconUrl,
                                     name: response.fields.status.name,
                                     summary: response.fields.summary,
-                                    issueKey: response.key
+                                    issueKey: response.key,
+                                    url: remoteObject.url
                                     // enableTooltip: true,
                                     // link: true
                                 };
-                                angular.extend(requirement, {
-                                    linkStatus: linkStatus
-                                });
-                                $scope.jiraStatus.allStatus.push(linkStatus);
+                                requirement.linkStatus.ticketStatus.push(linkStatus);
+                                if ($filter('filter')($scope.jiraStatus.allStatus, {
+                                        name: linkStatus.name
+                                    }).length === 0) {
+                                    $scope.jiraStatus.allStatus.push(linkStatus);
+                                }
                                 // shows the successful modal and updates the attachment.
                                 if (size === 0) {
                                     var urlSplit = $scope.exported.ticket.url.split('/');
@@ -875,16 +891,16 @@ angular.module('sdlctoolApp')
 
         $scope.getTicketValue = function (req) {
             if (angular.isUndefined($scope.checks.hasReqTicket)) {
-                return req.ticket;
+                return req.tickets;
             } else if (!$scope.checks.hasReqTicket) {
-                req.ticket = '';
-                return '';
+                req.tickets = [];
+                return [];
             } else if ($scope.checks.hasReqTicket) {
-                if (req.ticket !== '' && req.ticket !== null) {
+                if (req.tickets.length > 0) {
                     // save the ticket url from yaml, to later on link them to main Ticket. 
-                    $scope.ticketsToLink.push(req.ticket);
+                    $scope.ticketsToLink = $scope.ticketsToLink.concat(req.tickets);
                 }
-                return req.ticket;
+                return req.tickets;
             }
         };
 
@@ -901,7 +917,8 @@ angular.module('sdlctoolApp')
             // copy the exported object
             var copyOfExport = angular.copy($scope.exported);
             angular.forEach(copyOfExport.requirements, function (requirement) {
-                requirement.ticket = $scope.getTicketValue(requirement);
+
+                requirement.tickets = $scope.getTicketValue(requirement);
             });
 
             return Helper.buildYAMLFile(copyOfExport);

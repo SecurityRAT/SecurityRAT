@@ -33,6 +33,7 @@ angular.module('sdlctoolApp')
             },
             promise: {},
             authenticatorProperty: {},
+            jhError: {},
             error: false
         };
         // saves the alternative instances to be able to make panels out of them.
@@ -333,7 +334,7 @@ angular.module('sdlctoolApp')
             if ($scope.requirementProperties.hasIssueLinks) {
                 var hosts = [];
                 angular.forEach($scope.requirements, function (requirement) {
-                    if (angular.isDefined(requirement.ticket) && !angular.equals(requirement.ticket, '')) {
+                    if (requirement.tickets.length > 0) {
                         $scope.fetchTicketStatus(requirement, hosts);
                     }
                     if (requirement.shortName.indexOf(appConfig.customRequirement) >= 0) {
@@ -456,12 +457,15 @@ angular.module('sdlctoolApp')
         };
 
         $scope.getOptandStatusColumns = function () {
+
             angular.forEach($scope.systemSettings, function (object) {
                 angular.forEach(object, function (obj) {
                     angular.forEach(obj, function (value, key) {
                         if (key === 'optsColumn') {
                             $scope.optColumns = value;
                             angular.forEach($scope.optColumns, function (column) {
+                                // column.description = '<p class=\'myTooltip\'><span style=\'color:yellow;\'>Description:</span> ' + column.description + '</p>';
+                                column.description = '<strong> ' + column.description + '</strong>';
                                 angular.extend(column, {
                                     optColumnLabelText: {
                                         buttonDefaultText: column.name
@@ -476,7 +480,8 @@ angular.module('sdlctoolApp')
                             });
                             $scope.statusColumns = value;
                             angular.forEach($scope.statusColumns, function (status) {
-
+                                // status.description = '<p class=\'myTooltip\'><span style=\'color:yellow;\'>Description:</span> ' + status.description + '</p>';
+                                status.description = '<strong>' + status.description + '</strong>';
                                 var statColumnTooltip = '<p class=\'myTooltip\'><span style=\'color:yellow;\'>Possible values:</span><BR>';
                                 if (status.isEnum) {
                                     $scope.selectedStatusColumn[status.id] = [];
@@ -699,7 +704,7 @@ angular.module('sdlctoolApp')
                 //update the order of the last element in the category filter.
                 $scope.filterCategory[item.categoryIndex].lastElemOrder = item.requirement.order;
                 item.requirement.universalId = '';
-                item.requirement.ticket = '';
+                item.requirement.tickets = [];
                 $scope.newRequirementParam.index++;
                 angular.forEach(item.requirement.optionColumns, function (optColumn) {
                     angular.forEach(optColumn.content, function (content) {
@@ -1013,10 +1018,11 @@ angular.module('sdlctoolApp')
                         order: requirement.showOrder,
                         tagInstances: requirement.tagInstanceIds,
                         optionColumns: values,
-                        ticket: '',
+                        tickets: [],
                         // linkStatus : {enableTooltip : true, link: true},
                         linkStatus: {
-                            link: true
+                            link: true,
+                            ticketStatus: []
                         },
                         statusColumns: statusColumnsValues,
                         selected: false
@@ -1067,7 +1073,7 @@ angular.module('sdlctoolApp')
                     if (oldRequirement.id === newRequirement.id) {
                         newRequirement.optionColumns = oldRequirement.optionColumns;
                         newRequirement.statusColumns = oldRequirement.statusColumns;
-                        newRequirement.ticket = oldRequirement.ticket;
+                        newRequirement.tickets = oldRequirement.tickets;
                     }
                 });
                 if ((oldRequirement.shortName.indexOf(appConfig.customRequirement) >= 0) && (oldRequirement.id >= 10000)) {
@@ -1251,10 +1257,11 @@ angular.module('sdlctoolApp')
                         order: requirement.showOrder,
                         tagInstances: requirement.tagInstanceIds,
                         optionColumns: values,
-                        ticket: '',
+                        tickets: [],
                         // linkStatus : {enableTooltip: true, link:true},
                         linkStatus: {
-                            link: true
+                            link: true,
+                            ticketStatus: []
                         },
                         statusColumns: statusColumnsValues,
                         selected: false,
@@ -1279,7 +1286,7 @@ angular.module('sdlctoolApp')
                 needsUpdate: true
             });
             requirementToInsert.statusColumns = oldRequirement.statusColumns;
-            requirementToInsert.ticket = oldRequirement.ticket;
+            requirementToInsert.tickets = oldRequirement.tickets;
             requirementToInsert.linkStatus = oldRequirement.linkStatus;
             // $scope.updatesCounter++;
             $scope.updateCounter++;
@@ -1318,10 +1325,14 @@ angular.module('sdlctoolApp')
                     // $scope.requirements[i].linkStatus = {enableTooltip : true, link: true};
                     if (angular.isDefined($scope.requirements[i].linkStatus)) {
                         $scope.requirements[i].linkStatus.link = true;
+                        if (angular.isUndefined($scope.requirements[i].linkStatus.ticketStatus)) {
+                            $scope.requirements[i].linkStatus.ticketStatus = [];
+                        }
                     } else {
-                        // if not defined creates initialise object.
+                        // if not defined creates and initialise the linkStatus object.
                         $scope.requirements[i].linkStatus = {
-                            link: true
+                            link: true,
+                            ticketStatus: []
                         };
                     }
                     if ($scope.requirements[i].id === newRequirement.id) {
@@ -1533,8 +1544,6 @@ angular.module('sdlctoolApp')
             }
             // console.log($filter('orderBy')($scope.requirements, ['categoryOrder', 'order']));
             var message = '';
-            console.log($scope.newRequirements);
-            console.log($scope.deletedReqs);
             if ($scope.deletedReqs.length > 0) {
                 angular.forEach($scope.deletedReqs, function (deleteRequirement) {
                     var idx = $scope.requirements.indexOf(deleteRequirement);
@@ -2075,15 +2084,13 @@ angular.module('sdlctoolApp')
             modalInstance.result.then(function (jiraStatus) {
                 if ($scope.jiraStatus.allStatus.length > 0) {
                     angular.forEach(jiraStatus.allStatus, function (newStatus) {
-                        for (var i = 0; i < $scope.jiraStatus.allStatus.length; i++) {
-                            var oldStatus = $scope.jiraStatus.allStatus[i];
-                            if (!angular.equals(oldStatus.name, newStatus.name)) {
+                        // eliminates duplicates.
+                        if($filter('filter')($scope.jiraStatus.allStatus, {name : newStatus.name}).length === 0) {
                                 $scope.jiraStatus.allStatus.push(newStatus);
                             }
-                        }
                     });
                 } else {
-                    $scope.jiraStatus.allStatus.push(jiraStatus.allStatus[0]);
+                    $scope.jiraStatus.allStatus = jiraStatus.allStatus;
                 }
                 $scope.disableSave(true);
                 $scope.requirementProperties.hasIssueLinks = true;
@@ -2096,7 +2103,7 @@ angular.module('sdlctoolApp')
             angular.forEach($filter('filter')($scope.requirements, {
                 selected: true
             }), function (requirement) {
-                if (angular.isDefined(requirement.ticket) && !angular.equals(requirement.ticket, '')) {
+                if (angular.isDefined(requirement.tickets) && requirement.tickets.length > 0) {
                     if (!angular.equals($scope.existingTickets, '')) {
                         $scope.existingTickets += ', ';
                     }
@@ -2260,30 +2267,26 @@ angular.module('sdlctoolApp')
             $scope.manageTicketProperty.sameTicketError = false;
         };
 
-        $scope.doIssueLinking = function (req, callbackFunction, propMapper) {
-            var reqPropMapper = {
-                0: 'tempTicket',
-                1: 'ticket'
-            };
-
+        $scope.doIssueLinking = function (req, callbackFunction, ticket) {
             // reset the error handling properties.
             $scope.manageTicketProperty.error = false;
             $scope.manageTicketProperty.authenticationFailure = false;
-            if (angular.equals(req[reqPropMapper[propMapper]], $scope.ticket.url)) {
-                $scope.manageTicketProperty.sameTicketError = true;
+            if (angular.equals(ticket, $scope.ticket.url)) {
+                $scope.manageTicketProperty.jhError.show = true;
+                $scope.manageTicketProperty.jhError.msg = 'You cannot link a ticket to itself.';
             } else {
-                $scope.manageTicketProperty.sameTicketError = false;
+                $scope.manageTicketProperty.jhError.show = false;
                 var remoteObjectInfo = {};
                 var mainObjectInfo = {};
                 mainObjectInfo.apiUrl = Helper.buildJiraUrl($scope.ticket.url.split('/'));
                 mainObjectInfo.key = mainObjectInfo.apiUrl.ticketKey[0];
                 mainObjectInfo.url = $scope.ticket.url;
-                remoteObjectInfo.apiUrl = Helper.buildJiraUrl(req[reqPropMapper[propMapper]].split('/'));
+                remoteObjectInfo.apiUrl = Helper.buildJiraUrl(ticket.split('/'));
 
                 if (remoteObjectInfo.apiUrl.ticketKey.length === 1) {
                     $scope.manageTicketProperty.error = false;
                     remoteObjectInfo.key = remoteObjectInfo.apiUrl.ticketKey[0];
-                    remoteObjectInfo.url = req[reqPropMapper[propMapper]];
+                    remoteObjectInfo.url = ticket;
 
                     $scope.manageTicketProperty.authenticatorProperty = {
                         url: $scope.ticket.url,
@@ -2296,7 +2299,7 @@ angular.module('sdlctoolApp')
                         mainObjectInfo.fields = response.fields;
                         mainObjectInfo.key = response.key;
                         $scope.manageTicketProperty.authenticatorProperty = {
-                            url: req[reqPropMapper[propMapper]],
+                            url: ticket,
                             message: 'You are not authenticated, please click on the following link to authenticate yourself. You will have one minute after a click on the link.'
                         };
                         $scope.manageTicketProperty.promise.derefer = $q.defer();
@@ -2310,7 +2313,7 @@ angular.module('sdlctoolApp')
                         remoteObjectInfo.fields = responses[1].fields;
                         // This is to prevent adding the link to the yaml file before 'add ticket' confirmation. issue #62
 
-                        callbackFunction(req, mainObjectInfo, remoteObjectInfo);
+                        callbackFunction(req, mainObjectInfo, remoteObjectInfo, ticket);
                     }).catch(function (exception) {
                         $scope.manageTicketProperty.authenticationFailureMessage = 'The authentication to the issue tracker was unsuccesful.';
                         if (exception.status === 404) {
@@ -2325,69 +2328,84 @@ angular.module('sdlctoolApp')
             }
         };
 
-        $scope.addManualTicket = function (req, mainObjectInfo, remoteObjectInfo) {
+        $scope.addManualTicket = function (req, mainObjectInfo, remoteObjectInfo, ticket) {
             $scope.manageTicketProperty.spinnerProperty.showSpinner = true;
-            req.ticket = remoteObjectInfo.apiUrl.http + '//' + remoteObjectInfo.apiUrl.host + '/' + remoteObjectInfo.apiUrl.path.join('/') + '/' + remoteObjectInfo.key;
+            // var ticketUrl = remoteObjectInfo.apiUrl.http + '//' + remoteObjectInfo.apiUrl.host + '/' + remoteObjectInfo.apiUrl.path.join('/') + '/' + remoteObjectInfo.key;
 
-            req.tempTicket = '';
-            if (req.linkStatus.link) {
-                JiraService.addIssueLinks(mainObjectInfo, remoteObjectInfo).then(function () {
-                    // req.linkStatus.enableTooltip = true
-                    req.linkStatus.summary = remoteObjectInfo.fields.summary;
-                    $scope.manageTicketProperty.spinnerProperty.showSpinner = false;
+            // first check that the requirement is not already present.
+            if (req.tickets.indexOf(ticket) === -1) {
+                req.tickets.push(ticket);
 
-                }).catch(function (exception) {
-                    $scope.manageTicketProperty.spinnerProperty.showSpinner = false;
-                    onIssueLinkFailure(exception, mainObjectInfo.url, remoteObjectInfo.url);
-                });
-            }
+                req.tempTicket = '';
+                if (req.linkStatus.link) {
+                    JiraService.addIssueLinks(mainObjectInfo, remoteObjectInfo).then(function () {
+                        // req.linkStatus.enableTooltip = true
+                        // req.linkStatus.summary = remoteObjectInfo.fields.summary;
+                        $scope.manageTicketProperty.spinnerProperty.showSpinner = false;
 
-            var linkStatus = {
-                iconUrl: remoteObjectInfo.fields.status.iconUrl,
-                name: remoteObjectInfo.fields.status.name,
-                issueKey: remoteObjectInfo.key,
-                summary: remoteObjectInfo.fields.summary
-                // summary: req.linkStatus.link ? null : remoteObjectInfo.fields.summary,
-                // enableTooltip : req.linkStatus.link ? false : true
-            };
-            angular.extend(req, {
-                linkStatus: linkStatus
-            });
-            if ($scope.jiraStatus.allStatus.length === 0) {
-                $scope.jiraStatus.allStatus.push(linkStatus);
-            } else {
-                if ($filter('filter')($scope.jiraStatus.allStatus, {
-                        name: linkStatus.name
-                    }).length === 0) {
-                    $scope.jiraStatus.allStatus.push(linkStatus);
+                    }).catch(function (exception) {
+                        $scope.manageTicketProperty.spinnerProperty.showSpinner = false;
+                        onIssueLinkFailure(exception, mainObjectInfo.url, remoteObjectInfo.url);
+                    });
                 }
-            }
-            // console.log($scope.ticket);
-            var promise = JiraService.addAttachmentAndComment(mainObjectInfo, {
-                content: $scope.buildYAMLFile(),
-                artifactName: $scope.systemSettings.name,
-                errorHandlingProperty: $scope.manageTicketProperty
-            });
-            if (angular.isDefined(promise)) {
+                var linkStatus = {
+                    iconUrl: remoteObjectInfo.fields.status.iconUrl,
+                    name: remoteObjectInfo.fields.status.name,
+                    issueKey: remoteObjectInfo.key,
+                    summary: remoteObjectInfo.fields.summary,
+                    url: ticket
+                    // summary: req.linkStatus.link ? null : remoteObjectInfo.fields.summary,
+                    // enableTooltip : req.linkStatus.link ? false : true
+                }
+                req.linkStatus.ticketStatus.push(linkStatus);
+                if ($scope.jiraStatus.allStatus.length === 0) {
+                    $scope.jiraStatus.allStatus.push(linkStatus);
+                } else {
+                    if ($filter('filter')($scope.jiraStatus.allStatus, {
+                            name: linkStatus.name
+                        }).length === 0) {
+                        $scope.jiraStatus.allStatus.push(linkStatus);
+                    }
+                }
+                // console.log($scope.ticket);
+                var promise = JiraService.addAttachmentAndComment(mainObjectInfo, {
+                    content: $scope.buildYAMLFile(),
+                    artifactName: $scope.systemSettings.name,
+                    errorHandlingProperty: $scope.manageTicketProperty
+                });
+                if (angular.isDefined(promise)) {
+                    $scope.manageTicketProperty.spinnerProperty.showSpinner = false;
+                    req.linkStatus.enableTooltip = false;
+                }
+            } else {
+                $scope.manageTicketProperty.jhError.show = true;
                 $scope.manageTicketProperty.spinnerProperty.showSpinner = false;
+                $scope.manageTicketProperty.jhError.msg = 'This ticket is already linked to this requirement. Please provide another one.';
             }
+
 
         };
 
-        $scope.removeManualTicket = function (req, mainObjectInfo, remoteObjectInfo) {
-            req.ticket = '';
-            // must be done since it deletes the enabletooltip property linked to the linkStatus property.
-            req.linkStatus = {
-                link: true
-            };
-            if (($filter('filterTicketStatus')($scope.requirements, [remoteObjectInfo.fields.status.name])).length === 1) {
+        $scope.removeManualTicket = function (req, mainObjectInfo, remoteObjectInfo, ticket) {
+            // remove status from list of possible ticket status to filter.
+            if (($filter('filterTicketStatus')($scope.requirements, [remoteObjectInfo.fields.status])).length === 1) {
                 for (var i = 0; i < $scope.jiraStatus.allStatus.length; i++) {
                     if ($scope.jiraStatus.allStatus[i].name === remoteObjectInfo.fields.status.name) {
                         $scope.jiraStatus.allStatus.splice(i, 1);
-                        break;
                     }
                 }
 
+            }
+
+            // remove appropriate ticket from array in requirement.
+            var index = req.tickets.indexOf(ticket);
+            req.tickets.splice(index, 1);
+
+            for (var j = 0; j < req.linkStatus.ticketStatus.length; j++) {
+                var element = req.linkStatus.ticketStatus[j];
+                if (angular.equals(element.url, ticket)) {
+                    req.linkStatus.ticketStatus.splice(j, 1);
+                }
             }
 
             // This returns the jiraservice.sendComment promise
@@ -2413,70 +2431,78 @@ angular.module('sdlctoolApp')
         };
 
         $scope.fetchTicketStatus = function (requirement, hosts) {
-            var urlSplit = requirement.ticket.split('/');
-            var apiUrl = Helper.buildJiraUrl(urlSplit);
-            var urlCall = JiraService.buildUrlCall('issueKey', apiUrl);
             var linkStatus = {};
+            angular.forEach(requirement.tickets, function (ticket) {
+                var apiUrl = Helper.buildJiraUrl(ticket.split('/'));
+                var urlCall = JiraService.buildUrlCall('issueKey', apiUrl);
+                if (angular.isUndefined(linkStatus.ticketStatus)) {
+                    linkStatus.ticketStatus = [];
+                }
 
-            var jiraLink = apiUrl.http + '//' + apiUrl.host + '/' + apiUrl.path.join('/') + '/' + apiUrl.ticketKey[0];
-            apiFactory.getJIRAInfo(urlCall).then(function (response) {
-                linkStatus = {
-                    iconUrl: response.fields.status.iconUrl,
-                    name: response.fields.status.name,
-                    summary: response.fields.summary,
-                    issueKey: response.key
-                };
-                angular.extend(requirement.linkStatus, linkStatus);
-                if ($filter('filter')($scope.jiraStatus.allStatus, {
-                        name: response.fields.status.name
-                    }).length === 0) {
-                    $scope.jiraStatus.allStatus.push(linkStatus);
-                }
-            }, function (error) {
-                if (error.status === 401) {
-                    $scope[apiUrl.ticketKey[0]] = {};
-                    $scope[apiUrl.ticketKey[0]].derefer = $q.defer();
-                    var authenticatorProperty = {
-                        url: hosts.indexOf(apiUrl.host) === -1 ? jiraLink : '',
-                        message: 'The status of issue linked in your requirement set could not be determined because you are not authenticated.' +
-                            'Please click on the following link to authenticate yourself. You will have one minute after a click on the link.'
-                    };
-                    if (hosts.indexOf(apiUrl.host) === -1) {
-                        hosts.push(apiUrl.host);
-                        // adds the check authentication Modal in case the issue tracking's system session has expired
-                        // and the status of the ticket cannot be fetched.
-                        Helper.addCheckAuthenticationModal($scope[apiUrl.ticketKey[0]]);
+                var jiraLink = apiUrl.http + '//' + apiUrl.host + '/' + apiUrl.path.join('/') + '/' + apiUrl.ticketKey[0];
+                apiFactory.getJIRAInfo(urlCall).then(function (response) {
+                    var ticketStatus = {
+                        iconUrl: response.fields.status.iconUrl,
+                        name: response.fields.status.name,
+                        summary: response.fields.summary,
+                        issueKey: response.key,
+                        url: jiraLink
                     }
-                    // check if the user is authenticated to the issue tracker and starts the authentication process if this is not the case.
-                    checkAuthentication.jiraAuth(urlCall, authenticatorProperty, $scope.manageTicketProperty.spinnerProperty, $scope[apiUrl.ticketKey[0]]).then(function (response) {
-                        linkStatus = {
-                            iconUrl: response.fields.status.iconUrl,
-                            name: response.fields.status.name,
-                            summary: response.fields.summary,
-                            issueKey: response.key
+                    linkStatus.ticketStatus.push(ticketStatus);
+                    angular.extend(requirement.linkStatus, linkStatus);
+                    if ($filter('filter')($scope.jiraStatus.allStatus, {
+                            name: response.fields.status.name
+                        }).length === 0) {
+                        $scope.jiraStatus.allStatus.push(ticketStatus);
+                    }
+                }, function (error) {
+                    if (error.status === 401) {
+                        $scope[apiUrl.ticketKey[0]] = {};
+                        $scope[apiUrl.ticketKey[0]].derefer = $q.defer();
+                        var authenticatorProperty = {
+                            url: hosts.indexOf(apiUrl.host) === -1 ? jiraLink : '',
+                            message: 'The status of issue linked in your requirement set could not be determined because you are not authenticated.' +
+                                'Please click on the following link to authenticate yourself. You will have one minute after a click on the link.'
                         };
-                        angular.extend(requirement.linkStatus, linkStatus);
-                        if ($filter('filter')($scope.jiraStatus.allStatus, {
-                                name: response.fields.status.name
-                            }).length === 0) {
-                            $scope.jiraStatus.allStatus.push(linkStatus);
+                        if (hosts.indexOf(apiUrl.host) === -1) {
+                            hosts.push(apiUrl.host);
+                            // adds the check authentication Modal in case the issue tracking's system session has expired
+                            // and the status of the ticket cannot be fetched.
+                            Helper.addCheckAuthenticationModal($scope[apiUrl.ticketKey[0]]);
                         }
-                    }).catch(function () {
-                        if (error.status === 403) {
-                            SDLCToolExceptionService.showWarning('Issue call failed', 'You do not have the permission to view the ticket ' + jiraLink, SDLCToolExceptionService.DANGER);
-                        } else if (error.status === 500) {
-                            SDLCToolExceptionService.showWarning('Internal Server Error', 'The server encountered an unexpected condition which prevented it from fulfilling the request.', SDLCToolExceptionService.DANGER);
+                        // check if the user is authenticated to the issue tracker and starts the authentication process if this is not the case.
+                        checkAuthentication.jiraAuth(urlCall, authenticatorProperty, $scope.manageTicketProperty.spinnerProperty, $scope[apiUrl.ticketKey[0]]).then(function (response) {
+                            var ticketStatus = {
+                                iconUrl: response.fields.status.iconUrl,
+                                name: response.fields.status.name,
+                                summary: response.fields.summary,
+                                issueKey: response.key,
+                                url: jiraLink
+                            };
+                            linkStatus.ticketStatus.push(ticketStatus);
+                            angular.extend(requirement.linkStatus, linkStatus);
+                            if ($filter('filter')($scope.jiraStatus.allStatus, {
+                                    name: response.fields.status.name
+                                }).length === 0) {
+                                $scope.jiraStatus.allStatus.push(ticketStatus);
+                            }
+                        }).catch(function () {
+                            if (error.status === 403) {
+                                SDLCToolExceptionService.showWarning('Issue call failed', 'You do not have the permission to view the ticket ' + jiraLink, SDLCToolExceptionService.DANGER);
+                            } else if (error.status === 500) {
+                                SDLCToolExceptionService.showWarning('Internal Server Error', 'The server encountered an unexpected condition which prevented it from fulfilling the request.', SDLCToolExceptionService.DANGER);
+                            }
+                        });
+                    } else if (error.status === 403) {
+                        SDLCToolExceptionService.showWarning('Issue call failed', 'You do not have the permission to view the ticket ' + jiraLink, SDLCToolExceptionService.DANGER);
+                    } else if (error.status === 404) {
+                        if (error.errorException.opened.$$state.status === 0) {
+                            error.errorException.opened.$$state.value = false;
+                            error.errorException.opened.$$state.status = 1;
                         }
-                    });
-                } else if (error.status === 403) {
-                    SDLCToolExceptionService.showWarning('Issue call failed', 'You do not have the permission to view the ticket ' + jiraLink, SDLCToolExceptionService.DANGER);
-                } else if (error.status === 404) {
-                    if (error.errorException.opened.$$state.status === 0) {
-                        error.errorException.opened.$$state.value = false;
-                        error.errorException.opened.$$state.status = 1;
+                        SDLCToolExceptionService.showWarning('Issue call failed', 'The issue ' + jiraLink + ' linked to your requirement set does not exist.', SDLCToolExceptionService.DANGER);
                     }
-                    SDLCToolExceptionService.showWarning('Issue call failed', 'The issue ' + jiraLink + ' linked to your requirement set does not exist.', SDLCToolExceptionService.DANGER);
-                }
+                });
             });
         };
     });

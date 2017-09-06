@@ -101,7 +101,7 @@ angular.module('sdlctoolApp')
                 url: '',
                 backupUrl: ''
             });
-            
+
             var fileParam = undefined;
             if (url instanceof String) {
                 fileParam = url;
@@ -398,6 +398,7 @@ angular.module('sdlctoolApp')
             var newStyleAlternativeInstances = {};
 
             angular.forEach(requirementCategories, function (category) {
+                var tickets = [];
                 var lastElementOrder = 0;
                 angular.forEach(category.requirements, function (requirement) {
                     reqCounter++;
@@ -409,7 +410,10 @@ angular.module('sdlctoolApp')
                             if (content.setId !== undefined) {
                                 var split = content.content.split('**\n\n');
                                 // this is to make panels in editor view possible. This is done to better the performance.
-                                newStyleAlternativeInstances[requirement.id][content.id] = { title: split[0] + '**', body: split[1]};
+                                newStyleAlternativeInstances[requirement.id][content.id] = {
+                                    title: split[0] + '**',
+                                    body: split[1]
+                                };
                                 if ($scope.selectedAlternativeSets.indexOf(content.setId) === -1) {
                                     $scope.selectedAlternativeSets.push(content.setId);
                                 }
@@ -454,8 +458,17 @@ angular.module('sdlctoolApp')
 
                     });
 
-                    if(angular.isDefined(requirement.ticket) && !angular.equals(requirement.ticket, '')) {
-                        hasIssueLinks = true;
+                    if (angular.isDefined(requirement.tickets)) {
+                        tickets = requirement.tickets;
+                        if (requirement.tickets.length > 0) {
+                            hasIssueLinks = true;
+                        }
+                    } else {
+                        // push ticket to array if present in the ticket property.
+                        if (angular.isDefined(requirement.ticket) && !angular.equals(requirement.ticket, '')) {
+                            hasIssueLinks = true;
+                            tickets.push(requirement.ticket);
+                        }
                     }
 
                     $scope.requirements.push({
@@ -464,7 +477,7 @@ angular.module('sdlctoolApp')
                         categoryId: category.categoryId,
                         shortName: requirement.shortName,
                         universalId: requirement.universalId,
-                        ticket: requirement.ticket,
+                        tickets: tickets,
                         description: requirement.description,
                         categoryOrder: category.categoryOrder,
                         order: requirement.showOrder,
@@ -551,7 +564,7 @@ angular.module('sdlctoolApp')
             sharedProperties.setProperty(systemSetting);
         };
 
-        $scope.cleanAll = function() {
+        $scope.cleanAll = function () {
             // cleans the check authenticator promise if this one is running.
             authenticatorService.cancelPromises($scope.importProperty.promise);
             $scope.importProperty.spinner.showSpinner = false;

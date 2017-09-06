@@ -5,10 +5,12 @@
         <div>
             <div class="btn-group" data-ng-if="!manageTicketProperty.spinnerProperty.showSpinner">
                 <label id="removeTicket" type="submit" data-ng-disabled="formAddTicket.$invalid" uib-tooltip="Confirm" tooltip-placement="right-bottom"
-                    data-ng-click="doIssueLinking(reqs, removeManualTicket, 1)" class="btn btn-default"><i class="glyphicon glyphicon-ok"></i></label>
-                <label data-ng-click="reqs.linkStatus.enableTooltip = false" uib-tooltip="Cancel" tooltip-placement="right-bottom" class="btn btn-default"><i class="glyphicon glyphicon-remove"></i></label>
+                    data-ng-click="doIssueLinking(reqs, removeManualTicket, reqTicket.url)" class="btn btn-default"><i class="glyphicon glyphicon-ok"></i></label>
+                <label data-ng-click="reqTicket.enableTooltip = false" uib-tooltip="Cancel" tooltip-placement="right-bottom" class="btn btn-default"><i class="glyphicon glyphicon-remove"></i></label>
             </div>
             <div class="btn-group" data-ng-if="manageTicketProperty.spinnerProperty.showSpinner">
                 <label class="btn btn-default"><img src="assets/images/ellipsis.gif" /></label>
             </div>
+        </div>
+    </div>
 </form>
