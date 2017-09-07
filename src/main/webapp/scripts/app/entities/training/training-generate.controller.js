@@ -93,13 +93,13 @@ angular.module('sdlctoolApp')
                 "<h2>John Doe</h2>\n" +
                 "<ul><li>Security Trainer</li>\n" +
                 "<li>Expert in Security</li>\n" +
-                "<li>Elite programmer</li>");
+                "<li>Elite programmer</li></ul>");
         };
 
         var addOutro = function() {
             var intro = trainingRoot.addBranchNode("Outro");
-            intro.addChildNode("CustomSlideNode", "Title", false);
-            intro.addChildNode("CustomSlideNode", "Comic", false);
+            intro.addCustomSlideNode("Title", "<h2>{{ parent.name }}</h2>");
+            intro.addCustomSlideNode("Questions", "<h2>End of {{ training.name }}</h2>Please feel free to ask questions");
         };
 
         var initTree = function() {
