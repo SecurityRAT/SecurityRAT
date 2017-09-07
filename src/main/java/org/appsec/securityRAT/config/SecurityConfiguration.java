@@ -136,6 +136,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		//Security configuration for Form login. The difference is needed because no all ant Matchers are permitted in both form of Authentication. 
 		else if(env.getProperty("authentication.type").equals("FORM")){
 			http
+            .headers().frameOptions().sameOrigin()
+            .and()
 			.csrf()
 			.ignoringAntMatchers("/websocket/**")
 			.and()
