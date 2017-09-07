@@ -468,6 +468,7 @@ angular.module('sdlctoolApp')
                 if($scope.firstTimeDrawingTree) {
                     $('#tree').jstree({
                         'core': {
+                            'force_text': true,
                             'check_callback': function(operation, node, node_parent, node_position, more) {
                                 var operation_allowed = true;
                                 if(operation == "move_node") {
