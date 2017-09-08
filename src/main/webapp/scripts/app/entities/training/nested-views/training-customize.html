@@ -24,15 +24,6 @@
                           data-ng-change="disableSaveSlideButton = false"></textarea>
             </div>
             <div class="form-group">
-                <!--
-                    <div class="checkbox">
-                        <label><input type="checkbox" value="">Permanently link to Security Requirement</label>
-                    </div>
-                -->
-                <div id="customSlideWarning" class="alert alert-warning" style="display: none">
-                    <strong>Warning!</strong> If you change this slide, it will be turned into a
-                    custom slide and won't receive updates!
-                </div>
                 <div id="customSlideWarning" class="alert alert-info" data-ng-hide="selectedNode.content.length > 0">
                     Slides with no content will be excluded from the presentation.
                 </div>
