@@ -5,6 +5,7 @@ angular.module('sdlctoolApp')
         $rootScope.trainingTreeData = [];
         $scope.loadingProgressbar = { hide: false, barValue: 0, intervalPromise: undefined };
         $scope.modalProgressbar = { barValue: 0, intervalPromise: undefined };
+        $scope.treeReady = false;
 
         var onSaveFinished = function (result) {
             $scope.$emit('sdlctoolApp:trainingUpdate', result);
@@ -78,6 +79,7 @@ angular.module('sdlctoolApp')
 
                 $rootScope.trainingTreeData[0] = TrainingTreeNode.JSON_to_JSTree($scope.trainingRoot);
                 $rootScope.displayTree();
+                $scope.treeReady = true;
             });
         };
 
