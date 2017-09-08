@@ -473,9 +473,21 @@ angular.module('sdlctoolApp')
                                 var operation_allowed = true;
                                 if(operation == "move_node") {
                                     // workaround to prevent moving of GeneratedSlideNodes into CategoryNodes
-                                    if(node.type == "GeneratedSlideNode" && node_parent.type == "CategoryNode")
+                                    if(node.type === "GeneratedSlideNode" && node_parent.type === "CategoryNode")
                                         operation_allowed = false;
-                                    if(node.type == "CategoryNode" && node_parent.type == "CategoryNode")
+
+
+                                    /*
+                                       do not allow dragging of database-related nodes
+                                       this prevents
+                                        * that requirementNodes and GeneratedSlideNodes can be dragged into another category
+                                          (which would break the training when updating)
+                                        * that the user changes their order, which would then be detected as a structural
+                                          change which needs to be updated
+                                    */
+                                    if (node.type === "CategoryNode"
+                                        || node.type === "GeneratedSlideNode"
+                                        || node.type === "RequirementNode")
                                         operation_allowed = false;
                                 }
                                 return operation_allowed;
