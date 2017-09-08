@@ -179,6 +179,7 @@ angular.module('sdlctoolApp')
                 addOutro();
                 initTree();
                 $scope.finishProgressbar();
+                $scope.treeGenerated = true;
             }
         };
     });

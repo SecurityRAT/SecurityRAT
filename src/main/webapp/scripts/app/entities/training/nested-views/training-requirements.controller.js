@@ -74,11 +74,12 @@ angular.module('sdlctoolApp')
                 selectedProjectTypes = $rootScope.allProjectTypes;
             }
 
-            if(selectedCollections.length > 0) {
+            if(selectedCollections.length > 0 || selectedProjectTypes > 0) {
                 requestString += "collections=" + selectedCollections;
                 requestString += "&";
                 requestString += "projectTypes=" + selectedProjectTypes;
-            }
+            } // if nothing is selected, return an empty string
+
             return requestString;
         };
 
@@ -308,20 +309,20 @@ angular.module('sdlctoolApp')
         };
 
         $scope.deselectCollections = function(item) {
-            angular.forEach($scope.selectedCollection, function(collection) {
-                angular.forEach(collection.values, function(instance) {
+            for (var i = 0; i < $scope.selectedCollection.length; i++) {
+                var collection = $scope.selectedCollection[i];
+                for (var j = 0; j < collection.values.length; j++) {
+                    var instance = collection.values[j];
                     if(instance.collectionInstanceId === item.id) {
-                        var idx = collection.values.indexOf(instance);
-                        collection.values.splice(idx,1);
+                        collection.values.splice(j,1);
                         if(collection.values.length === 0) {
-                            var id = $scope.selectedCollection.indexOf(collection);
-                            $scope.selectedCollection.splice(id,1);
+                            $scope.selectedCollection.splice(i,1);
                         }
                     }
-                });
-                var id = $scope.training.collections.indexOf(item);
-                $scope.training.collections.splice(id,1);
-            });
+                }
+            }
+            var id = $scope.training.collections.indexOf(item);
+            $scope.training.collections.splice(id,1);
             $scope.updateNumberOfRequirements();
         };
 
