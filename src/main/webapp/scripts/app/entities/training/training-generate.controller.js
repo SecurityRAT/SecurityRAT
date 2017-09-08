@@ -9,6 +9,14 @@ angular.module('sdlctoolApp')
         $scope.progressbar = { hide: true, barValue: 0, intervalPromise: undefined };
         $scope.modalProgressbar = { barValue: 0, intervalPromise: undefined };
 
+        $scope.activeStep = 1;
+        $scope.showStep = function (n) {
+            if($scope.Training.name != null && $scope.Training.name.length > 0) {
+                $scope.activeStep = n;
+            }
+            else $scope.activeStep = 1;
+        };
+
         $scope.startProgressbar = function() {
             $scope.progressbar.intervalPromise = $interval(function() { $scope.progressbar.barValue += 1; }, 100, 95);
             $scope.progressbar.hide = false;

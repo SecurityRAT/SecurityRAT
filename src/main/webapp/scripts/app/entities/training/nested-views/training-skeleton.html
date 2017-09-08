@@ -2,7 +2,13 @@
     <div class="col-md-6">
         <div class="form-group">
             <label for="nameInput">Training Name</label>
-            <input class="form-control" name="name" id="nameInput" data-ng-model="training.name">
+            <input class="form-control" name="name" id="nameInput" required data-ng-model="training.name">
+            <div data-ng-show="!Training.name">
+                <p class="help-block"
+                   data-ng-show="!Training.name">
+                    Training name is required.
+                </p>
+            </div>
         </div>
         <div class="form-group">
             <label for="descriptionInput">Training Description</label>
