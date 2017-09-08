@@ -1,0 +1,31 @@
+{
+    "relationships": [
+        {
+            "relationshipId": 1,
+            "relationshipName": "node",
+            "otherEntityName": "trainingTreeNode",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldId": 1,
+            "fieldName": "name",
+            "fieldType": "String"
+        },
+        {
+            "fieldId": 2,
+            "fieldName": "content",
+            "fieldType": "String"
+        },
+        {
+            "fieldId": 3,
+            "fieldName": "anchor",
+            "fieldType": "Integer"
+        }
+    ],
+    "changelogDate": "20170726093957",
+    "dto": "no",
+    "pagination": "no"
+}

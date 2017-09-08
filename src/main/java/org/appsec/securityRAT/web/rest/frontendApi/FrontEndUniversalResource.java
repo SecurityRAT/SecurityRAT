@@ -1,10 +1,7 @@
 package org.appsec.securityRAT.web.rest.frontendApi;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -271,6 +268,25 @@ public class FrontEndUniversalResource {
         }
         return categoryDTOs;
     }
+
+    @RequestMapping(value="/numberOfRequirements/filter",
+        method=RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public int getNumberOfRequirements(
+        @RequestParam("collections") Long[] collectionIds,
+        @RequestParam("projectTypes") Long[] projectTypeIds) {
+
+        int result = 0;
+        Set<FECategoryDTO> categorySet = new HashSet<>();
+
+        categorySet = getCategoriesWithSkeletons(collectionIds, projectTypeIds);
+        for(FECategoryDTO category : categorySet)
+            result += category.getRequirements().size();
+
+        return result;
+    }
+
     /*
     @RequestMapping(value = "/testOptColumns/{projectTypeId}",
             method = RequestMethod.GET,

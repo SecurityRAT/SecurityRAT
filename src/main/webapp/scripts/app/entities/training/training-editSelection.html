@@ -1,0 +1,17 @@
+<jh-alert></jh-alert>
+<form name="editForm" role="form" novalidate ng-submit="save()">
+    <h2 id="page-title" class="page-header">Edit Training Selection</h2>
+
+    <h3>Selected Specific Security Requirements</h3>
+    <div class="container" style="padding-top: 30px;" ui-view="requirements"></div>
+
+    <h3>Optional Columns to Include per Requirement</h3>
+    <div class="container-fluid" style="padding-top: 30px;" ui-view="optcolumns"></div>
+
+    <div style="padding: 15px; text-align: right;">
+        <button type="button" class="btn btn-default" data-ng-click="cancel()">
+            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span></button>
+        <button type="submit" class="btn btn-warning">
+            <span class="glyphicon glyphicon-repeat"></span>&nbsp;<span>Regenerate</span></button>
+    </div>
+</form>

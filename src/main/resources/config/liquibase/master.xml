@@ -25,10 +25,21 @@
     <include file="classpath:config/liquibase/changelog/20151109_add_frontenduser.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20151207-changelengths.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20160205_remove_auditing.xml" relativeToChangelogFile="false" />
-    
+
     <!-- jmboldayamdjeu -->
-	<include file="classpath:config/liquibase/changelog/20160329_add_constant_configuration.xml" relativeToChangelogFile="false" />
-	<include file="classpath:config/liquibase/changelog/20160329_update_constant_configuration.xml" relativeToChangelogFile="false" />
-	<include file="classpath:config/liquibase/changelog/20160421_add_constant_value.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20160329_add_constant_configuration.xml" relativeToChangelogFile="false" />
+    <include file="classpath:config/liquibase/changelog/20160329_update_constant_configuration.xml" relativeToChangelogFile="false" />
+    <include file="classpath:config/liquibase/changelog/20160421_add_constant_value.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20170308_add_summaryconstant.xml" relativeToChangelogFile="false"/>
+
+    <!-- pzschumme -->
+    <include file="classpath:config/liquibase/changelog/20170613_add_trainer.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170607075959_added_entity_SlideTemplate.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170615124305_added_entity_Training.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170615135611_added_entity_TrainingTreeNode.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170726093957_added_entity_TrainingCustomSlideNode.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170727160224_added_entity_TrainingBranchNode.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170728121233_added_entity_TrainingCategoryNode.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170728141852_added_entity_TrainingRequirementNode.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170729152548_added_entity_TrainingGeneratedSlideNode.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>

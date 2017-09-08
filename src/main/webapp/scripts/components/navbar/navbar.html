@@ -21,6 +21,25 @@
                         <span>Editor</span>
                     </a>
                 </li>
+                <li ui-sref-active="{active: $state.includes('entity')}" data-ng-switch-when="true" has-any-role="ROLE_TRAINER" class="dropdown pointer">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="">
+                                <span>
+                                    <span class="glyphicon glyphicon-education"></span>
+                                    <span class="hidden-tablet">
+                                        Trainings
+                                    </span>
+                                    <b class="caret"></b>
+                                </span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><strong>Manage</strong></li>
+                        <li ui-sref-active="active" ><a ui-sref="training"><span class="glyphicon glyphicon-asterisk"></span>
+                            &#xA0;<span >Trainings</span></a></li>
+                        <li ui-sref-active="active" ><a ui-sref="slideTemplate"><span class="glyphicon glyphicon-asterisk"></span>
+                            &#xA0;<span >Slide Templates</span></a></li>
+                    </ul>
+                </li>
+
                 <li ui-sref-active="{active: $state.includes('febrowse')}" data-ng-switch-when="true" class="dropdown pointer">
                    <a class="dropdown-toggle" data-toggle="dropdown" href="">
                                 <span>
@@ -81,7 +100,6 @@
                         <li><strong>Implementation Types</strong></li>
                         <li ui-sref-active="active" ><a ui-sref="projectType"><span class="glyphicon glyphicon-asterisk"></span>
                         &#xA0;<span >Implementation Types</span></a></li>
-
                         <!-- JHipster will add entities to the menu here -->
                     </ul>
                 </li>

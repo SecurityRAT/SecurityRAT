@@ -105,6 +105,8 @@ public class DatabaseConfiguration implements EnvironmentAware {
 
     @Bean
     public Hibernate4Module hibernate4Module() {
-        return new Hibernate4Module();
+        Hibernate4Module hm = new Hibernate4Module();
+        hm.disable(Hibernate4Module.Feature.USE_TRANSIENT_ANNOTATION);
+        return hm;
     }
 }

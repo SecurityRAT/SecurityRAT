@@ -1,0 +1,22 @@
+{
+    "relationships": [
+        {
+            "relationshipId": 1,
+            "relationshipName": "node",
+            "otherEntityName": "trainingTreeNode",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipId": 2,
+            "relationshipName": "requirementSkeleton",
+            "otherEntityName": "requirementSkeleton",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [],
+    "changelogDate": "20170728141852",
+    "dto": "no",
+    "pagination": "no"
+}

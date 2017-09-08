@@ -2,8 +2,11 @@ package org.appsec.securityRAT.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 
+import org.appsec.securityRAT.domain.OptColumn;
 import org.appsec.securityRAT.domain.OptColumnContent;
+import org.appsec.securityRAT.domain.RequirementSkeleton;
 import org.appsec.securityRAT.repository.OptColumnContentRepository;
+import org.appsec.securityRAT.repository.OptColumnRepository;
 import org.appsec.securityRAT.repository.ProjectTypeRepository;
 import org.appsec.securityRAT.repository.RequirementSkeletonRepository;
 import org.appsec.securityRAT.repository.search.OptColumnContentSearchRepository;
@@ -48,6 +51,8 @@ public class OptColumnContentResource {
 
     @Inject
     private ProjectTypeRepository projectTypeRepository;
+
+    @Inject OptColumnRepository optColumnRepository;
 
     /**
      * POST  /optColumnContents -> Create a new optColumnContent.
@@ -148,6 +153,30 @@ public class OptColumnContentResource {
     		@RequestParam("projectTypeId") Long projectTypeId,
     		@RequestParam("requirementId") Long requirementSkeletonId) {
     	return optColumnContentRepository.findOptColumnsForRequirementIdAndProjectTypeId(requirementSkeletonId, projectTypeId);
+    }
+
+    /**
+     * GET /optColumnContents/byOptColumnAndRequirement/{optColumnId}/{requirementId}
+     * returns the optionColumnContent for a specific optColumn id and requirementSkeleton id
+     *
+     */
+    @RequestMapping(value="/optColumnContents/byOptColumnAndRequirement/{optColumnId}/{requirementId}",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    @Transactional
+    public OptColumnContent getOptColumnContentByOptColumnAndRequirement(
+        @PathVariable("optColumnId") Long optColumnId,
+        @PathVariable("requirementId") Long requirementId) {
+        log.debug("REST request to get OptColumnContent with RequirementSkeleton id : {} and OptColumn id : {}", requirementId, optColumnId);
+        OptColumn optColumn = optColumnRepository.findOne(optColumnId);
+        RequirementSkeleton skeleton = requirementSkeletonRepository.findOne(requirementId);
+        List<OptColumnContent> result = optColumnContentRepository.getOptColumnContentByOptColumnAndRequirement(skeleton, optColumn);
+        if(result != null && result.size() > 0) {
+            return result.get(0);
+        } else {
+            return null;
+        }
     }
 
 

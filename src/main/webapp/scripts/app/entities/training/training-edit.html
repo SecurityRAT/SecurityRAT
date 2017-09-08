@@ -1,0 +1,15 @@
+<jh-alert></jh-alert>
+<form name="editForm" role="form" novalidate ng-submit="save()">
+    <h2 id="page-title" class="page-header">Edit Training</h2>
+
+    <div id="skeleton" class="tab-pane fade in active">
+        <div class="container-fluid" style="padding-top: 30px;" ui-view="skeleton"></div>
+    </div>
+
+    <div style="padding: 15px; text-align: right;">
+        <button type="button" class="btn btn-default" data-ng-click="cancel()">
+            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span></button>
+        <button type="submit" class="btn btn-primary" data-ng-disabled="editForm.$invalid">
+            <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Save Training</span></button>
+    </div>
+</form>

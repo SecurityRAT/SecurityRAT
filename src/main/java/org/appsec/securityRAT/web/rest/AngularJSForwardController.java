@@ -14,17 +14,18 @@ import org.slf4j.LoggerFactory;
 
 @RestController
 public class AngularJSForwardController {
-	
+
 	@Inject
 	private UserService userService;
 
-	
+
     private final Logger log = LoggerFactory.getLogger(AngularJSForwardController.class);
 
     @RequestMapping(value = {"/audits*","/configuration*","/docs*","/apphealth*","/logs*","/appmetrics*",
                              "/error*","/accessdenied*", "/requirements","/collection*/**","/tag*/**","req*/**",
                              "opt*/**","status*/**","alternative*/**","projectTypes*/**", "/import*","/export*",
-                             "/config*/**", "/user*/**", "/authorities*", "/login*", "/password*", "/reset*", "/logout*", "/register*", "/ferequirement*/**", "/presentation"},
+                             "/config*/**", "/user*/**", "/authorities*", "/login*", "/password*", "/reset*", "/logout*",
+                             "/register*", "/ferequirement*/**", "/presentation", "/training*/**", "/slideTemplate*/**"},
                               method = RequestMethod.GET)
     public void pageForward(HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
     	String[] onlyForm = { "/login*", "/password*", "/reset*", "/logout*", "/register*"};
