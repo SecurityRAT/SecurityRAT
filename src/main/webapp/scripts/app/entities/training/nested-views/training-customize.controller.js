@@ -80,6 +80,8 @@ angular.module('sdlctoolApp')
             // update parent
             var parent = new TrainingTreeNode();
             parent.fromJSON(new_parent);
+            if(node.data == null)
+                node.data = {};
             node.data.parent_id = parent;
 
 
