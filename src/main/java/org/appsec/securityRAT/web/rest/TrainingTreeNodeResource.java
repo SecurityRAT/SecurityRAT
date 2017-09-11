@@ -824,7 +824,10 @@ public class TrainingTreeNodeResource {
             // update sort_order in database
             int new_sortOrder = 0;
             for(TrainingTreeNode child : childrenNewOrder) {
-                if(child.getSort_order() != new_sortOrder) {
+                // the new sort_order is smaller than the old, order needs to be corrected
+                // this way jumps between sort_orders (0->2->3->5) can pass without update popup
+                // while (0->2->1) will not pass
+                if(child.getSort_order() < new_sortOrder) {
                     hasUpdates = true;
                     if(readOnly)
                         return true;
@@ -833,7 +836,7 @@ public class TrainingTreeNodeResource {
                         trainingTreeNodeRepository.save(child);
                     }
                 }
-                new_sortOrder++;
+                new_sortOrder = child.getSort_order() + 1;
             }
 
 
