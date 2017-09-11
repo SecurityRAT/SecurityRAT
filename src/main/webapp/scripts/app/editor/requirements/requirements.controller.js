@@ -76,10 +76,14 @@ angular.module('sdlctoolApp')
                 counts: 0
             },
             exported: false,
-            statColumnChanged: false,
+            statColumnChanged: false, // indicates whether a status column value has been changed.
             crCounts: 0,
             defaultLabelFilterObject: {
                 buttonDefaultText: 'Filter'
+            },
+            newColumn: {
+                present: false,
+                alertMessages: []
             }
         };
         $scope.selectOptCompare = {
@@ -221,6 +225,10 @@ angular.module('sdlctoolApp')
             ProgressBar.finishProgressbar($scope.progressbar);
         };
 
+        $scope.closeNewColumAlert = function (index) {
+            $scope.requirementProperties.newColumn.alertMessages.splice(index, 1);
+        };
+
         $scope.init = function () {
             $scope.onRouteChangeOff = $scope.$on('$locationChangeStart', $scope.routeChange);
             // initialise the jiraStatus object;
@@ -269,6 +277,7 @@ angular.module('sdlctoolApp')
                 $scope.onTimeout();
                 $scope.promiseForStorage = $interval($scope.onTimeout, 60000);
                 $scope.updateRequirements();
+                $scope.getOptandStatusColumns(true);
                 $uibModalStack.dismissAll();
                 SDLCToolExceptionService.showWarning('Import successful', 'The Secure SDLC artifact ' + $scope.systemSettings.name + ' was successfully imported.', SDLCToolExceptionService.SUCCESS);
             } else {
@@ -280,11 +289,12 @@ angular.module('sdlctoolApp')
                 //    $scope.getAlternativeSets();
                 //} else {
                 $scope.getAlternativeSets();
+                $scope.getOptandStatusColumns(false);
                 $scope.alternativeSets = $scope.systemSettings.alternativeSets;
                 $scope.requirementProperties.hasIssueLinks = $scope.systemSettings.hasIssueLinks;
                 //}
             }
-            $scope.getOptandStatusColumns();
+            // $scope.getOptandStatusColumns();
             $scope.getTagCategories();
         };
 
@@ -456,7 +466,7 @@ angular.module('sdlctoolApp')
                 function () {});
         };
 
-        $scope.getOptandStatusColumns = function () {
+        $scope.getOptandStatusColumns = function (fromImport) {
 
             angular.forEach($scope.systemSettings, function (object) {
                 angular.forEach(object, function (obj) {
@@ -473,18 +483,21 @@ angular.module('sdlctoolApp')
                                 });
                             });
                         } else if (key === 'statsColumn') {
-                            angular.forEach(value, function (statusColumn) {
-                                if (statusColumn.isEnum) {
-                                    statusColumn.values = $filter('orderBy')(statusColumn.values, 'showOrder');
-                                }
-                            });
+                            var absentStatusColumns = [];
                             $scope.statusColumns = value;
+                            // angular.forEach(value, function (statusColumn) {
+                            //     if (statusColumn.isEnum) {
+                            //         statusColumn.values = $filter('orderBy')(statusColumn.values, 'showOrder');
+                            //     }
+                            // });
+                            var newColumnAlertMessage = 'The status column(s) ';
                             angular.forEach($scope.statusColumns, function (status) {
                                 // status.description = '<p class=\'myTooltip\'><span style=\'color:yellow;\'>Description:</span> ' + status.description + '</p>';
                                 status.description = '<strong>' + status.description + '</strong>';
                                 var statColumnTooltip = '<p class=\'myTooltip\'><span style=\'color:yellow;\'>Possible values:</span><BR>';
                                 if (status.isEnum) {
                                     $scope.selectedStatusColumn[status.id] = [];
+                                    status.values = $filter('orderBy')(status.values, 'showOrder');
                                     angular.forEach(status.values, function (value) {
                                         statColumnTooltip += '<span><b style=\'font-size:13px;color:#cc6600;\'>' + value.name + ':</b> ' + value.description + '<BR></span>';
                                     });
@@ -494,12 +507,39 @@ angular.module('sdlctoolApp')
                                         tooltip: $sce.trustAsHtml(statColumnTooltip)
                                     });
                                 }
+
+                                if (fromImport && $filter('filter')($scope.requirements[0].statusColumns, {
+                                        id: status.id
+                                    }).length === 0) {
+                                    absentStatusColumns.push(status);
+                                    $scope.requirementProperties.newColumn.present = true;
+                                }
+
                                 angular.extend(status, {
                                     statColumnLabelText: {
                                         buttonDefaultText: status.name
                                     }
                                 });
                             });
+
+                            // add this statusColumn to the import requirement set, if this one was not found.
+                            if (absentStatusColumns.length > 0) {
+                                console.log('absent status columns', $scope.requirementProperties.newColumn.alertMessages);
+                                var statusColumnsValues = buildStatusColumns(absentStatusColumns);
+                                angular.forEach($scope.requirements, function (req) {
+                                    angular.copy(req.statusColumns.concat(statusColumnsValues), req.statusColumns);
+                                    // req.statusColumns = req.statusColumns.concat(statusColumnsValues);
+                                });
+                                $scope.requirementProperties.requirementsEdited = true;
+                                var absentStatusColumnNames = [];
+                                for (var i = 0; i < absentStatusColumns.length; i++) {
+                                    absentStatusColumnNames.push(absentStatusColumns[i].name);
+
+                                }
+                                newColumnAlertMessage += '**' + absentStatusColumnNames.toString() + '** was/were added. Please make you save this set of requirements.';
+                                $scope.requirementProperties.newColumn.alertMessages.push(newColumnAlertMessage);
+
+                            }
                         }
                     });
                 });
@@ -999,12 +1039,13 @@ angular.module('sdlctoolApp')
         };
 
         $scope.buildRequirements = function () {
+            // this is the same for every requirement. It can therefore be called once.
+            var statusColumnsValues = buildStatusColumns($scope.statusColumns);
+
             angular.forEach($scope.requirementSkeletons, function (requirementCategory) {
                 var lastElementOrder = 0;
                 angular.forEach(requirementCategory.requirements, function (requirement) {
                     var values = buildReqOptContents(requirement.optionColumnContents);
-
-                    var statusColumnsValues = buildStatusColumns($scope.statusColumns);
 
                     $scope.fillEmptyOpts(values, $scope.optColumns);
                     $scope.requirements.push({
@@ -1024,7 +1065,7 @@ angular.module('sdlctoolApp')
                             link: true,
                             ticketStatus: []
                         },
-                        statusColumns: statusColumnsValues,
+                        statusColumns: angular.copy(statusColumnsValues, []),
                         selected: false
                     });
 
@@ -1241,10 +1282,12 @@ angular.module('sdlctoolApp')
 
         $scope.buildUpdatedRequirements = function (skeletons) {
             var updatedRequirements = [];
+            // this is the same for every requirement. It can therefore be called once.
+            var statusColumnsValues = buildStatusColumns($scope.statusColumns);
+
             angular.forEach(skeletons, function (requirementCategory) {
                 angular.forEach(requirementCategory.requirements, function (requirement) {
                     var values = buildReqOptContents(requirement.optionColumnContents);
-                    var statusColumnsValues = buildStatusColumns($scope.statusColumns);
                     $scope.fillEmptyOpts(values, $scope.optColumns);
                     updatedRequirements.push({
                         id: requirement.id,
@@ -1263,13 +1306,12 @@ angular.module('sdlctoolApp')
                             link: true,
                             ticketStatus: []
                         },
-                        statusColumns: statusColumnsValues,
+                        statusColumns: angular.copy(statusColumnsValues, []),
                         selected: false,
                         isNew: false,
                         isOld: false,
                         applyUpdate: ' '
                     });
-
                 });
 
             });
@@ -1308,6 +1350,8 @@ angular.module('sdlctoolApp')
             $scope.newRequirements = [];
             var onlyNewRequirements = [];
             // $scope.oldRequirements = [];
+            var newOptColumnMessage = 'The optional column(s) ';
+            var newOptColumns = [];
             angular.forEach(updatedRequirements, function (newRequirement) {
                 if (($filter('filter')($scope.filterCategory, {
                         id: newRequirement.categoryId
@@ -1356,8 +1400,10 @@ angular.module('sdlctoolApp')
                         }
                         //search for new changes in optionColumns
                         angular.forEach(newRequirement.optionColumns, function (newRequirementOptColumns) {
+                            var optColumnFound = false;
                             for (var j = 0; j < oldRequirement.optionColumns.length; j++) {
                                 if (oldRequirement.optionColumns[j].showOrder === newRequirementOptColumns.showOrder) {
+                                    optColumnFound = true;
                                     var oldRequirementOptColumns = oldRequirement.optionColumns[j];
                                     angular.forEach(newRequirementOptColumns.content, function (newRequirementContent) {
                                         angular.forEach(oldRequirementOptColumns.content, function (oldRequirementContent) {
@@ -1387,6 +1433,14 @@ angular.module('sdlctoolApp')
                                     });
                                     break;
                                 }
+                            }
+                            if (!optColumnFound) {
+                                if ($filter('filter')(newOptColumns, newRequirementOptColumns.name).length === 0) {
+                                    newOptColumns.push(newRequirementOptColumns.name);
+                                }
+                                oldRequirement.optionColumns.push(newRequirementOptColumns);
+                                $scope.requirementProperties.requirementsEdited = true;
+                                $scope.requirementProperties.newColumn.present = true;
                             }
                         });
                         // }
@@ -1433,6 +1487,12 @@ angular.module('sdlctoolApp')
                     }
                 }
             });
+            if (newOptColumns.length > 0) {
+                newOptColumnMessage += '**' + newOptColumns.toString() + '** was/were added. Please make you save this set of requirements.';
+                $scope.requirementProperties.newColumn.alertMessages.push(newOptColumnMessage);
+                console.log('absent opt columns', $scope.requirementProperties.newColumn.alertMessages);
+            }
+
             //checks if an old requirement was removed, so we need to reiterate through the new requirements
             $scope.deletedReqs = [];
             angular.forEach($scope.requirements, function (oldRequirement) {
@@ -1547,8 +1607,11 @@ angular.module('sdlctoolApp')
             if ($scope.deletedReqs.length > 0) {
                 angular.forEach($scope.deletedReqs, function (deleteRequirement) {
                     var idx = $scope.requirements.indexOf(deleteRequirement);
-                    $scope.requirements[idx].isOld = true;
-                    $scope.requirements[idx].updateTooltip = 'Obsolete requirement in your YAML file';
+                    var requirement = $filter('filter')($scope.requirements, {id: deleteRequirement.id}).pop();
+                    console.log(requirement);
+                    requirement.isOld = true;
+                    requirement.toBeRemoved = true;
+                    requirement.updateTooltip = 'Obsolete requirement in your YAML file';
                 });
             }
             // don't check for $scope.deletedCounter === 0 since these obsolete requirements are not deleted. The choice is left in the hands of the user.
@@ -1598,22 +1661,25 @@ angular.module('sdlctoolApp')
                 }
                 //keep new one
                 if (requirement.id === reqId && keepNewOne && !requirement.isNew) {
-                    $scope.requirements.splice(i, 1);
-                    if (!decisionMade) {
-                        $scope.updatesCounter--;
+                    if (angular.isUndefined(requirement.toBeRemoved)) {
+                        $scope.requirements.splice(i, 1);
+                        if (!decisionMade) {
+                            $scope.updatesCounter--;
+                        }
+                        $scope.requirementProperties.requirementsEdited = true;
+                        decisionMade = true;
                     }
-                    $scope.requirementProperties.requirementsEdited = true;
-                    decisionMade = true;
                     //keep old one
-                } else if (requirement.id === reqId && !keepNewOne && requirement.isNew) {
+                } else if (requirement.id === reqId && !keepNewOne && (requirement.isNew || requirement.toBeRemoved)) {
                     $scope.requirements.splice(i, 1);
                     if (!decisionMade) {
                         $scope.updatesCounter--;
                     }
                     decisionMade = true;
                     //remove green background from new one
-                } else if ((requirement.id === reqId) && (keepNewOne) && (requirement.isNew)) {
+                } else if ((requirement.id === reqId) && (keepNewOne) && (requirement.isNew || requirement.toBeRemoved)) {
                     requirement.isNew = false;
+                    requirement.toBeRemoved = false;
                     requirement.needsUpdate = false;
                     requirement.applyUpdate = ' ';
                     if (!decisionMade) {
@@ -2085,9 +2151,11 @@ angular.module('sdlctoolApp')
                 if ($scope.jiraStatus.allStatus.length > 0) {
                     angular.forEach(jiraStatus.allStatus, function (newStatus) {
                         // eliminates duplicates.
-                        if($filter('filter')($scope.jiraStatus.allStatus, {name : newStatus.name}).length === 0) {
-                                $scope.jiraStatus.allStatus.push(newStatus);
-                            }
+                        if ($filter('filter')($scope.jiraStatus.allStatus, {
+                                name: newStatus.name
+                            }).length === 0) {
+                            $scope.jiraStatus.allStatus.push(newStatus);
+                        }
                     });
                 } else {
                     $scope.jiraStatus.allStatus = jiraStatus.allStatus;

@@ -553,9 +553,19 @@ angular.module('sdlctoolApp')
                     statsColumn: statsColumn
                 });
             });
+            var ticket = system.ticket;
+            // in case a yaml file was manual uploaded to a JIRA ticket without giving the ticket URL in this file.
+            if((angular.isUndefined(ticket) || (angular.isDefined(ticket) && $.isEmptyObject(ticket))) && $scope.status.jira && angular.isDefined($scope.jiraLink.url)) {
+                ticket = { 
+                    url: $scope.jiraLink.url,
+                    key: Helper.buildJiraUrl($scope.jiraLink.url.split('/')).ticketKey[0]
+                };
+            }
+
+            console.log('ticket', ticket);
             var systemSetting = {
                 name: system.name,
-                ticket: system.ticket,
+                ticket: ticket,
                 generatedOn: system.generatedOn,
                 lastChanged: system.lastChanged,
                 project: projecttypes,

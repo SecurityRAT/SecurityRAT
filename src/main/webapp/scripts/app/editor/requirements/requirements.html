@@ -189,7 +189,7 @@
                 <ul class="dropdown-menu animate-dropdown" uib-dropdown-menu role="menu" aria-labelledby="selectDropdown">
                     <!-- show the link with a mouse over a ticket must first be created -->
                     <li role="menuitem" class="animate-hide" data-ng-hide="withselectedDropdown.toggleExcel">
-                        <a href="" data-ng-click="createTicketReqs()" confirm-if="checkExistingTickets()" confirm="The requirements {{existingTickets}} already have tickets. Are you sure you want to overwrite them?"
+                        <a href="" data-ng-click="createTicketReqs()" confirm-if="checkExistingTickets()" confirm="The requirement(s) {{existingTickets}} already has/have tickets. Are you sure you want to add a new ticket to it/them?"
                             data-ng-if="(requirements | filter:{selected: true}).length && ticket.url != null">
                             <img src="assets/images/jira-icon.png" width="16" height="16" /> Create JIRA tickets</a>
                         <a href="" data-ng-if="(requirements | filter:{selected: true}).length == 0 || ticket.url == null && (requirements | filter:{selected: true}).length">
@@ -235,7 +235,11 @@
         <uib-progressbar class="progress-striped active" value="progressbar.barValue" type="success" data-ng-hide="progressbar.hide">{{progressbar.barValue}}%</uib-progressbar>
     </div>
     <div>&nbsp;</div>
+
     <div class="container-fluid" data-ng-show="progressbar.showContent">
+        <div uib-alert data-ng-repeat="alertmessage in requirementProperties.newColumn.alertMessages" class="alert alert-warning" close="closeNewColumAlert($index)">
+            <span data-ng-bind-html="alertmessage | trusted"></span>
+        </div>
         <div class="table-responsive myMinHeight">
             <table id="requirementTable" class="table table-hover" infinite-scroll="loadMore()" infinite-scroll-distance="1">
                 <thead>
@@ -243,7 +247,7 @@
                         <th data-ng-if="updatedReqs">Updates</th>
                         <th class="text-center">Short Name <span data-ng-if="textFilters.shortName" style="color: red" class="glyphicon glyphicon-filter"></span></th>
                         <th class="text-center">Description <span data-ng-if="textFilters.description" style="color: red" class="glyphicon glyphicon-filter"></span></th>
-                        <th class="text-center" data-ng-repeat="opt in optColumns | orderBy:'showOrder'" data-ng-class="{'col-md-2': opt.selectedAlternativeSets.length > 0}">
+                        <th class="text-center" data-ng-repeat="opt in optColumns | orderBy:'showOrder'" data-ng-class="{'col-md-2': opt.selectedAlternativeSets.length > 1}">
                             <span data-ng-if="!opt.alternativeSets  && optToHide.indexOf(opt.id) == -1">
                                 <span data-ng-show="optToHide.indexOf(opt.id) == -1" uib-tooltip-html="opt.description" tooltip-append-to-body="true">{{opt.name}}</span>
                             <span class="glyphicon glyphicon-eye-close positionChevron" data-ng-if="optToHide.indexOf(opt.id) == -1" uib-tooltip="Hide {{opt.name}}"
@@ -273,7 +277,7 @@
                             </span>
                             <span data-ng-if="status.isEnum">
                                 <span uib-tooltip-html="status.description"  tooltip-append-to-body="true">{{status.name}}</span>
-                                <span data-ng-if="selectedStatusColumn[status.id].length > 0" style="color: red" class="glyphicon glyphicon-filter"></span>
+                            <span data-ng-if="selectedStatusColumn[status.id].length > 0" style="color: red" class="glyphicon glyphicon-filter"></span>
                             </span>
 
                         </th>
@@ -292,7 +296,7 @@
                             <input placeholder="Filter" type="text" class="form-control" data-ng-model="textFilters.optColumns[opt.id]" data-ng-if="optToHide.indexOf(opt.id) == -1"
                             />
                         </td>
-                        <td class="text-center" data-ng-class="{'col-md-2': selectedStatusColumn[status.id].length > 0}" data-ng-repeat="status in statusColumns | orderBy:'showOrder'">
+                        <td class="text-center" data-ng-class="{'col-md-2': selectedStatusColumn[status.id].length > 1}" data-ng-repeat="status in statusColumns | orderBy:'showOrder'">
                             <div data-ng-if="status.isEnum">
                                 <div data-ng-repeat="statTooltip in htmlTooltips.statusColumnTooltips">
                                     <div data-ng-if="status.id == statTooltip.statId" ng-dropdown-multiselect="" options="status.values" selected-model="selectedStatusColumn[status.id]"
@@ -307,7 +311,7 @@
                             </div>
 
                         </td>
-                        <td class="text-center" data-ng-class="{'col-md-2': jiraStatus.selectedStatus.length > 0}" data-ng-if="ticket.url" id="StatusFilter">
+                        <td class="text-center" data-ng-class="{'col-md-2': jiraStatus.selectedStatus.length > 1}" data-ng-if="ticket.url" id="StatusFilter">
                             <div data-ng-dropdown-multiselect="" options="jiraStatus.allStatus" selected-model="jiraStatus.selectedStatus" extra-settings="selectedJiraStatusSettings"
                                 translation-texts="requirementProperties.defaultLabelFilterObject" disabled="isStatusArrayEmpty()">
                             </div>
@@ -333,8 +337,8 @@
                     </tr>
                     <tr class="animate-repeat" data-ng-repeat="reqs in (filteredReqs = (requirements | orderBy:['categoryOrder','order'] | filterUpdates : updatedReqs | filterByTags : filteredRequirementsByTags | filter: {category: category.label, description: textFilters.description, shortName: textFilters.shortName} | filterByStatus : selectedStatusColumn: statusColumns | filterTicketStatus : jiraStatus.selectedStatus | filter:search | filterOptColumnByText: textFilters.optColumns : optColumns | filterStatusColumnByText: textFilters.statusColumns : statusColumns))"
                         uib-tooltip="{{reqs.updateTooltip}}" data-ng-style="updatedReqs && reqs.shortName!==filteredReqs[$index+1].shortName && {'border-bottom':'solid 3px'}">
-                        <td data-ng-if="updatedReqs && !reqs.isNew">{{reqs.applyUpdate}}</td>
-                        <td data-ng-if="updatedReqs && reqs.isNew">
+                        <td data-ng-if="updatedReqs && (!reqs.isNew && !reqs.toBeRemoved)">{{reqs.applyUpdate}}</td>
+                        <td data-ng-if="updatedReqs && (reqs.toBeRemoved)">
                             <div>
                                 <button id="acceptReq" class="btn btn-success" data-ng-click="applyChanges(reqs.id, true)" uib-tooltip="Accept the change and keep the new requirement">
                                     <span class="glyphicon glyphicon-ok"></span>
