@@ -524,7 +524,6 @@ angular.module('sdlctoolApp')
 
                             // add this statusColumn to the import requirement set, if this one was not found.
                             if (absentStatusColumns.length > 0) {
-                                console.log('absent status columns', $scope.requirementProperties.newColumn.alertMessages);
                                 var statusColumnsValues = buildStatusColumns(absentStatusColumns);
                                 angular.forEach($scope.requirements, function (req) {
                                     angular.copy(req.statusColumns.concat(statusColumnsValues), req.statusColumns);
@@ -1490,7 +1489,6 @@ angular.module('sdlctoolApp')
             if (newOptColumns.length > 0) {
                 newOptColumnMessage += '**' + newOptColumns.toString() + '** was/were added. Please make you save this set of requirements.';
                 $scope.requirementProperties.newColumn.alertMessages.push(newOptColumnMessage);
-                console.log('absent opt columns', $scope.requirementProperties.newColumn.alertMessages);
             }
 
             //checks if an old requirement was removed, so we need to reiterate through the new requirements
@@ -1605,13 +1603,22 @@ angular.module('sdlctoolApp')
             // console.log($filter('orderBy')($scope.requirements, ['categoryOrder', 'order']));
             var message = '';
             if ($scope.deletedReqs.length > 0) {
+                // must be done since the decision is now made by the user.
+                $scope.updatesCounter += $scope.deletedReqs.length;
                 angular.forEach($scope.deletedReqs, function (deleteRequirement) {
-                    var idx = $scope.requirements.indexOf(deleteRequirement);
-                    var requirement = $filter('filter')($scope.requirements, {id: deleteRequirement.id}).pop();
-                    console.log(requirement);
-                    requirement.isOld = true;
-                    requirement.toBeRemoved = true;
-                    requirement.updateTooltip = 'Obsolete requirement in your YAML file';
+                    // var idx = $scope.requirements.indexOf(deleteRequirement);
+                    for (var k = 0; k < $scope.requirements.length; k++) {
+                        var requirement = $scope.requirements[k];
+                        if(requirement.id === deleteRequirement.id) {
+                            requirement.isOld = true;
+                            requirement.toBeRemoved = true;
+                            requirement.needsUpdate = true;
+                            requirement.updateTooltip = 'Obsolete requirement in your YAML file';
+                            break;
+                        }
+                        
+                    }
+                    
                 });
             }
             // don't check for $scope.deletedCounter === 0 since these obsolete requirements are not deleted. The choice is left in the hands of the user.
@@ -1620,10 +1627,10 @@ angular.module('sdlctoolApp')
             } else if ($scope.updatesCounter > 0) {
 
                 message = 'Summary:<ul><li>' + $scope.updateCounter + ' requirement(s) updates were found</li><li> ' + $scope.newCounter + ' new requirement(s) were found</li><li> ' + $scope.deletedReqs.length + ' removable requirement(s) were found.</li></ul><BR>You can now review the updates. ' +
-                    'The old requirement is marked in <span style=\'background-color:rgb(255, 204, 204);\'>light red</span> and the new requirement in <span style=\'background-color:rgb(204, 255, 204);\'>light green</span>' +
+                    'The obsolete requirement is marked in <span style=\'background-color:rgb(255, 204, 204);\'>light red</span> and the new requirement in <span style=\'background-color:rgb(204, 255, 204);\'>light green</span>' +
                     ' Please accept the change by clicking on the <button class=\'btn btn-success\'>' +
                     '<span class=\'glyphicon glyphicon-ok\'></span></button> button to keep the new requirement or by clicking on the <button class=\'btn btn-danger\'><span class=\'glyphicon glyphicon-remove\'></span></button> ' +
-                    'to keep the old requirement.';
+                    'to keep the obsolete requirement.';
                 SDLCToolExceptionService.showWarning('Update requirements successful', message, SDLCToolExceptionService.INFO);
             }
             // console.log("updates available clicked");
@@ -1660,15 +1667,13 @@ angular.module('sdlctoolApp')
                     });
                 }
                 //keep new one
-                if (requirement.id === reqId && keepNewOne && !requirement.isNew) {
-                    if (angular.isUndefined(requirement.toBeRemoved)) {
+                if (requirement.id === reqId && keepNewOne && !requirement.isNew && angular.isUndefined(requirement.toBeRemoved)) {
                         $scope.requirements.splice(i, 1);
                         if (!decisionMade) {
                             $scope.updatesCounter--;
                         }
                         $scope.requirementProperties.requirementsEdited = true;
                         decisionMade = true;
-                    }
                     //keep old one
                 } else if (requirement.id === reqId && !keepNewOne && (requirement.isNew || requirement.toBeRemoved)) {
                     $scope.requirements.splice(i, 1);
@@ -1680,6 +1685,7 @@ angular.module('sdlctoolApp')
                 } else if ((requirement.id === reqId) && (keepNewOne) && (requirement.isNew || requirement.toBeRemoved)) {
                     requirement.isNew = false;
                     requirement.toBeRemoved = false;
+                    requirement.isOld = false; // for requirement with toBeRemoved == true
                     requirement.needsUpdate = false;
                     requirement.applyUpdate = ' ';
                     if (!decisionMade) {
@@ -1689,6 +1695,7 @@ angular.module('sdlctoolApp')
                     //remove red background from old one
                 } else if (requirement.id === reqId && !keepNewOne && !requirement.isNew) {
                     requirement.isOld = false;
+                    requirement.toBeRemoved = false; // for requirement with toBeRemoved == true
                     requirement.needsUpdate = false;
                 }
             }

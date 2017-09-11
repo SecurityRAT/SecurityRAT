@@ -237,7 +237,8 @@
     <div>&nbsp;</div>
 
     <div class="container-fluid" data-ng-show="progressbar.showContent">
-        <div uib-alert data-ng-repeat="alertmessage in requirementProperties.newColumn.alertMessages" class="alert alert-warning" close="closeNewColumAlert($index)">
+        <div uib-alert data-ng-repeat="alertmessage in requirementProperties.newColumn.alertMessages" class="alert alert-warning"
+            close="closeNewColumAlert($index)">
             <span data-ng-bind-html="alertmessage | trusted"></span>
         </div>
         <div class="table-responsive myMinHeight">
@@ -338,17 +339,24 @@
                     <tr class="animate-repeat" data-ng-repeat="reqs in (filteredReqs = (requirements | orderBy:['categoryOrder','order'] | filterUpdates : updatedReqs | filterByTags : filteredRequirementsByTags | filter: {category: category.label, description: textFilters.description, shortName: textFilters.shortName} | filterByStatus : selectedStatusColumn: statusColumns | filterTicketStatus : jiraStatus.selectedStatus | filter:search | filterOptColumnByText: textFilters.optColumns : optColumns | filterStatusColumnByText: textFilters.statusColumns : statusColumns))"
                         uib-tooltip="{{reqs.updateTooltip}}" data-ng-style="updatedReqs && reqs.shortName!==filteredReqs[$index+1].shortName && {'border-bottom':'solid 3px'}">
                         <td data-ng-if="updatedReqs && (!reqs.isNew && !reqs.toBeRemoved)">{{reqs.applyUpdate}}</td>
-                        <td data-ng-if="updatedReqs && (reqs.toBeRemoved)">
+                        <td data-ng-if="updatedReqs && (reqs.isNew || reqs.toBeRemoved)">
                             <div>
-                                <button id="acceptReq" class="btn btn-success" data-ng-click="applyChanges(reqs.id, true)" uib-tooltip="Accept the change and keep the new requirement">
+                                <button data-ng-if="reqs.isNew" id="acceptReq" class="btn btn-success" data-ng-click="applyChanges(reqs.id, true)" uib-tooltip="Accept the change and keep the new requirement">
                                     <span class="glyphicon glyphicon-ok"></span>
                                 </button>
+                                <button data-ng-if="reqs.toBeRemoved" id="acceptReq" class="btn btn-success" data-ng-click="applyChanges(reqs.id, true)"
+                                    uib-tooltip="Decline the change and keep the obsolete requirement">
+                                        <span class="glyphicon glyphicon-ok"></span>
+                                    </button>
                             </div>
                             <br/>
                             <br/>
                             <div>
-                                <button id="removeReq" class="btn btn-danger" data-ng-click="applyChanges(reqs.id, false)" uib-tooltip="Decline the change and keep the old requirement or remove a newly added requirement">
+                                <button data-ng-if="reqs.isNew" id="removeReq" class="btn btn-danger" data-ng-click="applyChanges(reqs.id, false)" uib-tooltip="Decline the change and keep this obsolete requirement or remove this newly added requirement">
                                     <span class="glyphicon glyphicon-remove"></span>
+                                </button>
+                                <button data-ng-if="reqs.toBeRemoved" id="removeReq" class="btn btn-danger" data-ng-click="applyChanges(reqs.id, false)" uib-tooltip="Accept the change and remove the obsolete requirement.">
+                                        <span class="glyphicon glyphicon-remove"></span>
                                 </button>
                             </div>
                         </td>
