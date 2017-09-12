@@ -3,6 +3,7 @@ package org.appsec.securityRAT.web.rest;
 import org.appsec.securityRAT.Application;
 import org.appsec.securityRAT.domain.TrainingCategoryNode;
 import org.appsec.securityRAT.repository.TrainingCategoryNodeRepository;
+import org.appsec.securityRAT.repository.TrainingTreeNodeRepository;
 import org.appsec.securityRAT.repository.search.TrainingCategoryNodeSearchRepository;
 
 import org.junit.Before;
@@ -51,6 +52,9 @@ public class TrainingCategoryNodeResourceTest {
     private TrainingCategoryNodeSearchRepository trainingCategoryNodeSearchRepository;
 
     @Inject
+    private TrainingTreeNodeRepository trainingTreeNodeRepository;
+
+    @Inject
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     private MockMvc restTrainingCategoryNodeMockMvc;
@@ -63,6 +67,7 @@ public class TrainingCategoryNodeResourceTest {
         TrainingCategoryNodeResource trainingCategoryNodeResource = new TrainingCategoryNodeResource();
         ReflectionTestUtils.setField(trainingCategoryNodeResource, "trainingCategoryNodeRepository", trainingCategoryNodeRepository);
         ReflectionTestUtils.setField(trainingCategoryNodeResource, "trainingCategoryNodeSearchRepository", trainingCategoryNodeSearchRepository);
+        ReflectionTestUtils.setField(trainingCategoryNodeResource, "trainingTreeNodeRepository", trainingTreeNodeRepository);
         this.restTrainingCategoryNodeMockMvc = MockMvcBuilders.standaloneSetup(trainingCategoryNodeResource).setMessageConverters(jacksonMessageConverter).build();
     }
 

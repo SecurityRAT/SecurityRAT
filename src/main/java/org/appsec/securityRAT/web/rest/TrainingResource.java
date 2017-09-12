@@ -37,25 +37,6 @@ public class TrainingResource {
     @Inject
     private TrainingSearchRepository trainingSearchRepository;
 
-    @Inject
-    private TrainingTreeNodeRepository trainingTreeNodeRepository;
-
-
-    @Inject
-    private TrainingCustomSlideNodeRepository trainingCustomSlideNodeRepository;
-
-    @Inject
-    private TrainingGeneratedSlideNodeRepository trainingGeneratedSlideNodeRepository;
-
-    @Inject
-    private TrainingRequirementNodeRepository trainingRequirementNodeRepository;
-
-    @Inject
-    private TrainingBranchNodeRepository trainingBranchNodeRepository;
-
-    @Inject
-    private TrainingCategoryNodeRepository trainingCategoryNodeRepository;
-
     /**
      * POST  /trainings -> Create a new training.
      */

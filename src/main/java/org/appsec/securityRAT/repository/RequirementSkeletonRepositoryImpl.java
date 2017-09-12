@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -15,11 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class RequirementSkeletonRepositoryImpl implements RequirementSkeletonRepositoryCustom {
 
-	@Autowired
+	@Inject
 	RequirementSkeletonRepository requirementSkeletonRepository;
 
-	@PersistenceContext
-	private EntityManager em;
+	// @PersistenceContext
+	// private EntityManager em;
 
 	@Override
 	public List<RequirementSkeleton> findSkeletonsByCollectionsAndProjectType(List<CollectionInstance> collectionInstances, List<ProjectType> projectTypes) {

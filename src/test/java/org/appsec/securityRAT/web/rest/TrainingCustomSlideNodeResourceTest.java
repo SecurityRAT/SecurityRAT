@@ -3,6 +3,7 @@ package org.appsec.securityRAT.web.rest;
 import org.appsec.securityRAT.Application;
 import org.appsec.securityRAT.domain.TrainingCustomSlideNode;
 import org.appsec.securityRAT.repository.TrainingCustomSlideNodeRepository;
+import org.appsec.securityRAT.repository.TrainingTreeNodeRepository;
 import org.appsec.securityRAT.repository.search.TrainingCustomSlideNodeSearchRepository;
 
 import org.junit.Before;
@@ -56,6 +57,9 @@ public class TrainingCustomSlideNodeResourceTest {
     private TrainingCustomSlideNodeSearchRepository trainingCustomSlideNodeSearchRepository;
 
     @Inject
+    private TrainingTreeNodeRepository trainingTreeNodeRepository;
+
+    @Inject
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     private MockMvc restTrainingCustomSlideNodeMockMvc;
@@ -68,6 +72,7 @@ public class TrainingCustomSlideNodeResourceTest {
         TrainingCustomSlideNodeResource trainingCustomSlideNodeResource = new TrainingCustomSlideNodeResource();
         ReflectionTestUtils.setField(trainingCustomSlideNodeResource, "trainingCustomSlideNodeRepository", trainingCustomSlideNodeRepository);
         ReflectionTestUtils.setField(trainingCustomSlideNodeResource, "trainingCustomSlideNodeSearchRepository", trainingCustomSlideNodeSearchRepository);
+        ReflectionTestUtils.setField(trainingCustomSlideNodeResource, "trainingTreeNodeRepository", trainingTreeNodeRepository);
         this.restTrainingCustomSlideNodeMockMvc = MockMvcBuilders.standaloneSetup(trainingCustomSlideNodeResource).setMessageConverters(jacksonMessageConverter).build();
     }
 

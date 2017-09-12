@@ -2,22 +2,24 @@ package org.appsec.securityRAT.repository;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.appsec.securityRAT.domain.ProjectType;
 import org.appsec.securityRAT.domain.StatusColumn;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class ProjectTypeRepositoryImpl implements ProjectTypeRepositoryCustom {
 
-	@Autowired
+	@Inject
 	ProjectTypeRepository projectTypeRepository;
 
-	@Autowired
+	@Inject
 	OptColumnRepository optColumnRepository;
 
-	@Autowired
+	@Inject
 	StatusColumnRepository statusColumnRepository;
 
-	@Autowired
+	@Inject
 	StatusColumnValueRepository statusColumnValueRepository;
 
 

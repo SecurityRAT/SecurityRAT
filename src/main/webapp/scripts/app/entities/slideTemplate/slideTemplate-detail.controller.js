@@ -39,7 +39,7 @@ angular.module('sdlctoolApp')
                     method: 'updateSlide',
                     args: [ marked(content) ]
                 }), '*' );
-            console.log("preview updated!");
+            // console.log("preview updated!");
         };
 
         $timeout(function() {

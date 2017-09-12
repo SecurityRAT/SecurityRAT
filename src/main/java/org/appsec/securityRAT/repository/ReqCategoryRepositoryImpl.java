@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -22,29 +23,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class ReqCategoryRepositoryImpl implements ReqCategoryRepositoryCustom{
 
-	@Autowired
+	@Inject
 	private OptColumnRepository optColumnRepository;
 
-	@Autowired
+	@Inject
 	private CollectionInstanceRepository collectionInstanceRepository;
 
-	@Autowired
+	@Inject
 	private ReqCategoryRepository reqCategoryRepository;
 
-	@Autowired
+	@Inject
 	private RequirementSkeletonRepository requirementSkeletonRepository;
 
-	@Autowired
+	@Inject
 	private TagInstanceRepository tagInstanceRepository;
 
-	@Autowired
+	@Inject
 	private OptColumnContentRepository optColumnContentRepository;
 
-	@PersistenceContext
-	private EntityManager em;
+	// @PersistenceContext
+	// private EntityManager em;
 
-    private static SessionFactory sessionFactory;
-    private static ServiceRegistry serviceRegistry;
+    // private static SessionFactory sessionFactory;
+    // private static ServiceRegistry serviceRegistry;
 
 	@Override
 	public List<ReqCategory> findEagerlyCategoriesWithRequirements(
@@ -161,13 +162,13 @@ public class ReqCategoryRepositoryImpl implements ReqCategoryRepositoryCustom{
 
 
 
-	private static SessionFactory createSessionFactory() {
-	    Configuration configuration = new Configuration();
-	    configuration.configure();
-	    serviceRegistry = new StandardServiceRegistryBuilder().applySettings(
-	            configuration.getProperties()).build();
-	    sessionFactory = configuration.buildSessionFactory(serviceRegistry);
-	    return sessionFactory;
-	}
+	// private static SessionFactory createSessionFactory() {
+	//     Configuration configuration = new Configuration();
+	//     configuration.configure();
+	//     serviceRegistry = new StandardServiceRegistryBuilder().applySettings(
+	//             configuration.getProperties()).build();
+	//     sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+	//     return sessionFactory;
+	// }
 
 }
