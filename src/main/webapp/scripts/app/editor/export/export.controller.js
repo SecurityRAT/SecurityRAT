@@ -599,7 +599,7 @@ angular.module('sdlctoolApp')
             });
             if (requirements.length > 0) {
                 var message = 'The Requirements ' + requirements.toString();
-                message += ' have ticket associated to them. Should these tickets URL been taken along and linked to the new ticket or not?';
+                message += ' have tickets associated to them. Should these tickets URL been taken along and linked to the new ticket or not?';
                 $confirm({
                         text: message,
                         title: 'Confirm',

@@ -562,7 +562,6 @@ angular.module('sdlctoolApp')
                 };
             }
 
-            console.log('ticket', ticket);
             var systemSetting = {
                 name: system.name,
                 ticket: ticket,
