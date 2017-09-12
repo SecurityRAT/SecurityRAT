@@ -443,6 +443,11 @@ angular.module('sdlctoolApp')
         // create a new ticket
         $scope.createTicket = function (fieldObject, withAttachment) {
             var derefer = $q.defer();
+            var req = {};
+            if (angular.isDefined(fieldObject.req)) {
+                angular.extend(req, fieldObject.req);
+                delete fieldObject.req;
+            }
             //          var excludedFields = ['summary', 'issuetype', 'labels', 'reporter', 'project', 'description'];
             for (var i = 0; i < $scope.jiraAlternatives.mandatoryFields.length && $scope.jiraAlternatives.mandatoryFields.length > 0; i++) {
                 if (!$scope.jiraAlternatives.mandatoryFields[i].mandatory) {
@@ -464,6 +469,7 @@ angular.module('sdlctoolApp')
                 })
                 .then(function (response) {
                     if (response !== undefined) {
+                        response.req = req;
                         $scope.apiUrl.ticketKey = [];
                         $scope.apiUrl.ticketKey.push(response.key);
                         derefer.resolve(response);
@@ -779,9 +785,68 @@ angular.module('sdlctoolApp')
             }
         };
 
+        function callbackAfterReqTicketCreation(ticketResponse) {
+            
+            apiFactory.getJIRAInfo(ticketResponse.self).then(function (responseInfo) {
+                angular.forEach($filter('filter')($scope.exported.requirements, {
+                    selected: true
+                }), function (requirement) {
+                    if ((requirement.id === ticketResponse.req.id) && requirement.shortName === ticketResponse.req.shortName) {
+                        var remoteObject = {};
+                        remoteObject.url = $scope.jiraUrl.url + '-' + responseInfo.key.split('-').pop();
+                        remoteObject.apiUrl = Helper.buildJiraUrl(remoteObject.url.split('/'));
+                        // This property muss be set irrelevant of thre remoteObject.key property.
+                        remoteObject.apiUrl.ticketKey = [];
+                        remoteObject.apiUrl.ticketKey.push(responseInfo.key);
+                        remoteObject.apiUrl.projectKey = responseInfo.fields.project.key;
+                        remoteObject.fields = responseInfo.fields;
+                        remoteObject.key = responseInfo.key;
+
+                        requirement.tickets.push(remoteObject.url);
+                        
+                        $scope.numRequirementTicketToCreate--;
+                        var linkStatus = {
+                            iconUrl: responseInfo.fields.status.iconUrl,
+                            name: responseInfo.fields.status.name,
+                            summary: responseInfo.fields.summary,
+                            issueKey: responseInfo.key,
+                            url: remoteObject.url
+                            // enableTooltip: true,
+                            // link: true
+                        };
+                        requirement.linkStatus.ticketStatus.push(linkStatus);
+                        if ($filter('filter')($scope.jiraStatus.allStatus, {
+                                name: linkStatus.name
+                            }).length === 0) {
+                            $scope.jiraStatus.allStatus.push(linkStatus);
+                        }
+                        //links the newly created ticket to the main ticket
+                        JiraService.addIssueLinks($scope.exported.ticket, remoteObject).then()
+                        .catch(function (exception) {
+                            onIssueLinkFailure(exception, remoteObject.key);
+                        });
+                        // shows the successful modal and updates the attachment.
+                        if ($scope.numRequirementTicketToCreate === 0) {
+                            var urlSplit = $scope.exported.ticket.url.split('/');
+                            $scope.buildUrlObject(urlSplit);
+                            $scope.sendAttachment();
+                            var tickets = '\n';
+                            var message = '';
+                            for (var i = 0; i < $scope.ticketURLs.length; i++) {
+                                tickets += $scope.ticketURLs[i];
+                                tickets += '\r\n';
+                            }
+                            $scope.close();
+                            SDLCToolExceptionService.showWarning('Tickets creation successful',
+                                'The following tickets were successfully created: ' + tickets, SDLCToolExceptionService.SUCCESS);
+                        }
+                    }
+                });
+            });
+        }
         // creates tickets for each selected requirement.
         $scope.createReqTickets = function () {
-            var size = ($filter('filter')($scope.exported.requirements, {
+            $scope.numRequirementTicketToCreate = ($filter('filter')($scope.exported.requirements, {
                 selected: true
             })).length;
             // preparing the main ticket object for linking
@@ -802,6 +867,8 @@ angular.module('sdlctoolApp')
                         var name = $scope.exported.name.replace(' ', '_');
                         //console.log(name);
                         fieldObject.description = '';
+                        // to synchronize asynchronous REST CALLS.
+                        fieldObject.req = requirement;
                         fieldObject.summary = '';
                         fieldObject.summary += '[' + $scope.exported.name + '] ' + requirement.description + ' (' + requirement.shortName + ')';
                         fieldObject.description += 'Category:\n';
@@ -829,58 +896,7 @@ angular.module('sdlctoolApp')
                         });
 
                         $scope.createTicket(fieldObject, false).then(function (ticketResponse) {
-                            var reqTicket = $scope.ticketURL;
-                            // get the status of the newly created tickets and updates the filter.
-                            apiFactory.getJIRAInfo(ticketResponse.self).then(function (response) {
-                                var remoteObject = {};
-                                remoteObject.apiUrl = Helper.buildJiraUrl(reqTicket.split('/'));
-                                // This property muss be set irrelevant of thre remoteObject.key property.
-                                remoteObject.apiUrl.ticketKey = [];
-                                remoteObject.apiUrl.ticketKey.push(response.key);
-                                remoteObject.apiUrl.projectKey = response.fields.project.key;
-                                remoteObject.fields = response.fields;
-                                remoteObject.key = response.key;
-                                remoteObject.url = $scope.jiraUrl.url + '-' + response.key.split('-').pop();
-
-                                requirement.tickets.push(remoteObject.url);
-                                //links the newly created ticket to the main ticket
-                                JiraService.addIssueLinks($scope.exported.ticket, remoteObject).then()
-                                    .catch(function (exception) {
-                                        onIssueLinkFailure(exception, remoteObject.key);
-                                    });
-                                size--;
-                                var linkStatus = {
-                                    iconUrl: response.fields.status.iconUrl,
-                                    name: response.fields.status.name,
-                                    summary: response.fields.summary,
-                                    issueKey: response.key,
-                                    url: remoteObject.url
-                                    // enableTooltip: true,
-                                    // link: true
-                                };
-                                requirement.linkStatus.ticketStatus.push(linkStatus);
-                                if ($filter('filter')($scope.jiraStatus.allStatus, {
-                                        name: linkStatus.name
-                                    }).length === 0) {
-                                    $scope.jiraStatus.allStatus.push(linkStatus);
-                                }
-                                // shows the successful modal and updates the attachment.
-                                if (size === 0) {
-                                    var urlSplit = $scope.exported.ticket.url.split('/');
-                                    $scope.buildUrlObject(urlSplit);
-                                    $scope.sendAttachment();
-                                    var tickets = '\n';
-                                    var message = '';
-                                    for (var i = 0; i < $scope.ticketURLs.length; i++) {
-                                        tickets += $scope.ticketURLs[i];
-                                        tickets += '\r\n';
-                                    }
-                                    $scope.close();
-                                    SDLCToolExceptionService.showWarning('Tickets creation successful',
-                                        'The following tickets were successfully created: ' + tickets, SDLCToolExceptionService.SUCCESS);
-                                }
-                            });
-
+                            callbackAfterReqTicketCreation(ticketResponse);
                         });
                     });
                 }).catch(function () {

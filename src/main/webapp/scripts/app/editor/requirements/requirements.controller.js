@@ -1378,6 +1378,7 @@ angular.module('sdlctoolApp')
                             ticketStatus: []
                         };
                     }
+
                     if ($scope.requirements[i].id === newRequirement.id) {
                         // updates category name is this was changed
                         // $scope.requirements[i].category = newRequirement.category;
@@ -1618,8 +1619,8 @@ angular.module('sdlctoolApp')
                         }
                         
                     }
-                    
                 });
+                $scope.updatedReqs = true;
             }
             // don't check for $scope.deletedCounter === 0 since these obsolete requirements are not deleted. The choice is left in the hands of the user.
             if ($scope.updatesCounter === 0 && $scope.newCounter === 0) {
@@ -2340,12 +2341,15 @@ angular.module('sdlctoolApp')
             req.tempTicket = '';
             // if(angular.isDefined(req.ticket) && req.ticket !== '') req.ticket = '';
             $scope.manageTicketProperty.sameTicketError = false;
+            $scope.manageTicketProperty.jhError.show = false;
         };
 
         $scope.doIssueLinking = function (req, callbackFunction, ticket) {
             // reset the error handling properties.
             $scope.manageTicketProperty.error = false;
             $scope.manageTicketProperty.authenticationFailure = false;
+            $scope.manageTicketProperty.jhError.show = false;
+            $scope.manageTicketProperty.jhError.msg = '';
             if (angular.equals(ticket, $scope.ticket.url)) {
                 $scope.manageTicketProperty.jhError.show = true;
                 $scope.manageTicketProperty.jhError.msg = 'You cannot link a ticket to itself.';
@@ -2409,7 +2413,7 @@ angular.module('sdlctoolApp')
 
             // first check that the requirement is not already present.
             if (req.tickets.indexOf(ticket) === -1) {
-                req.tickets.push(ticket);
+                req.tickets.push(req.tempTicket);
 
                 req.tempTicket = '';
                 if (req.linkStatus.link) {
@@ -2431,7 +2435,7 @@ angular.module('sdlctoolApp')
                     url: ticket
                     // summary: req.linkStatus.link ? null : remoteObjectInfo.fields.summary,
                     // enableTooltip : req.linkStatus.link ? false : true
-                }
+                };
                 req.linkStatus.ticketStatus.push(linkStatus);
                 if ($scope.jiraStatus.allStatus.length === 0) {
                     $scope.jiraStatus.allStatus.push(linkStatus);
@@ -2451,6 +2455,7 @@ angular.module('sdlctoolApp')
                 if (angular.isDefined(promise)) {
                     $scope.manageTicketProperty.spinnerProperty.showSpinner = false;
                     req.linkStatus.enableTooltip = false;
+                    $scope.manageTicketProperty.jhError.show = false;
                 }
             } else {
                 $scope.manageTicketProperty.jhError.show = true;

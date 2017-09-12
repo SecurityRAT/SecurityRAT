@@ -162,7 +162,7 @@ angular.module('sdlctoolApp')
                 }
 
                 if (testComplete || stopped) {
-                    console.log('Test stopped');
+                    // console.log('Test stopped');
                     $scope.authenticationProperties.spinnerProperty.showSpinner = false;
                     // console.log($scope.testResults);
                     authenticatorService.cancelPromises($scope.authenticationProperties.authenticatorpromise);
