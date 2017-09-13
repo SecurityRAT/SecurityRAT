@@ -1104,6 +1104,8 @@ angular.module('sdlctoolApp')
             $scope.onTimeout();
             $scope.promiseForStorage = $interval($scope.onTimeout, 60000);
             $scope.length = $scope.requirementSkeletons.length;
+
+            console.log('requirements', $scope.requirements);
         };
 
         $scope.mergeOldAndNewRequirements = function () {
@@ -1610,14 +1612,14 @@ angular.module('sdlctoolApp')
                     // var idx = $scope.requirements.indexOf(deleteRequirement);
                     for (var k = 0; k < $scope.requirements.length; k++) {
                         var requirement = $scope.requirements[k];
-                        if(requirement.id === deleteRequirement.id) {
+                        if (requirement.id === deleteRequirement.id) {
                             requirement.isOld = true;
                             requirement.toBeRemoved = true;
                             requirement.needsUpdate = true;
                             requirement.updateTooltip = 'Obsolete requirement in your YAML file';
                             break;
                         }
-                        
+
                     }
                 });
                 $scope.updatedReqs = true;
@@ -1669,12 +1671,12 @@ angular.module('sdlctoolApp')
                 }
                 //keep new one
                 if (requirement.id === reqId && keepNewOne && !requirement.isNew && angular.isUndefined(requirement.toBeRemoved)) {
-                        $scope.requirements.splice(i, 1);
-                        if (!decisionMade) {
-                            $scope.updatesCounter--;
-                        }
-                        $scope.requirementProperties.requirementsEdited = true;
-                        decisionMade = true;
+                    $scope.requirements.splice(i, 1);
+                    if (!decisionMade) {
+                        $scope.updatesCounter--;
+                    }
+                    $scope.requirementProperties.requirementsEdited = true;
+                    decisionMade = true;
                     //keep old one
                 } else if (requirement.id === reqId && !keepNewOne && (requirement.isNew || requirement.toBeRemoved)) {
                     $scope.requirements.splice(i, 1);
@@ -1766,6 +1768,7 @@ angular.module('sdlctoolApp')
         };
 
         $scope.configExcel = function () {
+            // if($filter('filter')($scope.statusColumns))
             var modalInstance = $uibModal.open({
                 size: 'lg',
                 backdrop: 'static',
@@ -1823,8 +1826,12 @@ angular.module('sdlctoolApp')
             var wb = new Workbook();
             wb.SheetNames.push(wsName);
             wb.Sheets[wsName] = ws;
-            wb.SheetNames.push(wsName1);
-            wb.Sheets[wsName1] = $scope.buildDropdownList(dropdownList);
+            
+            if (dropdownList.length > 0) {
+                wb.SheetNames.push(wsName1);
+                // in case there are no statuscolumns of type enum.
+                wb.Sheets[wsName1] = $scope.buildDropdownList(dropdownList);
+            }
             //sets the columns width.
             ws['!cols'] = wscols;
             var wbopts = {

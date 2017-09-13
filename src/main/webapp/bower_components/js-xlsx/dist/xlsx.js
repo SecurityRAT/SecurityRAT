@@ -7639,7 +7639,7 @@ function write_ws_xml(idx, opts, wb) {
 		var data_xml = write_ws_xml_data(ws, opts, idx, wb)
 //		console.log(data_xml);
 		rdata = data_xml.o.join("");
-		dropdownListIndexes = data_xml.dropdownIndexes;
+		if(data_xml.dropdownIndexes !== undefined) dropdownListIndexes = data_xml.dropdownIndexes;
 //		rdata = write_ws_xml_data(ws, opts, idx, wb);
 		if(rdata.length > 0) o[o.length] = (rdata);
 	}
@@ -7647,7 +7647,7 @@ function write_ws_xml(idx, opts, wb) {
 
 	if(ws['!merges'] !== undefined && ws['!merges'].length > 0) o[o.length] = (write_ws_xml_merges(ws['!merges']));
 	// custom code from jay:begin
-	if(idx === 0) {
+	if(idx === 0 && dropdownListIndexes.length > 0) {
 		var str = '<extLst><ext uri="{CCE6A557-97BC-4b89-ADB6-D9C93CAAB3DF}" xmlns:x14="http://schemas.microsoft.com/office/spreadsheetml/2009/9/main" ><x14:dataValidations count="'
 			str += dropdownListIndexes.length + '" xmlns:xm="http://schemas.microsoft.com/office/excel/2006/main">';
 		

@@ -34,7 +34,8 @@ public interface OptColumnContentRepository extends JpaRepository<OptColumnConte
 			+ "left join optColumnContent.optColumn.projectTypes pt "
 			+ "left join optColumnContent.requirementSkeleton skeleton "
 			+ "where skeleton = :skeleton "
-			+ "and pt in :projectTypes")
+			+ "and pt in :projectTypes "
+			+ "and optColumnContent.optColumn.active = true")
 	@Transactional
 	Set<OptColumnContent> findOptColumnsForSkeletonAndProjectTypes (
 			@Param("skeleton") RequirementSkeleton skeleton,
