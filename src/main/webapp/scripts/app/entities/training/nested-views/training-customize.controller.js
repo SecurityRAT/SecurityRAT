@@ -13,6 +13,7 @@ angular.module('sdlctoolApp')
         $scope.firstTimeDrawingTree = true;
         $scope.disabledIcon = "glyphicon glyphicon-remove";
         $scope.disableSaveSlideButton = false; // if true, the saveSlide button gets disabled
+        $scope.showPreview = false;
 
         $scope.load = function (id) {
             Training.get({id: id}, function(result) {
@@ -27,9 +28,11 @@ angular.module('sdlctoolApp')
             if(state) {
                 $("#editBlock").fadeIn();
                 $("#previewBlock").fadeIn();
+                // $scope.showPreview = true;
             } else {
                 $("#editBlock").hide();
                 $("#previewBlock").hide();
+                // $scope.showPreview = false;
             }
         };
 
@@ -508,9 +511,10 @@ angular.module('sdlctoolApp')
                     tree.jstree(true).settings.core.data = $rootScope.trainingTreeData;
                     tree.jstree('refresh');
                 }
-
+                $scope.showPreview = true;
                 // overwrite icon for inactive nodes when tree is ready
                 tree.bind('ready.jstree', function(event, data) {
+                    $("#previewBlock").hide();
                     $(tree.jstree().get_json(tree, {
                         flat: true
                     })).each(function(index, node) {
