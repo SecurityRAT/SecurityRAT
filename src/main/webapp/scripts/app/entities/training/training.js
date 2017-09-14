@@ -7,7 +7,7 @@ angular.module('sdlctoolApp')
                 parent: 'entity',
                 url: '/trainings',
                 data: {
-                    roles: ['ROLE_TRAINER'],
+                    roles: ['ROLE_TRAINER', 'ROLE_ADMIN'],
                     pageTitle: 'Trainings'
                 },
                 views: {
@@ -23,7 +23,7 @@ angular.module('sdlctoolApp')
                 parent: 'entity',
                 url: '/training/{id}',
                 data: {
-                    roles: ['ROLE_TRAINER'],
+                    roles: ['ROLE_TRAINER', 'ROLE_ADMIN'],
                     pageTitle: 'Training'
                 },
                 views: {
@@ -42,7 +42,7 @@ angular.module('sdlctoolApp')
                 parent: 'training',
                 abstract: 'true',
                 data: {
-                    roles: ['ROLE_TRAINER']
+                    roles: ['ROLE_TRAINER', 'ROLE_ADMIN']
                 },
                 views: {
                     'content@': {
@@ -62,6 +62,9 @@ angular.module('sdlctoolApp')
             .state('training.new', {
                 parent: 'training.generate',
                 url: '/generate',
+                data: {
+                    roles: ['ROLE_TRAINER', 'ROLE_ADMIN']
+                },
                 views: {
                     'skeleton@training.generate': {
                         templateUrl: 'scripts/app/entities/training/nested-views/training-skeleton.html',
@@ -87,7 +90,7 @@ angular.module('sdlctoolApp')
                 url: '/{id}',
                 abstract: 'true',
                 data: {
-                    roles: ['ROLE_TRAINER'],
+                    roles: ['ROLE_TRAINER', 'ROLE_ADMIN']
                 },
                 views: {
                     'content@': {
@@ -104,6 +107,9 @@ angular.module('sdlctoolApp')
             .state('training.edit.state', {
                 parent: 'training.edit',
                 url: '/edit',
+                data: {
+                    roles: ['ROLE_TRAINER', 'ROLE_ADMIN']
+                },
                 views: {
                     'skeleton@training.edit': {
                         templateUrl: 'scripts/app/entities/training/nested-views/training-skeleton.html',
@@ -117,7 +123,7 @@ angular.module('sdlctoolApp')
                 url: '/tree/{id}',
                 abstract: 'true',
                 data: {
-                    roles: ['ROLE_TRAINER']
+                    roles: ['ROLE_TRAINER', 'ROLE_ADMIN']
                 },
                 views: {
                     'content@': {
@@ -134,6 +140,9 @@ angular.module('sdlctoolApp')
             .state('training.editTree.state', {
                 parent: 'training.editTree',
                 url: '/edit',
+                data: {
+                    roles: ['ROLE_TRAINER', 'ROLE_ADMIN']
+                },
                 views: {
                     'customize@training.editTree': {
                         templateUrl: 'scripts/app/entities/training/nested-views/training-customize.html',
@@ -147,7 +156,7 @@ angular.module('sdlctoolApp')
                 url: '/selection/{id}',
                 abstract: 'true',
                 data: {
-                    roles: ['ROLE_TRAINER']
+                    roles: ['ROLE_TRAINER', 'ROLE_ADMIN']
                 },
                 views: {
                     'content@': {
@@ -164,6 +173,9 @@ angular.module('sdlctoolApp')
             .state('training.editSelection.state', {
                 parent: 'training.editSelection',
                 url: '/edit',
+                data: {
+                    roles: ['ROLE_TRAINER', 'ROLE_ADMIN']
+                },
                 views: {
                     'requirements@training.editSelection': {
                         templateUrl: 'scripts/app/entities/training/nested-views/training-requirements.html',
@@ -181,7 +193,7 @@ angular.module('sdlctoolApp')
                 parent: 'site',
                 url: '/training/{id}/view',
                 data: {
-                    roles: ['ROLE_TRAINER']
+                    roles: ['ROLE_TRAINER', 'ROLE_ADMIN']
                 },
                 views: {
                     'content@': {
