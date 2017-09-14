@@ -190,4 +190,8 @@ angular.module('sdlctoolApp')
                 $scope.treeGenerated = true;
             }
         };
+
+        $scope.cancel = function() {
+            $state.go('training', {});
+        };
     });
