@@ -1105,7 +1105,7 @@ angular.module('sdlctoolApp')
             $scope.promiseForStorage = $interval($scope.onTimeout, 60000);
             $scope.length = $scope.requirementSkeletons.length;
 
-            console.log('requirements', $scope.requirements);
+            // console.log('requirements', $scope.requirements);
         };
 
         $scope.mergeOldAndNewRequirements = function () {
