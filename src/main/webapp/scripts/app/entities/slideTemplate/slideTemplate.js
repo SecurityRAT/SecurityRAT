@@ -7,7 +7,7 @@ angular.module('sdlctoolApp')
                 parent: 'entity',
                 url: '/slideTemplates',
                 data: {
-                    roles: ['ROLE_TRAINER'],
+                    roles: ['ROLE_TRAINER', 'ROLE_ADMIN'],
                     pageTitle: 'SlideTemplates'
                 },
                 views: {
@@ -23,7 +23,7 @@ angular.module('sdlctoolApp')
                 parent: 'entity',
                 url: '/slideTemplate/{id}',
                 data: {
-                    roles: ['ROLE_TRAINER'],
+                    roles: ['ROLE_TRAINER', 'ROLE_ADMIN'],
                     pageTitle: 'SlideTemplate'
                 },
                 views: {
@@ -42,7 +42,7 @@ angular.module('sdlctoolApp')
                 parent: 'slideTemplate',
                 url: '/new',
                 data: {
-                    roles: ['ROLE_TRAINER'],
+                    roles: ['ROLE_TRAINER', 'ROLE_ADMIN'],
                 },
                 views: {
                     'content@': {
