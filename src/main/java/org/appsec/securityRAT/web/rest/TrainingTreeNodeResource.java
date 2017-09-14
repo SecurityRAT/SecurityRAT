@@ -563,8 +563,8 @@ public class TrainingTreeNodeResource {
                     }
                 }
                 if (foundSelectedCategory) {
-                    categoryNodes.remove(foundNode); // no need to check this node again
-                } else {
+                    categoryNodes.remove(foundNode); // pass: this category should be were it is
+                } else if(selectedCategory.getRequirementSkeletons().size() > 0) {
                     hasUpdates = true;
                     if (readOnly)
                         return true;

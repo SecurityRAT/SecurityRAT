@@ -157,20 +157,22 @@ angular.module('sdlctoolApp')
 
                         // add generated slides
                         categoriesWithRequirements.forEach(function(category) {
-                            var categoryNode = contentNode.addCategoryNode(category.name, {id: category.id}, false);
-                            categoryNode.addCustomSlideNode("Title", "<h2>{{ parent.name }}</h2>");
-                            sortByShowOrder(category.requirements);
-                            category.requirements.forEach(function(requirement) {
-                                var requirementNode = categoryNode.addRequirementNode(requirement, false);
+                            if(category.requirements != null && category.requirements.length > 0) {
+                                var categoryNode = contentNode.addCategoryNode(category.name, {id: category.id}, false);
+                                categoryNode.addCustomSlideNode("Title", "<h2>{{ parent.name }}</h2>");
+                                sortByShowOrder(category.requirements);
+                                category.requirements.forEach(function(requirement) {
+                                    var requirementNode = categoryNode.addRequirementNode(requirement, false);
 
-                                // add slides for each requirement displaying option column content
-                                //  if no optColumns were selected, $scope.TrainingoptColumns is undefined!
-                                if($scope.Training.optColumns != null) {
-                                    $scope.Training.optColumns.forEach(function(optColumn) {
-                                        requirementNode.addGeneratedSlideNode(optColumn);
-                                    });
-                                }
-                            });
+                                    // add slides for each requirement displaying option column content
+                                    //  if no optColumns were selected, $scope.TrainingoptColumns is undefined!
+                                    if($scope.Training.optColumns != null) {
+                                        $scope.Training.optColumns.forEach(function(optColumn) {
+                                            requirementNode.addGeneratedSlideNode(optColumn);
+                                        });
+                                    }
+                                });
+                            }
                         });
                     },
                     function(exception) {}
