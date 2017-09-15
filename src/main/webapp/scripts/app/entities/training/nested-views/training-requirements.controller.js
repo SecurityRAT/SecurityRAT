@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('TrainingRequirementsController', function ($scope, $rootScope, $stateParams, $filter, entity, Training,
-        TrainingTreeNode, apiFactory, sharedProperties) {
+    .controller('TrainingRequirementsController', function ($scope, $rootScope, $stateParams, $filter, $http, entity, Training,
+                                                            TrainingTreeNode, apiFactory, sharedProperties ) {
         var system = "old";
         $scope.training = entity;
         var backUpValues = {
@@ -19,8 +19,8 @@ angular.module('sdlctoolApp')
                 }
 
                 // restore selection from training
-                $scope.training.collections.forEach(function (col) {
-                    $scope.selectCollections(col);
+                $scope.training.collections.forEach(function(col) {
+                    $scope.selectCollections(col, false);
                 });
                 $scope.training.projectTypes.forEach(function (prot) {
                     $scope.selectedProjectType.push(prot);
@@ -100,10 +100,11 @@ angular.module('sdlctoolApp')
                 $stateParams.isDirty = true;
             }
             $scope.showFilters();
-            $scope.updateNumberOfRequirements();
+            $rootScope.updateNumberOfRequirements();
         };
 
-        $scope.updateNumberOfRequirements = function () {
+        $rootScope.updateNumberOfRequirements = function () {
+            console.log('called');
             if (backUpValues.allRequirementsSelected === $scope.training.allRequirementsSelected &&
                 backUpValues.selectedColls.length === $scope.training.collections.length &&
                 backUpValues.selectedTypes.length === $scope.training.projectTypes.length) {
@@ -134,10 +135,16 @@ angular.module('sdlctoolApp')
                 $scope.training.collections.length > 0 ||
                 $scope.training.projectTypes.length > 0) {
                 var requestString = $rootScope.buildQueryParams();
-                apiFactory.getByQuery("numberOfRequirements", "filter", requestString).then(
-                    function (numberOfRequirements) {
-                        $rootScope.requirementsSelected = numberOfRequirements;
-                    });
+                $http({
+                    url: "/frontend-api/numberOfRequirements/filter?" + requestString,
+                    method: "GET"
+                }).then(function(response) {
+                    $rootScope.fetchNumberError = false;
+                    $rootScope.requirementsSelected = response.data;
+                }, function (exception) {
+                    $rootScope.fetchNumberError = true;
+                    $rootScope.requirementsSelected = "??";
+                });
             } else {
                 $rootScope.requirementsSelected = 0;
             }
@@ -177,19 +184,19 @@ angular.module('sdlctoolApp')
         $scope.selectedProjectTypeSettings = $scope.selectedCollectionSettings;
 
         $scope.selectedCollectionEvents = {
-            onItemSelect: function (item) {
-                $scope.selectCollections(item);
+            onItemSelect : function(item) {
+                $scope.selectCollections(item, true);
             },
-            onItemDeselect: function (item) {
-                $scope.deselectCollections(item);
+            onItemDeselect : function(item) {
+                $scope.deselectCollections(item, true);
             }
         };
         $scope.selectedProjectTypeEvents = {
-            onItemSelect: function (item) {
-                $scope.selectProjectType(item);
+            onItemSelect : function(item) {
+                $scope.selectProjectType(item, true);
             },
-            onItemDeselect: function (item) {
-                $scope.deselectProjectType(item);
+            onItemDeselect : function(item) {
+                $scope.deselectProjectType(item, true);
             }
         };
 
@@ -231,8 +238,8 @@ angular.module('sdlctoolApp')
 
             });
 
-        Promise.all(queryPromises).then(function () {
-            $scope.updateNumberOfRequirements();
+        Promise.all(queryPromises).then(function() {
+            $rootScope.updateNumberOfRequirements();
         });
 
         $scope.init = function () {
@@ -283,7 +290,7 @@ angular.module('sdlctoolApp')
                 }
             });
         };
-        $scope.selectProjectType = function (item) {
+        $scope.selectProjectType = function(item, updateNumberOfSelectedReq) {
             $scope.projectTypeModel = item;
 
             var saved_in_training = false;
@@ -297,22 +304,22 @@ angular.module('sdlctoolApp')
                 $scope.training.projectTypes.push(item);
 
             }
-
-            $scope.updateNumberOfRequirements();
+            if(updateNumberOfSelectedReq)
+                $rootScope.updateNumberOfRequirements();
         };
 
-        $scope.deselectProjectType = function (item) {
+        $scope.deselectProjectType = function(item, updateNumberOfSelectedReq) {
 
             for (var i = 0; i < $scope.training.projectTypes.length; i++) {
                 if ($scope.training.projectTypes[i].id === item.id) {
                     $scope.training.projectTypes.splice(i, 1);
                 }
             }
-
-            $scope.updateNumberOfRequirements();
+            if(updateNumberOfSelectedReq)
+                $rootScope.updateNumberOfRequirements();
         };
 
-        $scope.selectCollections = function (item) {
+        $scope.selectCollections = function(item, updateNumberOfSelectedReq) {
             var categoryName = "";
             angular.forEach($scope.categories, function (category) {
                 angular.forEach(category.collectionInstances, function (instance) {
@@ -355,10 +362,11 @@ angular.module('sdlctoolApp')
             if (!saved_in_training) {
                 $scope.training.collections.push(item);
             }
-            $scope.updateNumberOfRequirements();
+            if(updateNumberOfSelectedReq)
+                $rootScope.updateNumberOfRequirements();
         };
 
-        $scope.deselectCollections = function (item) {
+        $scope.deselectCollections = function(item, updateNumberOfSelectedReq) {
             // remove the deselected item from the drop down lists selection
             for (var i = 0; i < $scope.selectedCollection.length; i++) {
                 var collection = $scope.selectedCollection[i];
@@ -378,7 +386,8 @@ angular.module('sdlctoolApp')
                     $scope.training.collections.splice(k, 1);
                 }
             }
-            $scope.updateNumberOfRequirements();
+            if(updateNumberOfSelectedReq)
+                $rootScope.updateNumberOfRequirements();
         };
 
         $scope.searchObjectbyValue = function (search, object) {

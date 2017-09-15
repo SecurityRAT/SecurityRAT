@@ -91,7 +91,10 @@
                             <button type="submit" ui-sref="training.editTree.state({id:training.id})" class="btn btn-primary btn-sm">
                             <span class="glyphicon glyphicon-pencil"></span>&nbsp;<span> Edit Tree</span>
                         </button>
-                            <button type="submit" ng-click="delete(training.id)" class="btn btn-danger btn-sm">
+                            <button type="submit" data-ng-click="checkUpdate(training.id)" class="btn btn-warning btn-sm">
+                            <span class="glyphicon glyphicon-refresh"></span>&nbsp;<span> Update</span>
+                        </button>
+                            <button type="submit" data-ng-click="delete(training.id)" class="btn btn-danger btn-sm">
                             <span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span> Delete</span>
                         </button>
                         </td>

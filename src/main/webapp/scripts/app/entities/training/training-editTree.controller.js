@@ -49,7 +49,12 @@ angular.module('sdlctoolApp')
             }, 2500);
         };
         $scope.openFeedbackModal = function(title, message) {
-            $scope.feedback = { title: title, message: message };
+            $scope.feedback = {
+                title: title,
+                message: message,
+                showUpdateButton: true,
+                showProgressIndicator: false
+            };
             $scope.feedbackModalInstance = $uibModal.open({
                 size: 'md',
                 backdrop: 'static',
