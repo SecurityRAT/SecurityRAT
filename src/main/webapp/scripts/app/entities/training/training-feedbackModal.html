@@ -1,5 +1,4 @@
 <div class="modal-header" >
-    <button type="button" class="close" data-ng-click="cancel()" aria-hidden="true">×</button>
     <div class="form-group">
         <h3 class="modal-title">{{ feedback.title }}</h3>
     </div>
@@ -11,9 +10,10 @@
 </div>
 <div class="modal-footer">
     <button class="btn btn-default" data-ng-click="closeFeedbackModal(false)">
-        </span>&nbsp;<span>NO</span>
+        </span>&nbsp;<span>{{ feedback.showUpdateButton ? "NO" : "OK" }}</span>
     </button>
-    <button class="btn btn-warning" data-ng-click="closeFeedbackModal(true)">
-        &nbsp;<span>YES</span>
+    <button data-ng-if="feedback.showUpdateButton" class="btn btn-warning" data-ng-click="closeFeedbackModal(true)">
+        &nbsp;<span>{{ feedback.showProgressIndicator ? "Updating" : "YES" }}</span>
+        <img data-ng-if="feedback.showProgressIndicator" src="assets/images/ellipsis1.gif" height="18" width="18" />
     </button>
 </div>
