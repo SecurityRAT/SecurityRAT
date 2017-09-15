@@ -356,13 +356,14 @@ angular.module('sdlctoolApp')
             });
         };
 
-        TrainingTreeNode.prototype.JSTree_to_JSON = function(jstree_json) {
-
-        };
-
         TrainingTreeNode.JSON_to_JSTree = function(json) {
+            var name = json.name;
+            if(name != null && name.length > 20) {
+                name = name.substr(0,17);
+                name += "...";
+            }
             var result = {
-                "text" : json.name,
+                "text" : name, // the 'short' name (max. 20 characters)
                 "state" : { "opened": json.opened },
                 "type" : json.node_type,
                 children: [],
@@ -375,6 +376,7 @@ angular.module('sdlctoolApp')
             result.data["json_universal_id"] = json.json_universal_id;
             result.data["active"] = json.active;
             result.data["anchor"] = json.anchor;
+            result.data["name"] = json.name; // the long name (no maximum)
 
             switch(json.node_type) {
                 case "BranchNode":
@@ -420,11 +422,13 @@ angular.module('sdlctoolApp')
                 node.anchor = json_data.data.anchor;
             }
 
+
             switch(json_data.type) {
                 case "GeneratedSlideNode":
                     node.optColumn = json_data.data.optColumn;
                 case "CustomSlideNode":
                     node.content = json_data.data.content;
+                    node.name = json_data.data.name;
                     break;
             }
             if(json_data.data != null)
