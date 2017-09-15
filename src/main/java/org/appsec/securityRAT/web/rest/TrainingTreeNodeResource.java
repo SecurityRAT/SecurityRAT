@@ -267,15 +267,17 @@ public class TrainingTreeNodeResource {
         boolean hasUpdates = updateSubTree(trainingTreeNode, reqCategories, selectedOptColumns, readOnly);
         result.setHasUpdates(hasUpdates);
 
-        // update has finished, try to assign custom nodes which belong to moved (or deleted) requirements
-        TrainingNodePool pool = TrainingNodePool.getInstance(training.getId());
-        HashMap<Long, List<TrainingTreeNode>> nodesToAssign = pool.getAll();
-        for (Long requirementId : nodesToAssign.keySet()) {
-            TrainingTreeNode newParent = findRequirementNode(trainingTreeNode, requirementId);
-            if (newParent != null) {
-                for (TrainingTreeNode nodeToAssign : nodesToAssign.get(requirementId)) {
-                    nodeToAssign.setParent_id(newParent);
-                    trainingTreeNodeRepository.save(nodeToAssign);
+        if(!readOnly) {
+            // update has finished, try to assign custom nodes which belong to moved (or deleted) requirements
+            TrainingNodePool pool = TrainingNodePool.getInstance(training.getId());
+            HashMap<Long, List<TrainingTreeNode>> nodesToAssign = pool.getAll();
+            for (Long requirementId : nodesToAssign.keySet()) {
+                TrainingTreeNode newParent = findRequirementNode(trainingTreeNode, requirementId);
+                if (newParent != null) {
+                    for (TrainingTreeNode nodeToAssign : nodesToAssign.get(requirementId)) {
+                        nodeToAssign.setParent_id(newParent);
+                        trainingTreeNodeRepository.save(nodeToAssign);
+                    }
                 }
             }
         }
@@ -293,7 +295,7 @@ public class TrainingTreeNodeResource {
             if (reqNode.getRequirementSkeleton().getId().equals(requirementId))
                 result = subtree; // found!
         } else {
-            if (type == ContentNode || type == CategoryNode) {
+            if (type == ContentNode || type == CategoryNode || type == RootNode) {
                 List<TrainingTreeNode> children = trainingTreeNodeRepository.getChildrenOf(subtree);
                 if (children != null) {
                     for (TrainingTreeNode child : children) {
@@ -325,8 +327,8 @@ public class TrainingTreeNodeResource {
      */
 
     private List<TrainingTreeNode> reorder_children(TreeMap<Integer, List<TrainingTreeNode>> customNodes,
-            TreeMap<Integer, TrainingTreeNode> databaseNodes) {
-
+            TreeMap<Integer, List<TrainingTreeNode>> databaseNodes) {
+        SortOrderComparator sortOrderComparator = new SortOrderComparator();
         if (customNodes == null && databaseNodes == null)
             return null;
 
@@ -336,32 +338,39 @@ public class TrainingTreeNodeResource {
         if (customNodes != null) {
             parentAnchored = customNodes.get(PARENT_ANCHOR);
             if (parentAnchored != null && parentAnchored.size() > 0) {
-                parentAnchored.sort(new SortOrderComparator());
+                parentAnchored.sort(sortOrderComparator);
                 for (TrainingTreeNode nextCustomNode : parentAnchored) {
                     result.add(nextCustomNode);
                 }
                 customNodes.remove(PARENT_ANCHOR);
             }
         }
-        Map.Entry<Integer, TrainingTreeNode> nextDatabaseNodeEntry = databaseNodes.firstEntry();
+        Map.Entry<Integer, List<TrainingTreeNode>> nextDatabaseNodeEntry = databaseNodes.firstEntry();
         while (nextDatabaseNodeEntry != null) {
-            result.add(nextDatabaseNodeEntry.getValue());
+            List<TrainingTreeNode> databaseNodesForShowOrder = nextDatabaseNodeEntry.getValue();
+            if(databaseNodesForShowOrder != null) {
+                databaseNodesForShowOrder.sort(sortOrderComparator);
+                for(TrainingTreeNode databaseNode : databaseNodesForShowOrder) {
+                    result.add(databaseNode);
 
-            // now, add custom nodes which are anchored here (ordered by sort_order)
-            if (customNodes != null && customNodes.size() > 0) {
-                Long universal_id = nextDatabaseNodeEntry.getValue().getJson_universal_id();
-                if (universal_id != null) {
-                    int anchor = Math.toIntExact(universal_id);
-                    List<TrainingTreeNode> anchoredHere = customNodes.get(anchor);
-                    if (anchoredHere != null && anchoredHere.size() > 0) {
-                        anchoredHere.sort(new SortOrderComparator());
-                        for (TrainingTreeNode nextCustomNode : anchoredHere) {
-                            result.add(nextCustomNode);
+                    // now, add custom nodes which are anchored to this node (ordered by sort_order)
+                    if (customNodes != null && customNodes.size() > 0) {
+                        Long universal_id = databaseNode.getJson_universal_id();
+                        if (universal_id != null) {
+                            int anchor = Math.toIntExact(universal_id);
+                            List<TrainingTreeNode> anchoredHere = customNodes.get(anchor);
+                            if (anchoredHere != null && anchoredHere.size() > 0) {
+                                anchoredHere.sort(sortOrderComparator);
+                                for (TrainingTreeNode nextCustomNode : anchoredHere) {
+                                    result.add(nextCustomNode);
+                                }
+                                customNodes.remove(anchor);
+                            }
                         }
-                        customNodes.remove(anchor);
                     }
                 }
             }
+
             databaseNodes.remove(nextDatabaseNodeEntry.getKey());
             nextDatabaseNodeEntry = databaseNodes.firstEntry();
         }
@@ -407,22 +416,6 @@ public class TrainingTreeNodeResource {
         }
     }
 
-    // return a child with given anchor or null
-    private TrainingTreeNode findChildWithAnchor(List<TrainingTreeNode> children, int anchor) {
-        TrainingTreeNode result = null;
-        for (TrainingTreeNode child : children) {
-
-        }
-        return result;
-    }
-
-    private int getAnchor(TrainingTreeNode node) {
-        switch (node.getNode_type()) {
-        case RequirementNode:
-
-        }
-        return 0;
-    }
 
     // finds children with given anchor and parent, sets their anchor to PARENT_ANCHOR
     private void removeAnchor(TrainingTreeNode anchoredNode) {
@@ -493,7 +486,7 @@ public class TrainingTreeNodeResource {
 
         List<TrainingTreeNode> children = trainingTreeNodeRepository.getChildrenOf(trainingTreeNode);
         TreeMap<Integer, List<TrainingTreeNode>> customNodes = new TreeMap<>(); // <anchor,list_of_nodes>
-        TreeMap<Integer, TrainingTreeNode> databaseNodes = new TreeMap<>(); // <showOrder,node>
+        TreeMap<Integer, List<TrainingTreeNode>> databaseNodes = new TreeMap<>(); // <showOrder,list_of_nodes>
         for (TrainingTreeNode child : children) {
             TrainingTreeNodeType child_type = child.getNode_type();
             if (child_type == CustomSlideNode) {
@@ -518,12 +511,18 @@ public class TrainingTreeNodeResource {
                 TrainingCategoryNode categoryNode = trainingCategoryNodeRepository
                         .getTrainingCategoryNodeByTrainingTreeNode(child);
                 child.setJson_universal_id(categoryNode.getCategory().getId());
-                databaseNodes.put(categoryNode.getCategory().getShowOrder(), child);
+                Integer showOrder = categoryNode.getCategory().getShowOrder();
+                if(databaseNodes.get(showOrder) == null)
+                    databaseNodes.put(showOrder, new ArrayList<>());
+                databaseNodes.get(showOrder).add(child);
             } else if (child_type == RequirementNode) {
                 TrainingRequirementNode requirementNode = trainingRequirementNodeRepository
                         .getTrainingRequirementNodeByTrainingTreeNode(child);
                 child.setJson_universal_id(requirementNode.getRequirementSkeleton().getId());
-                databaseNodes.put(requirementNode.getRequirementSkeleton().getShowOrder(), child);
+                Integer showOrder = requirementNode.getRequirementSkeleton().getShowOrder();
+                if(databaseNodes.get(showOrder) == null)
+                    databaseNodes.put(showOrder, new ArrayList<>());
+                databaseNodes.get(showOrder).add(child);
             } else if (child_type == GeneratedSlideNode) {
                 TrainingGeneratedSlideNode generatedSlideNode = trainingGeneratedSlideNodeRepository
                         .getTrainingGeneratedSlideNodeByTrainingTreeNode(child);
@@ -535,7 +534,9 @@ public class TrainingTreeNodeResource {
                 if (generatedSlideNode.getOptColumn() != null) {
                     showOrder = generatedSlideNode.getOptColumn().getShowOrder();
                 }
-                databaseNodes.put(showOrder, child);
+                if(databaseNodes.get(showOrder) == null)
+                    databaseNodes.put(showOrder, new ArrayList<>());
+                databaseNodes.get(showOrder).add(child);
             }
         }
 
@@ -546,8 +547,9 @@ public class TrainingTreeNodeResource {
 
             // fetch category nodes inside this branch
             List<TrainingCategoryNode> categoryNodes = new ArrayList<>();
-            for (TrainingTreeNode databaseNode : databaseNodes.values()) {
-                categoryNodes
+            for (List<TrainingTreeNode> databaseNodesForShowOrder : databaseNodes.values()) {
+                for(TrainingTreeNode databaseNode : databaseNodesForShowOrder)
+                    categoryNodes
                         .add(trainingCategoryNodeRepository.getTrainingCategoryNodeByTrainingTreeNode(databaseNode));
             }
 
@@ -584,7 +586,10 @@ public class TrainingTreeNodeResource {
                         new_categoryNode.setCategory(selectedCategory);
                         trainingCategoryNodeRepository.save(new_categoryNode);
 
-                        databaseNodes.put(selectedCategory.getShowOrder(), new_baseNode);
+                        Integer showOrder = selectedCategory.getShowOrder();
+                        if(databaseNodes.get(showOrder) == null)
+                            databaseNodes.put(showOrder, new ArrayList<>());
+                        databaseNodes.get(showOrder).add(new_baseNode);
                     }
                 }
             }
@@ -647,8 +652,9 @@ public class TrainingTreeNodeResource {
         case CategoryNode:
             // fetch requirement nodes inside this branch
             List<TrainingRequirementNode> requirementNodes = new ArrayList<>();
-            for (TrainingTreeNode databaseNode : databaseNodes.values()) {
-                requirementNodes.add(
+            for (List<TrainingTreeNode> databaseNodesForShowOrder : databaseNodes.values()) {
+                for(TrainingTreeNode databaseNode : databaseNodesForShowOrder)
+                    requirementNodes.add(
                         trainingRequirementNodeRepository.getTrainingRequirementNodeByTrainingTreeNode(databaseNode));
             }
 
@@ -707,7 +713,10 @@ public class TrainingTreeNodeResource {
                                 pool.removeCustomNodes(selectedRequirement.getId());
                             }
 
-                            databaseNodes.put(selectedRequirement.getShowOrder(), new_baseNode);
+                            Integer showOrder = selectedRequirement.getShowOrder();
+                            if(databaseNodes.get(showOrder) == null)
+                                databaseNodes.put(showOrder, new ArrayList<>());
+                            databaseNodes.get(showOrder).add(new_baseNode);
                         }
                     }
                 }
@@ -743,9 +752,10 @@ public class TrainingTreeNodeResource {
         case RequirementNode:
             // fetch GeneratedSlideNodes inside this RequirementNode
             List<TrainingGeneratedSlideNode> generatedSlideNodes = new ArrayList<>();
-            for (TrainingTreeNode databaseNode : databaseNodes.values()) {
-                generatedSlideNodes.add(trainingGeneratedSlideNodeRepository
-                        .getTrainingGeneratedSlideNodeByTrainingTreeNode(databaseNode));
+            for (List<TrainingTreeNode> databaseNodesForShowOrder : databaseNodes.values()) {
+                for(TrainingTreeNode databaseNode : databaseNodesForShowOrder)
+                    generatedSlideNodes.add(trainingGeneratedSlideNodeRepository
+                            .getTrainingGeneratedSlideNodeByTrainingTreeNode(databaseNode));
             }
 
             // search for each selected optColumn and delete / add GenerateSlideNodes to match the lists
@@ -786,7 +796,10 @@ public class TrainingTreeNodeResource {
                         Integer showOrder = 0;
                         if (selectedOptColumn != null)
                             showOrder = selectedOptColumn.getShowOrder();
-                        databaseNodes.put(showOrder, new_baseNode);
+
+                        if(databaseNodes.get(showOrder) == null)
+                            databaseNodes.put(showOrder, new ArrayList<>());
+                        databaseNodes.get(showOrder).add(new_baseNode);
                     }
                 }
             }
@@ -799,7 +812,6 @@ public class TrainingTreeNodeResource {
                         TrainingTreeNode baseNode = generatedSlideNodeToRemove.getNode();
                         extractCustomNodes(baseNode, baseNode.getParent_id());
                         delete(baseNode.getId());
-                        // TODO what happens to nodes anchored here?
                     }
                 }
             }

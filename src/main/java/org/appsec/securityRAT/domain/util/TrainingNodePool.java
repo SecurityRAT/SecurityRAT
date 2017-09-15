@@ -42,6 +42,7 @@ public class TrainingNodePool {
     }
     public void removeCustomNodes(Long requirementId) {
         savedNodes.get(requirementId).clear();
+        savedNodes.remove(requirementId);
     }
     public void clearAll() {
         savedNodes.clear();
