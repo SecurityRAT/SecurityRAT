@@ -20,6 +20,8 @@ angular.module('sdlctoolApp')
             }
             $scope.modalProgressbar.barValue = 100;
             $timeout(function() {
+
+            $state.params.isDirty = false;
                 // actions when finished
                 $scope.saveProgressModalInstance.close();
             }, 2500);
@@ -30,7 +32,6 @@ angular.module('sdlctoolApp')
         };
 
         $scope.save = function() {
-            $state.params.isDirty = false;
             if ($scope.training.id != null) {
                 $scope.openSaveProgressModal();
                 Training.update($scope.training, onSaveFinished).$promise.then(function(training) {

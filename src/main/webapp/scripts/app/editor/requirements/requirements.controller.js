@@ -127,6 +127,7 @@ angular.module('sdlctoolApp')
             externalIdProp: ''
         };
         $scope.selectedJiraStatusSettings = {
+            template: '<span data-ng-style="option.name==\'No ticket\' && {\'font-style\': \'italic\'}">{{option.name}}</span>',
             smartButtonMaxItems: 3,
             keyboardControls: true,
             styleActive: true,
@@ -2174,7 +2175,9 @@ angular.module('sdlctoolApp')
                     });
                 } else {
                     $scope.jiraStatus.allStatus = jiraStatus.allStatus;
+                    $scope.jiraStatus.allStatus = {name: 'No ticket'};
                 }
+                
                 $scope.disableSave(true);
                 $scope.requirementProperties.hasIssueLinks = true;
             });
@@ -2446,6 +2449,7 @@ angular.module('sdlctoolApp')
                 req.linkStatus.ticketStatus.push(linkStatus);
                 if ($scope.jiraStatus.allStatus.length === 0) {
                     $scope.jiraStatus.allStatus.push(linkStatus);
+                    $scope.jiraStatus.allStatus.push({name: 'No ticket'});
                 } else {
                     if ($filter('filter')($scope.jiraStatus.allStatus, {
                             name: linkStatus.name
@@ -2483,6 +2487,11 @@ angular.module('sdlctoolApp')
                 }
 
             }
+            if($scope.jiraStatus.allStatus.length === 1) {
+                if(angular.eqauls($scope.jiraStatus.allStatus[0].name.toLowerCase(), 'No ticket')){
+                    $scope.jiraStatus.allStatus = [];
+                }
+            }
 
             // remove appropriate ticket from array in requirement.
             var index = req.tickets.indexOf(ticket);
@@ -2519,6 +2528,9 @@ angular.module('sdlctoolApp')
 
         $scope.fetchTicketStatus = function (requirement, hosts) {
             var linkStatus = {};
+            if($scope.jiraStatus.allStatus.length === 0) {
+                $scope.jiraStatus.allStatus.push({name: 'No ticket'});
+            }
             angular.forEach(requirement.tickets, function (ticket) {
                 var apiUrl = Helper.buildJiraUrl(ticket.split('/'));
                 var urlCall = JiraService.buildUrlCall('issueKey', apiUrl);
@@ -2534,9 +2546,10 @@ angular.module('sdlctoolApp')
                         summary: response.fields.summary,
                         issueKey: response.key,
                         url: jiraLink
-                    }
+                    };
                     linkStatus.ticketStatus.push(ticketStatus);
                     angular.extend(requirement.linkStatus, linkStatus);
+                    
                     if ($filter('filter')($scope.jiraStatus.allStatus, {
                             name: response.fields.status.name
                         }).length === 0) {

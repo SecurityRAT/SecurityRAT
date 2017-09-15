@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('sdlctoolApp')
     .controller('TrainingEditController', function ($scope, $rootScope, $stateParams, $state, entity, Training) {
         $scope.Training = entity;

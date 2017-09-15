@@ -644,13 +644,22 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
             } else {
                 var newView = [];
                 angular.forEach(array, function (requirement) {
-                    angular.forEach(selectedTicketStatus, function (value) {
-                        if ($filter('filter')(requirement.linkStatus.ticketStatus, {
-                                name: value.name
-                            }).length > 0) {
-                            newView.push(requirement);
+                    for (var i = 0; i < selectedTicketStatus.length; i++) {
+                        var element = selectedTicketStatus[i];
+                        if (angular.equals(element.name.toLowerCase(), 'no ticket')) {
+                            if(requirement.linkStatus.ticketStatus.length === 0) {
+                                newView.push(requirement);
+                                break;
+                            }
+                        } else {
+                            if ($filter('filter')(requirement.linkStatus.ticketStatus, {
+                                    name: element.name
+                                }).length > 0) {
+                                newView.push(requirement);
+                                break;
+                            }
                         }
-                    });
+                    }
                 });
                 return newView;
             }

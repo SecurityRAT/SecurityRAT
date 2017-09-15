@@ -63,6 +63,7 @@ angular.module('sdlctoolApp')
             }
             $scope.modalProgressbar.barValue = 100;
             $timeout(function() {
+                $state.params.isDirty = false;
                 // actions when finished
                 $scope.saveProgressModalInstance.close();
                 $state.go('training', null, { reload: true });
@@ -131,7 +132,6 @@ angular.module('sdlctoolApp')
         };
 
         $scope.generate = function() {
-            $state.params.isDirty = false;
             $scope.startProgressbar();
 
             // clear the tree
