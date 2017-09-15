@@ -71,10 +71,16 @@
 
 <div style="padding-top: 15px;"></div>
 
-<div class="well">
+<div class="well" data-ng-if="!fetchNumberError">
     <span class="glyphicon glyphicon-info-sign"></span>
     <div style="display: inline-block;">The current selection includes <strong>{{ requirementsSelected }} </strong> Security
         Requirements.
     </div>
 </div>
 
+<div class="alert alert-danger" data-ng-if="fetchNumberError">
+    <span class="glyphicon glyphicon-exclamation-sign"></span>
+    <div style="display: inline-block;">
+        Sorry, there was an error while retrieving the number of selected requirements.
+    </div>
+</div>

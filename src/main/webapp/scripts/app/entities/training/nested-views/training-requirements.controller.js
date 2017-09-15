@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('TrainingRequirementsController', function ($scope, $rootScope, $stateParams, $filter, entity, Training,
+    .controller('TrainingRequirementsController', function ($scope, $rootScope, $stateParams, $filter, $http, entity, Training,
                                                             TrainingTreeNode, apiFactory, sharedProperties ) {
         var system = "old";
         $scope.training = entity;
@@ -85,18 +85,24 @@ angular.module('sdlctoolApp')
 
         $scope.allRequirementsSwitched = function() {
             $scope.showFilters();
-            $scope.updateNumberOfRequirements();
+            $rootScope.updateNumberOfRequirements();
         };
 
-        $scope.updateNumberOfRequirements = function() {
+        $rootScope.updateNumberOfRequirements = function() {
             if($scope.training.allRequirementsSelected
                 || $scope.training.collections.length > 0
                 || $scope.training.projectTypes.length > 0) {
                 var requestString = $rootScope.buildQueryParams();
-                apiFactory.getByQuery("numberOfRequirements", "filter", requestString).then(
-                    function (numberOfRequirements) {
-                        $rootScope.requirementsSelected = numberOfRequirements;
-                    });
+                $http({
+                    url: "/frontend-api/numberOfRequirements/filter?" + requestString,
+                    method: "GET"
+                }).then(function(response) {
+                    $rootScope.fetchNumberError = false;
+                    $rootScope.requirementsSelected = response.data;
+                }, function (exception) {
+                    $rootScope.fetchNumberError = true;
+                    $rootScope.requirementsSelected = "??";
+                });
             } else {
                 $rootScope.requirementsSelected = 0;
             }
@@ -183,7 +189,7 @@ angular.module('sdlctoolApp')
             });
 
         Promise.all(queryPromises).then(function() {
-            $scope.updateNumberOfRequirements();
+            $rootScope.updateNumberOfRequirements();
         });
 
         $scope.init = function() {
@@ -247,7 +253,7 @@ angular.module('sdlctoolApp')
             if(!saved_in_training) {
                 $scope.training.projectTypes.push(item);
             }
-            $scope.updateNumberOfRequirements();
+            $rootScope.updateNumberOfRequirements();
         };
 
         $scope.deselectProjectType = function(item) {
@@ -258,7 +264,7 @@ angular.module('sdlctoolApp')
                 }
             }
 
-            $scope.updateNumberOfRequirements();
+            $rootScope.updateNumberOfRequirements();
         };
 
         $scope.selectCollections = function(item) {
@@ -310,7 +316,7 @@ angular.module('sdlctoolApp')
             if(!saved_in_training) {
                 $scope.training.collections.push(item);
             }
-            $scope.updateNumberOfRequirements();
+            $rootScope.updateNumberOfRequirements();
         };
 
         $scope.deselectCollections = function(item) {
@@ -333,7 +339,7 @@ angular.module('sdlctoolApp')
                     $scope.training.collections.splice(k, 1);
                 }
             }
-            $scope.updateNumberOfRequirements();
+            $rootScope.updateNumberOfRequirements();
         };
 
         $scope.searchObjectbyValue = function(search, object) {

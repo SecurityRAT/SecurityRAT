@@ -15,6 +15,8 @@ angular.module('sdlctoolApp')
                 $scope.activeStep = n;
             }
             else $scope.activeStep = 1;
+            if($scope.activeStep === 4)
+                $scope.updateNumberOfRequirements();
         };
 
         $scope.startProgressbar = function() {
