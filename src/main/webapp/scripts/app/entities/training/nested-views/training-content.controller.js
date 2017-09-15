@@ -6,6 +6,7 @@ angular.module('sdlctoolApp')
         $scope.optcolumns = OptColumn.query();
         $rootScope.selected = {};
         $rootScope.optColumnDict = {};
+        var backUpSelection = {};
 
         // load selections from entity
         $q.all([$scope.training.$promise, $scope.optcolumns.$promise]).then(function() {
@@ -19,6 +20,7 @@ angular.module('sdlctoolApp')
                 angular.forEach($scope.training.optColumns, function(oc_selected) {
                     $rootScope.selected[oc_selected.id] = true;
                 });
+                angular.copy($rootScope.selected, backUpSelection);
                 $scope.selectAll = ($scope.training.optColumns.length === $scope.optcolumns.length);
             }
         });
@@ -59,6 +61,11 @@ angular.module('sdlctoolApp')
         // adds or removes a selection to/from the training entity (which will be saved to db in parent controller)
         $scope.updateSelection = function(id) {
             updateSelectAll($rootScope.selected[id]);
+            if(angular.equals($rootScope.selected, backUpSelection)) {
+                $stateParams.isDirty = false;
+            } else {
+                $stateParams.isDirty = true;
+            }
 
             $q.all([$scope.training.$promise, $rootScope.optColumnDict.$promise]).then(function() {
                 if($rootScope.selected[id]) {

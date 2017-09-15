@@ -20,11 +20,14 @@ angular.module('sdlctoolApp')
                 }
             })
             .state('slideTemplate.detail', {
-                parent: 'entity',
-                url: '/slideTemplate/{id}',
+                parent: 'slideTemplate',
+                url: '/slideTemplates/{id}',
                 data: {
                     roles: ['ROLE_TRAINER', 'ROLE_ADMIN'],
                     pageTitle: 'SlideTemplate'
+                },
+                params: {
+                    isDirty : false
                 },
                 views: {
                     'content@': {

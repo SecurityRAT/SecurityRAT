@@ -30,6 +30,7 @@ angular.module('sdlctoolApp')
         };
 
         $scope.save = function() {
+            $state.params.isDirty = false;
             if ($scope.training.id != null) {
                 $scope.openSaveProgressModal();
                 Training.update($scope.training, onSaveFinished).$promise.then(function(training) {
@@ -44,6 +45,7 @@ angular.module('sdlctoolApp')
         };
 
         $scope.cancel = function() {
+            $state.params.isDirty = false;
             $state.go('training', {});
         };
     });

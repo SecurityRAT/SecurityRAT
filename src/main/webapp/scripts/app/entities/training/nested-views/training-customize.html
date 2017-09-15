@@ -8,10 +8,10 @@
 <div class="col-sm-6 col-md-5">
     <div id="editBlock">
         <h2 class="page-header" style="margin-top: 0px">Edit Slide</h2>
-        <form name="slideEditorform" data-ng-submit="save()">
+        <form name="slideEditorform" data-ng-submit="saveSlide()">
             <div class="form-group">
                 <label for="slideTitle">Slide Title</label>
-                <input class="form-control" name="slideTitle" id="slideTitle" data-ng-model="selectedNode.name" data-ng-change="disableSaveSlideButton = false">
+                <input class="form-control" name="slideTitle" id="slideTitle" data-ng-model="selectedNode.name" data-ng-change="updateEditableSlides()">
             </div>
 
             <div class="form-group">
@@ -21,7 +21,7 @@
                           name="slideContent"
                           id="slideContent"
                           data-ng-model="selectedNode.content"
-                          data-ng-change="disableSaveSlideButton = false"></textarea>
+                          data-ng-change="updateEditableSlides()"></textarea>
             </div>
             <div class="form-group">
                 <div id="customSlideWarning" class="alert alert-info" data-ng-hide="selectedNode.content.length > 0">
@@ -29,10 +29,10 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button id="updateSlideButton" type="button" class="btn btn-info" data-ng-click="updateSlidePreview(false, '')">
+                <!-- <button id="updateSlideButton" type="button" class="btn btn-info" data-ng-click="updateSlidePreview(false, '')">
                     <span class="glyphicon glyphicon-eye-open"></span>&nbsp;<span>Update Preview</span>
-                </button>
-                <button id="saveSlideButton" type="button" class="btn btn-primary" data-ng-click="saveSlide()" data-ng-disabled="disableSaveSlideButton">
+                </button> -->
+                <button id="saveSlideButton" type="submit" class="btn btn-primary" data-ng-disabled="disableSaveSlideButton">
                     <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Save Slide</span></button>
             </div>
         </form>

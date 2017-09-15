@@ -14,6 +14,7 @@ angular.module('sdlctoolApp')
         };
 
         var onSaveFinished = function (result) {
+            $state.params.isDirty = false;
             $scope.$emit('sdlctoolApp:slideTemplateUpdate', result);
             $state.go('slideTemplate', null, {
                 reload: true
@@ -31,11 +32,17 @@ angular.module('sdlctoolApp')
         };
 
         $scope.cancel = function () {
+            $state.params.isDirty = false;
             $state.go('slideTemplate', {});
         };
 
+        $scope.setDirty = function(value) {
+            $stateParams.isDirty = value;
+        };
+        
         $scope.updateSlidePreview = function () {
             if (angular.isDefined($scope.slideTemplate.content)) {
+                $stateParams.isDirty = true;
                 var content = $scope.slideTemplate.content;
                 content = content
                     .replace(/({{ *training.name *}})/g, "TrainingName")
@@ -51,6 +58,8 @@ angular.module('sdlctoolApp')
 
         $timeout(function () {
             // this must be done _after_ the iframe content loaded or has no effect
-            $scope.updateSlidePreview(false, "");
-        }, 2500);
+            $scope.updateSlidePreview();
+            // slideTemplate object is still clean at this stage;
+            $stateParams.isDirty = false;
+        }, 500);
     });

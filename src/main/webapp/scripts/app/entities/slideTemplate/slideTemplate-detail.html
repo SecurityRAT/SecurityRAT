@@ -4,7 +4,7 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label for="field_name">Name</label>
-                <input id="field_name" class="form-control" type="text" name="name" ng-model="slideTemplate.name" required>
+                <input id="field_name" class="form-control" type="text" name="name" ng-model="slideTemplate.name" data-ng-change="setDirty(true)" required>
                 <div data-ng-show="editForm.name.$invalid">
                     <p class="help-block">
                         The name field is required
@@ -14,11 +14,11 @@
             <div class="form-group">
                 <label for="field_description">Description</label>
                 <textarea id="field_description" class="container form-control" name="description" data-ng-model='slideTemplate.description'
-                    rows="10" cols="125"></textarea>
+                    rows="10" cols="125" data-ng-change="setDirty(true)"></textarea>
             </div>
             <div class="form-group">
                 <label for="field_content">Content</label>
-                <textarea id="field_content" class="container form-control" name="content" data-ng-model='slideTemplate.content' data-ng-change="loadSlidePreview()"
+                <textarea id="field_content" class="container form-control" name="content" data-ng-model='slideTemplate.content' data-ng-change="updateSlidePreview()"
                     rows="10" cols="125" required></textarea>
                 <div data-ng-show="editForm.content.$invalid">
                     <p class="help-block">
@@ -31,9 +31,6 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" ng-click="cancel()">
                     <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span> </button>
-                <button type="button" class="btn btn-info" data-ng-click="updateSlidePreview(false, '')">
-                    <span class="glyphicon glyphicon-eye-open"></span>&nbsp;<span>Update Preview</span>
-                </button>
                 <button type="submit" ng-disabled="editForm.$invalid || editForm.$submitted" class="btn btn-primary">
                     <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Save</span>
                 </button>

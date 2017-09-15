@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('SlideTemplateController', function ($scope, SlideTemplate, SlideTemplateSearch) {
+    .controller('SlideTemplateController', function ($scope, SlideTemplate, SlideTemplateSearch, $stateParams) {
         $scope.slideTemplates = [];
         $scope.loadAll = function() {
             SlideTemplate.query(function(result) {

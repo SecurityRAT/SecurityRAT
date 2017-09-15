@@ -3,6 +3,6 @@
 	    <div style="white-space: pre-line; word-wrap: break-word;"marked ="data.text"></div>
 	</div>
 	<div class="modal-footer">
-	    <button class="btn btn-primary" data-ng-click="ok()"><b>{{data.ok}}</b></button>
+	    <button class="btn btn-primary" data-ng-class="{'btn-danger': data.isDirty}" data-ng-click="ok()"><b>{{data.ok}}</b></button>
 	    <button class="btn btn-default" data-ng-click="cancel()"><b>{{data.cancel}}</b></button>
 	</div>

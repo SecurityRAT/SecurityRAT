@@ -24,6 +24,11 @@ angular.module('sdlctoolApp')
             $scope.training = result;
         });
 
+        $scope.updateEditableSlides = function() {
+            $scope.disableSaveSlideButton = false;
+            $scope.updateSlidePreview(false, '');
+        };
+
         $scope.slideEditor = function(state) {
             if(state) {
                 $("#editBlock").fadeIn();
@@ -59,13 +64,13 @@ angular.module('sdlctoolApp')
                     $('#slideTitle').prop('disabled', true);
                     $('#slideContent').prop('disabled', true);
                     $('#saveSlideButton').prop('disabled', true);
-                    $('#updateSlideButton').prop('disabled', true);
+                    // $('#updateSlideButton').prop('disabled', true);
                     // $('#customSlideWarning').fadeIn();
                 } else {
                     $('#slideTitle').prop('disabled', false);
                     $('#slideContent').prop('disabled', false);
                     $('#saveSlideButton').prop('disabled', false);
-                    $('#updateSlideButton').prop('disabled', false);
+                    // $('#updateSlideButton').prop('disabled', false);
                     // $('#customSlideWarning').hide();
                 }
             } else {
@@ -143,6 +148,7 @@ angular.module('sdlctoolApp')
         });
 
         $scope.saveSlide = function() {
+            $stateParams.isDirty = true;
             // rename node
             var tree = $('#tree').jstree(true);
             tree.rename_node(tree.get_selected(), $scope.selectedNode.name);
@@ -163,6 +169,7 @@ angular.module('sdlctoolApp')
                 });
             }
 
+            $stateParams.isDirty = true;
             if($scope.selectedNode.node_type == "CustomSlideNode")
                 $scope.updateSlidePreview(false, "");
         };

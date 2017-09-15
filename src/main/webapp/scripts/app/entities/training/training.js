@@ -6,6 +6,9 @@ angular.module('sdlctoolApp')
             .state('training', {
                 parent: 'entity',
                 url: '/trainings',
+                params: {
+                    isDirty: false
+                },
                 data: {
                     roles: ['ROLE_TRAINER', 'ROLE_ADMIN'],
                     pageTitle: 'Trainings'
@@ -20,7 +23,7 @@ angular.module('sdlctoolApp')
                 }
             })
             .state('training.detail', {
-                parent: 'entity',
+                parent: 'training',
                 url: '/training/{id}',
                 data: {
                     roles: ['ROLE_TRAINER', 'ROLE_ADMIN'],

@@ -19,7 +19,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
         'ui.indeterminate'
     ])
     /* jshint unused: false*/
-    .run(function ($rootScope, $location, $window, $http, $state, Auth, Principal, ENV, VERSION, Account) {
+    .run(function ($rootScope, $location, $window, $http, $state, Auth, Principal, ENV, VERSION, Account, $confirm) {
         $rootScope.ENV = ENV;
         $rootScope.VERSION = VERSION;
         $rootScope.AUTHENTICATIONTYPE = '';
@@ -42,7 +42,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
             }
         };
 
-        $rootScope.$on('$stateChangeStart', function (event, toState, toStateParams) {
+        function callbackOnClean($rootScope, toState, toStateParams, Principal, Auth) {
             $rootScope.toState = toState;
             $rootScope.toStateParams = toStateParams;
             var a = document.getElementById('redirect');
@@ -51,6 +51,32 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
             }
             if (Principal.isIdentityResolved()) {
                 Auth.authorize();
+            }
+        }
+        $rootScope.$on('$stateChangeStart', function (event, toState, toStateParams, fromState, fromParams) {
+            if (angular.isDefined(fromParams.isDirty) && fromParams.isDirty) {
+                event.preventDefault();
+                $confirm({
+                        text: 'You have unsaved Changes. Are you sure you want to leave the page without saving?',
+                        title: 'Confirm',
+                        isDirty: fromParams.isDirty,
+                        ok: 'Ignore Changes',
+                        cancel: 'Cancel'
+                    }, {
+                        templateUrl: 'scripts/app/editor/confirm-modal.html'
+                    })
+                    .then(function () {
+                        fromParams.isDirty = false;
+                        $state.go(toState.name, toStateParams);
+                        // $scope.onRouteChangeOff = '';
+                        // $scope.requirementProperties.requirementsEdited = false;
+                        // window.onbeforeunload = function (e) {};
+                        // window.location.href = $location.url(newUrl).hash();
+                    }, function () {
+                        event.preventDefault();
+                    });
+            } else {
+                callbackOnClean($rootScope, toState, toStateParams, Principal, Auth);
             }
 
         });
@@ -619,7 +645,9 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                 var newView = [];
                 angular.forEach(array, function (requirement) {
                     angular.forEach(selectedTicketStatus, function (value) {
-                        if ($filter('filter')(requirement.linkStatus.ticketStatus, {name: value.name}).length > 0) {
+                        if ($filter('filter')(requirement.linkStatus.ticketStatus, {
+                                name: value.name
+                            }).length > 0) {
                             newView.push(requirement);
                         }
                     });
@@ -742,7 +770,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
     .filter('filterStatusColumnByText', function ($filter) {
         return function (array, textfilterObject, statusColumns) {
             /* jshint loopfunc: true */
-            if (!$.isEmptyObject(textfilterObject)  && array.length > 0) {
+            if (!$.isEmptyObject(textfilterObject) && array.length > 0) {
                 for (var i = 0; i < statusColumns.length; i++) {
                     var element = statusColumns[i];
                     if (!element.isEnum && angular.isDefined(textfilterObject[element.id]) && textfilterObject[element.id] !== '') {

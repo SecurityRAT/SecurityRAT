@@ -129,6 +129,7 @@ angular.module('sdlctoolApp')
         };
 
         $scope.generate = function() {
+            $state.params.isDirty = false;
             $scope.startProgressbar();
 
             // clear the tree
@@ -194,6 +195,7 @@ angular.module('sdlctoolApp')
         };
 
         $scope.cancel = function() {
+            $state.params.isDirty = false;
             $state.go('training', {});
         };
     });
