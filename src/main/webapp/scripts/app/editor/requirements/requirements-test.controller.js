@@ -112,11 +112,12 @@ angular.module('sdlctoolApp')
         };
 
         $scope.showLongdesc = function (result) {
+            result.backUpLimitDesc = result.limitDesc;
             result.limitDesc = undefined;
         };
 
         $scope.hideLongdesc = function (result) {
-            result.limitDesc = LETTERLIMIT;
+            result.limitDesc = result.backUpLimitDesc;
         };
 
         function configureDisplay(actualTemplateName, showCloseButton, errorAlertType, errorMessage) {
@@ -151,7 +152,31 @@ angular.module('sdlctoolApp')
                         }
                         element.status = 1;
                         angular.forEach(element.testResults, function (result) {
+                            var split = result.message.split('```');
+                            // set default.
                             result.limitDesc = LETTERLIMIT;
+                            result.backUpLimitDesc = result.limitDesc;
+                            if(split.length > 1) {
+                                var charactersCounter = 0;
+                                var codeDelimiterCounter = 0; // must always be a multiple of 2.
+                                for (var j = 0; j < split.length; j++) {
+                                    charactersCounter += split[j].length;
+                                    if(charactersCounter < LETTERLIMIT || codeDelimiterCounter % 2 === 1) {
+                                        if(j < split.length - 1) {
+                                        codeDelimiterCounter++;
+                                        charactersCounter += 3; // for the code markdown delimeter
+                                        } else if ((j === split.length - 1) && angular.equals(split[j], '')) {
+                                            // needed to properly display the code snippet
+                                            // in case the return to new line is not present at the end.
+                                            result.message += '\n';
+                                        }
+                                    } else {
+                                        result.limitDesc = charactersCounter - split[j].length;
+                                        result.backUpLimitDesc = result.limitDesc;
+                                        break;
+                                    }
+                                }
+                            }
                             // marks a requirement as completely tested if all its tests have completed.
                             if ($scope.STATUSCONSTANT[result.status] === $scope.STATUSCONSTANT.IN_PROGRESS) {
                                 element.status = 0;
@@ -205,6 +230,7 @@ angular.module('sdlctoolApp')
         $scope.startTest = function () {
             $scope.error.display = false;
             $scope.authenticationProperties.authenticatorpromise.derefer = $q.defer();
+            $scope.authenticationProperties.spinnerProperty.showSpinner = true;
             testAutomation.headerConfig.withCredentials = false;
             // check authentication by running sending the request to start the test.
             testAutomation.startTest($scope.testObject)
@@ -215,6 +241,7 @@ angular.module('sdlctoolApp')
                                 $scope.authenticationProperties.spinnerProperty, $scope.authenticationProperties.authenticatorpromise)
                             .then(successCallbackAfterStart)
                             .catch(function (exception) { // onRejected checker function
+                                startTestForm.$submitted = false;
                                 var errorMessage = 'The authentication to the securityCAT tool was unsuccessful. ' +
                                     'This can sometimes be due to wrong CORS header configurations. Please check this and try again.';
                                 if (exception === 'CORS') {

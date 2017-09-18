@@ -803,4 +803,9 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
 
             return array;
         };
+    })
+    .filter('sanitizeMarked', function($sanitize) {
+        return function(html) {
+            return $sanitize(html);
+        }
     });
