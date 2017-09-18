@@ -20,9 +20,6 @@ angular.module('sdlctoolApp')
                 $scope.training = result;
             });
         };
-        $rootScope.$on('sdlctoolApp:trainingUpdate', function(event, result) {
-            $scope.training = result;
-        });
 
         $scope.updateEditableSlides = function() {
             $scope.disableSaveSlideButton = false;
@@ -46,14 +43,13 @@ angular.module('sdlctoolApp')
         var tree = $("#tree");
         // Tree selection callback (called when a node is selected)
         tree.bind("select_node.jstree", function(evt, data) {
-            //selected node object: data.inst.get_json()[0];
             $scope.selectedNodeJSTree = data;
             $scope.selectedNode = new TrainingTreeNode();
             $scope.selectedNode.fromJSON(data.node);
             $scope.$apply();
+            //selected node object: data.inst.get_json()[0];
 
             var selectedNodeType = $scope.selectedNode.node_type;
-            var selectedNodeName = $scope.selectedNode.text;
 
             if(selectedNodeType == "GeneratedSlideNode" || selectedNodeType == "CustomSlideNode") {
                 $scope.slideEditor(true);
@@ -76,6 +72,13 @@ angular.module('sdlctoolApp')
             } else {
                 $scope.slideEditor(false);
             }
+        });
+
+        tree.bind("rename_node.jstree", function(e, data) {
+        if(data.node.data == null)
+            data.node.data = {};
+            data.node.data.name = data.text;
+            $scope.updateParentName(data.node.children, data.text);
         });
 
         // callback on jstree's move_node event (triggered when a node was moved)
@@ -143,7 +146,10 @@ angular.module('sdlctoolApp')
 
                     node.content = new_content;
                 });
-                //$scope.setSlidePreviewContent(nodeObj.loadContent(new_parent.name));
+                nodeObj.parent_id = parent;
+                nodeObj.loadContent(new_parent.name).then(function(content) {
+                    $scope.setSlidePreviewContent(content);
+                });
             }
         });
 
@@ -151,10 +157,16 @@ angular.module('sdlctoolApp')
             $stateParams.isDirty = true;
             // rename node
             var tree = $('#tree').jstree(true);
-            tree.rename_node(tree.get_selected(), $scope.selectedNode.name);
+            var new_name = $scope.selectedNode.name;
+            if(new_name.length > 20) {
+                new_name = new_name.substr(0,17);
+                new_name += "...";
+            }
+            tree.rename_node(tree.get_selected(), new_name);
 
             // update content
             $scope.selectedNodeJSTree.node.data["content"] = $scope.selectedNode.content;
+            $scope.selectedNodeJSTree.node.data["name"] = $scope.selectedNode.name;
 
             if($scope.selectedNodeJSTree.node.data.node_id != null) {
                 TrainingTreeUtil.CustomSlideNode.query({id: $scope.selectedNodeJSTree.node.data.node_id}).$promise.then(function(customSlideNode) {
@@ -172,6 +184,14 @@ angular.module('sdlctoolApp')
             $stateParams.isDirty = true;
             if($scope.selectedNode.node_type == "CustomSlideNode")
                 $scope.updateSlidePreview(false, "");
+        };
+
+        $scope.updateParentName = function(node_ids, name) {
+            var tree = $('#tree').jstree(true);
+            node_ids.forEach(function(node_id) {
+               var node = tree.get_node(node_id);
+               node.data.parent_id.name = name;
+            });
         };
 
         $scope.updateSlidePreview = function(writeback, parentName) {
@@ -240,6 +260,7 @@ angular.module('sdlctoolApp')
                             }
                         );
                         tree.edit(newChild);
+                        $('.jstree-rename-input').attr('maxLength', 20);
                         $scope.selectedNode.addBranchNode(newChild.text);
                         //TODO how to get the branchNodes new name?
 
@@ -271,12 +292,15 @@ angular.module('sdlctoolApp')
                             "separator_after": true,
                             icon: "glyphicon glyphicon-flash",
                             action: function(obj) {
+                                var parent = tree.get_node(tree.get_selected());
                                 var newChild = tree.create_node(node.id,
                                     {
                                         "text": "new Customslide",
                                         "type": "CustomSlideNode",
                                         "data": {
-                                            "content": ""
+                                            "name": "new Customslide",
+                                            "content": "",
+                                            "parent_id": {name: parent.text}
                                         }
                                     }
                                 );
@@ -307,6 +331,7 @@ angular.module('sdlctoolApp')
                     "label": "Rename",
                     "action": function (obj) {
                         tree.edit(node);
+                        $('.jstree-rename-input').attr('maxLength', 20);
                     },
                     "icon": "glyphicon glyphicon-wrench"
                 },
@@ -385,12 +410,15 @@ angular.module('sdlctoolApp')
                             "action": function (obj) {
 
                                 var tree = $('#tree').jstree(true);
+                                var parent = tree.get_node(tree.get_selected());
                                 var newChild = tree.create_node($scope.selectedNodeJSTree.node.id,
                                     {
                                         "text": slideTemplate.name,
                                         "type": "CustomSlideNode",
                                         "data": {
-                                            "content": slideTemplate.content
+                                            "content": slideTemplate.content,
+                                            "name": slideTemplate.name,
+                                            "parent_id": {name: parent.text}
                                         }
                                     }
                                 );
