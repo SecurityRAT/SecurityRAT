@@ -199,7 +199,7 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 			element(by.model('reqStat.value')).sendKeys('Edited custom comment');
 		});
 
-		(element(by.model('requirement.description'))).clear().then(function() {
+		element(by.model('requirement.description')).clear().then(function() {
 			(element(by.model('requirement.description'))).sendKeys('Edited custom description');
 		});
 

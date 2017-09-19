@@ -292,14 +292,14 @@ angular.module('sdlctoolApp')
             angular.forEach(attachments, function (attachment) {
                 //              
                 if ((attachment.mimeType === 'application/x-yaml' && attachment.size <= 5000000)) {
-                    var date = $filter('date')((new Date(attachment.created)).getTime(), 'medium');
+                    var date = $filter('date')(attachment.created, 'medium');
                     var names = attachment.filename.split('_');
                     var name = names[(names).indexOf(appConfig.filenamePrefix) + 1];
 
                     attachmentArray.push({
                         label: name + ' created on: ' + date,
                         downloadUrl: attachment.content,
-                        showOrder: (new Date(attachment.created)).getTime()
+                        showOrder: attachment.created
                     });
                 }
             });

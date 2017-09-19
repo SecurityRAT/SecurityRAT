@@ -342,6 +342,7 @@ describe('Protractor Security RAT bug Scenarios Testsuite', function () {
                 });
             });
         });
+        browser.sleep(5000);
         refreshBrowser();
         browser.get(browser.params.impTestAttachmentUrl + browser.params.attachmentUrls[3]).then(function () {}, function () {
             browser.switchTo().alert().accept();
