@@ -398,9 +398,9 @@ angular.module('sdlctoolApp')
             var newStyleAlternativeInstances = {};
 
             angular.forEach(requirementCategories, function (category) {
-                var tickets = [];
                 var lastElementOrder = 0;
                 angular.forEach(category.requirements, function (requirement) {
+                    
                     reqCounter++;
                     var values = [];
                     // var linkStatus = {};
@@ -457,9 +457,11 @@ angular.module('sdlctoolApp')
                         }
 
                     });
-
+                    var tickets = [];
                     if (angular.isDefined(requirement.tickets)) {
-                        tickets = requirement.tickets;
+                        angular.copy(requirement.tickets, tickets);
+                        requirement.tickets = [];
+                        requirement.tickets = tickets;
                         if (requirement.tickets.length > 0) {
                             hasIssueLinks = true;
                         }
@@ -485,7 +487,10 @@ angular.module('sdlctoolApp')
                         statusColumns: statusColumnsValues,
                         tagInstances: requirement.tagInstances,
                         selected: false,
-                        linkStatus: {},
+                        linkStatus: {
+                            link: true,
+                            ticketStatus: []
+                        },
                         isNew: false,
                         isOld: false,
                         applyUpdate: ' '

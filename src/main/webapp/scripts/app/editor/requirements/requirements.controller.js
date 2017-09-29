@@ -1827,7 +1827,7 @@ angular.module('sdlctoolApp')
             var wb = new Workbook();
             wb.SheetNames.push(wsName);
             wb.Sheets[wsName] = ws;
-            
+
             if (dropdownList.length > 0) {
                 wb.SheetNames.push(wsName1);
                 // in case there are no statuscolumns of type enum.
@@ -2175,9 +2175,11 @@ angular.module('sdlctoolApp')
                     });
                 } else {
                     $scope.jiraStatus.allStatus = jiraStatus.allStatus;
-                    $scope.jiraStatus.allStatus = {name: 'No ticket'};
+                    $scope.jiraStatus.allStatus.push({
+                        name: 'No ticket'
+                    });
                 }
-                
+
                 $scope.disableSave(true);
                 $scope.requirementProperties.hasIssueLinks = true;
             });
@@ -2245,8 +2247,9 @@ angular.module('sdlctoolApp')
                 localStorageService.set(appConfig.localStorageKey, doc);
             }
         };
-
+        
         $scope.buildYAMLFile = function () {
+            
             var objectToExport = {
                 name: $scope.systemSettings.name,
                 ticket: $scope.ticket,
@@ -2449,7 +2452,9 @@ angular.module('sdlctoolApp')
                 req.linkStatus.ticketStatus.push(linkStatus);
                 if ($scope.jiraStatus.allStatus.length === 0) {
                     $scope.jiraStatus.allStatus.push(linkStatus);
-                    $scope.jiraStatus.allStatus.push({name: 'No ticket'});
+                    $scope.jiraStatus.allStatus.push({
+                        name: 'No ticket'
+                    });
                 } else {
                     if ($filter('filter')($scope.jiraStatus.allStatus, {
                             name: linkStatus.name
@@ -2464,9 +2469,14 @@ angular.module('sdlctoolApp')
                     errorHandlingProperty: $scope.manageTicketProperty
                 });
                 if (angular.isDefined(promise)) {
-                    $scope.manageTicketProperty.spinnerProperty.showSpinner = false;
-                    req.linkStatus.enableTooltip = false;
-                    $scope.manageTicketProperty.jhError.show = false;
+                    promise
+                        .then(function () {
+                            $scope.manageTicketProperty.spinnerProperty.showSpinner = false;
+                            req.linkStatus.enableTooltip = false;
+                            $scope.manageTicketProperty.jhError.show = false;
+                        }).catch(function () {
+
+                        });
                 }
             } else {
                 $scope.manageTicketProperty.jhError.show = true;
@@ -2487,8 +2497,8 @@ angular.module('sdlctoolApp')
                 }
 
             }
-            if($scope.jiraStatus.allStatus.length === 1) {
-                if(angular.eqauls($scope.jiraStatus.allStatus[0].name.toLowerCase(), 'No ticket')){
+            if ($scope.jiraStatus.allStatus.length === 1) {
+                if (angular.eqauls($scope.jiraStatus.allStatus[0].name.toLowerCase(), 'No ticket')) {
                     $scope.jiraStatus.allStatus = [];
                 }
             }
@@ -2528,8 +2538,10 @@ angular.module('sdlctoolApp')
 
         $scope.fetchTicketStatus = function (requirement, hosts) {
             var linkStatus = {};
-            if($scope.jiraStatus.allStatus.length === 0) {
-                $scope.jiraStatus.allStatus.push({name: 'No ticket'});
+            if ($scope.jiraStatus.allStatus.length === 0) {
+                $scope.jiraStatus.allStatus.push({
+                    name: 'No ticket'
+                });
             }
             angular.forEach(requirement.tickets, function (ticket) {
                 var apiUrl = Helper.buildJiraUrl(ticket.split('/'));
@@ -2549,7 +2561,7 @@ angular.module('sdlctoolApp')
                     };
                     linkStatus.ticketStatus.push(ticketStatus);
                     angular.extend(requirement.linkStatus, linkStatus);
-                    
+
                     if ($filter('filter')($scope.jiraStatus.allStatus, {
                             name: response.fields.status.name
                         }).length === 0) {

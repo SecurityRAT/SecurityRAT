@@ -336,7 +336,7 @@
                             <br/>
                         </td>
                     </tr>
-                    <tr class="animate-repeat" data-ng-repeat="reqs in (filteredReqs = (requirements | orderBy:['categoryOrder','order'] | filterUpdates : updatedReqs | filterByTags : filteredRequirementsByTags | filter: {categoryId: category.id, description: textFilters.description, shortName: textFilters.shortName} | filterByStatus : selectedStatusColumn: statusColumns | filterTicketStatus : jiraStatus.selectedStatus | filter:search | filterOptColumnByText: textFilters.optColumns : optColumns | filterStatusColumnByText: textFilters.statusColumns : statusColumns))"
+                    <tr class="animate-repeat" data-ng-repeat="reqs in (filteredReqs = (requirements | orderBy:['categoryOrder','order'] | filterUpdates : updatedReqs | filterByTags : filteredRequirementsByTags | filter: {categoryId: category.id} : true | filter: { description: textFilters.description, shortName: textFilters.shortName} | filterByStatus : selectedStatusColumn: statusColumns | filterTicketStatus : jiraStatus.selectedStatus | filter:search | filterOptColumnByText: textFilters.optColumns : optColumns | filterStatusColumnByText: textFilters.statusColumns : statusColumns))"
                         uib-tooltip="{{reqs.updateTooltip}}" data-ng-style="updatedReqs && reqs.shortName!==filteredReqs[$index+1].shortName && {'border-bottom':'solid 3px'}">
                         <td data-ng-if="updatedReqs && (!reqs.isNew && !reqs.toBeRemoved)">{{reqs.applyUpdate}}</td>
                         <td data-ng-if="updatedReqs && (reqs.isNew || reqs.toBeRemoved)">

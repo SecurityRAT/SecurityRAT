@@ -315,7 +315,7 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 		
 		//export to excel without status values.
 		element(by.buttonText('Action with selected')).click();
-		element(by.linkText('Create spreadsheet')).click();
+		element(by.partialLinkText('Create spreadsheet')).click();
 		browser.sleep(2000);
 		element(by.css('span[class=\'bootstrap-switch-label\']')).click();
 		browser.sleep(1000);
