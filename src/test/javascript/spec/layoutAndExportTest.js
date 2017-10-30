@@ -149,9 +149,11 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 			}
 		});
 		(element(by.buttonText('Generate'))).click();
-		browser.sleep(6000);
-		element(by.buttonText(closeButton)).click();
-		browser.sleep(2000);
+		browser.wait(function() {
+			return element(by.buttonText('Close')).isPresent();
+		});
+		element(by.buttonText('Close')).click();
+		browser.sleep(500);
 		element(by.buttonText('Action with selected')).click();
 		browser.sleep(1000);
 		element(by.buttonText('Action with selected')).click();

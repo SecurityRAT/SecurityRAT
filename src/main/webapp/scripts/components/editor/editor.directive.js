@@ -84,4 +84,19 @@ angular.module('sdlctoolApp')
             	
             }
         };
-    });
+    }).directive('actionWithSelected', function() {
+		'use strict';
+		return {
+			scope: {
+				enabled: '=actionWithSelected'
+			},
+			restrict: 'A',
+			link: function (scope, element, attrs) {
+				element.bind('click', function(event) {
+					if(!scope.enabled) {
+						event.off();
+					}
+				});
+			}
+		};
+	});

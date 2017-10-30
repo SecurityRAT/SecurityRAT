@@ -1090,8 +1090,6 @@ angular.module('sdlctoolApp')
             $scope.filterCategory = $filter('orderBy')($scope.filterCategory, 'showOrder');
 
             if ($scope.systemSettings.oldRequirements !== undefined) {
-                //$scope.mergeOldAndNewRequirements();
-                // list of old requirements.
                 var retOld = $scope.systemSettings.oldRequirements;
                 var retNew = $scope.requirements;
                 $scope.requirements = retOld;
@@ -1497,20 +1495,20 @@ angular.module('sdlctoolApp')
 
             //checks if an old requirement was removed, so we need to reiterate through the new requirements
             $scope.deletedReqs = [];
-            angular.forEach($scope.requirements, function (oldRequirement) {
+            // reverse iteration so that change in array lenght does not affect the result
+            for (var idx = $scope.requirements.length - 1; idx >= 0 ; idx--) {
+                var oldRequirement = $scope.requirements[idx];
                 // check for requirement with id less than 10000 is to avoid removing custom requirements from the scope.
                 if (!$scope.searchRequirementInArray(oldRequirement, updatedRequirements) && oldRequirement.id < 10000) {
                     $scope.deletedReqs.push(oldRequirement);
                     if (changedSettings) {
-                        var idx = $scope.requirements.indexOf(oldRequirement);
                         $scope.requirements.splice(idx, 1);
-                    } else {
+                    }else {
                         $scope.updatesAvailable = true;
                     }
                     $scope.deletedCounter++;
                 }
-            });
-
+            }
             if (changedSettings) {
                 var message = '';
                 if ($scope.newCounter === 0 && $scope.deletedCounter === 0) {
@@ -2247,9 +2245,9 @@ angular.module('sdlctoolApp')
                 localStorageService.set(appConfig.localStorageKey, doc);
             }
         };
-        
+
         $scope.buildYAMLFile = function () {
-            
+
             var objectToExport = {
                 name: $scope.systemSettings.name,
                 ticket: $scope.ticket,
