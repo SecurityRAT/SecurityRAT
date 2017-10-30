@@ -193,10 +193,10 @@
                             data-ng-if="(requirements | filter:{selected: true}).length && ticket.url != null">
                             <img src="assets/images/jira-icon.png" width="16" height="16" /> Create JIRA tickets</a>
                         <a href="" data-ng-if="(requirements | filter:{selected: true}).length == 0 || ticket.url == null && (requirements | filter:{selected: true}).length">
-                            <span uib-tooltip="Please export the requirement set to JIRA first." tooltip-trigger="mouseenter" tooltip-placement="top" data-ng-if="ticket.url == null && (requirements | filter:{selected: true}).length" class="disabledButton" tooltip-append-to-body>
+                            <span uib-tooltip="Please export the requirement set to JIRA first." tooltip-trigger="mouseenter" tooltip-placement="top" data-ng-if="ticket.url == null && (requirements | filter:{selected: true}).length" class="disabledButton">
 								<img src="assets/images/jira-icon.png" width="16" height="16"/> Create JIRA tickets
 							</span>
-                            <span uib-tooltip="Please select requirements first." tooltip-trigger="mouseenter" tooltip-placement="top" data-ng-if="(requirements | filter:{selected: true}).length == 0" class="disabledButton" tooltip-append-to-body>
+                            <span uib-tooltip="Please select requirements first." tooltip-trigger="mouseenter" tooltip-placement="top" data-ng-if="(requirements | filter:{selected: true}).length == 0" class="disabledButton">
 							<img src="assets/images/jira-icon.png" width="16" height="16"/> Create JIRA tickets
 							</span>
                         </a>
@@ -204,15 +204,21 @@
                     <li role="menuitem" class="animate-hide" data-ng-hide="withselectedDropdown.toggleExcel">
                         <a href="" uib-tooltip="Please select requirements first." tooltip-enable="(requirements | filter:{selected: true}).length == 0"
                             tooltip-trigger="mouseenter" tooltip-placement="top" tooltip-append-to-body>
-                            <span data-ng-click="configExcel()" data-ng-class="{'disabledButton': (requirements | filter:{selected: true}).length == 0}">
+                            <span data-ng-if="(requirements | filter:{selected: true}).length == 0" data-ng-class="{'disabledButton': (requirements | filter:{selected: true}).length == 0}">
+								<img src="assets/images/Excel-icon.png"/> Create spreadsheet
+                            </span>
+                            <span data-ng-if="(requirements | filter:{selected: true}).length > 0" data-ng-click="configExcel()" >
 								<img src="assets/images/Excel-icon.png"/> Create spreadsheet
 							</span>
                         </a>
                     </li>
-                    <li role="menuitem" class="animate-hide" data-ng-hide="withselectedDropdown.toggleExcel">
+                    <li role="menuitem" class="animate-hide" data-ng-hide="withselectedDropdown.toggleExcel" >
                         <a href="" uib-tooltip="Please select requirements first." tooltip-enable="(requirements | filter:{selected: true}).length == 0"
                             tooltip-trigger="mouseenter" tooltip-placement="top" tooltip-append-to-body>
-                            <span data-ng-click="exportPTT()" data-ng-class="{'disabledButton': (requirements | filter:{selected: true}).length == 0}">
+                            <span data-ng-if="(requirements | filter:{selected: true}).length == 0" data-ng-class="{'disabledButton': (requirements | filter:{selected: true}).length == 0}">
+								<img src="assets/images/powerpoint-icon.png"/> Create slides
+                            </span>
+                            <span data-ng-if="(requirements | filter:{selected: true}).length > 0" data-ng-click="exportPTT()" >
 								<img src="assets/images/powerpoint-icon.png"/> Create slides
 							</span>
                         </a>
@@ -220,7 +226,10 @@
                     <li role="menuitem" class="animate-hide">
                         <a href="" tooltip-enable="(requirements | filter:{selected: true}).length == 0" uib-tooltip="Please select requirements first and make sure this one is testable by filtering with TAG TESTABILITY."
                             tooltip-trigger="mouseenter" tooltip-placement="top" tooltip-append-to-body data-ng-if="withselectedDropdown.testAutomation">
-                            <span data-ng-click="startAutomatedTest()" data-ng-class="{'disabledButton': (requirements | filter:{selected: true}).length == 0}">
+                            <span data-ng-if="(requirements | filter:{selected: true}).length == 0" data-ng-class="{'disabledButton': (requirements | filter:{selected: true}).length == 0}">
+								<img src="assets/images/seccat.png"/> Test requirements (BETA)
+                            </span>
+                            <span data-ng-if="(requirements | filter:{selected: true}).length > 0" data-ng-click="startAutomatedTest()">
 								<img src="assets/images/seccat.png"/> Test requirements (BETA)
 							</span>
                         </a>

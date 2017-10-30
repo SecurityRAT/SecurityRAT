@@ -49,7 +49,7 @@
                             <div data-ng-if="error.display">N/A</div>
                             <div data-ng-if="!error.display">
                                 <div data-ng-if="STATUSCONSTANT[result.status] === 0" style="color:gray">{{displayProperties.inProgressMessage}}</div>
-                                <div data-ng-if="STATUSCONSTANT[result.status] !== 0" data-ng-bind-html="result.message | trusted "></div>
+                                <div data-ng-if="STATUSCONSTANT[result.status] !== 0" data-ng-bind-html="result.message | limitTo: result.limitDesc | trusted "></div>
                                 <span data-ng-if="STATUSCONSTANT[result.status] !== 0" class="pull-right">
                                     <button data-ng-if="result.message.length > result.limitDesc" data-ng-click="showLongdesc(result)" class="btn btn-primary btn-xs" uib-tooltip="Show complete message." tooltip-append-to-body="true">Show more</button>
                                     <button data-ng-if="!result.limitDesc" data-ng-click="hideLongdesc(result)" class="btn btn-primary btn-xs" uib-tooltip="Hide part of the message." tooltip-append-to-body="true">Show less</button>

@@ -15,6 +15,8 @@ angular.module('sdlctoolApp')
 
         var LETTERLIMIT = 200;
 
+        var PUNCT = ['.', ':', '.', ';', ' ', '\n', '\t', '\r'];
+
         $scope.entity = entity;
 
         $scope.testObject = {
@@ -147,38 +149,50 @@ angular.module('sdlctoolApp')
                         var requirement = $filter('filter')(response, {
                             requirement: element.shortName
                         }).pop();
-                        if (angular.isDefined(requirement)) {
+                        if (angular.isDefined(requirement) && element.testResults.length === 0) {
                             angular.copy(requirement.testResults, element.testResults);
                         }
                         element.status = 1;
-                        angular.forEach(element.testResults, function (result) {
-                            var split = result.message.split('```');
-                            // set default.
-                            result.limitDesc = LETTERLIMIT;
-                            result.backUpLimitDesc = result.limitDesc;
-                            if(split.length > 1) {
-                                var charactersCounter = 0;
-                                var codeDelimiterCounter = 0; // must always be a multiple of 2.
-                                for (var j = 0; j < split.length; j++) {
-                                    charactersCounter += split[j].length;
-                                    if(charactersCounter < LETTERLIMIT || codeDelimiterCounter % 2 === 1) {
-                                        if(j < split.length - 1) {
-                                        codeDelimiterCounter++;
-                                        charactersCounter += 3; // for the code markdown delimeter
-                                        } else if ((j === split.length - 1) && angular.equals(split[j], '')) {
-                                            // needed to properly display the code snippet
-                                            // in case the return to new line is not present at the end.
-                                            result.message += '\n';
+                        angular.forEach(requirement.testResults, function (remoteResult) {
+                            angular.forEach(element.testResults, function (result) {
+                                if (remoteResult.tool === result.tool && remoteResult.message !== '' && angular.isUndefined(result.limitDesc)) {
+                                    result.confidenceLevel = remoteResult.confidenceLevel;
+                                    result.status = remoteResult.status;
+                                    result.message = remoteResult.message;
+                                    var split = result.message.split('```');
+                                    // set default.
+                                    result.limitDesc = LETTERLIMIT;
+                                    result.backUpLimitDesc = result.limitDesc;
+                                    if (split.length > 1) {
+                                        var charactersCounter = 0;
+                                        var codeDelimiterCounter = 0; // must always be a multiple of 2.
+                                        for (var j = 0; j < split.length; j++) {
+                                            charactersCounter += split[j].length;
+                                            if (charactersCounter < LETTERLIMIT || codeDelimiterCounter % 2 === 1) {
+                                                if (j < split.length - 1) {
+                                                    codeDelimiterCounter++;
+                                                    charactersCounter += 3; // for the code markdown delimeter
+                                                } else if ((j === split.length - 1) && angular.equals(split[j], '')) {
+                                                    // needed to properly display the code snippet
+                                                    // in case the return to new line is not present at the end.
+                                                    result.message += '\n';
+                                                }
+                                            } else {
+                                                result.limitDesc = charactersCounter - split[j].length;
+                                                result.backUpLimitDesc = result.limitDesc;
+                                                break;
+                                            }
                                         }
-                                    } else {
-                                        result.limitDesc = charactersCounter - split[j].length;
-                                        result.backUpLimitDesc = result.limitDesc;
-                                        break;
                                     }
+                                    while (PUNCT.indexOf(result.message[result.limitDesc]) === -1 && result.limitDesc < result.message.length) {
+                                        result.limitDesc++;
+                                    }
+                                    result.backUpLimitDesc = result.limitDesc;
+                                    
                                 }
-                            }
+                            });
                             // marks a requirement as completely tested if all its tests have completed.
-                            if ($scope.STATUSCONSTANT[result.status] === $scope.STATUSCONSTANT.IN_PROGRESS) {
+                            if ($scope.STATUSCONSTANT[remoteResult.status] === $scope.STATUSCONSTANT.IN_PROGRESS) {
                                 element.status = 0;
                                 testComplete = false;
                             }
