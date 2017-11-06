@@ -192,10 +192,11 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
         var apiPrefix = '/frontend-api/';
         var responseHeadersNeeded = false;
 
-        apiFactory.testRequirementApi = function (method, restcall, data, headerConfig, headersNeeded) {
+        apiFactory.testRequirementApi = function (method, restcall, data, headerConfig, headersNeeded, instanceUrl) {
             var url = '';
             if (!re_weburl.test(restcall)) {
-                url += appConfig.securityCAT.endsWith('/') ? appConfig.securityCAT.substr(0, appConfig.securityCAT.length - 1) : appConfig.securityCAT;
+                url = angular.isDefined(instanceUrl) && instanceUrl !== '' ? instanceUrl : appConfig.securityCAT;
+                url = url.endsWith('/') ? url.substr(0, url.length - 1) : url;
             }
 
             url += restcall;
@@ -357,9 +358,11 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                     });
                     modalInstance.result.then(function () {
                         returnValue.resolve('start');
+                    }, function() {
+                        returnValue.reject('Ex001'); // Ex001 code for authentication start process was not triggered.
                     });
                 } else {
-                    returnValue.resolve(true);
+                    returnValue.reject('Ex001');
                 }
                 return returnValue.promise;
             },
@@ -420,6 +423,13 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                                 promise.runningModalPromise = promise.runningModalPromise();
                             }
                         }
+                    }, function (reject) {
+                        if (angular.isDefined(spinnerProperty.authenticating)) {
+                            spinnerProperty.authenticating = false;
+                        }
+                        spinnerProperty.showSpinner = false;
+                        promise.derefer.reject(reject);
+                        self.cancelPromises(promise);
                     });
                 }
             }

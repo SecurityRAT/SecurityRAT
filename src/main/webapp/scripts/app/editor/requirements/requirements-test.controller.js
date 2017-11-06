@@ -93,12 +93,24 @@ angular.module('sdlctoolApp')
             }
         };
 
-
+        $scope.removeReq = function (reqShortName) {
+            for (var i = 0; i < $scope.entity.length; i++) {
+                if ($scope.entity[i].shortName === reqShortName) {
+                    $scope.entity.splice(i, 1);
+                }
+            }
+            for (var j = 0; j < $scope.testResults.reqs.length; j++) {
+                if ($scope.testResults.reqs[j].shortName === reqShortName) {
+                    $scope.testResults.reqs.splice(j, 1);
+                }
+            }
+        };
 
         $scope.parseEntity = function () {
             $scope.testObject.requirements = [];
             $scope.testResults.reqs = [];
             angular.forEach($scope.entity, function (req) {
+                req.remove = false;
                 $scope.testResults.reqs.push({
                     shortName: req.shortName,
                     showOrder: req.order,
@@ -134,7 +146,6 @@ angular.module('sdlctoolApp')
         }
 
         function fetchResult(location) {
-
             testAutomation.fetchResult(location, $scope.acceptedHeaderConfig).then(function (response) {
                 configureDisplay('result', true, $scope.error.class, $scope.error.message);
 
@@ -188,7 +199,7 @@ angular.module('sdlctoolApp')
                                         result.limitDesc++;
                                     }
                                     result.backUpLimitDesc = result.limitDesc;
-                                    
+
                                 }
                             });
                             // marks a requirement as completely tested if all its tests have completed.
@@ -235,33 +246,37 @@ angular.module('sdlctoolApp')
             var url = '';
             $scope.acceptedHeaderConfig = headers.config;
             if (!re_weburl.test(headers.location)) {
-                url += appConfig.securityCAT.endsWith('/') ? appConfig.securityCAT.substr(0, appConfig.securityCAT.length - 1) : appConfig.securityCAT;
+                url = $scope.authenticationProperties.displayProperty.url;
+                url = url.endsWith('/') ? url.substr(0, url.length - 1) : url;
             }
             url += headers.location;
             fetchResult(url);
         }
 
-        $scope.startTest = function () {
+        $scope.startTest = function (form) {
             $scope.error.display = false;
             $scope.authenticationProperties.authenticatorpromise.derefer = $q.defer();
             $scope.authenticationProperties.spinnerProperty.showSpinner = true;
             testAutomation.headerConfig.withCredentials = false;
             // check authentication by running sending the request to start the test.
-            testAutomation.startTest($scope.testObject)
+            testAutomation.startTest($scope.testObject, $scope.authenticationProperties.displayProperty.url)
                 .then(successCallbackAfterStart)
                 .catch(function (exception) {
                     if (exception.status !== 500 && exception.status !== 403) {
                         testAutomation.checkAuthentication($scope.testObject, $scope.authenticationProperties.displayProperty,
                                 $scope.authenticationProperties.spinnerProperty, $scope.authenticationProperties.authenticatorpromise)
                             .then(successCallbackAfterStart)
-                            .catch(function (exception) { // onRejected checker function
-                                startTestForm.$submitted = false;
-                                var errorMessage = 'The authentication to the securityCAT tool was unsuccessful. ' +
-                                    'This can sometimes be due to wrong CORS header configurations. Please check this and try again.';
-                                if (exception === 'CORS') {
-                                    errorMessage = 'Communication with the SecurityCAT Server was not possible due to Cross origin policy. Please make sure this is properly set.';
+                            .catch(function (authFailException) { // onRejected checker function
+                                form.$submitted = false;
+                                if (authFailException !== 'Ex001') {
+                                    var errorMessage = 'The authentication to the securityCAT tool was unsuccessful. ' +
+                                        'This can sometimes be due to wrong CORS header configurations. Please check this and try again.';
+                                    if (authFailException === 'CORS') {
+                                        errorMessage = 'Communication with the SecurityCAT Server was not possible due to Cross origin policy. Please make sure this is properly set.';
+                                    }
+                                    configureDisplay('error', true, 'alert alert-danger', errorMessage);
                                 }
-                                configureDisplay('error', true, 'alert alert-danger', errorMessage);
+
                             });
                     } else {
                         $scope.error.display = true;
@@ -286,7 +301,7 @@ angular.module('sdlctoolApp')
         $scope.stopTest = function () {
             stopped = true;
             // stops the running checkstate operation.
-            testAutomation.stopTest($scope.testId, $scope.acceptedHeaderConfig).then(function () {
+            testAutomation.stopTest($scope.testId, $scope.acceptedHeaderConfig, $scope.authenticationProperties.displayProperty.url).then(function () {
                 AlertService.success('The test was successfully cancelled.', '');
                 callbackAfterStop();
             }).catch(function () {

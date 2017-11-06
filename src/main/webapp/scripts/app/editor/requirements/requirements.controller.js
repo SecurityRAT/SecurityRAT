@@ -2222,7 +2222,7 @@ angular.module('sdlctoolApp')
                 if (angular.isDefined(obj.ticket) && angular.isDefined(obj.ticket.url) && angular.isDefined(obj.ticket.key)) {
                     $scope.ticket.url = obj.ticket.url;
                     $scope.ticket.key = obj.ticket.key;
-                    $window.document.title += ': ' + $scope.ticket.key;
+                    $window.document.title = $window.document.title.split(':')[0] + ': ' + $scope.ticket.key;
                 }
                 if (angular.isDefined(obj.hasReqTicket) && !obj.hasReqTicket) {
                     $scope.requirementProperties.hasIssueLinks = false;
@@ -2496,7 +2496,7 @@ angular.module('sdlctoolApp')
 
             }
             if ($scope.jiraStatus.allStatus.length === 1) {
-                if (angular.eqauls($scope.jiraStatus.allStatus[0].name.toLowerCase(), 'No ticket')) {
+                if ($scope.jiraStatus.allStatus[0].name.toLowerCase() === 'no ticket') {
                     $scope.jiraStatus.allStatus = [];
                 }
             }
