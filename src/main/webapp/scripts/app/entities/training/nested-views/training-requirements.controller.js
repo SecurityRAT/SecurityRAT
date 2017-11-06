@@ -2,8 +2,7 @@
 
 angular.module('sdlctoolApp')
     .controller('TrainingRequirementsController', function ($scope, $rootScope, $stateParams, $filter, $http, entity, Training,
-                                                            TrainingTreeNode, apiFactory, sharedProperties ) {
-        var system = "old";
+                                                            TrainingTreeNode, apiFactory ) {
         $scope.training = entity;
         var backUpValues = {
             selectedColls: [],
@@ -104,7 +103,6 @@ angular.module('sdlctoolApp')
         };
 
         $rootScope.updateNumberOfRequirements = function () {
-            console.log('called');
             if (backUpValues.allRequirementsSelected === $scope.training.allRequirementsSelected &&
                 backUpValues.selectedColls.length === $scope.training.collections.length &&
                 backUpValues.selectedTypes.length === $scope.training.projectTypes.length) {
@@ -230,9 +228,6 @@ angular.module('sdlctoolApp')
                 $scope.projectType.forEach(function (prot) {
                     $rootScope.allProjectTypes.push(prot.id);
                 });
-                if ($scope.selectedProjectType.length > 0) {
-                    $scope.selectOldProjectTypeSettings();
-                }
             },
             function (exception) {
 
@@ -244,52 +239,14 @@ angular.module('sdlctoolApp')
 
         $scope.init = function () {
             $scope.projectTypeModel.name = 'Select';
-            $scope.oldSettings = sharedProperties.getProperty();
-            if ($scope.oldSettings != undefined && angular.equals(system, "old")) {
-                $scope.disabled = true;
-                if ($scope.training.collections != null)
-                    $scope.selectedCollection = $scope.training.collections;
-                else {
-                    $scope.selectedCollection = $scope.oldSettings.colls;
-                }
-                $scope.selectedProjectType = $scope.oldSettings.project;
-                $scope.ticket = $scope.oldSettings.ticket;
-                $scope.oldAlternativeSets = $scope.oldSettings.alternativeSets;
-                $scope.oldHasIssueLinks = $scope.oldSettings.hasIssueLinks;
-                $scope.oldRequirements = $scope.oldSettings.requirements;
-                $scope.selectOldCategorySettings();
-            }
+
+            // restore the selection saved in the training (if any)
+            if ($scope.training.collections != null && $scope.training.collections.length > 0)
+                angular.copy($scope.training.collections, $scope.selectedCollection);
+            if ($scope.training.projectType != null && $scope.training.projectType != null)
+                angular.copy($scope.training.projectTypes, $scope.selectedProjectType);
         };
 
-        $scope.selectOldCategorySettings = function () {
-            angular.forEach($scope.selectedCollection, function (collection) {
-                $scope.getCategoryObject(collection);
-            });
-
-        };
-
-        $scope.selectOldProjectTypeSettings = function () {
-            angular.forEach($scope.selectedProjectType, function (oldProjectType) {
-                angular.forEach($scope.projectType, function (newProjectType) {
-                    if (newProjectType.id === oldProjectType.projectTypeId) {
-                        $scope.projectTypeModel = newProjectType;
-                    }
-                });
-            });
-        };
-        $scope.getCategoryObject = function (collection) {
-            angular.forEach($scope.categories, function (category) {
-                if (angular.equals(category.name, collection.categoryName)) {
-                    angular.forEach(category.collectionInstances, function (instance) {
-                        angular.forEach(collection.values, function (oldValue) {
-                            if (instance.id === oldValue.collectionInstanceId) {
-                                category.selectedCollectionSets.push(instance);
-                            }
-                        });
-                    });
-                }
-            });
-        };
         $scope.selectProjectType = function(item, updateNumberOfSelectedReq) {
             $scope.projectTypeModel = item;
 
@@ -302,7 +259,6 @@ angular.module('sdlctoolApp')
             });
             if (!saved_in_training) {
                 $scope.training.projectTypes.push(item);
-
             }
             if(updateNumberOfSelectedReq)
                 $rootScope.updateNumberOfRequirements();
@@ -370,12 +326,14 @@ angular.module('sdlctoolApp')
             // remove the deselected item from the drop down lists selection
             for (var i = 0; i < $scope.selectedCollection.length; i++) {
                 var collection = $scope.selectedCollection[i];
-                for (var j = 0; j < collection.values.length; j++) {
-                    var instance = collection.values[j];
-                    if (instance.collectionInstanceId === item.id) {
-                        collection.values.splice(j, 1);
-                        if (collection.values.length === 0) {
-                            $scope.selectedCollection.splice(i, 1);
+                if(collection.value != null) {
+                    for (var j = 0; j < collection.values.length; j++) {
+                        var instance = collection.values[j];
+                        if (instance.collectionInstanceId === item.id) {
+                            collection.values.splice(j, 1);
+                            if (collection.values.length === 0) {
+                                $scope.selectedCollection.splice(i, 1);
+                            }
                         }
                     }
                 }
