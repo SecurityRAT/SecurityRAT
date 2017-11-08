@@ -74,11 +74,13 @@ angular.module('sdlctoolApp')
                     $scope.training.projectTypes.forEach(function (projectType) {
                         selectedProjectTypes.push(projectType.id);
                     });
-                } else {
+                } else if($scope.training.collections.length > 0) {
                     // in case no project type was selected, select all to get a project type independent result
+                    // do this only when at least one collection was selected to avoid overwriting an empty selection ("0 req. selected")
                     selectedProjectTypes = $rootScope.allProjectTypes;
                 }
             } else {
+                // all requirements selected -> insert all selectors
                 selectedCollections = $rootScope.allCollections;
                 selectedProjectTypes = $rootScope.allProjectTypes;
             }

@@ -15,13 +15,12 @@ angular.module('sdlctoolApp')
             });
         };
         $scope.closeSaveProgressModal = function() {
+            $state.params.isDirty = false;
             if (angular.isDefined($scope.modalProgressbar.intervalPromise)) {
                 $interval.cancel($scope.modalProgressbar.intervalPromise);
             }
             $scope.modalProgressbar.barValue = 100;
             $timeout(function() {
-
-            $state.params.isDirty = false;
                 // actions when finished
                 $scope.saveProgressModalInstance.close();
             }, 2500);
