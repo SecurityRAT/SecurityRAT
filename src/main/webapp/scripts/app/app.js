@@ -358,7 +358,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                     });
                     modalInstance.result.then(function () {
                         returnValue.resolve('start');
-                    }, function() {
+                    }, function () {
                         returnValue.reject('Ex001'); // Ex001 code for authentication start process was not triggered.
                     });
                 } else {
@@ -657,16 +657,20 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                     for (var i = 0; i < selectedTicketStatus.length; i++) {
                         var element = selectedTicketStatus[i];
                         if (angular.equals(element.name.toLowerCase(), 'no ticket')) {
-                            if(requirement.linkStatus.ticketStatus.length === 0) {
+                            if (angular.isUndefined(requirement.linkStatus) || (angular.isDefined(requirement.linkStatus) && requirement.linkStatus.ticketStatus.length === 0)) {
+
+
                                 newView.push(requirement);
                                 break;
                             }
                         } else {
-                            if ($filter('filter')(requirement.linkStatus.ticketStatus, {
-                                    name: element.name
-                                }).length > 0) {
-                                newView.push(requirement);
-                                break;
+                            if (angular.isDefined(requirement.linkStatus)) {
+                                if ($filter('filter')(requirement.linkStatus.ticketStatus, {
+                                        name: element.name
+                                    }).length > 0) {
+                                    newView.push(requirement);
+                                    break;
+                                }
                             }
                         }
                     }
@@ -814,8 +818,8 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
             return array;
         };
     })
-    .filter('sanitizeMarked', function($sanitize) {
-        return function(html) {
+    .filter('sanitizeMarked', function ($sanitize) {
+        return function (html) {
             return $sanitize(html);
         }
     });

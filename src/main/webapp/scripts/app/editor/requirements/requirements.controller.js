@@ -13,7 +13,7 @@
 angular.module('sdlctoolApp')
     .controller('RequirementsController', function ($scope, apiFactory, sharedProperties, $httpParamSerializer, $interval, $timeout, $uibModal, $filter,
         getRequirementsFromImport, $confirm, $location, localStorageService, appConfig, $sce, SDLCToolExceptionService, $rootScope, marked, Helper, $state,
-        checkAuthentication, JiraService, $q, $uibModalStack, ProgressBar, $window) {
+        checkAuthentication, JiraService, $q, $uibModalStack, ProgressBar, $window, authenticatorService) {
         $scope.failed = '';
         $scope.fail = false;
         $scope.checks = {
@@ -1496,14 +1496,14 @@ angular.module('sdlctoolApp')
             //checks if an old requirement was removed, so we need to reiterate through the new requirements
             $scope.deletedReqs = [];
             // reverse iteration so that change in array lenght does not affect the result
-            for (var idx = $scope.requirements.length - 1; idx >= 0 ; idx--) {
+            for (var idx = $scope.requirements.length - 1; idx >= 0; idx--) {
                 var oldRequirement = $scope.requirements[idx];
                 // check for requirement with id less than 10000 is to avoid removing custom requirements from the scope.
                 if (!$scope.searchRequirementInArray(oldRequirement, updatedRequirements) && oldRequirement.id < 10000) {
                     $scope.deletedReqs.push(oldRequirement);
                     if (changedSettings) {
                         $scope.requirements.splice(idx, 1);
-                    }else {
+                    } else {
                         $scope.updatesAvailable = true;
                     }
                     $scope.deletedCounter++;
@@ -2353,6 +2353,8 @@ angular.module('sdlctoolApp')
             // if(angular.isDefined(req.ticket) && req.ticket !== '') req.ticket = '';
             $scope.manageTicketProperty.sameTicketError = false;
             $scope.manageTicketProperty.jhError.show = false;
+            authenticatorService.cancelPromises($scope.manageTicketProperty.promise);
+            $scope.manageTicketProperty.spinnerProperty.showSpinner = false;
         };
 
         $scope.doIssueLinking = function (req, callbackFunction, ticket) {
@@ -2405,9 +2407,12 @@ angular.module('sdlctoolApp')
 
                         callbackFunction(req, mainObjectInfo, remoteObjectInfo, ticket);
                     }).catch(function (exception) {
-                        $scope.manageTicketProperty.authenticationFailureMessage = 'The authentication to the issue tracker was unsuccesful.';
-                        if (exception.status === 404) {
-                            $scope.manageTicketProperty.authenticationFailureMessage += ' Please make sure that the given ticket exist.';
+                        if (exception.status === 503) {
+                            $scope.manageTicketProperty.authenticationFailureMessage = 'Service is not available for the moment. Please try again later.';
+                        } else if (exception.status === 404) {
+                            $scope.manageTicketProperty.authenticationFailureMessage = 'The request to the issue tracker responded with 404 Not found. Please make sure that the given ticket exist.';
+                        } else {
+                            $scope.manageTicketProperty.authenticationFailureMessage = 'The authentication to the issue tracker was unsuccesful. Please make sure you have permission to see the specified issue';
                         }
                         $scope.manageTicketProperty.authenticationFailure = true;
                         $scope.manageTicketProperty.spinnerProperty.showSpinner = false;
