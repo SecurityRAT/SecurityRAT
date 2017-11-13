@@ -198,8 +198,6 @@ describe('Protractor Security RAT statuscolumn values entities testsuite', funct
 						}
 					});
 				});
-		selectButton.first().click();
-		selectButton.get(1).click();
 		element(by.buttonText('Bulk change with selected')).click();
 		element(by.buttonText('Fulfilled')).click();
 		element(by.buttonText('Save')).click();

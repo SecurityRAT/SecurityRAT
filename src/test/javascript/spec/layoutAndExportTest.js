@@ -86,7 +86,7 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 		element(by.linkText('Lifecycle')).click();
 		browser.sleep(3000);
 		var requirementInRed = element(by.id('requirementInRed'));
-		expect(requirementInRed.getText()).toBeGreaterThan('5');
+		expect(requirementInRed.getText()).toBeGreaterThan(5);
 		
 		element(by.linkText('Lifecycle')).click(); 
 		element(by.buttonText('Category')).click();
@@ -386,7 +386,7 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 		expect(element(by.binding('exportProperty.failed')).getText()).toBe('You have entered a wrong queue. Please select a valid queue and click on Export again.');
 		
 		element(by.model('fields.project.key')).sendKeys(browser.params.jiraQueue.split('/').pop());
-		browser.sleep(5000);
+		browser.sleep(8000);
 		(element(by.buttonText(exportButton))).click();
 		
 		element(by.model('fields.issuetype.name')).sendKeys(browser.params.issuetypes[1]);
@@ -649,7 +649,7 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 		browser.sleep(5000);
 		element(by.buttonText(closeButton)).click();
 		expect(element(by.binding('manageTicketProperty.authenticationFailureMessage')).getText())
-			.toBe('The authentication to the issue tracker was unsuccesful. Please make sure that the given ticket exist.');
+			.toBe('The request to the issue tracker responded with 404 Not found. Please make sure that the given ticket exist.');
 		
 		// Add an existing remote ticket.
 		element(by.id('ticket_field')).clear().then(function() {

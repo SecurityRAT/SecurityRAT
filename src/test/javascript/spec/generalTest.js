@@ -48,7 +48,7 @@ describe('Protractor Security RAT general testsuite', function() {
 	});
 	
 	it('should have title Secure SDLC', function() {
-		browser.sleep(15000);
+		browser.sleep(3000);
 		expect(browser.getTitle()).toEqual('SecurityRAT');
 	});
 	
