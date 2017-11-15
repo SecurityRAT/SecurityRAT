@@ -48,7 +48,7 @@ angular.module('sdlctoolApp')
          */
         function checkAuthentication(testObject, displayProperty, spinnerProperty, promise) {
             headerConfig.withCredentials = true;
-            startTest(testObject).then(function (response) {
+            startTest(testObject, displayProperty.url).then(function (response) {
                 if (response.status === 302) {
                     authenticatorService.startCheckAuthenticationProcess(testObject, displayProperty, spinnerProperty, promise, checkAuthentication);
                 } else {
