@@ -405,6 +405,7 @@ describe('Protractor Security RAT bug Scenarios Testsuite', function () {
         (element(by.buttonText('Close'))).click();
         browser.sleep(3000);
         var requirementCounts = element(by.binding('requirements.length')).getText();
+        
         element(by.buttonText('Updates available')).isPresent().then(function () {
             element(by.buttonText('Updates available')).click();
             browser.wait(function () {
@@ -414,6 +415,31 @@ describe('Protractor Security RAT bug Scenarios Testsuite', function () {
             element(by.buttonText('Close')).click();
             browser.sleep(3000);
             element(by.buttonText('Cancel the updates')).isPresent().then(function () {
+                var removeReq = element.all(by.id('removeReq'));
+                expect(removeReq.count()).toBeGreaterThan(0);
+                expect(element.all(by.id('acceptReq')).count()).toBeGreaterThan(0);
+
+                removeReq.first().click();
+                element(by.buttonText('Cancel the updates')).click();
+                browser.sleep(3000);
+                expect(element(by.binding('requirements.length')).getText()).toBe(requirementCounts);
+            });
+        });
+
+        element(by.buttonText('Updates available')).isPresent().then(function () {
+            element(by.buttonText('Updates available')).click();
+            browser.wait(function () {
+                return element(by.buttonText('Close')).isPresent();
+            });
+            browser.sleep(3000);
+            element(by.buttonText('Close')).click();
+            browser.sleep(3000);
+            element(by.buttonText('Cancel the updates')).isPresent().then(function () {
+                var acceptReq = element.all(by.id('acceptReq'));
+                expect(acceptReq.count()).toBeGreaterThan(0);
+                expect(element.all(by.id('acceptReq')).count()).toBeGreaterThan(0);
+
+                acceptReq.first().click();
                 element(by.buttonText('Cancel the updates')).click();
                 browser.sleep(3000);
                 expect(element(by.binding('requirements.length')).getText()).toBe(requirementCounts);

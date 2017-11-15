@@ -124,8 +124,8 @@ angular.module('sdlctoolApp')
                 angular.forEach(settings.requirements, function (requirement) {
                     angular.forEach(requirement.optionColumns, function (optColumn) {
                         angular.forEach(optColumn.content, function (content) {
-                            if (angular.isDefined(content.oldContent)) {
-                                delete content.oldContent;
+                            if (angular.isDefined(content.diffContent)) {
+                                delete content.diffContent;
                             }
                         });
                     });
