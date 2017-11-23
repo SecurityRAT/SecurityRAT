@@ -73,11 +73,9 @@ angular.module('sdlctoolApp')
                         $scope.training.optColumns = [];
                     $scope.training.optColumns.push($rootScope.optColumnDict[id].toJSON());
                 } else {
-                    for(var i = 0; i < $scope.training.optColumns.length; i++) {
-                        if($scope.training.optColumns[i].id === id) {
-                            $scope.training.optColumns.splice(i, 1);
-                        }
-                    }
+                    $scope.training.optColumns = $.grep($scope.training.optColumns, function(optColumn) {
+                        return optColumn.id != id;
+                    });
                 }
             });
         };
