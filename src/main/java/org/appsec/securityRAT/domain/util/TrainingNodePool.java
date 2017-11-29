@@ -22,9 +22,13 @@ import java.util.List;
 public class TrainingNodePool {
     private static HashMap<Long, TrainingNodePool> instances = new HashMap<>();
     private HashMap<Long, List<TrainingTreeNode>> savedNodes; // requirementId, list of saved nodes
+    private HashMap<Long, TrainingTreeNode> oldParents; // nodeId, oldParent
+
     protected TrainingNodePool() {
         savedNodes = new HashMap<>();
+        oldParents = new HashMap<>();
     }
+
     public static TrainingNodePool getInstance(Long trainingId) {
         if(instances.get(trainingId) == null) {
             instances.put(trainingId, new TrainingNodePool());
@@ -32,14 +36,21 @@ public class TrainingNodePool {
         return instances.get(trainingId);
     }
 
-    public void addCustomNode(Long requirementId, TrainingTreeNode customNode) {
+    /**
+     * Add requirement node to the pool
+     * @param requirementId
+     * @param customNode
+     */
+    public void addCustomNode(Long requirementId, TrainingTreeNode customNode, TrainingTreeNode oldParentId) {
         if(savedNodes.get(requirementId) == null)
             savedNodes.put(requirementId, new ArrayList<>());
         savedNodes.get(requirementId).add(customNode);
+        oldParents.put(customNode.getId(), oldParentId);
     }
     public List<TrainingTreeNode> getCustomNodes(Long requirementId) {
         return savedNodes.get(requirementId);
     }
+    public TrainingTreeNode getOldParentId(Long requirementId) { return oldParents.get(requirementId); }
     public void removeCustomNodes(Long requirementId) {
         savedNodes.get(requirementId).clear();
         savedNodes.remove(requirementId);
