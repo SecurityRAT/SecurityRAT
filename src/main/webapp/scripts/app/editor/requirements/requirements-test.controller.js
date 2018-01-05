@@ -233,7 +233,7 @@ angular.module('sdlctoolApp')
                     configureDisplay('error', true, 'alert alert-danger', 'An error occurred when fetching the results.');
                 } else {
                     AlertService.clear();
-                    AlertService.error('An error occurred when fetching the results.', '');
+                    AlertService.error('An error occurred when fetching the remaining results.', '');
                     configureDisplay('result', true, '', '');
                 }
                 authenticatorService.cancelPromises($scope.authenticationProperties.authenticatorpromise);
