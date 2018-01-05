@@ -148,7 +148,6 @@ angular.module('sdlctoolApp')
         function fetchResult(location) {
             testAutomation.fetchResult(location, $scope.acceptedHeaderConfig).then(function (response) {
                 configureDisplay('result', true, $scope.error.class, $scope.error.message);
-
                 $scope.testResults.self = location;
                 var testComplete = true;
                 // var tempResults = testResults.requirements;
@@ -225,14 +224,16 @@ angular.module('sdlctoolApp')
                         }
                     }, 3000);
                 }
-            }).catch(function () {
-                if (($filter('filter')($scope.testResults.reqs, {
+            }).catch(function (location) {
+		if(location.data[0].requirement == null) {
+                   configureDisplay('error', true, 'alert alert-danger', location.data[0].testResults[0].message);
+                } else if (($filter('filter')($scope.testResults.reqs, {
                         status: 1
                     })).length === 0) {
                     configureDisplay('error', true, 'alert alert-danger', 'An error occurred when fetching the results.');
                 } else {
                     AlertService.clear();
-                    AlertService.error('An error occurred when fetching the remaining result.', '');
+                    AlertService.error('An error occurred when fetching the results.', '');
                     configureDisplay('result', true, '', '');
                 }
                 authenticatorService.cancelPromises($scope.authenticationProperties.authenticatorpromise);
