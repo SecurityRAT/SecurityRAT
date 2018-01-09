@@ -225,7 +225,7 @@ angular.module('sdlctoolApp')
                     }, 3000);
                 }
             }).catch(function (location) {
-		if(location.data[0].requirement == null) {
+		if(angular.isDefined(location.data[0]) && location.data[0].requirement == null) {
                    configureDisplay('error', true, 'alert alert-danger', location.data[0].testResults[0].message);
                 } else if (($filter('filter')($scope.testResults.reqs, {
                         status: 1
