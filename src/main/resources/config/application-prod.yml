@@ -9,7 +9,7 @@ spring:
         active: prod
     datasource:
         dataSourceClassName: com.mysql.jdbc.jdbc2.optional.MysqlDataSource
-        url: jdbc:mysql://mysql-server:3306/securityrat?useUnicode=true&characterEncoding=utf8  #edit according to the DB server and DB name
+        url: jdbc:mysql://mysql-server:3306/security_rat?useUnicode=true&characterEncoding=utf8  #edit according to the DB server and DB name
         databaseName:
         serverName:
         username: securityrat #change to your db user
