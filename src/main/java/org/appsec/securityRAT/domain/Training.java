@@ -29,6 +29,7 @@ public class Training extends AbstractAuditingEntity implements Serializable {
     private String name;
 
     @Column(name = "description")
+    @Lob
     private String description;
 
     @Column(name = "all_requirements_selected")

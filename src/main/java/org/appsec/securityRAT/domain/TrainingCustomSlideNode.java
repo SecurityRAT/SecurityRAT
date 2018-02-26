@@ -23,14 +23,15 @@ public class TrainingCustomSlideNode implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
-    
+
+
     @Column(name = "name")
     private String name;
-    
+
     @Column(name = "content")
+    @Lob
     private String content;
-    
+
     @Column(name = "anchor")
     private Integer anchor;
 
