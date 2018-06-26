@@ -51,7 +51,7 @@ angular.module('sdlctoolApp')
                         size: 'lg',
                         resolve: {
                             entity: function () {
-                                return {name: null, description: null, isEnum: null, showOrder: null, active: false, id: null};
+                                return {name: null, description: null, isEnum: false, showOrder: null, active: false, id: null};
                             }
                         }
                     }).result.then(function(result) {
