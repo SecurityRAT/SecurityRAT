@@ -115,6 +115,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.permitAll()
 			.and()
 				.authorizeRequests()
+                .antMatchers("/robots.txt").permitAll()
 				.antMatchers("/api/register").denyAll()
 				.antMatchers("/api/account/reset_password/init").denyAll()
 				.antMatchers("/api/account/reset_password/finish").denyAll()
