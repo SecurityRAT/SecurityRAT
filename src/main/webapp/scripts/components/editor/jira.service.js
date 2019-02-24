@@ -5,8 +5,8 @@
 angular.module('sdlctoolApp')
 	.factory('JiraService', ['Helper', 'apiFactory', 'appConfig', '$q', 'SDLCToolExceptionService', function(Helper, apiFactory, appConfig, $q, SDLCToolExceptionService){
 
-		var linkTypeName = 'Relates';
-		var remoteRelationshipName = 'relates to';
+		var linkTypeName = appConfig.linkTypeName;
+		var remoteRelationshipName = appConfig.remoteRelationshipName;
 
 		function buildUrlCall(selector, apiUrlInfo) {
             var baseJiraCall = apiUrlInfo.http + '//' + apiUrlInfo.host + appConfig.jiraApiPrefix + '/';
