@@ -44,4 +44,7 @@
     <include file="classpath:config/liquibase/changelog/20170729152548_added_entity_TrainingGeneratedSlideNode.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20170912130015_update_entity_SlideTemplate.xml" relativeToChangelogFile="false" />
     <include file="classpath:config/liquibase/changelog/20180124143733_update_training_length_restrictions.xml" relativeToChangelogFile="false" />
+
+    <!-- jmboldayamdjeu -->
+    <include file="classpath:config/liquibase/changelog/20190219_add_extra_constant.xml" relativeToChangelogFile="false" />
 </databaseChangeLog>
