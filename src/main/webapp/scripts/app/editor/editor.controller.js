@@ -5,7 +5,7 @@ angular.module('sdlctoolApp')
 
 	$scope.fileParams = '';
 	$scope.detectedRestore = false;
-	$scope.title = appConfig.title;
+	$scope.welcomeMessage = appConfig.welcomeMessage;
 
 	$scope.initStarter = function() {
 		$uibModal.open({

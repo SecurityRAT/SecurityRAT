@@ -67,7 +67,7 @@
                 <tr class="animate-repeat" data-ng-repeat="constant in constants | filter: searchQuery">
                     <!--<td><a ui-sref="optColumnType.detail({id:optColumnType.id})">{{optColumnType.id}}</a></td>-->
                     <td><strong>{{constant.name}}</strong></td>
-                    <td data-ng-bind-html="constant.value | trusted"></td>
+                    <td>{{constant.value}}</td>
                     <td data-ng-bind-html="constant.description | trusted"></td>
                     <td>
                         <button type="submit"

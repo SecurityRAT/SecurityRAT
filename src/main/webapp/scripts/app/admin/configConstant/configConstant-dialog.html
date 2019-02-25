@@ -28,10 +28,20 @@
                     required>
 
         </div>
+        <div class="form-group" data-ng-if="constant.value">
+            <label for="field_value_preview">Value preview</label>
+            <div id="field_value_preview" data-ng-bind-html="constant.value | trusted"></div>
+
+        </div>
         <div class="form-group">
             <label for="field_description">Description</label>
             <textarea name="description" id="field_description"
                     data-ng-model="constant.description" class="container" rows="10" cols="128" required></textarea>
+
+        </div>
+        <div class="form-group" data-ng-if="constant.description">
+            <label for="field_description_preview">Description preview</label>
+            <div id="field_description_preview" data-ng-bind-html="constant.description | trusted"></div>
 
         </div>
     </div>

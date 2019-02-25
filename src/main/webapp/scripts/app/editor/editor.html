@@ -1,8 +1,5 @@
 <div class="container-fluid">
-	<h1 align="center">
-        Welcome to
-        <span style="color:#002e4d;">{{ title ? title : 'SecurityRAT' }}!</span>
-    </h1>
+	<div data-ng-bind-html="welcomeMessage | trusted" class="text-center"></div>
 	<!-- <h1 align="center">Welcome to <img alt="" height="70" src="/assets/images/securityratLogo.png"></span></h1> -->
 	<BR>
 	<BR>
