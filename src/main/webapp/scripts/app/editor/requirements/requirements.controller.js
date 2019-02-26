@@ -451,8 +451,6 @@ angular.module('sdlctoolApp')
                 function (categoriesWithRequirements) {
                     $scope.requirementSkeletons = categoriesWithRequirements;
                     $scope.buildRequirements();
-                    console.log($scope.requirements);
-                    console.log($scope.statusColumns)
                 },
                 function () { });
         };
