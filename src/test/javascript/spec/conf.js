@@ -20,7 +20,7 @@ exports.config = {
 	   testHost:"https://securityrat.test.local", //FQDN of test instance of Security RAT
 	   jiraQueue : 'https://test-jira.local/browse/XYZ', //path to a JIRA Queue where test tickets can be opened
 	   jiraTicket : 'https://test-jira.local/browse/XYZ-144', //path to a JIRA Ticket to test manual linking of tickets
-	   jiraRemoteLinkQueue: 'https://second-test-jira.local/browse/ABC', // second jira to test the remote linking
+	   jiraRemoteLinkQueue: 'https://second-test-jira.local/browse/ABC', // second jira to test the remote linking. Please this Queue should just have issuetype as mandatory field.
 	   jiraRemoteLinkTicket: 'https://second-test-jira.local/browse/ABC-524', // an existing ticket from the second jira instance to test manual linking
 	   jiraHost : 'https://test-jira.local/browse/', //path to test JIRA
 	   impTestAttachmentUrl : 'https://securityrat.test.local/?file=https%3A%2F%2Ftest-jira.local%2Frest%2Fapi%2F2%2Fattachment%2F',
@@ -36,8 +36,8 @@ exports.config = {
 	                   '#{issuenum2}' // JIRA issue number from "jiraQueue" containing more than one attachment added through SecurityRAT
 	                   ],
 	   issuetypes : ['#{issuetype1}', // issuetype with no mandatory fields other than project, summary name and reporter e.g Bug
-	                 '#{issuetype2}', // an issue type with a mandatory fields other than project, summary name or reporter e.g Epic
-	                 '#{issuetype2}' // issue type for the {jiraRemoteLinkQueue} propperty
+	                 '#{issuetype2}', // an issue type with a mandatory fields besides project, summary name or reporter e.g Epic
+	                 '#{issuetype3}' // issue type for the {jiraRemoteLinkQueue} propperty
 	                 ],
        email: '#{registrationEmail}' // Email address to test for the registration.
    },

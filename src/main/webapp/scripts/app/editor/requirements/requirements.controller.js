@@ -1326,8 +1326,8 @@ angular.module('sdlctoolApp')
             });
         }
         function removeSpacesFromString(inputString) {
-            result = inputString;
-            if (angular.isDefined(inputString)) {
+            var result = inputString;
+            if (inputString) {
                 result = inputString.replace(/[^\x20-\x7E]|\s+/gmi, '')
             }
             return result;
@@ -1387,11 +1387,10 @@ angular.module('sdlctoolApp')
                         $scope.requirements[i].tagInstances = newRequirement.tagInstances;
 
                         var oldRequirement = $scope.requirements[i];
-                        var atLeastOneDescriptionIsDefined = !(angular.isDefined(newRequirement.description)
-                            && angular.isDefined(oldRequirement.description))
+                        var atLeastOneDescriptionIsNotNull = !(newRequirement.description && oldRequirement.description)
                             
                         // search for new changes in description
-                        if (atLeastOneDescriptionIsDefined &&
+                        if (atLeastOneDescriptionIsNotNull ||
                             (removeSpacesFromString(newRequirement.description)
                                 !== removeSpacesFromString(oldRequirement.description))) {
                             var changes = diffString2(oldRequirement.description, newRequirement.description);

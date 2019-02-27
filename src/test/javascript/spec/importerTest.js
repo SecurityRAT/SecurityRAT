@@ -59,9 +59,9 @@ describe('Protractor Security RAT importer testsuite', function() {
 			if(list.count() > 1) {
 				// gives time to see whether attachments other than .yml were considered.
 				browser.sleep(6000);
-				element(by.buttonText('Import')).click();
 			}
 		});
+		element(by.buttonText('Import')).click();
 		browser.sleep(3000);
 		element(by.buttonText('Close')).isPresent().then(function(v){
 		    expect(v).toBe(true);
@@ -159,7 +159,7 @@ describe('Protractor Security RAT importer testsuite', function() {
 		expect(element(by.id('failUrlMessage')).getText()).toBe('The entered URL is invalid. Please provide a valid URL');
 	});
 	it('Update available test', function() {
-		browser.get(browser.params.impTestAttachmentUrl + browser.params.attachmentUrls[0]).then(function() {}, function(){
+		browser.get(browser.params.impTestAttachmentUrl + browser.params.attachmentUrls[2]).then(function() {}, function(){
 			browser.switchTo().alert().accept();
 		});
 		browser.sleep(5000);
@@ -212,7 +212,7 @@ describe('Protractor Security RAT importer testsuite', function() {
 		browser.get(browser.params.impTestFileUrl).then(function() {}, function(){
 			browser.switchTo().alert().accept();
 		});
-		expect(element.all(by.css('div[marked]')).last().getText()).toBe('invalid url in queryInvalid url in query parameter file. Please enter a valid JIRA ticket with an attachment.');
+		expect(element.all(by.css('div[marked]')).last().getText()).toBe('Invalid url in query parameter file. Please enter a valid JIRA ticket with an attachment.');
 	});
 
 	// The first time you should not authenticate.

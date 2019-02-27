@@ -31,7 +31,7 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 				browser.manage().getCookie('JSESSIONID').then(function() {
 					browser.manage().deleteCookie('JSESSIONID');
 					browser.switchTo().window(handles[0]).then();
-				});				
+				});
 			});
 		});
 	};
@@ -80,15 +80,15 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 	});
 	
 	it('Test requirements generation, apply alternative instances and change settings', function() {
-		
+
 		expect(element(by.binding('requirements.length')).getText()).toBeGreaterThan('50');
 		element(by.buttonText('Category')).click();
 		element(by.linkText('Lifecycle')).click();
 		browser.sleep(3000);
 		var requirementInRed = element(by.id('requirementInRed'));
 		expect(requirementInRed.getText()).toBeGreaterThan(5);
-		
-		element(by.linkText('Lifecycle')).click(); 
+
+		element(by.linkText('Lifecycle')).click();
 		element(by.buttonText('Category')).click();
 		//clicks on Action with selected and check if the buttons are grey
 		element(by.buttonText('Action with selected')).click();
@@ -159,20 +159,20 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 		element(by.buttonText('Action with selected')).click();
 		element.all(by.className('positionChevron')).first().click();
 		browser.sleep(2000);
-		
+
 		browser.get(browser.params.testHost).then(function() {
 		}, function(){
 			browser.sleep(2000);
 			browser.switchTo().alert().accept();
 		});
-		
+
 	});
-	
+
 	it('add, edit and removes a new custom requirement.', function() {
 		var requirements = element(by.binding('requirements.length')).getText();
 		element(by.buttonText('Custom requirements')).click();
 		element(by.linkText('Add')).click();
-		
+
 		// set the value in custom requirement modal.
 		(element(by.model('requirement.description'))).sendKeys('custom description');
 		element(by.id('content1')).isPresent().then(function(content) {
@@ -185,16 +185,16 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 				element(by.id('content2')).sendKeys('custom motivation');
 			}
 		});
-		
+
 		element(by.model('reqStat.value')).sendKeys('Custom comment');
 		element.all(by.options('value as value.name for value in statusColumn.values | orderBy: \'showOrder\'')).get(3).click();
-		
+
 		element(by.buttonText('Add requirement')).click();
 		browser.sleep(8000);
-		
+
 		expect(element(by.binding('requirements.length')).getText()).toBeGreaterThan(requirements);
 		var count = 0;
-		
+
 		element(by.buttonText('Custom requirements')).click();
 		element(by.linkText('Edit')).click();
 		element(by.model('reqStat.value')).clear().then(function() {
@@ -223,7 +223,7 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 		// element(by.linkText('Edit')).click();
 		element.all(by.options('category.id as category.label for category in categories')).get(4).click();
 		element.all(by.options('value as value.name for value in statusColumn.values | orderBy: \'showOrder\'')).get(3).click();
-		
+
 		element(by.buttonText('Edit requirement')).click();
 		browser.sleep(2000);
 		element.all(by.repeater(requirementRepeater).column('reqs.shortName')).each(function (elem, index) {
@@ -239,7 +239,7 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 		count = 0;
 		element(by.buttonText('Custom requirements')).click();
 		element(by.linkText('Add')).click();
-		
+
 		// set the value in custom requirement modal.
 		(element(by.model('requirement.description'))).sendKeys('custom description');
 		element(by.id('content1')).isPresent().then(function(content) {
@@ -253,23 +253,23 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 				element(by.id('content2')).sendKeys('custom motivation');
 			}
 		});
-		
+
 		element(by.model('reqStat.value')).sendKeys('Custom some comment');
 		element.all(by.options('value as value.name for value in statusColumn.values | orderBy: \'showOrder\'')).get(2).click();
-		
+
 		element(by.buttonText('Add requirement')).click();
 		browser.sleep(8000);
 		element(by.buttonText('Custom requirements')).click();
 		element(by.partialLinkText('Remove')).click();
 		element(by.buttonText('Delete requirement')).click();
-		
+
 		expect(element(by.binding('requirements.length')).getText()).toBeGreaterThan('30');
 		browser.refresh().then(function() {}, function(){
 			browser.sleep(2000);
 			browser.switchTo().alert().accept();
 		});
 	});
-	
+
 	it('exports to JIRA by creating a ticket in the queue, check spreadsheet creation, create a ticket in bash mode and checks if when selected after creation the confirms modal pops up', function() {
 		(element(by.buttonText(SaveButton))).click();
 		element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraQueue + '-100000');
@@ -296,7 +296,7 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 		browser.sleep(3000);
 		var list2 = element.all(by.partialLinkText(browser.params.jiraQueue));
 		expect(list2.count()).toBe(1);
-		
+
 		element(by.buttonText(closeButton)).click();
 		browser.sleep(3000);
 		removeRibbon();
@@ -304,9 +304,9 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 		// (element.all(by.className('accordion-toggle'))).first().click();
 		// var list3 = element.all(by.partialLinkText(browser.params.jiraQueue));
 		// expect(list3.count()).toBe(1);
-		
+
 		browser.sleep(3000);
-		
+
 		//export to excel with status values.
 		element(by.id('selectAll')).click();
 		element(by.buttonText('Action with selected')).click();
@@ -314,7 +314,7 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 		browser.sleep(2000);
 		element(by.buttonText('Create')).click();
 		browser.sleep(2000);
-		
+
 		//export to excel without status values.
 		element(by.buttonText('Action with selected')).click();
 		element(by.partialLinkText('Create spreadsheet')).click();
@@ -326,17 +326,17 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 		//deselects all
 		element(by.id('selectAll')).click();
 		var requirements = element.all(by.model('reqs.selected'));
-		
+
 		requirements.first().click();
-		
+
 		element(by.buttonText('Action with selected')).click();
 		element(by.linkText('Create JIRA tickets')).click();
-		
+
 		element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraQueue + '-700');
 		(element(by.buttonText('Create tickets'))).click();
 		browser.sleep(3000);
 		expect(element(by.binding('exportProperty.failed')).getText()).toBe('You have entered a ticket. Please provide a queue.');
-		
+
 		element(by.model('jiraUrl.url')).clear().then(function(){
 			element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraQueue);
 		});
@@ -345,29 +345,29 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 		element(by.model('fields.issuetype.name')).sendKeys(browser.params.issuetypes[0]);
 		element(by.model('label.labelValue')).sendKeys('myNew Label');
 		element(by.id('addLabel')).click();
-		
+
 		element(by.model('label.labelValue')).sendKeys('<script>alert(1)</script>');
 		element(by.id('addLabel')).click();
-		
+
 		(element(by.buttonText('Create tickets'))).click();
 		browser.sleep(3000);
 		element(by.buttonText(closeButton)).click();
 		browser.sleep(3000);
-		
+
 		//checks the status column is present after the ticket is created.
-		element(by.id('StatusFilter')).isPresent().then(function(v){ 
+		element(by.id('StatusFilter')).isPresent().then(function(v){
 		    expect(v).toBe(true);
 		});
 		//should filter the requirement set.
 		expect(element(by.id('StatusFilter')).isPresent()).toBe(true);
-		
+
 		// modal pops up to warn the existence of a ticket for the selected requirement.
 		element(by.buttonText('Action with selected')).click();
 		element(by.linkText('Create JIRA tickets')).click();
 		browser.sleep(5000);
 		element(by.buttonText('Cancel')).click();
 	});
-	
+
 	it('try to export with wrong URL and then enters a non existing project', function() {
 		//non valid URL
 		(element(by.buttonText(SaveButton))).click();
@@ -375,43 +375,43 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 		(element(by.buttonText(exportButton))).click();
 		browser.sleep(2000);
 		expect(element(by.id('failUrlMessage')).getText()).toBe('Invalid url. Please specify URL like https://www.example-jira.com/browse/DUMBQ');
-		
+
 		//wrong project
 		element(by.model('jiraUrl.url')).clear().then(function(){
 			element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraHost + 'SSDi');
 		});
-		
+
 		(element(by.buttonText(exportButton))).click();
 		browser.sleep(6000);
 		expect(element(by.binding('exportProperty.failed')).getText()).toBe('You have entered a wrong queue. Please select a valid queue and click on Export again.');
-		
+
 		element(by.model('fields.project.key')).sendKeys(browser.params.jiraQueue.split('/').pop());
 		browser.sleep(8000);
 		(element(by.buttonText(exportButton))).click();
-		
+
 		element(by.model('fields.issuetype.name')).sendKeys(browser.params.issuetypes[1]);
 		browser.sleep(3000);
 		element(by.model('fields.issuetype.name')).sendKeys(browser.params.issuetypes[0]);
-		
+
 		element(by.model('fields.summary')).sendKeys('<script>alert(1)</script>');
 		element(by.model('fields.description')).sendKeys('<script>alert(1)</script>');
 		(element(by.buttonText(exportButton))).click();
 		browser.sleep(3000);
 		var list = element.all(by.partialLinkText(browser.params.jiraQueue));
 		expect(list.count()).toBe(1);
-		
+
 		if(list.count() === 1) {
 			list.first().click();
 		}
-		
+
 		(element(by.buttonText(closeButton))).click();
 	});
-	
+
 	it('Export a requirement set which has already be exported into a new ticket (by giving the ticket URL or queue). Check if a warning modal pops up', function() {
-		
+
 		(element(by.buttonText(SaveButton))).click();
 		browser.sleep(2000);
-		
+
 		element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraQueue);
 		(element(by.buttonText(exportButton))).click();
 		element(by.model('fields.issuetype.name')).sendKeys(browser.params.issuetypes[0]);
@@ -419,26 +419,26 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 		element(by.model('fields.description')).sendKeys('<script>alert(1)</script>');
 		(element(by.buttonText(exportButton))).click();
 		browser.sleep(3000);
-		
+
 		var list = element.all(by.partialLinkText(browser.params.jiraQueue));
 		expect(list.count()).toBe(1);
 		browser.sleep(5000);
 		(element(by.buttonText(closeButton))).click();
 		browser.sleep(3000);
 		var requirements = element.all(by.model('reqs.selected'));
-		
+
 		requirements.first().click();
 		requirements.get(1).click();
 		requirements.get(2).click();
-		
+
 		element(by.buttonText('Action with selected')).click();
 		element(by.linkText('Create JIRA tickets')).click();
-		
+
 		element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraQueue + '-700');
 		(element(by.buttonText('Create tickets'))).click();
 		browser.sleep(3000);
 		expect(element(by.binding('exportProperty.failed')).getText()).toBe('You have entered a ticket. Please provide a queue.');
-		
+
 		element(by.model('jiraUrl.url')).clear().then(function(){
 			element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraRemoteLinkQueue);
 		});
@@ -447,21 +447,21 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 		element(by.model('fields.issuetype.name')).sendKeys(browser.params.issuetypes[2]);
 		element(by.model('label.labelValue')).sendKeys('myNew Label');
 		element(by.id('addLabel')).click();
-		
+
 		element(by.model('label.labelValue')).sendKeys('<script>alert(1)</script>');
 		element(by.id('addLabel')).click();
-		
+
 		(element(by.buttonText('Create tickets'))).click();
 		browser.sleep(3000);
 		element(by.buttonText(closeButton)).click();
 		browser.sleep(3000);
-		
-		
+
+
 		(element(by.buttonText(SaveButton))).click();
 		element(by.model('jiraUrl.url')).clear().then(function(){
 			element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraQueue);
 		});
-		
+
 		(element(by.buttonText(exportButton))).click();
 		element(by.model('fields.issuetype.name')).sendKeys(browser.params.issuetypes[0]);
 		element(by.model('fields.summary')).sendKeys('<script>alert(1)</script>');
@@ -486,8 +486,8 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 		browser.sleep(2000);
 		element(by.buttonText('No')).click();
 		browser.sleep(2000);
-	});	
-	
+	});
+
 	it('Export to ticket and create a ticket without being authenticated', function() {
 		deleteCookie1();
 		deleteCookie();
