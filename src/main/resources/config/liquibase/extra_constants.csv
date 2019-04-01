@@ -1,0 +1,4 @@
+name;value;description
+welcomeMessage;# Welcome to SecurityRAT;This property defines the welcome message in the home page. Markdown supported.
+JIRAIssueLinkTypeName;Relates;The default issue link type name used to link tickets in the same JIRA instance. Check the possible values for your instance using the rest URI (/rest/api/2/issueLinkType).
+JIRARemoteIssueLinkRelationshipName;relates to;The 'relationship' name used to link remote tickets. That is tickets in different JIRA instances. More information [here](https://developer.atlassian.com/server/jira/platform/jira-rest-api-for-remote-issue-links/).

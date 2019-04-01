@@ -51,12 +51,12 @@ describe('Protractor Security RAT general testsuite', function() {
 		browser.sleep(3000);
 		expect(browser.getTitle()).toEqual('SecurityRAT');
 	});
-	
+
 	it('should have an error due to / in artifact name and generate button is disabled', function() {
 		defineArtifact.click();
 		var artifactName = element(by.model('starterForm.name'));
 		artifactName.sendKeys('some artifact /');
-		var list = element.all(by.id('falsePattern')); 
+		var list = element.all(by.id('falsePattern'));
 		expect(element(by.buttonText('Generate')).isEnabled()).toEqual(false);
 	    expect(list.count()).toBe(1);
 	});

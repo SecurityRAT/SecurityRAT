@@ -451,7 +451,7 @@
                         <td class="text-center" data-ng-repeat="stats in statusColumns | orderBy:'showOrder'" data-ng-style="reqs.isNew && {'background-color':'rgb(204, 255, 204)'} || reqs.isOld && {'background-color':'rgb(255, 204, 204)'}">
                             <div data-ng-if="!stats.isEnum">
                                 <div data-ng-repeat="statusValue in reqs.statusColumns">
-                                    <div data-ng-if="!statusValue.isEnum">
+                                    <div data-ng-if="statusValue.id === stats.id">
                                         <textarea class="form-control" cols="1000" rows="5" data-ng-model="statusValue.value" data-ng-change="enableSave(true)"></textarea>
                                     </div>
                                 </div>

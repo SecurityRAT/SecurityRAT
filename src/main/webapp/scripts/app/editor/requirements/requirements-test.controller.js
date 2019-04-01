@@ -82,6 +82,12 @@ angular.module('sdlctoolApp')
             url: 'scripts/app/editor/requirements/testRequirementsTemplates/infoTemplate.html'
         };
 
+        $scope.stopTimeout = function () {
+            if (angular.isDefined($scope.fetchResultInterval)) {
+                $timeout.cancel($scope.fetchResultInterval);
+            }
+        };
+
         $scope.toggleShowHide = function () {
             $scope.displayProperties.show = !$scope.displayProperties.show;
             if ($scope.displayProperties.show) {
@@ -97,14 +103,16 @@ angular.module('sdlctoolApp')
             for (var i = 0; i < $scope.entity.length; i++) {
                 if ($scope.entity[i].shortName === reqShortName) {
                     $scope.entity.splice(i, 1);
-                }
-            }
-            for (var j = 0; j < $scope.testResults.reqs.length; j++) {
-                if ($scope.testResults.reqs[j].shortName === reqShortName) {
-                    $scope.testResults.reqs.splice(j, 1);
+                    break;
                 }
             }
         };
+
+        $scope.init = function() {
+            stopped = false;
+            $scope.error.display = false;
+            $scope.authenticationProperties.showSpinner = false;
+        }
 
         $scope.parseEntity = function () {
             $scope.testObject.requirements = [];
@@ -120,9 +128,6 @@ angular.module('sdlctoolApp')
                 });
                 $scope.testObject.requirements.push(req.shortName);
             });
-            stopped = false;
-            $scope.error.display = false;
-            $scope.authenticationProperties.showSpinner = false;
         };
 
         $scope.showLongdesc = function (result) {
@@ -165,11 +170,13 @@ angular.module('sdlctoolApp')
                         element.status = 1;
                         angular.forEach(requirement.testResults, function (remoteResult) {
                             angular.forEach(element.testResults, function (result) {
-                                if (remoteResult.tool === result.tool && remoteResult.message !== '' && angular.isUndefined(result.limitDesc)) {
+                                if (remoteResult.tool === result.tool && remoteResult.message !== '' && angular.isUndefined(result.complete) && !result.complete) {
                                     result.confidenceLevel = remoteResult.confidenceLevel;
                                     result.status = remoteResult.status;
                                     result.message = remoteResult.message;
-                                    var split = result.message.split('```');
+                                    result.complete = true
+
+                                    var split = result.message.split('`');
                                     // set default.
                                     result.limitDesc = LETTERLIMIT;
                                     result.backUpLimitDesc = result.limitDesc;
@@ -181,7 +188,7 @@ angular.module('sdlctoolApp')
                                             if (charactersCounter < LETTERLIMIT || codeDelimiterCounter % 2 === 1) {
                                                 if (j < split.length - 1) {
                                                     codeDelimiterCounter++;
-                                                    charactersCounter += 3; // for the code markdown delimeter
+                                                    charactersCounter += 1; // for the code markdown delimeter
                                                 } else if ((j === split.length - 1) && angular.equals(split[j], '')) {
                                                     // needed to properly display the code snippet
                                                     // in case the return to new line is not present at the end.
@@ -214,19 +221,20 @@ angular.module('sdlctoolApp')
                     // console.log('Test stopped');
                     $scope.authenticationProperties.spinnerProperty.showSpinner = false;
                     // console.log($scope.testResults);
+                    $scope.stopTimeout();
                     authenticatorService.cancelPromises($scope.authenticationProperties.authenticatorpromise);
                 } else {
                     $scope.authenticationProperties.spinnerProperty.text = 'Automated test still in progress...';
                     $scope.authenticationProperties.spinnerProperty.showSpinner = true;
-                    $timeout(function () {
+                    $scope.fetchResultInterval = $timeout(function () {
                         if (!stopped) {
                             fetchResult(location);
                         }
-                    }, 3000);
+                    }, 5000);
                 }
             }).catch(function (location) {
-		if(angular.isDefined(location.data[0]) && location.data[0].requirement == null) {
-                   configureDisplay('error', true, 'alert alert-danger', location.data[0].testResults[0].message);
+                if (angular.isDefined(location.data[0]) && location.data[0].requirement == null) {
+                    configureDisplay('error', true, 'alert alert-danger', location.data[0].testResults[0].message);
                 } else if (($filter('filter')($scope.testResults.reqs, {
                         status: 1
                     })).length === 0) {
@@ -236,6 +244,7 @@ angular.module('sdlctoolApp')
                     AlertService.error('An error occurred when fetching the remaining results.', '');
                     configureDisplay('result', true, '', '');
                 }
+                $scope.stopTimeout();
                 authenticatorService.cancelPromises($scope.authenticationProperties.authenticatorpromise);
                 $scope.authenticationProperties.spinnerProperty.showSpinner = false;
             });
@@ -255,6 +264,7 @@ angular.module('sdlctoolApp')
         }
 
         $scope.startTest = function (form) {
+            $scope.parseEntity();
             $scope.error.display = false;
             $scope.authenticationProperties.authenticatorpromise.derefer = $q.defer();
             $scope.authenticationProperties.spinnerProperty.showSpinner = true;
@@ -295,6 +305,8 @@ angular.module('sdlctoolApp')
                 })).length === 0) {
                 $scope.clear();
             } else {
+                // stop timeout to fetch the test results
+                $scope.stopTimeout();
                 configureDisplay('result', true, '', '');
             }
         }
@@ -332,6 +344,8 @@ angular.module('sdlctoolApp')
 
         $scope.backToInfo = function () {
             stopped = false;
+            $scope.testResults = {};
+            $scope.displayProperties.inProgressMessage = 'test running...';
             $scope.parseEntity();
             $scope.authenticationProperties.spinnerProperty.showSpinner = false;
             configureDisplay('info', true, '', '');
@@ -343,6 +357,7 @@ angular.module('sdlctoolApp')
         };
 
         $scope.clear = function () {
+            $scope.stopTimeout();
             authenticatorService.cancelPromises($scope.authenticationProperties.authenticatorpromise);
             $scope.authenticationProperties.spinnerProperty.showSpinner = false;
             $uibModalInstance.dismiss();

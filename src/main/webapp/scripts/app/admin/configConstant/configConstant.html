@@ -68,7 +68,7 @@
                     <!--<td><a ui-sref="optColumnType.detail({id:optColumnType.id})">{{optColumnType.id}}</a></td>-->
                     <td><strong>{{constant.name}}</strong></td>
                     <td>{{constant.value}}</td>
-                    <td>{{constant.description}}</td>
+                    <td data-ng-bind-html="constant.description | trusted"></td>
                     <td>
                         <button type="submit"
                                 ui-sref="configConstant.detail({id:constant.id})"
@@ -97,7 +97,7 @@
 	    </div>
 	    <div class="row">
 	    	<label for="testFeature"><strong>ACTIVATE TEST AUTOMATION:</strong></label>
-	 		<input name="testFeature" bs-switch type="checkbox" switch-on-color="success" switch-off-color="danger" data-ng-model="activate"  switch-on-text="Yes" switch-off-text="No"
+	 		<input id="testFeature" bs-switch type="checkbox" switch-on-color="success" switch-off-color="danger" data-ng-model="activate"  switch-on-text="Yes" switch-off-text="No"
 	 			switch-label-width="2px" data-ng-change="activateTestAutomation()"/>
 	    </div>
 

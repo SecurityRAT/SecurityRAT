@@ -3,7 +3,6 @@
 angular.module('sdlctoolApp')
     .factory('checkAuthentication', function(authenticatorService, apiFactory) {
         var checkRoutines = {};
-
         function jiraAuth(apiCall, displayProperty, spinnerProperty, promise) {
             apiFactory.getJIRAInfo(apiCall).then(function(response) {
                 if (response.length === 0) {
@@ -16,7 +15,7 @@ angular.module('sdlctoolApp')
                 }
             }).catch(function(exception) {
                 // console.log(exception)
-                if (exception.status === 401 || exception.status === 403) {
+                if (exception.status === 401 || (exception.status === 403 && apiCall.indexOf('attachment/') !== -1)) {
                     if (angular.isDefined(exception.errorException) && exception.errorException.opened.$$state.status === 0) {
                         exception.errorException.opened.$$state.value = false;
                         exception.errorException.opened.$$state.status = 1;

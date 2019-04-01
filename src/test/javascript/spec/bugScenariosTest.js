@@ -370,7 +370,7 @@ describe('Protractor Security RAT bug Scenarios Testsuite', function () {
         browser.wait(function () {
             return element(by.buttonText('Close')).isPresent();
         });
-        element(by.buttonText('Close')).click();
+//        element(by.buttonText('Close')).click();
         browser.sleep(1000);
         element(by.buttonText('Updates available')).isPresent().then(function () {
             element(by.buttonText('Updates available')).click();
@@ -396,7 +396,7 @@ describe('Protractor Security RAT bug Scenarios Testsuite', function () {
                 });
             });
         });
-
+//
         refreshBrowser();
         browser.get(browser.params.impTestAttachmentUrl + browser.params.attachmentUrls[3]).then(function () {}, function () {
             browser.switchTo().alert().accept();
@@ -405,7 +405,7 @@ describe('Protractor Security RAT bug Scenarios Testsuite', function () {
         (element(by.buttonText('Close'))).click();
         browser.sleep(3000);
         var requirementCounts = element(by.binding('requirements.length')).getText();
-        
+
         element(by.buttonText('Updates available')).isPresent().then(function () {
             element(by.buttonText('Updates available')).click();
             browser.wait(function () {

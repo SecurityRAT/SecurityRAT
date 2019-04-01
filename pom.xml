@@ -11,7 +11,7 @@
 
     <groupId>org.appsec.securityRAT</groupId>
     <artifactId>securityRAT</artifactId>
-    <version>1.7.3</version>
+    <version>1.7.6</version>
     <packaging>war</packaging>
 
     <name>SecurityRAT</name>

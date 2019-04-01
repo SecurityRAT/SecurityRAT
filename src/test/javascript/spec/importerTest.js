@@ -14,7 +14,7 @@ describe('Protractor Security RAT importer testsuite', function() {
 				browser.manage().getCookie('JSESSIONID').then(function() {
 					browser.manage().deleteCookie('JSESSIONID');
 					browser.switchTo().window(handles[0]).then();
-				});				
+				});
 			});
 		});
 	};
@@ -25,7 +25,7 @@ describe('Protractor Security RAT importer testsuite', function() {
 				browser.manage().getCookie('JSESSIONID').then(function() {
 					browser.manage().deleteCookie('JSESSIONID');
 					browser.switchTo().window(handles[0]).then();
-				});				
+				});
 			});
 		});
 	};
@@ -38,16 +38,16 @@ describe('Protractor Security RAT importer testsuite', function() {
 		browser.sleep(10000);
 		element(by.buttonText('Close')).click();
 		browser.sleep(3000);
-		
+
 		(element(by.buttonText(SaveButton))).click();
 		browser.sleep(3000);
 		(element(by.buttonText('Export'))).click();
 		browser.sleep(5000);
 		element(by.buttonText('Close')).click();
-		
-		
+
+
 	});
-	
+
 	it('imports by clicking on the link with parameter ticket and export them again', function() {
 		browser.sleep(3000);
 		browser.get(browser.params.impTestUrl2).then(function() {}, function(){
@@ -59,16 +59,16 @@ describe('Protractor Security RAT importer testsuite', function() {
 			if(list.count() > 1) {
 				// gives time to see whether attachments other than .yml were considered.
 				browser.sleep(6000);
-				element(by.buttonText('Import')).click();
 			}
 		});
+		element(by.buttonText('Import')).click();
 		browser.sleep(3000);
-		element(by.buttonText('Close')).isPresent().then(function(v){ 
+		element(by.buttonText('Close')).isPresent().then(function(v){
 		    expect(v).toBe(true);
 		});
 		element(by.buttonText('Close')).click();
 	});
-	
+
 	it('Imports by giving the ticket url in modal', function() {
 		browser.get(browser.params.testHost);
 		browser.sleep(5000);
@@ -114,18 +114,18 @@ describe('Protractor Security RAT importer testsuite', function() {
 		var list = element.all(by.tagName('textarea'));
 		list.first().sendKeys('export into file');
 		list.get(1).sendKeys('custom motivation');
-		
-		
+
+
 		(element(by.buttonText(SaveButton))).click();
 		(element(by.linkText('Export into File'))).click();
 		(element(by.buttonText('Export'))).click();
 		browser.sleep(3000);
-		element(by.css('a[download]')).isPresent().then(function(v){ 
+		element(by.css('a[download]')).isPresent().then(function(v){
 		    expect(v).toBe(true);
 		});
-		
+
 		expect(element.all(by.css('a[download]')).count()).toBe(1);
-		// var filename = ''; 
+		// var filename = '';
 		element(by.css('a[download]')).getAttribute('download').then(function() {
 			browser.get(browser.params.testHost);
 			importArtifact.click();
@@ -133,9 +133,9 @@ describe('Protractor Security RAT importer testsuite', function() {
 			// (element(by.linkText('Import from File'))).click();
 			// var fileToUpload = '../../../../../Downloads/' + value;
 			//  var absolutePath = path.resolve(__dirname, fileToUpload);
-			
+
 			// var input = element(by.id('fileUpload'));
-			
+
 			// input.sendKeys(absolutePath);
 			// browser.sleep(3000);
 			// (element(by.buttonText('Import'))).click();
@@ -146,7 +146,7 @@ describe('Protractor Security RAT importer testsuite', function() {
 			element(by.buttonText('Close')).click();
 		});
 	});
-	
+
 	it('Import with invalid Url', function() {
 		browser.get(browser.params.testHost + '?file=ww.asdasfd').then(function() {}, function(){
 			browser.switchTo().alert().accept();
@@ -159,13 +159,13 @@ describe('Protractor Security RAT importer testsuite', function() {
 		expect(element(by.id('failUrlMessage')).getText()).toBe('The entered URL is invalid. Please provide a valid URL');
 	});
 	it('Update available test', function() {
-		browser.get(browser.params.impTestAttachmentUrl + browser.params.attachmentUrls[0]).then(function() {}, function(){
+		browser.get(browser.params.impTestAttachmentUrl + browser.params.attachmentUrls[2]).then(function() {}, function(){
 			browser.switchTo().alert().accept();
 		});
 		browser.sleep(5000);
 		(element(by.buttonText('Close'))).click();
 		browser.sleep(3000);
-		element(by.buttonText('Updates available')).isPresent().then(function(){ 
+		element(by.buttonText('Updates available')).isPresent().then(function(){
 		    element(by.buttonText('Updates available')).click();
 		    browser.wait(function() {
 				return element(by.buttonText('Close')).isPresent();
@@ -181,7 +181,7 @@ describe('Protractor Security RAT importer testsuite', function() {
 					    expect(element(by.buttonText(SaveButton)).isEnabled()).toBe(false);
 					    // expect(element.all(by.id('feedbackIcon')).count()).toBe(0);
 					    var acceptList = element.all(by.id('acceptReq'));
-					    
+
 					    var x = 0;
 					    acceptList.each(function(element) {
 					    	if(x <= 5) {
@@ -207,14 +207,14 @@ describe('Protractor Security RAT importer testsuite', function() {
 		browser.sleep(10000);
 		expect(element.all(by.css('div[marked]')).last().getText()).toBe('No attachment with this id was found.');
 	});
-	
+
 	it('import with link to attachment content in file query parameter', function() {
 		browser.get(browser.params.impTestFileUrl).then(function() {}, function(){
 			browser.switchTo().alert().accept();
 		});
-		expect(element.all(by.css('div[marked]')).last().getText()).toBe('No attachment with this id was found.');
+		expect(element.all(by.css('div[marked]')).last().getText()).toBe('Invalid url in query parameter file. Please enter a valid JIRA ticket with an attachment.');
 	});
-	
+
 	// The first time you should not authenticate.
 	it('Imports by giving the ticket url without being authenticated', function() {
 		deleteCookie1();
@@ -244,7 +244,7 @@ describe('Protractor Security RAT importer testsuite', function() {
 		browser.sleep(5000);
 		element(by.buttonText('Close')).click();
 	});
-	
+
 	it('imports by clicking on the link without being authenticated', function() {
 		deleteCookie1();
 		deleteCookie();
