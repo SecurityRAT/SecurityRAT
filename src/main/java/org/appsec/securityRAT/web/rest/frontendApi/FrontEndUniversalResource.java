@@ -208,12 +208,11 @@ public class FrontEndUniversalResource {
     @Timed
     public ResponseEntity<RequirementSkeleton> getActiveRequirement(@PathVariable Long id) {
         log.debug("REST request requirement {}", id);
-        for (RequirementSkeleton requirement : requirementSkeletonRepository.findAllActiveWithEagerRelationships()) {
-			if(requirement.getId() == id) {
-				return new ResponseEntity<RequirementSkeleton>(requirement, HttpStatus.OK);
-			}
-		};
-        return new ResponseEntity<RequirementSkeleton>(HttpStatus.NOT_FOUND);
+	return Optional.ofNullable(requirementSkeletonRepository.findOneWithEagerRelationships(id))
+            .map(requirementSkeleton -> new ResponseEntity<>(
+                requirementSkeleton,
+                HttpStatus.OK))
+	.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     /**
