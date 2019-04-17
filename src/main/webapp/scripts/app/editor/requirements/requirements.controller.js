@@ -1388,13 +1388,13 @@ angular.module('sdlctoolApp')
 
                         var oldRequirement = $scope.requirements[i];
                         var atLeastOneDescriptionIsNotNull = !(newRequirement.description && oldRequirement.description)
-                            
+
                         // search for new changes in description
                         if (atLeastOneDescriptionIsNotNull ||
                             (removeSpacesFromString(newRequirement.description)
                                 !== removeSpacesFromString(oldRequirement.description))) {
                             var changes = diffString2(oldRequirement.description, newRequirement.description);
-                            // saves the hightlighted changes in diffDescription property to prevent this from been shown when not needed.
+                            // saves the highlighted changes in diffDescription property to prevent this from been shown when not needed.
                             oldRequirement.diffDescription = changes.o;
                             newRequirement.diffDescription = changes.n;
 
@@ -1412,7 +1412,9 @@ angular.module('sdlctoolApp')
                                     var oldRequirementOptColumns = oldRequirement.optionColumns[j];
                                     angular.forEach(newRequirementOptColumns.content, function (newRequirementContent) {
                                         angular.forEach(oldRequirementOptColumns.content, function (oldRequirementContent) {
-                                            if ((newRequirementContent.id === oldRequirementContent.id) && (newRequirementContent.content.replace(/[^\x20-\x7E]|\s+/gmi, '') !== oldRequirementContent.content.replace(/[^\x20-\x7E]|\s+/gmi, ''))) {
+                                            if ((newRequirementContent.id === oldRequirementContent.id) &&
+                                                (newRequirementContent.content.replace(/[^\x20-\x7E]|\s+/gmi, '')
+                                                    !== oldRequirementContent.content.replace(/[^\x20-\x7E]|\s+/gmi, ''))) {
                                                 var changes = diffString2(oldRequirementContent.content, newRequirementContent.content);
                                                 oldRequirementContent.diffContent = changes.o.replace(/\x60/gmi, '');
                                                 newRequirementContent.diffContent = changes.n.replace(/\x60/gmi, '');
@@ -1426,7 +1428,8 @@ angular.module('sdlctoolApp')
                                                 if (oldRequirementOptColumns.content.length > 1) {
                                                     angular.forEach(requirementToInsert.optionColumns, function (requirementToInsertOptColumns) {
                                                         angular.forEach(oldRequirementOptColumns.content, function (oldRequirementOptColumnsContent) {
-                                                            if (oldRequirementOptColumnsContent.id > 0 && (requirementToInsertOptColumns.showOrder === oldRequirementOptColumns.showOrder)) {
+                                                            if (oldRequirementOptColumnsContent.id > 0 &&
+                                                                (requirementToInsertOptColumns.showOrder === oldRequirementOptColumns.showOrder)) {
                                                                 requirementToInsertOptColumns.content.push(oldRequirementOptColumnsContent);
                                                             }
                                                         });
@@ -2125,7 +2128,8 @@ angular.module('sdlctoolApp')
                 generatedOn: $scope.generatedOn,
                 lastChanged: Helper.getCurrentDate(),
                 requirements: $scope.requirements,
-                statusColumns: $scope.statusColumns
+                statusColumns: $scope.statusColumns,
+                jiraQueuePlaceholder: appConfig.JIRAQueuePlaceholder
             });
             sharedProperties.setProperty(exportRequirements);
             var modalInstance = $uibModal.open({
@@ -2182,7 +2186,8 @@ angular.module('sdlctoolApp')
                 collections: $scope.systemSettings.colls,
                 generatedOn: $scope.generatedOn,
                 lastChanged: Helper.getCurrentDate(),
-                requirements: $scope.requirements
+                requirements: $scope.requirements,
+                defaultJIRAUrl: appConfig.defaultYAMLJIRAQueue
             });
             sharedProperties.setProperty(exportRequirements);
             var modalInstance = $uibModal.open({

@@ -567,8 +567,6 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 		expect(element(by.buttonText(exportButton)).isEnabled()).toBe(true);
 		(element(by.buttonText(exportButton))).click();
 		browser.sleep(4000);
-		expect(element(by.buttonText(exportButton)).isEnabled()).toBe(false);
-		browser.sleep(2000);
 		browser.refresh().then(function() {}, function(){
 			browser.sleep(2000);
 			browser.switchTo().alert().accept();
