@@ -34,7 +34,8 @@ angular.module('sdlctoolApp')
             promise: {},
             authenticatorProperty: {},
             jhError: {},
-            error: false
+            error: false,
+            jiraHostPlaceholder: appConfig.JIRAHostPlaceholder
         };
         // saves the alternative instances to be able to make panels out of them.
         $scope.newStyleAlternativeInstances = {};
@@ -2129,7 +2130,7 @@ angular.module('sdlctoolApp')
                 lastChanged: Helper.getCurrentDate(),
                 requirements: $scope.requirements,
                 statusColumns: $scope.statusColumns,
-                jiraQueuePlaceholder: appConfig.JIRAQueuePlaceholder
+                JIRAHostPlaceholder: appConfig.JIRAHostPlaceholder
             });
             sharedProperties.setProperty(exportRequirements);
             var modalInstance = $uibModal.open({
@@ -2187,7 +2188,7 @@ angular.module('sdlctoolApp')
                 generatedOn: $scope.generatedOn,
                 lastChanged: Helper.getCurrentDate(),
                 requirements: $scope.requirements,
-                defaultJIRAUrl: appConfig.defaultYAMLJIRAQueue
+                defaultJIRAUrl: appConfig.defaultJIRAQueueForYAML
             });
             sharedProperties.setProperty(exportRequirements);
             var modalInstance = $uibModal.open({
@@ -2337,6 +2338,8 @@ angular.module('sdlctoolApp')
 
         $scope.doIssueLinking = function (req, callbackFunction, ticket) {
             // reset the error handling properties.
+            ticket = JiraService.buildJiraUrl(ticket);
+            req.tempTicket = JiraService.buildJiraUrl(ticket);
             $scope.manageTicketProperty.error = false;
             $scope.manageTicketProperty.authenticationFailure = false;
             $scope.manageTicketProperty.jhError.show = false;
@@ -2400,6 +2403,10 @@ angular.module('sdlctoolApp')
                 }
             }
         };
+
+        $scope.validateURLTicketValue = function (value) {
+            return Helper.validateURLTicketValue(value);
+        }
 
         $scope.addManualTicket = function (req, mainObjectInfo, remoteObjectInfo, ticket) {
             $scope.manageTicketProperty.spinnerProperty.showSpinner = true;

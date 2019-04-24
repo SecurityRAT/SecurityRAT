@@ -44,12 +44,11 @@ angular.module('sdlctoolApp')
             });
             $scope.exported = sharedProperties.getProperty();
 
-            if ($scope.selection.createTickets && angular.isDefined($scope.exported.jiraQueuePlaceholder)
-                && $scope.exported.jiraQueuePlaceholder.trim() !== '') {
+            if ($scope.selection.createTickets && angular.isDefined($scope.exported.JIRAHostPlaceholder)
+                && $scope.exported.JIRAHostPlaceholder.trim() !== '') {
                 $scope.exportProperty.isQueueJIRAPlaceholderDefined = true;
                 $scope.exportProperty.urlPlaceholder = 'e.g. YOURPROJECT or https://your-jira.url/browse/YOURPROJECT';
-                $scope.exportProperty.jiraQueuePlaceholderName = appConfig.jiraQueuePlaceholderName;
-                $scope.exportProperty.jiraQueuePlaceholder = $scope.exported.jiraQueuePlaceholder;
+                $scope.exportProperty.JIRAHostPlaceholder = $scope.exported.JIRAHostPlaceholder;
             } else {
                 //            assigns default JIRA Url
                 $scope.jiraUrl.url = $scope.exported.defaultJIRAUrl
@@ -86,13 +85,7 @@ angular.module('sdlctoolApp')
         };
 
         $scope.validateURLQueueValue = function (value) {
-            if (value === undefined) {
-                return true;
-            } else if (value.startsWith('http')) {
-                var re = new RegExp($scope.checks.url.pattern, 'i');
-                return re.test(value.trim())
-            }
-            return new RegExp('^[A-Z]+$').test(value.trim())
+            return Helper.validateURLQueueValue(value);
         }
 
         $scope.removeLabel = function (label) {
@@ -213,7 +206,9 @@ angular.module('sdlctoolApp')
                         $scope.jiraAlternatives.issueTypes.push(issueType);
                     }
                 });
-                $scope.fields.issuetype.name = $scope.jiraAlternatives.issueTypes[0].name
+                $scope.fields.issuetype = {
+                    name: $scope.jiraAlternatives.issueTypes[0].name
+                }
             }, function () { });
         };
 
@@ -461,8 +456,8 @@ angular.module('sdlctoolApp')
         $scope.$watch('fields.project.key', function (newVal, oldVal, scope) {
             if ($scope.apiUrl.http !== undefined && newVal !== undefined) {
                 $scope.apiUrl.projectkey = newVal;
-                $scope.jiraUrl.url = $scope.apiUrl.cachedUrl + newVal;
-                $scope.backupUrl = $scope.apiUrl.cachedUrl + newVal;
+                $scope.jiraUrl.url = $scope.apiUrl.http + '//' + $scope.apiUrl.host + '/browse/' + newVal;
+                $scope.backupUrl = $scope.jiraUrl.url;
             }
         });
         // create a new ticket
@@ -656,21 +651,11 @@ angular.module('sdlctoolApp')
 
         };
 
-        $scope.buildUrl = function () {
-            if ($scope.jiraUrl.value === undefined) {
-                return $scope.jiraUrl.url;
-            } else if ($scope.jiraUrl.url.startsWith('http')) {
-                return $scope.jiraUrl.value
-            }
-
-            return $scope.exportProperty.jiraQueuePlaceholder.replace($scope.exportProperty.jiraQueuePlaceholderName, $scope.jiraUrl.value);
-        };
-
         $scope.confirm = function () {
             $scope.exportProperty.fail = false;
             $scope.checks.isTicket = false;
             var fieldNotfulfilled = false;
-            $scope.jiraUrl.url = $scope.buildUrl();
+            $scope.jiraUrl.url = JiraService.buildJiraUrl($scope.jiraUrl.url);
             if ($scope.selection.jira || $scope.selection.createTickets) {
                 //export to JIRA
                 $scope.exportProperty.authenticatorProperty = {
@@ -713,13 +698,6 @@ angular.module('sdlctoolApp')
                             $scope.checks.isQueue = true;
                             $scope.manFilterObject.projectKey = $scope.fields.project.key;
                             $scope.manFilterObject.issuetypeName = undefined;
-                            // gets the mandatory fields of the project selected
-                            // if ($scope.checks.isNotProject) {
-                            //     $scope.checks.isNotProject = false;
-                            //     $scope.getMandatoryFields($scope.manFilterObject, excludedFields, fatalFields);
-                            //     $scope.getIssueTypes($scope.fields.project.key);
-                            //     fieldNotfulfilled = true;
-                            // } else {
                             $scope.checks.isNotProject = false;
                             if ($scope.jiraAlternatives.mandatoryFields.length === 0) {
                                 $scope.getMandatoryFields($scope.manFilterObject, excludedFields, fatalFields);

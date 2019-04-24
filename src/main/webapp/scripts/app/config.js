@@ -9,4 +9,3 @@ var securityCATTestApi = '/scanapi/tests';
 var jiraComment = '/comment';
 var importPrefix = window.location.origin ? window.location.origin + '/?file=' : window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port: '') + '/?file=';
 var localStorageKey = 'backup';
-var jiraQueuePlaceholderName = '§queue§'

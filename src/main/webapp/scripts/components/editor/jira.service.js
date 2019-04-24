@@ -8,6 +8,18 @@ angular.module('sdlctoolApp')
 		var linkTypeName = appConfig.JIRAIssueLinkTypeName;
 		var remoteRelationshipName = appConfig.JIRARemoteIssueLinkRelationshipName;
 
+        function buildJiraUrl(value) {
+            var result = value;
+            if (!value.startsWith('http')) {
+            	if (!appConfig.JIRAHostPlaceholder.endsWith('/')) {
+                    result = appConfig.JIRAHostPlaceholder + '/';
+                }
+                result += 'browse/' + value;
+            }
+            
+            return result;
+        }
+
 		function buildUrlCall(selector, apiUrlInfo) {
             var baseJiraCall = apiUrlInfo.http + '//' + apiUrlInfo.host + appConfig.jiraApiPrefix + '/';
             var origin = apiUrlInfo.http + '//' + apiUrlInfo.host;
@@ -186,7 +198,8 @@ angular.module('sdlctoolApp')
 			buildUrlCall : buildUrlCall,
 			addAttachmentAndComment : addAttachmentAndComment,
 			addIssueLinks : addIssueLinks,
-			removeIssueLinks: removeIssueLinks
+			removeIssueLinks: removeIssueLinks,
+			buildJiraUrl: buildJiraUrl
 		};
 
 		return jiraService;

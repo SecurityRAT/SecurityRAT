@@ -35,7 +35,9 @@ angular.module('sdlctoolApp')
             spinner: {},
             promise: {},
             importing: false,
-            authenticating: false
+            authenticating: false,
+            jiraHostPlaceholder: appConfig.JIRAHostPlaceholder,
+            jiraTicketInputPlaceholder: appConfig.JIRAHostPlaceholder ? 'e.g. TEST-01 or https://your-jira.url/browse/YOURPROJECT-123' : 'e.g. https://your-jira.url/browse/YOURPROJECT-123'
         };
         $scope.checks = {
             url: {
@@ -52,7 +54,7 @@ angular.module('sdlctoolApp')
                     var modalInstance = $uibModal.open({
                         template: '<div class="modal-body"><div id="UsSpinner1" class=" text-center col-sm-1" id="UsSpinner" spinner-on="true" us-spinner=' +
                             '"{radius:6, width:4, length:6, lines:9}"></div><br/><h4 class="text-center"> JIRA Authentication running...</h4></div>',
-                        controller: function () {},
+                        controller: function () { },
                         size: 'sm',
                         backdrop: false
                     });
@@ -72,6 +74,10 @@ angular.module('sdlctoolApp')
             // }
         };
 
+        var isImportFromLink = function (fileParam) {
+            return ($location.search().file !== undefined || fileParam !== undefined) && ($location.search().ticket === undefined);
+        }
+
         $scope.init = function () {
             function onSuccess(attachment) {
                 // var modalInstance;
@@ -86,7 +92,7 @@ angular.module('sdlctoolApp')
                             type: attachment.mimeType
                         });
                         $scope.readYamlFile(blob);
-                    }, function () {});
+                    }, function () { });
                 } else {
                     SDLCToolExceptionService.showWarning('Import unsuccessful', 'Invalid url in query parameter file. Please enter a valid JIRA ticket with an attachment.', SDLCToolExceptionService.DANGER);
                 }
@@ -122,15 +128,19 @@ angular.module('sdlctoolApp')
                         // $scope.importProperty.importing = true;
                         $scope.readYamlFileFromLocalStorage(blob);
                     },
-                    function () {});
+                    function () { });
             } else {
                 angular.extend($scope.importProperty.spinner, {
                     showSpinner: false
                 });
+                if (!isImportFromLink(fileParam)) {
+                    $('#jiraLink').focus();
+                    $scope.status.jira = true;
+                }
                 apiFactory.getAll('projectTypes').then(
                     function (projectTypes) {
                         $scope.projectTypes = $filter('orderBy')(projectTypes, 'showOrder');
-                        if (($location.search().file !== undefined || fileParam !== undefined) && ($location.search().ticket === undefined)) {
+                        if (isImportFromLink(fileParam)) {
                             var fileUrl;
                             if (fileParam !== undefined) {
                                 fileUrl = decodeURIComponent(fileParam.toString());
@@ -170,11 +180,9 @@ angular.module('sdlctoolApp')
                                 $scope.status.jira = true;
                                 $scope.uploadJira();
                             }
-                            $('#jiraLink').focus();
-                            $scope.status.jira = true;
                         }
                     },
-                    function () {});
+                    function () { });
             }
 
         };
@@ -190,8 +198,14 @@ angular.module('sdlctoolApp')
             }
         };
 
+
+        $scope.validateURLTicketValue = function (value) {
+            return Helper.validateURLTicketValue(value);
+        }
+
+
         $scope.uploadJira = function () {
-            // if (re_weburl.test($scope.jiraLink.url.trim())) {
+            $scope.jiraLink.url = JiraService.buildJiraUrl($scope.jiraLink.url);
             var urlSplit = $scope.jiraLink.url.split('/');
             $scope.buildUrlObject(urlSplit);
             // var apiCall = $scope.apiUrl.http + "//" + $scope.apiUrl.host + appConfig.jiraApiIssueType;
@@ -223,10 +237,6 @@ angular.module('sdlctoolApp')
                     $scope.importProperty.importing = false;
                 });
             }
-            // } else {
-            //     $scope.uploadFail = true;
-            //     $scope.failMessage = "The entered URL is invalid. Please provide a valid URL";
-            // }
         };
 
         //checks if the given ticket exist
@@ -235,26 +245,26 @@ angular.module('sdlctoolApp')
             if ($scope.attachmentProperties.attachments.length === 0) {
                 // var urlCall = $scope.apiUrl.http + "//" + $scope.apiUrl.host + appConfig.jiraApiPrefix + "/" + $scope.apiUrl.ticketKey[0];
                 apiFactory.getJIRAInfo(JiraService.buildUrlCall('issueKey', $scope.apiUrl)).then(function (response) {
-                        if (response.fields.attachment.length === 0) {
+                    if (response.fields.attachment.length === 0) {
+                        $scope.importProperty.importing = false;
+                        SDLCToolExceptionService.showWarning('Import unsuccessful', 'There were no attachments found in this ticket.', SDLCToolExceptionService.DANGER);
+                    } else if (response.fields.attachment.length > 0) {
+                        // $scope.isTicket = true;
+                        //                      $scope.getNewestAttachment(response.fields.attachment);
+                        $scope.attachmentProperties.attachments = $filter('orderBy')($scope.buildAttachmentsArray(response.fields.attachment), 'showOrder', true);
+                        //                      console.log($scope.attachmentProperties.attachments);
+                        if ($scope.attachmentProperties.attachments.length === 1) {
+                            $scope.getAttachment($scope.attachmentProperties.attachments[0].downloadUrl);
+                        } else if ($scope.attachmentProperties.attachments.length > 1) {
+                            $scope.attachmentProperties.selectedAttachment = $scope.attachmentProperties.attachments[0].downloadUrl;
+                            $scope.attachmentProperties.hasAttachments = true;
                             $scope.importProperty.importing = false;
-                            SDLCToolExceptionService.showWarning('Import unsuccessful', 'There were no attachments found in this ticket.', SDLCToolExceptionService.DANGER);
-                        } else if (response.fields.attachment.length > 0) {
-                            // $scope.isTicket = true;
-                            //                      $scope.getNewestAttachment(response.fields.attachment);
-                            $scope.attachmentProperties.attachments = $filter('orderBy')($scope.buildAttachmentsArray(response.fields.attachment), 'showOrder', true);
-                            //                      console.log($scope.attachmentProperties.attachments);
-                            if ($scope.attachmentProperties.attachments.length === 1) {
-                                $scope.getAttachment($scope.attachmentProperties.attachments[0].downloadUrl);
-                            } else if ($scope.attachmentProperties.attachments.length > 1) {
-                                $scope.attachmentProperties.selectedAttachment = $scope.attachmentProperties.attachments[0].downloadUrl;
-                                $scope.attachmentProperties.hasAttachments = true;
-                                $scope.importProperty.importing = false;
-                            } else if ($scope.attachmentProperties.attachments.length === 0) {
-                                $scope.importProperty.importing = false;
-                                SDLCToolExceptionService.showWarning('Import unsuccessful', 'There were no valid yaml attachments found in this ticket.', SDLCToolExceptionService.DANGER);
-                            }
+                        } else if ($scope.attachmentProperties.attachments.length === 0) {
+                            $scope.importProperty.importing = false;
+                            SDLCToolExceptionService.showWarning('Import unsuccessful', 'There were no valid yaml attachments found in this ticket.', SDLCToolExceptionService.DANGER);
                         }
-                    },
+                    }
+                },
                     function (exception) {
                         $scope.importProperty.importing = false;
                         if (exception.status === 404) {
@@ -400,7 +410,7 @@ angular.module('sdlctoolApp')
             angular.forEach(requirementCategories, function (category) {
                 var lastElementOrder = 0;
                 angular.forEach(category.requirements, function (requirement) {
-                    
+
                     reqCounter++;
                     var values = [];
                     // var linkStatus = {};
@@ -560,8 +570,8 @@ angular.module('sdlctoolApp')
             });
             var ticket = system.ticket;
             // in case a yaml file was manual uploaded to a JIRA ticket without giving the ticket URL in this file.
-            if((angular.isUndefined(ticket) || (angular.isDefined(ticket) && $.isEmptyObject(ticket))) && $scope.status.jira && angular.isDefined($scope.jiraLink.url)) {
-                ticket = { 
+            if ((angular.isUndefined(ticket) || (angular.isDefined(ticket) && $.isEmptyObject(ticket))) && $scope.status.jira && angular.isDefined($scope.jiraLink.url)) {
+                ticket = {
                     url: $scope.jiraLink.url,
                     key: Helper.buildJiraUrl($scope.jiraLink.url.split('/')).ticketKey[0]
                 };

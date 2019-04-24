@@ -44,6 +44,24 @@ angular.module('sdlctoolApp')
                 }
                 return changedContent;
             },
+            validateURLQueueValue: function (value) {
+                if (!value) {
+                    return true;
+                } else if (value.startsWith('http')) {
+                    var re = new RegExp(urlpattern.javascriptStringRegex, 'i');
+                    return re.test(value.trim())
+                }
+                return new RegExp('^[A-Z]+$').test(value.trim());
+            },
+            validateURLTicketValue: function (value) {
+                if (!value) {
+                    return true;
+                } else if (value.startsWith('http')) {
+                    var re = new RegExp(urlpattern.javascriptStringRegex, 'i');
+                    return re.test(value.trim())
+                }
+                return new RegExp('^[A-Z]+-\\d+$').test(value.trim());
+            },
             buildJiraUrl: function (list) {
                 var apiUrl = {};
                 apiUrl.ticketKey = [];
