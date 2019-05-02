@@ -26,10 +26,12 @@ public class ConfigConstant implements Serializable {
     @Column(name = "name", nullable=false, unique=true)
     private String name;
 
-    @Column(name = "value", nullable= false)
+    @Column(name = "value")
+		@Lob
     private String value;
 
     @Column(name = "description")
+		@Lob
     private String description;
 
 
