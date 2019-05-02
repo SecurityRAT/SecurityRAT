@@ -58,6 +58,7 @@ angular.module('sdlctoolApp')
                             showOrder = value.showOrder;
                             name = value.name;
                             valueId = value.id;
+                            $scope.statValue.value = value;
                         }
 
                     });
@@ -145,10 +146,9 @@ angular.module('sdlctoolApp')
 
         $scope.close = function () {
             var item = {};
-            //		  $scope.updateOptColumns();
-            //   if($scope.status.add) {
             var index = -1;
             var categoryIndex = 0;
+            console.log($scope.requirement);
             angular.forEach($scope.categories, function (category) {
                 index++;
                 if (category.id === $scope.requirement.categoryId) {
@@ -162,10 +162,6 @@ angular.module('sdlctoolApp')
                 requirement: $scope.requirement,
                 categoryIndex: categoryIndex
             };
-            //   } else if($scope.status.edit) {
-            // 	  item = {requirement: $scope.requirement};
-
-            //   }
             $uibModalInstance.close(item);
         };
     });
