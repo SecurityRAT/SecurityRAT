@@ -18,7 +18,7 @@ describe('Protractor Security RAT general testsuite', function() {
 			  }(document.createEvent('MouseEvents'))));}(document.createElement('a')));
 			}, browser.params.jiraQueue);
 		// wait for the user to log into the jira queue.
-		browser.sleep(20000);
+		browser.sleep(15000);
 		browser.driver.executeScript(function(jiraRemoteLinkQueue) {
 			  (function(a){
 				  // append a link to the jira queue to the DOM and clicks it. 
@@ -31,7 +31,7 @@ describe('Protractor Security RAT general testsuite', function() {
 			  }(document.createEvent('MouseEvents'))));}(document.createElement('a')));
 			}, browser.params.jiraRemoteLinkQueue);
 		// wait for the user to log into the jira queue.
-		browser.sleep(20000);
+		browser.sleep(15000);
 		// browser.get(browser.params.testHost);
 		// element(by.id('username')).clear().then(function(){
 		// 	element(by.id('username')).sendKeys(browser.params.admin.user);

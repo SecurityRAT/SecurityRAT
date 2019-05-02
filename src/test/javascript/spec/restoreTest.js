@@ -15,8 +15,6 @@ describe('Protractor Security RAT restoring session testsuite', function() {
 		defineArtifact.click();
 		var artifactName = element(by.model('starterForm.name'));
 		artifactName.sendKeys('some artifact');
-		element.all(by.buttonText('Select')).last().click();
-		element(by.linkText('Internal')).click();
 		element.all(by.buttonText('Select')).each(function(elemt) {
 			elemt.click().then(function() {
 				element(by.linkText('High')).isPresent().then(function(isInternally){

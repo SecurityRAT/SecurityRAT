@@ -57,9 +57,6 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 		var artifactName = element(by.model('starterForm.name'));
 		artifactName.sendKeys('-+.:()[],!#$%\'*=?`{}~;@&some artifact');
 
-		element.all(by.buttonText('Select')).last().click();
-		browser.sleep(500);
-		(element(by.linkText('Internal'))).click();
 		element.all(by.buttonText('Select')).each(function(elem) {
 			elem.click().then(function() {
 				element(by.linkText('High')).isPresent().then(function(present){
