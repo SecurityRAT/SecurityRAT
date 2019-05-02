@@ -8,21 +8,21 @@
             <uib-alert class="text-center" data-ng-if="exportProperty.fail" type="alert alert-danger">
                 {{exportProperty.failed}}
             </uib-alert>
-            <uib-alert class="text-center" data-ng-if="exportProperty.isQueueJIRAPlaceholderDefined"
+            <uib-alert class="text-center" data-ng-if="exportProperty.defaultJIRAHost"
                 type="alert alert-warning">
                 Enter either project URL or project name to resolve URL with JIRA host
-                <strong>{{exportProperty.JIRAHostPlaceholder}}</strong>.
+                <strong>{{exportProperty.defaultJIRAHost}}</strong>.
             </uib-alert>
             <div class="form-group">
                 <div class="text-center col-sm-9">
                     <div class="input-group">
                         <span class="input-group-addon required-field"><span
-                                data-ng-if="exportProperty.isQueueJIRAPlaceholderDefined">Project
+                                data-ng-if="exportProperty.defaultJIRAHost">Project
                                 name/</span>URL:</span>
                         <input type="text" data-ng-attr-placeholder="{{exportProperty.urlPlaceholder}}"
                             data-ng-model="jiraUrl.url" name="url" class="form-control" required />
                     </div>
-                    <div data-ng-show="!validateURLQueueValue(jiraUrl.value)">
+                    <div data-ng-show="!validateURLQueueValue(jiraUrl.url)">
                         <p class="help-block">
                             {{checks.url.createTicketURLErrorMessage}}
                         </p>

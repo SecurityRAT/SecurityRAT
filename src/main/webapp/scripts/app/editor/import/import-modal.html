@@ -13,58 +13,61 @@
                     Import from JIRA <i class="pull-right glyphicon"
                         data-ng-class="{'glyphicon-chevron-up':status.jira , 'glyphicon-chevron-down': !status.jira}"></i>
                 </uib-accordion-heading>
-                <div>
-                    <span>Please provide ticket URL<span data-ng-if="importProperty.jiraHostPlaceholder"> or ticket
-                            key to resolve URL with JIRA host
-                            <strong>{{importProperty.jiraHostPlaceholder}}</strong></span> to a Jira Ticket. If the
-                        ticket contains more than one attachments a list with all available attachments of the
-                        ticket will be shown. Otherwise the attachment will be imported automatically.</span>
-                </div>
-                <BR />
-                <div class="form-group">
-                    <div class="text-center col-sm-11">
-                        <div class="input-group">
-                            <span class="input-group-addon required-field">
-                                <span data-ng-if="importProperty.jiraHostPlaceholder">
-                                    Ticket key/</span>URL:
-                            </span>
-                            <input type="text" id="jiraLink" data-ng-model="jiraLink.url"
-                                data-ng-attr-placeholder="{{importProperty.jiraTicketInputPlaceholder}}"
-                                class="form-control" name="url" required />
+                <div data-ng-if="status.jira">
+                    <div>
+                        <span>Please provide ticket URL<span data-ng-if="importProperty.defaultJIRAHost"> or ticket
+                                key to resolve URL with JIRA host
+                                <strong>{{importProperty.defaultJIRAHost}}</strong></span> to a Jira Ticket. If the
+                            ticket contains more than one attachments a list with all available attachments of the
+                            ticket will be shown. Otherwise the attachment will be imported automatically.</span>
+                    </div>
+                    <BR />
+                    <div class="form-group">
+                        <div class="text-center col-sm-11">
+                            <div class="input-group">
+                                <span class="input-group-addon required-field">
+                                    <span data-ng-if="importProperty.defaultJIRAHost">
+                                        Ticket key/</span>URL:
+                                </span>
+                                <input type="text" id="jiraLink" data-ng-model="jiraLink.url"
+                                    data-ng-attr-placeholder="{{importProperty.jiraTicketInputPlaceholder}}"
+                                    class="form-control" name="url" required />
+                            </div>
+                            <div data-ng-show="importForm.url.$invalid">
+                                <p class="help-block" data-ng-show="importForm.url.$error.required">
+                                    field is required
+                                </p>
+                            </div>
+                            <div data-ng-show="!validateURLTicketValue(jiraLink.url)">
+                                <p class="help-block">
+                                    Please specify a valid <span data-ng-if="importProperty.defaultJIRAHost">Ticket
+                                        key or</span>
+                                    URL
+                                </p>
+                            </div>
                         </div>
-                        <div data-ng-show="importForm.url.$invalid">
-                            <p class="help-block" data-ng-show="importForm.url.$error.required">
-                                field is required
-                            </p>
-                        </div>
-                        <div data-ng-show="!validateURLTicketValue(jiraLink.url)">
-                            <p class="help-block">
-                                Please specify a valid <span data-ng-if="importProperty.jiraHostPlaceholder">Ticket
-                                    key or</span>
-                                URL
-                            </p>
+                        <div id="UsSpinner" data-ng-if="importProperty.spinner.showSpinner"
+                            class="text-center col-sm-1">
+                            <span spinner-on="importProperty.spinner.showSpinner"
+                                us-spinner="{radius:5, width:3, length:3, lines:9}"
+                                uib-popover="JIRA Authentication running..." popover-placement="top"
+                                popover-trigger="mouseenter"></span>
                         </div>
                     </div>
-                    <div id="UsSpinner" data-ng-if="importProperty.spinner.showSpinner" class="text-center col-sm-1">
-                        <span spinner-on="importProperty.spinner.showSpinner"
-                            us-spinner="{radius:5, width:3, length:3, lines:9}"
-                            uib-popover="JIRA Authentication running..." popover-placement="top"
-                            popover-trigger="mouseenter"></span>
+                    <div data-ng-if="attachmentProperties.hasAttachments">
+                        <BR />
+                        <span>There were more than one SSDLC attachments found in the ticket you provided. Please select
+                            the one you would like to import.</span>
                     </div>
-                </div>
-                <div data-ng-if="attachmentProperties.hasAttachments">
-                    <BR />
-                    <span>There were more than one SSDLC attachments found in the ticket you provided. Please select
-                        the one you would like to import.</span>
-                </div>
-                <div class="form-group" data-ng-if="attachmentProperties.hasAttachments">
-                    <BR />
-                    <label for="Attachments" class="col-sm-2 control-label">Attachment file:</label>
-                    <div class="col-sm-9">
-                        <select id="Attachments" data-ng-model="attachmentProperties.selectedAttachment"
-                            data-ng-options="attachment.downloadUrl as attachment.label for attachment in attachmentProperties.attachments"
-                            class="form-control" required>
-                        </select>
+                    <div class="form-group" data-ng-if="attachmentProperties.hasAttachments">
+                        <BR />
+                        <label for="Attachments" class="col-sm-2 control-label">Attachment file:</label>
+                        <div class="col-sm-9">
+                            <select id="Attachments" data-ng-model="attachmentProperties.selectedAttachment"
+                                data-ng-options="attachment.downloadUrl as attachment.label for attachment in attachmentProperties.attachments"
+                                class="form-control" required>
+                            </select>
+                        </div>
                     </div>
                 </div>
             </uib-accordion-group>

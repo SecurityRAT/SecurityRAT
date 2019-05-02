@@ -35,7 +35,7 @@ angular.module('sdlctoolApp')
             authenticatorProperty: {},
             jhError: {},
             error: false,
-            jiraHostPlaceholder: appConfig.JIRAHostPlaceholder
+            defaultJIRAHost: appConfig.defaultJIRAHost
         };
         // saves the alternative instances to be able to make panels out of them.
         $scope.newStyleAlternativeInstances = {};
@@ -278,14 +278,10 @@ angular.module('sdlctoolApp')
                 $scope.generatedOn = Helper.getCurrentDate();
                 $scope.buildSettings();
                 $scope.getRequirements();
-                //if($scope.systemSettings.oldRequirements === undefined) {
-                //    $scope.getAlternativeSets();
-                //} else {
                 $scope.getAlternativeSets();
                 $scope.getOptandStatusColumns(false);
                 $scope.alternativeSets = $scope.systemSettings.alternativeSets;
                 $scope.requirementProperties.hasIssueLinks = $scope.systemSettings.hasIssueLinks;
-                //}
             }
             // $scope.getOptandStatusColumns();
             $scope.getTagCategories();
@@ -2130,7 +2126,7 @@ angular.module('sdlctoolApp')
                 lastChanged: Helper.getCurrentDate(),
                 requirements: $scope.requirements,
                 statusColumns: $scope.statusColumns,
-                JIRAHostPlaceholder: appConfig.JIRAHostPlaceholder
+                defaultJIRAHost: appConfig.defaultJIRAHost
             });
             sharedProperties.setProperty(exportRequirements);
             var modalInstance = $uibModal.open({
@@ -2339,7 +2335,7 @@ angular.module('sdlctoolApp')
         $scope.doIssueLinking = function (req, callbackFunction, ticket) {
             // reset the error handling properties.
             ticket = JiraService.buildJiraUrl(ticket);
-            req.tempTicket = JiraService.buildJiraUrl(ticket);
+            req.tempTicket = ticket;
             $scope.manageTicketProperty.error = false;
             $scope.manageTicketProperty.authenticationFailure = false;
             $scope.manageTicketProperty.jhError.show = false;

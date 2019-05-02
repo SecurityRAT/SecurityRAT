@@ -40,15 +40,13 @@ angular.module('sdlctoolApp')
                 showSpinner: false,
                 failed: '',
                 authenticating: false,
-                isQueueJIRAPlaceholderDefined: false
             });
             $scope.exported = sharedProperties.getProperty();
 
-            if ($scope.selection.createTickets && angular.isDefined($scope.exported.JIRAHostPlaceholder)
-                && $scope.exported.JIRAHostPlaceholder.trim() !== '') {
-                $scope.exportProperty.isQueueJIRAPlaceholderDefined = true;
+            if ($scope.selection.createTickets && angular.isDefined($scope.exported.defaultJIRAHost)
+                && $scope.exported.defaultJIRAHost.trim() !== '') {
                 $scope.exportProperty.urlPlaceholder = 'e.g. YOURPROJECT or https://your-jira.url/browse/YOURPROJECT';
-                $scope.exportProperty.JIRAHostPlaceholder = $scope.exported.JIRAHostPlaceholder;
+                $scope.exportProperty.defaultJIRAHost = $scope.exported.defaultJIRAHost;
             } else {
                 //            assigns default JIRA Url
                 $scope.jiraUrl.url = $scope.exported.defaultJIRAUrl

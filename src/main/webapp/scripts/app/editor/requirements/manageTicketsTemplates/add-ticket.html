@@ -6,9 +6,9 @@
         {{manageTicketProperty.authenticationFailureMessage}}
     </div>
     <jh-alert></jh-alert>
-    <div uib-alert class="alert alert-warning" data-ng-show="manageTicketProperty.jiraHostPlaceholder">
+    <div uib-alert class="alert alert-warning" data-ng-show="manageTicketProperty.defaultJIRAHost">
         Enter either ticket URL or ticket key (e.g. TEST-01) to resolve URL with JIRA host
-        <strong>{{manageTicketProperty.jiraHostPlaceholder}}</strong>.
+        <strong>{{manageTicketProperty.defaultJIRAHost}}</strong>.
     </div>
     <div class="input-group input-group-sm">
         <span class="input-group-addon">
@@ -33,7 +33,7 @@
         </div>
         <div data-ng-show="!validateURLTicketValue(reqs.tempTicket)">
             <p class="help-block">
-                Please specify a valid <span data-ng-if="manageTicketProperty.jiraHostPlaceholder">Ticket key or</span>
+                Please specify a valid <span data-ng-if="manageTicketProperty.defaultJIRAHost">Ticket key or</span>
                 URL
             </p>
         </div>

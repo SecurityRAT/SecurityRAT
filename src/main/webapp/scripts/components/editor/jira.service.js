@@ -11,8 +11,8 @@ angular.module('sdlctoolApp')
         function buildJiraUrl(value) {
             var result = value;
             if (!value.startsWith('http')) {
-            	if (!appConfig.JIRAHostPlaceholder.endsWith('/')) {
-                    result = appConfig.JIRAHostPlaceholder + '/';
+            	if (!appConfig.defaultJIRAHost.endsWith('/')) {
+                    result = appConfig.defaultJIRAHost + '/';
                 }
                 result += 'browse/' + value;
             }

@@ -26,13 +26,13 @@
             <column name="name" value="defaultJIRAQueueForYAML"/>
             <column name="value" value=""/>
             <column name="description"
-                    value="This value defines the default JIRA queue (e.g. https://test-jira.com/browse/TEST) used to save your requirements to JIRA."/>
+                    value="This value defines the default JIRA queue (e.g. https://test-jira.com/browse/TEST) used to save your requirements."/>
         </insert>
         <insert tableName="CONFIGCONSTANT">
-            <column name="name" value="JIRAHostPlaceholder"/>
+            <column name="name" value="defaultJIRAHost"/>
             <column name="value" value=""/>
             <column name="description"
-                    value="Default JIRA host used in multiple Interfaces such as the **create JIRA tickets**, **import** or **add manual link**. When defined, the user could only provide a JIRA project name or ticket key instead of the whole URL."/>
+                    value="Default JIRA host used in multiple Interfaces such as **create JIRA tickets** or **import**. When defined, the user could only provide a JIRA project name or ticket key instead of the whole URL."/>
         </insert>
     </changeSet>
 </databaseChangeLog>
