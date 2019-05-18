@@ -1,6 +1,34 @@
 CHANGELOG
 =========
 
+## 0.5.2 (2017-04-19)
+
+- Update `bootstrap-switch` to `~3.3.4`
+- Fix `jquery` import in tests
+- Fix `npm` dependencies
+- Fix `README` headings
+
+## 0.5.1 (2016-06-04)
+
+- Make `switch-change` trigger when model changes
+- Use `ng-change` for triggers only on view changes
+- Test `ng-change` and `switch-change` behaviors
+
+## 0.5.0 (2016-03-10)
+
+- Use `ngAnnotate` instead of `ngMin`
+- Update dev dependencies
+- Add `switch-change` attribute
+- Improve digest cycle
+- Use `null` for indeterminate state
+- Update to Angular 1.5.0
+
+**BREAKING CHANGES:**
+
+- Applications relying on `undefined` as the only indeterminate state
+  may break if they consider `null` a falsy value. `null` is now an
+  indeterminate value.
+
 ## 0.4.1 (2015-06-15)
 
 - Update to `angular` 1.4.0

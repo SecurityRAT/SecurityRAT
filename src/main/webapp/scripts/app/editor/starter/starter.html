@@ -26,7 +26,7 @@
                         <div class="col-sm-10">
                             <div class="control-group">
                                 <input class="form-control" type="text" data-ng-model="starterForm.name" id="inputName"
-                                       name="artifact" data-ng-pattern="regex">
+                                    name="artifact" data-ng-pattern="regex">
                             </div>
                         </div>
                         <div class="col-sm-1 pull-right">
@@ -57,17 +57,16 @@
                         <p>
                             <strong style="color:yellow">{{category.name}}: {{category.description}}</strong><BR>
                             <span data-ng-repeat="instances in category.collectionInstances | orderBy:'showOrder'">
-									<span
-                                        style="color:#cc6600;">{{instances.name}}:</span> {{instances.description}}<BR>
-								</span>
+                                <span style="color:#cc6600;">{{instances.name}}:</span> {{instances.description}}<BR>
+                            </span>
                         </p>
                     </div>
                 </div>
                 <div class="col-sm-1"></div>
                 <div class="col-sm-8">
                     <div ng-dropdown-multiselect="" options="category.collectionInstances"
-                         selected-model="category.selectedCollectionSets"
-                         extra-settings="selectedCollectionSettings" events="selectedCollectionEvents"></div>
+                        selected-model="category.selectedCollectionSets" extra-settings="selectedCollectionSettings"
+                        events="selectedCollectionEvents"></div>
                     <BR>
                 </div>
             </div>
@@ -87,22 +86,22 @@
                     <strong>Implementation Type</strong>
                     <div class="help-tip pull-right">
                         <p>
-								<span data-ng-repeat="type in projectType | orderBy:'showOrder'">
-									<span style="color:#cc6600;">{{type.name}}:</span> {{type.description}}<BR>
-								</span>
+                            <span data-ng-repeat="type in projectType | orderBy:'showOrder'">
+                                <span style="color:#cc6600;">{{type.name}}:</span> {{type.description}}<BR>
+                            </span>
                         </p>
                     </div>
                 </div>
                 <div class="col-sm-1"></div>
                 <div class="col-sm-3" uib-dropdown>
                     <button class="btn btn-default" data-ng-disabled="disabled" type="button" uib-dropdown-toggle>
-                        {{projectTypeModel.name}} <span data-ng-if="projectType.length > 1" class="caret"></span></button>
+                        {{projectTypeModel.name}} <span data-ng-if="projectType.length > 1"
+                            class="caret"></span></button>
                     <ul class="uib-dropdown-menu" aria-labelledby="typeDropdown">
-                        <li data-ng-repeat="type in projectType"><a href="" data-ng-click="selectProject(type)">{{type.name}}</a>
+                        <li data-ng-repeat="type in projectType"><a href=""
+                                data-ng-click="selectProject(type)">{{type.name}}</a>
                         </li>
                     </ul>
-                    <!--  <select data-ng-options="type as type.name for type in projectType" data-ng-model="projectTypeModel" data-ng-change="selectProject(projectTypeModel)"
-                    class="btn btn-default form-control"></select>-->
                 </div>
             </div>
         </div>
@@ -111,7 +110,7 @@
 <div class="modal-footer">
     <div class="col-sm-offset-8 col-sm-4">
         <button class="btn btn-primary form-control pull-right" data-ng-click="finish()"
-                data-ng-disabled="projectTypeModel.name == 'Select' || starterForm.name == null || starterForm.name.length == 0">
+            data-ng-disabled="projectTypeModel.name == 'Select' || starterForm.name == null || starterForm.name.length == 0">
             <strong>Generate</strong></button>
     </div>
 </div>

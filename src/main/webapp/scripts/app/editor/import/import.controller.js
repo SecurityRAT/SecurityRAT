@@ -12,7 +12,7 @@
  */
 angular.module('sdlctoolApp')
     .controller('ImportController', function ($scope, $location, $uibModalStack, sharedProperties, getRequirementsFromImport, Helper, checkAuthentication,
-        apiFactory, $filter, authenticatorService, $interval, SDLCToolExceptionService, $timeout, appConfig, $q, $uibModal, localStorageService, JiraService) {
+        apiFactory, $filter, authenticatorService, SDLCToolExceptionService, $timeout, appConfig, $q, $uibModal, localStorageService, JiraService) {
         $scope.status = {
             file: false,
             jira: false
@@ -75,6 +75,8 @@ angular.module('sdlctoolApp')
         }
 
         $scope.init = function () {
+            $scope.status.jira = true;
+            $timeout(function() {$('#jiraLink').focus();}, 500)
             function onSuccess(attachment) {
                 // var modalInstance;
                 if (attachment.self !== undefined) {
@@ -111,6 +113,7 @@ angular.module('sdlctoolApp')
             // must be '==' and not '===' because fileParam is and object of type String but not "RESTORE"
             /* jshint eqeqeq: false */
             if (fileParam == 'RESTORE') {
+                $scope.status.jira = false;
                 $scope.importProperty.importing = true;
                 angular.extend($scope.importProperty.spinner, {
                     showSpinner: false
@@ -132,10 +135,10 @@ angular.module('sdlctoolApp')
                 angular.extend($scope.importProperty.spinner, {
                     showSpinner: false
                 });
-                if (!isImportFromLink(fileParam)) {
-                    $('#jiraLink').focus();
-                    $scope.status.jira = true;
-                }
+                // if (!isImportFromLink(fileParam)) {
+                //     $('#jiraLink').focus();
+                //     $scope.status.jira = true;
+                // }
                 apiFactory.getAll('collections').then(function (collections) {
                     $scope.collections = collections;
                 }, function() {});

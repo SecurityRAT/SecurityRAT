@@ -52,6 +52,21 @@ angular.module('frapontillo.bootstrap-switch')
         };
 
         /**
+         * Returns a function that executes the provided expression
+         *
+         * @param value The string expression
+         * @return a function that evaluates the expression
+         */
+        var getExprFromString = function (value) {
+          if (angular.isUndefined(value)) {
+            return angular.noop;
+          }
+          return function () {
+            scope.$evalAsync(value);
+          };
+        };
+
+        /**
          * Get the value of the angular-bound attribute, given its name.
          * The returned value may or may not equal the attribute value, as it may be transformed by a function.
          *
@@ -77,7 +92,8 @@ angular.module('frapontillo.bootstrap-switch')
               return value || 'wrapper';
             },
             'switchInverse': getBooleanFromString,
-            'switchReadonly': getBooleanFromString
+            'switchReadonly': getBooleanFromString,
+            'switchChange': getExprFromString
           };
           var transFn = map[attrName] || getValueOrUndefined;
           return transFn(attrs[attrName]);
@@ -138,37 +154,37 @@ angular.module('frapontillo.bootstrap-switch')
           }
         };
 
+        var switchChange = getSwitchAttrValue('switchChange');
+
         /**
          * Listen to model changes.
          */
         var listenToModel = function () {
 
           attrs.$observe('switchActive', function (newValue) {
+
             var active = getBooleanFromStringDefTrue(newValue);
             // if we are disabling the switch, delay the deactivation so that the toggle can be switched
             if (!active) {
-              $timeout(function() {
-                setActive(active);
-              });
+              $timeout(setActive);
             } else {
               // if we are enabling the switch, set active right away
-              setActive(active);
+              setActive();
             }
           });
 
-          function modelValue() {
-            return controller.$modelValue;
-          }
-
           // When the model changes
-          scope.$watch(modelValue, function(newValue) {
+          controller.$render = function () {
             initMaybe();
-            if (newValue !== undefined) {
-              element.bootstrapSwitch('state', newValue === getTrueValue(), false);
+            var newValue = controller.$modelValue;
+            if (newValue !== undefined && newValue !== null) {
+              element.bootstrapSwitch('state', newValue === getTrueValue(), true);
             } else {
-              element.bootstrapSwitch('toggleIndeterminate', true, false);
+              element.bootstrapSwitch('indeterminate', true, true);
+              controller.$setViewValue(undefined);
             }
-          }, true);
+            switchChange();
+          };
 
           // angular attribute to switch property bindings
           var bindings = {
@@ -206,6 +222,7 @@ angular.module('frapontillo.bootstrap-switch')
          * Listen to view changes.
          */
         var listenToView = function () {
+
           if (attrs.type === 'radio') {
             // when the switch is clicked
             element.on('change.bootstrapSwitch', function (e) {
@@ -220,6 +237,7 @@ angular.module('frapontillo.bootstrap-switch')
                   // otherwise if it's been deselected, delete the view value
                   controller.$setViewValue(undefined);
                 }
+                switchChange();
               }
             });
           } else {
@@ -227,6 +245,7 @@ angular.module('frapontillo.bootstrap-switch')
             element.on('switchChange.bootstrapSwitch', function (e) {
               // $setViewValue --> $viewValue --> $parsers --> $modelValue
               controller.$setViewValue(e.target.checked);
+              switchChange();
             });
           }
         };

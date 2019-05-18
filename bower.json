@@ -1,25 +1,24 @@
 {
-  "name": "sdlctool",
-  "version": "0.0.0",
+  "name": "securityrat",
+  "version": "1.7.7",
   "appPath": "src/main/webapp",
   "testPath": "src/test/javascript/spec",
   "dependencies": {
-    "angular": "1.5.8",
-    "angular-animate": "1.4.4",
+    "angular": "1.7.8",
+    "angular-animate": "1.7.8",
     "angular-bootstrap": "~0.14.3",
     "angular-cache-buster": "0.4.3",
-    "angular-cookies": "1.4.4",
+    "angular-cookies": "^1.7.8",
     "angular-local-storage": "0.2.0",
-    "angular-resource": "1.4.4",
-    "angular-route": "1.4.4",
-    "angular-sanitize": "1.4.4",
-    "angular-touch": "1.4.4",
-    "angular-ui-router": "0.2.15",
-    "angular-ui-sortable": "~0.13.4",
+    "angular-resource": "^1.7.8",
+    "angular-route": "^1.7.8",
+    "angular-sanitize": "^1.7.8",
+    "angular-ui-router": "^0.4.3",
+    "angular-ui-sortable": "^0.19.0",
     "angularjs-dropdown-multiselect": "^1.11.8",
-    "bootstrap": "3.3.5",
-    "jquery": "2.1.4",
-    "jquery-ui": "~1.11.4",
+    "bootstrap": "3.4.1",
+    "jquery": "^3.4.1",
+    "jquery-ui": "^1.12.1",
     "js-yaml": "^3.7.0",
     "json3": "3.3.2",
     "modernizr": "2.8.3",
@@ -33,15 +32,16 @@
     "js-xlsx": "~0.8.0",
     "xregexp": "^3.0.0",
     "angular-disable-all": "^0.0.2",
-    "angular-bootstrap-switch": "^0.4.1",
+    "angular-bootstrap-switch": "^0.5.2",
     "angular-ui-indeterminate": "^1.0.0",
     "angular-confirm-modal": "~1.2.3",
-    "highlightjs": "~9.6.0"
+    "highlightjs": "~9.6.0",
+    "jstree": "^3.3.8"
   },
   "devDependencies": {
     "angular-mocks": "1.4.4",
-    "angular-scenario": "1.4.4",
-    "jstree": "^3.3.4"
+    "angular-scenario": "1.4.4"
+    
   },
   "overrides": {
     "bootstrap": {
@@ -53,8 +53,6 @@
     }
   },
   "resolutions": {
-    "angular": "1.5.8",
-    "angular-cookies": "1.4.4",
-    "jquery": "2.1.4"
+    "angular": ">=1.4.0"
   }
 }

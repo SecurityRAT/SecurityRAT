@@ -23,7 +23,6 @@ module.exports = function (config) {
             'main/webapp/bower_components/angular-resource/angular-resource.js',
             'main/webapp/bower_components/angular-route/angular-route.js',
             'main/webapp/bower_components/angular-sanitize/angular-sanitize.js',
-            'main/webapp/bower_components/angular-touch/angular-touch.js',
             'main/webapp/bower_components/angular-ui-router/release/angular-ui-router.js',
             'main/webapp/bower_components/jquery-ui/jquery-ui.js',
             'main/webapp/bower_components/angular-ui-sortable/sortable.js',
@@ -46,8 +45,8 @@ module.exports = function (config) {
             'main/webapp/bower_components/angular-ui-indeterminate/dist/indeterminate.js',
             'main/webapp/bower_components/angular-confirm-modal/angular-confirm.js',
             'main/webapp/bower_components/highlightjs/highlight.pack.js',
-            'main/webapp/bower_components/angular-mocks/angular-mocks.js',
             'main/webapp/bower_components/jstree/dist/jstree.js',
+            'main/webapp/bower_components/angular-mocks/angular-mocks.js',
             // endbower
 	    'main/webapp/scripts/app/editor/config.js',
 	    'main/webapp/scripts/app/app.js',

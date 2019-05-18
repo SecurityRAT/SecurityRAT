@@ -233,9 +233,6 @@ minimum table-responsive height
 .myMinHeight {
 	min-height: 180px;
 }
-.tableMaxSize {
-	/* max-width:1250px; */
-}
 .titleSize {
 	font-size: medium;
 }
@@ -640,9 +637,6 @@ Animation for export to excel
 	-webkit-animation: myTransparent 0.2s; /*Chrome, Safari, Opera*/
     animation: myTransparent 0.2s;
 }
-.animate-show, .animate-hide {
-
-}
 .animate-show.ng-hide-remove {
 	position:relative;
 	-webkit-animation: mymove 0.2s; /*Chrome, Safari, Opera*/
@@ -750,4 +744,11 @@ Template animation
 .show-chevron {
     cursor:pointer;
     display: inline;
+}
+
+/* ===================================
+    Must be set to override form-control background color
+====================================== */
+.btn-primary:disabled {
+    background-color: rgb(51, 122, 183);
 }

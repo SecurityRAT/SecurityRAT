@@ -9,23 +9,16 @@
                     <span class="glyphicon glyphicon-flash"></span> <span>Create a new Training</span>
                 </button>
             </div>
-            <!-- <div class="col-md-8">
-                <form name="searchForm" class="form-inline">
-                    <div class="form-group">
-                        <input type="text" class="form-control" ng-model="searchQuery" id="searchQuery" placeholder="query">
-                    </div>
-                    <button class="btn btn-info" ng-click="search()"><span class="glyphicon glyphicon-search"></span> <span>Search a Training</span>
-                    </button>
-                </form>
-            </div> -->
             <div class="col-md-5">
                 <form>
-                    <button type="button" class="btn btn-info pull-left" data-toggle="collapse" data-target="#searchStringID">Search
-                            <span class="glyphicon glyphicon-search"></span>
-                        </button>
+                    <button type="button" class="btn btn-info pull-left" data-toggle="collapse"
+                        data-target="#searchStringID">Search
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
                     <div id="searchStringID" class="collapse">
                         <div class="input-group">
-                            <input type="text" class="form-control col-md-5" placeholder="Search String" data-ng-model="searchString">
+                            <input type="text" class="form-control col-md-5" placeholder="Search String"
+                                data-ng-model="searchString">
                         </div>
                     </div>
                 </form>
@@ -38,7 +31,8 @@
             <div class="modal-content">
                 <form name="deleteForm" ng-submit="confirmDelete(training.id)">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="clear()">&times;</button>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                            ng-click="clear()">&times;</button>
                         <h4 class="modal-title">Confirm delete operation</h4>
                     </div>
                     <div class="modal-body">
@@ -78,26 +72,30 @@
                     <td>{{training.createdDate | date : "mediumDate" }} by {{training.createdBy}}</td>
                     <td>{{training.lastModifiedDate | date : "shortTime" }} by {{training.lastModifiedBy}}</td>
                     <td>
-                        <td class="col-sm-5">
-                            <button type="button" data-ng-click="startPresentation(training.id)" class="btn btn-info btn-sm">
+                    <td class="col-sm-5">
+                        <button type="button" data-ng-click="startPresentation(training.id)"
+                            class="btn btn-info btn-sm">
                             <span class="glyphicon glyphicon-film"></span>&nbsp;<span> Start</span>
                         </button>
-                            <button type="submit" ui-sref="training.edit.state({id:training.id})" class="btn btn-primary btn-sm">
+                        <button type="submit" ui-sref="training.edit.state({id:training.id})"
+                            class="btn btn-primary btn-sm">
                             <span class="glyphicon glyphicon-pencil"></span>&nbsp;<span> Edit Training</span>
                         </button>
-                            <button type="submit" ui-sref="training.editSelection.state({id:training.id})" class="btn btn-primary btn-sm">
+                        <button type="submit" ui-sref="training.editSelection.state({id:training.id})"
+                            class="btn btn-primary btn-sm">
                             <span class="glyphicon glyphicon-pencil"></span>&nbsp;<span> Edit Selection</span>
                         </button>
-                            <button type="submit" ui-sref="training.editTree.state({id:training.id})" class="btn btn-primary btn-sm">
+                        <button type="submit" ui-sref="training.editTree.state({id:training.id})"
+                            class="btn btn-primary btn-sm">
                             <span class="glyphicon glyphicon-pencil"></span>&nbsp;<span> Edit Tree</span>
                         </button>
-                            <button type="submit" data-ng-click="checkUpdate(training.id)" class="btn btn-warning btn-sm">
+                        <button type="submit" data-ng-click="checkUpdate(training.id)" class="btn btn-warning btn-sm">
                             <span class="glyphicon glyphicon-refresh"></span>&nbsp;<span> Update</span>
                         </button>
-                            <button type="submit" data-ng-click="delete(training.id)" class="btn btn-danger btn-sm">
+                        <button type="submit" data-ng-click="delete(training.id)" class="btn btn-danger btn-sm">
                             <span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span> Delete</span>
                         </button>
-                        </td>
+                    </td>
                 </tr>
             </tbody>
         </table>

@@ -223,7 +223,6 @@
                             uib-tooltip="Please create a custom requirement first." tooltip-trigger="mouseenter"
                             tooltip-placement="right" style="cursor:not-allowed">
                             <span class="disabledButton">Edit</span>
-                            <!-- <span data-ng-click="editRequirement()" data-ng-if="customRequirements.length > 0">Edit</span> -->
                         </a>
                         <a href="" data-ng-click="editRequirement()" data-ng-if="customRequirements.length > 0">Edit</a>
                     </li>
@@ -509,12 +508,12 @@
                                 <span data-ng-if="updateProperties.updatedReqs"
                                     uib-tooltip="Please apply updates first." style="cursor:not-allowed"
                                     tooltip-append-to-body>
-                                    <img src="assets/images/feedback.png" width="16" height="16">
+                                    <img src="assets/images/feedback.png" width="16" height="16" />
                                 </span>
                                 <span id="feedbackIcon" data-ng-if="!updateProperties.updatedReqs"
                                     uib-tooltip="Give feedback for this requirement." style="cursor:pointer;"
                                     data-ng-click="openFeedback(reqs)" tooltip-append-to-body>
-                                    <img src="assets/images/feedback.png" width="16" height="16">
+                                    <img src="assets/images/feedback.png" width="16" height="16" />
                                 </span>
                             </div>
                         </td>

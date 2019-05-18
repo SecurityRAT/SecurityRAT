@@ -8,7 +8,6 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
         'ngAnimate', // editor stuff from here on...
         'ngRoute',
         'ngSanitize',
-        'ngTouch',
         'ui.sortable',
         'angularjs-dropdown-multiselect',
         'angular-confirm',
