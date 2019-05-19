@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('sdlctoolApp')
-    .controller('UserManagementController', function($scope, UserManagement, User, UserManagementSearch, Helper, Account) {
+    .controller('UserManagementController', function($scope, UserManagement, User, Account, AlertService) {
         $scope.usersWithAuthorities = [];
         $scope.activeUser = {}
 
@@ -27,7 +27,14 @@ angular.module('sdlctoolApp')
 
         $scope.updateUserActivation = function(user) {
             user.activated = !user.activated;
-            User.update(user, onSaveFinished);
+            User.update(user, onSaveFinished, function(error) {
+                user.activated = !user.activated;
+                if (error.status == 500) {
+                    AlertService.error('Internal server error. User could not be updated.');
+                } else if (error.status == 401) {
+                    AlertService.error('User update is unauthorized.')
+                }
+            });
         }
 
         $scope.delete = function(user) {

@@ -6,12 +6,14 @@
         <div class="row">
             <div class="col-md-offset-4 col-md-8">
                 <form name="searchForm" class="form-inline">
-                	<div class="input-group">
-                        <input type="text" class="form-control" data-ng-model="searchQuery" id="searchQuery" placeholder="Search for a constant">
+                    <div class="input-group">
+                        <input type="text" class="form-control" data-ng-model="searchQuery" id="searchQuery"
+                            placeholder="Search for a constant">
                         <span class="input-group-btn">
-	                    	<button class="btn btn-info" id="searchButton"><span class="glyphicon glyphicon-search"></span>
-	                    	</button>
-                    	</span>
+                            <button class="btn btn-info" id="searchButton"><span
+                                    class="glyphicon glyphicon-search"></span>
+                            </button>
+                        </span>
                     </div>
                 </form>
             </div>
@@ -24,7 +26,7 @@
                 <form name="deleteForm" data-ng-submit="confirmDelete(constant.id)">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-                                data-ng-click="clear()">&times;</button>
+                            data-ng-click="clear()">&times;</button>
                         <h4 class="modal-title">Confirm feature deactivation</h4>
                     </div>
                     <div class="modal-body">
@@ -45,13 +47,12 @@
 
     <div class="table-responsive">
         <table class="table table-striped">
-        	<col style="width:15%">
-        	<col style="width:35%">
-        	<col style="width:35%">
-        	<col style="width:15%">
+            <col style="width:15%">
+            <col style="width:35%">
+            <col style="width:35%">
+            <col style="width:15%">
             <thead>
                 <tr>
-                    <!--<th>ID</th>-->
                     <th>Name</th>
                     <th>Value</th>
                     <th>Description</th>
@@ -60,42 +61,36 @@
             </thead>
             <tbody>
                 <tr class="animate-repeat" data-ng-repeat="constant in constants | filter: searchQuery">
-                    <!--<td><a ui-sref="optColumnType.detail({id:optColumnType.id})">{{optColumnType.id}}</a></td>-->
                     <td><strong>{{constant.name}}</strong></td>
                     <td>{{constant.value}}</td>
                     <td data-ng-bind-html="constant.description | trusted"></td>
                     <td>
-                        <button type="submit"
-                                ui-sref="configConstant.detail({id:constant.id})"
-                                class="btn btn-primary btn-sm">
+                        <button type="submit" ui-sref="configConstant.detail({id:constant.id})"
+                            class="btn btn-primary btn-sm">
                             <span class="glyphicon glyphicon-eye-open"></span>&nbsp;<span> View</span>
                         </button>
-                        <button type="submit"
-                                ui-sref="configConstant.edit({id:constant.id})"
-                                class="btn btn-warning btn-sm">
+                        <button type="submit" ui-sref="configConstant.edit({id:constant.id})"
+                            class="btn btn-warning btn-sm">
                             <span class="glyphicon glyphicon-pencil"></span>&nbsp;<span> Edit</span>
                         </button>
-                        <!-- <button type="submit"
-                                data-ng-click="delete(constant.id)"
-                                class="btn btn-danger btn-sm">
-                            <span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span> Delete</span>
-                        </button> -->
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
-    <br/>
+    <br />
     <div class="container">
-    	<div data-ng-if="checkSecurityCAT()" class="row">
-	    	<p class="alert alert-warning">Please fill the <strong>securityCAT</strong> field accordingly to complete the activation</p>
-	    </div>
-	    <div class="row">
-	    	<label for="testFeature"><strong>ACTIVATE TEST AUTOMATION:</strong></label>
-	 		<input id="testFeature" bs-switch type="checkbox" switch-on-color="success" switch-off-color="danger" data-ng-model="activate"  switch-on-text="Yes" switch-off-text="No"
-	 			switch-label-width="2px" data-ng-change="activateTestAutomation()"/>
-	    </div>
+        <div data-ng-if="checkSecurityCAT()" class="row">
+            <p class="alert alert-warning">Please fill the <strong>securityCAT</strong> field accordingly to complete
+                the activation</p>
+        </div>
+        <div class="row">
+            <label for="testFeature"><strong>ACTIVATE TEST AUTOMATION:</strong></label>
+            <input id="testFeature" bs-switch type="checkbox" switch-on-color="success" switch-off-color="danger"
+                data-ng-model="activate" switch-on-text="Yes" switch-off-text="No" switch-label-width="2px"
+                data-ng-change="activateTestAutomation()" />
+        </div>
 
     </div>
-    <br/>
+    <br />
 </div>

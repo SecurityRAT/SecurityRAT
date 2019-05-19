@@ -254,20 +254,20 @@
                         <a href="" data-ng-click="createTicketReqs()" confirm-if="checkExistingTickets()"
                             confirm="The requirement(s) {{existingTickets}} already has/have tickets. Are you sure you want to add a new ticket to it/them?"
                             data-ng-if="(requirements | filter:{selected: true}).length && ticket.url != null">
-                            <img src="assets/images/jira-icon.png" width="16" height="16" /> Create JIRA tickets</a>
+                            <img src="assets/images/jira-icon.png" width="16" height="16" alt="jira icon"/> Create JIRA tickets</a>
                         <a href=""
                             data-ng-if="(requirements | filter:{selected: true}).length == 0 || ticket.url == null && (requirements | filter:{selected: true}).length">
                             <span uib-tooltip="Please export the requirement set to JIRA first."
                                 tooltip-trigger="mouseenter" tooltip-placement="top"
                                 data-ng-if="ticket.url == null && (requirements | filter:{selected: true}).length"
                                 class="disabledButton">
-                                <img src="assets/images/jira-icon.png" width="16" height="16" /> Create JIRA tickets
+                                <img src="assets/images/jira-icon.png" width="16" height="16" alt="jira icon"/> Create JIRA tickets
                             </span>
                             <span uib-tooltip="Please select requirements first." tooltip-trigger="mouseenter"
                                 tooltip-placement="top"
                                 data-ng-if="(requirements | filter:{selected: true}).length == 0"
                                 class="disabledButton">
-                                <img src="assets/images/jira-icon.png" width="16" height="16" /> Create JIRA tickets
+                                <img src="assets/images/jira-icon.png" width="16" height="16" alt=""/> Create JIRA tickets
                             </span>
                         </a>
                     </li>
@@ -277,11 +277,11 @@
                             tooltip-trigger="mouseenter" tooltip-placement="top" tooltip-append-to-body>
                             <span data-ng-if="(requirements | filter:{selected: true}).length == 0"
                                 data-ng-class="{'disabledButton': (requirements | filter:{selected: true}).length == 0}">
-                                <img src="assets/images/Excel-icon.png" /> Create spreadsheet
+                                <img src="assets/images/Excel-icon.png" alt="excel icon"/> Create spreadsheet
                             </span>
                             <span data-ng-if="(requirements | filter:{selected: true}).length > 0"
                                 data-ng-click="configExcel()">
-                                <img src="assets/images/Excel-icon.png" /> Create spreadsheet
+                                <img src="assets/images/Excel-icon.png" alt="excel icon"/> Create spreadsheet
                             </span>
                         </a>
                     </li>
@@ -291,11 +291,11 @@
                             tooltip-trigger="mouseenter" tooltip-placement="top" tooltip-append-to-body>
                             <span data-ng-if="(requirements | filter:{selected: true}).length == 0"
                                 data-ng-class="{'disabledButton': (requirements | filter:{selected: true}).length == 0}">
-                                <img src="assets/images/powerpoint-icon.png" /> Create slides
+                                <img src="assets/images/powerpoint-icon.png" alt="powerpoint icon"/> Create slides
                             </span>
                             <span data-ng-if="(requirements | filter:{selected: true}).length > 0"
                                 data-ng-click="exportPTT()">
-                                <img src="assets/images/powerpoint-icon.png" /> Create slides
+                                <img src="assets/images/powerpoint-icon.png" alt="powerpoint icon"/> Create slides
                             </span>
                         </a>
                     </li>
@@ -441,14 +441,6 @@
                                 translation-texts="requirementProperties.defaultLabelFilterObject"
                                 disabled="isStatusArrayEmpty()">
                             </div>
-                            <!-- <p uib-collapse="!requirementProperties.hasIssueLinks" data-ng-click="requirementProperties.hasIssueLinks = !requirementProperties.hasIssueLinks">
-                                <span class="glyphicon glyphicon-chevron-down positionChevron hide-chevron" uib-tooltip="Hide this column" tooltip-append-to-body></span>
-                                </span>
-                            </p>
-                            <p id="toggleManualLink" uib-collapse="requirementProperties.hasIssueLinks" data-ng-click="requirementProperties.hasIssueLinks = !requirementProperties.hasIssueLinks"
-                                uib-tooltip="Show ticket status column">
-                                ...<span class="glyphicon glyphicon-chevron-right show-chevron"></span>
-                            </p> -->
                         </td>
                         <td class="text-center">
                             <select-all filter-length="{{filterRequirements().length}}"
@@ -463,7 +455,7 @@
                     <tr>
                         <td class="text-center titleSize"
                             colspan="{{3 + optColumns.length + statusColumns.length + 1}}">
-                            <b>{{category.label}}</b>
+                            <strong>{{category.label}}</strong>
                             <br />
                         </td>
                     </tr>
@@ -508,12 +500,12 @@
                                 <span data-ng-if="updateProperties.updatedReqs"
                                     uib-tooltip="Please apply updates first." style="cursor:not-allowed"
                                     tooltip-append-to-body>
-                                    <img src="assets/images/feedback.png" width="16" height="16" />
+                                    <img src="assets/images/feedback.png" width="16" height="16" alt="feedback"/>
                                 </span>
                                 <span id="feedbackIcon" data-ng-if="!updateProperties.updatedReqs"
                                     uib-tooltip="Give feedback for this requirement." style="cursor:pointer;"
                                     data-ng-click="openFeedback(reqs)" tooltip-append-to-body>
-                                    <img src="assets/images/feedback.png" width="16" height="16" />
+                                    <img src="assets/images/feedback.png" width="16" height="16" alt="feedback"/>
                                 </span>
                             </div>
                         </td>
@@ -583,7 +575,7 @@
                                     uib-popover-template="jiraStatus.displayStatusTemplateUrl"
                                     popover-trigger="mouseenter" popover-append-to-body="true">
                                     <img data-ng-src="{{reqTicket.iconUrl}}" data-ng-if="reqTicket.iconUrl != null"
-                                        popover-append-to-body="true" /> {{reqTicket.name}}
+                                        popover-append-to-body="true" alt="ticket status"/> {{reqTicket.name}}
                                 </a>
                                 <span>
                                     <span id="removeManualTicket" class="glyphicon glyphicon-minus"
