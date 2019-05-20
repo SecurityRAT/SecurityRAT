@@ -11,22 +11,21 @@ angular.module('sdlctoolApp')
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded'
                     }
-                }).success(function (response) {
-                    return response;
                 });
             },
             logout: function () {
                 // logout from the server
-                $http.post('api/logout').then(function (response) {
-                    localStorageService.clearAll();
-                    if (!$rootScope.AUTHENTICATIONTYPE) {
-                        // to get a new csrf token call the api                    
-                        $http.get('api/account').then(function () { });
-                        return response;
-                    } else {
-                        location.href = $rootScope.CASLOGOUTURL;
-                    }
-                });
+                $http.post('api/logout')
+                    .then(function (response) {
+                        localStorageService.clearAll();
+                        if (!$rootScope.AUTHENTICATIONTYPE) {
+                            // to get a new csrf token call the api                    
+                            $http.get('api/account').then(function () { });
+                            return response;
+                        } else {
+                            location.href = $rootScope.CASLOGOUTURL;
+                        }
+                    }).catch(function() {});
             },
             getToken: function () {
                 var token = localStorageService.get('token');

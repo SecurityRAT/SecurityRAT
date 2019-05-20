@@ -2,8 +2,8 @@
 
 angular.module('sdlctoolApp')
     .controller('TrainingCustomizeController', function ($scope, $rootScope, $stateParams, $timeout, entity, Training,
-                                                         TrainingTreeNode, TrainingCustomSlideNode, TrainingTreeUtil,
-                                                         SlideTemplate, marked) {
+        TrainingTreeNode, TrainingCustomSlideNode, TrainingTreeUtil,
+        SlideTemplate, marked) {
 
         var onSaveFinished = function (result) {
             $scope.$emit('sdlctoolApp:trainingUpdate', result);
@@ -16,18 +16,18 @@ angular.module('sdlctoolApp')
         $scope.showPreview = false;
 
         $scope.load = function (id) {
-            Training.get({id: id}, function(result) {
+            Training.get({ id: id }, function (result) {
                 $scope.training = result;
             });
         };
 
-        $scope.updateEditableSlides = function() {
+        $scope.updateEditableSlides = function () {
             $scope.disableSaveSlideButton = false;
             $scope.updateSlidePreview(false, '');
         };
 
-        $scope.slideEditor = function(state) {
-            if(state) {
+        $scope.slideEditor = function (state) {
+            if (state) {
                 $("#editBlock").fadeIn();
                 $("#previewBlock").fadeIn();
                 // $scope.showPreview = true;
@@ -42,7 +42,7 @@ angular.module('sdlctoolApp')
 
         var tree = $("#tree");
         // Tree selection callback (called when a node is selected)
-        tree.bind("select_node.jstree", function(evt, data) {
+        tree.bind("select_node.jstree", function (evt, data) {
             $scope.selectedNodeJSTree = data;
             $scope.selectedNode = new TrainingTreeNode();
             $scope.selectedNode.fromJSON(data.node);
@@ -51,12 +51,12 @@ angular.module('sdlctoolApp')
 
             var selectedNodeType = $scope.selectedNode.node_type;
 
-            if(selectedNodeType == "GeneratedSlideNode" || selectedNodeType == "CustomSlideNode") {
+            if (selectedNodeType == "GeneratedSlideNode" || selectedNodeType == "CustomSlideNode") {
                 $scope.slideEditor(true);
 
                 $scope.updateSlidePreview(selectedNodeType == "GeneratedSlideNode", "");
 
-                if(selectedNodeType !== "CustomSlideNode") {
+                if (selectedNodeType !== "CustomSlideNode") {
                     $('#slideTitle').prop('disabled', true);
                     $('#slideContent').prop('disabled', true);
                     $('#saveSlideButton').prop('disabled', true);
@@ -74,15 +74,15 @@ angular.module('sdlctoolApp')
             }
         });
 
-        tree.bind("rename_node.jstree", function(e, data) {
-        if(data.node.data == null)
-            data.node.data = {};
+        tree.bind("rename_node.jstree", function (e, data) {
+            if (data.node.data == null)
+                data.node.data = {};
             data.node.data.name = data.text;
             $scope.updateParentName(data.node.children, data.text);
         });
 
         // callback on jstree's move_node event (triggered when a node was moved)
-        tree.bind("move_node.jstree", function(e, data) {
+        tree.bind("move_node.jstree", function (e, data) {
 
             var node = data.node;
             var new_parent = tree.jstree(true).get_node(data.parent);
@@ -91,25 +91,25 @@ angular.module('sdlctoolApp')
             // update parent
             var parent = new TrainingTreeNode();
             parent.fromJSON(new_parent);
-            if(node.data == null)
+            if (node.data == null)
                 node.data = {};
             node.data.parent_id = parent;
 
 
-            if(node.type === "CustomSlideNode" || node.type === "BranchNode") {
+            if (node.type === "CustomSlideNode" || node.type === "BranchNode") {
                 // set new anchor
                 var new_anchor = -2;
-                if(new_parent.children != null) {
+                if (new_parent.children != null) {
                     var previousChildren = [];
-                    for(var i = 0; i < new_parent.children.length; i++) {
-                        if(node.id != new_parent.children[i])
+                    for (var i = 0; i < new_parent.children.length; i++) {
+                        if (node.id != new_parent.children[i])
                             previousChildren.push(new_parent.children[i]);
                         else break;
                     }
-                    previousChildren.forEach(function(child_id) {
+                    previousChildren.forEach(function (child_id) {
                         var child_node = tree.jstree(true).get_node(child_id);
-                        if(child_node.type === "CategoryNode" || child_node.type === "RequirementNode" || child_node.type === "GeneratedSlideNode") {
-                            if(child_node.data.json_universal_id != null)
+                        if (child_node.type === "CategoryNode" || child_node.type === "RequirementNode" || child_node.type === "GeneratedSlideNode") {
+                            if (child_node.data.json_universal_id != null)
                                 new_anchor = child_node.data.json_universal_id;
                         }
                     });
@@ -117,19 +117,19 @@ angular.module('sdlctoolApp')
                     console.error("error in move_node.jstree callback: new parent has no children");
                 }
                 node.data.anchor = new_anchor;
-            } else if(node.type === "CategoryNode" || node.type === "RequirementNode" || node.type === "GeneratedSlideNode") {
+            } else if (node.type === "CategoryNode" || node.type === "RequirementNode" || node.type === "GeneratedSlideNode") {
                 // find nodes with anchor on this node, and update their anchor
                 // note: it makes no difference if old_parent == new_parent
                 var thisAnchor = node.data.json_universal_id;
-                if(thisAnchor !== null && old_parent.children !== null) {
+                if (thisAnchor !== null && old_parent.children !== null) {
                     var newAnchor = TrainingTreeNode.PARENT_ANCHOR;
-                    old_parent.children.forEach(function(childId) {
+                    old_parent.children.forEach(function (childId) {
                         var node = tree.jstree(true).get_node(childId);
-                        if(node != null && node.data != null) {
-                            if(node.type === "CustomSlideNode" || node.type === "BranchNode") {
-                                if(node.data.anchor === thisAnchor)
+                        if (node != null && node.data != null) {
+                            if (node.type === "CustomSlideNode" || node.type === "BranchNode") {
+                                if (node.data.anchor === thisAnchor)
                                     node.data.anchor = newAnchor;
-                            } else if(node.type === "CategoryNode" || node.type === "RequirementNode" || node.type === "GeneratedSlideNode") {
+                            } else if (node.type === "CategoryNode" || node.type === "RequirementNode" || node.type === "GeneratedSlideNode") {
                                 // this anchor can be used for replacement as it is more recent
                                 newAnchor = node.data.json_universal_id;
                             }
@@ -139,27 +139,27 @@ angular.module('sdlctoolApp')
             }
 
             // update slide content
-            if(node.type === "CustomSlideNode" || node.type === "GeneratedSlideNode") {
+            if (node.type === "CustomSlideNode" || node.type === "GeneratedSlideNode") {
                 var nodeObj = new TrainingTreeNode();
                 nodeObj.fromJSON(node);
-                nodeObj.loadContent(new_parent.name).then(function(new_content) {
+                nodeObj.loadContent(new_parent.name).then(function (new_content) {
 
                     node.content = new_content;
                 });
                 nodeObj.parent_id = parent;
-                nodeObj.loadContent(new_parent.name).then(function(content) {
+                nodeObj.loadContent(new_parent.name).then(function (content) {
                     $scope.setSlidePreviewContent(content);
                 });
             }
         });
 
-        $scope.saveSlide = function() {
+        $scope.saveSlide = function () {
             $stateParams.isDirty = true;
             // rename node
             var tree = $('#tree').jstree(true);
             var new_name = $scope.selectedNode.name;
-            if(new_name.length > 20) {
-                new_name = new_name.substr(0,17);
+            if (new_name.length > 20) {
+                new_name = new_name.substr(0, 17);
                 new_name += "...";
             }
             tree.rename_node(tree.get_selected(), new_name);
@@ -168,91 +168,91 @@ angular.module('sdlctoolApp')
             $scope.selectedNodeJSTree.node.data["content"] = $scope.selectedNode.content;
             $scope.selectedNodeJSTree.node.data["name"] = $scope.selectedNode.name;
 
-            if($scope.selectedNodeJSTree.node.data.node_id != null) {
-                TrainingTreeUtil.CustomSlideNode.query({id: $scope.selectedNodeJSTree.node.data.node_id}).$promise.then(function(customSlideNode) {
+            if ($scope.selectedNodeJSTree.node.data.node_id != null) {
+                TrainingTreeUtil.CustomSlideNode.query({ id: $scope.selectedNodeJSTree.node.data.node_id }).$promise.then(function (customSlideNode) {
                     customSlideNode.content = $scope.selectedNode.content;
-                    TrainingCustomSlideNode.update(customSlideNode, onSaveFinished).$promise.then(function() {
+                    TrainingCustomSlideNode.update(customSlideNode, onSaveFinished).$promise.then(function () {
                         $scope.disableSaveSlideButton = true;
-                    }, function() {
+                    }, function () {
                         $scope.disableSaveSlideButton = false;
                     });
-                }, function() {
+                }, function () {
                     $scope.disableSaveSlideButton = false;
                 });
             }
 
             $stateParams.isDirty = true;
-            if($scope.selectedNode.node_type == "CustomSlideNode")
+            if ($scope.selectedNode.node_type == "CustomSlideNode")
                 $scope.updateSlidePreview(false, "");
         };
 
-        $scope.updateParentName = function(node_ids, name) {
+        $scope.updateParentName = function (node_ids, name) {
             var tree = $('#tree').jstree(true);
-            node_ids.forEach(function(node_id) {
-               var node = tree.get_node(node_id);
-               node.data.parent_id.name = name;
+            node_ids.forEach(function (node_id) {
+                var node = tree.get_node(node_id);
+                node.data.parent_id.name = name;
             });
         };
 
-        $scope.updateSlidePreview = function(writeback, parentName) {
-            if($scope.selectedNode.training_id == null || $scope.selectedNode.training_id.name == null )
+        $scope.updateSlidePreview = function (writeback, parentName) {
+            if ($scope.selectedNode.training_id == null || $scope.selectedNode.training_id.name == null)
                 $scope.selectedNode.training_id = $scope.training;
-            $scope.selectedNode.loadContent(parentName).then(function(content) {
+            $scope.selectedNode.loadContent(parentName).then(function (content) {
 
                 $scope.setSlidePreviewContent(content);
-                if(writeback) {
-                    $timeout(function() {
+                if (writeback) {
+                    $timeout(function () {
                         $scope.selectedNode.content = content;
                         $scope.$apply();
                     });
                 }
-            }, function(failed_reason) {
+            }, function (failed_reason) {
                 console.error("failed to load content from slide: " + failed_reason);
                 $scope.setSlidePreviewContent("");
             });
         };
 
-        $scope.setSlidePreviewContent = function(content) {
+        $scope.setSlidePreviewContent = function (content) {
             document.getElementById('previewFrameId').contentWindow.postMessage(
                 JSON.stringify({
                     method: 'updateSlide',
-                    args: [ marked(content) ]
-                }), '*' );
+                    args: [content !== null ? marked(content) : '']
+                }), '*');
         };
 
-        var excludeItem = function(node) {
+        var excludeItem = function (node) {
             var tree = $('#tree').jstree(true);
             tree.set_icon(node, $scope.disabledIcon);
-            if(node.data == null) node.data = {};
+            if (node.data == null) node.data = {};
             node.data["active"] = false;
-            node.children.forEach(function(child_id) {
+            node.children.forEach(function (child_id) {
                 var childNode = $('#tree').jstree(true).get_node(child_id);
                 excludeItem(childNode);
             });
         };
 
-        var includeItem = function(node) {
+        var includeItem = function (node) {
             var tree = $('#tree').jstree(true);
             tree.set_icon(node, $scope.treeNodeTypes[node.type].icon);
-            if(node.data == null) node.data = {};
+            if (node.data == null) node.data = {};
             node.data["active"] = true;
-            node.children.forEach(function(child_id) {
+            node.children.forEach(function (child_id) {
                 var childNode = $('#tree').jstree(true).get_node(child_id);
                 includeItem(childNode);
             });
         };
 
         // Custom Menu
-        var customMenu = function(node) {
+        var customMenu = function (node) {
             var tree = $('#tree').jstree(true);
             // The default set of all items
             var items = {
                 // Some key
-                create_branch : {
+                create_branch: {
                     // The item label
-                    "label"				: "Create Branch",
+                    "label": "Create Branch",
                     // The function to execute upon a click
-                    "action"			: function (obj) {
+                    "action": function (obj) {
                         var newChild = tree.create_node(node.id,
                             {
                                 "text": "new Branch",
@@ -266,32 +266,32 @@ angular.module('sdlctoolApp')
 
                     },
                     // All below are optional
-                    "_disabled"			: false,		// clicking the item won't do a thing
-                    "_class"			: "class",	// class is applied to the item LI node
-                    "separator_before"	: false,	// Insert a separator before the item
-                    "separator_after"	: false,		// Insert a separator after the item
+                    "_disabled": false,		// clicking the item won't do a thing
+                    "_class": "class",	// class is applied to the item LI node
+                    "separator_before": false,	// Insert a separator before the item
+                    "separator_after": false,		// Insert a separator after the item
                     // false or string - if does not contain `/` - used as classname
-                    "icon"				:  "glyphicon glyphicon-folder-open",
-                    "submenu"			: {
+                    "icon": "glyphicon glyphicon-folder-open",
+                    "submenu": {
                         /* Collection of objects (the same structure) */
                     }
                 },
-                insert_slide : {
+                insert_slide: {
                     // The item label
-                    "label"				: "Insert Custom Slide",
+                    "label": "Insert Custom Slide",
                     // All below are optional
-                    "_disabled"			: false,		// clicking the item won't do a thing
-                    "_class"			: "class",	// class is applied to the item LI node
-                    "separator_before"	: false,	// Insert a separator before the item
-                    "separator_after"	: true,		// Insert a separator after the item
+                    "_disabled": false,		// clicking the item won't do a thing
+                    "_class": "class",	// class is applied to the item LI node
+                    "separator_before": false,	// Insert a separator before the item
+                    "separator_after": true,		// Insert a separator after the item
                     // false or string - if does not contain `/` - used as classname
-                    "icon"				:  "glyphicon glyphicon-flash",
-                    "submenu"			: {
+                    "icon": "glyphicon glyphicon-flash",
+                    "submenu": {
                         empty: {
                             "label": "Empty Slide",
                             "separator_after": true,
                             icon: "glyphicon glyphicon-flash",
-                            action: function(obj) {
+                            action: function (obj) {
                                 var parent = tree.get_node(tree.get_selected());
                                 var newChild = tree.create_node(node.id,
                                     {
@@ -300,7 +300,7 @@ angular.module('sdlctoolApp')
                                         "data": {
                                             "name": "new Customslide",
                                             "content": "",
-                                            "parent_id": {name: parent.text}
+                                            "parent_id": { name: parent.text }
                                         }
                                     }
                                 );
@@ -310,7 +310,7 @@ angular.module('sdlctoolApp')
                         },
                         template: {
                             "label": "Template",
-                            "icon":  "glyphicon glyphicon-list-alt",
+                            "icon": "glyphicon glyphicon-list-alt",
                             "submenu": $scope.slideTemplateSubMenu
                         }
                     }
@@ -337,27 +337,27 @@ angular.module('sdlctoolApp')
                 },
                 deleteItem: {
                     "label": "Delete",
-                    "action": function(obj) {
+                    "action": function (obj) {
                         tree.delete_node(node);
                     },
                     "icon": "glyphicon glyphicon-remove-circle"
                 },
                 excludeItem: {
                     "label": "Exclude",
-                    "action": function(obj) {
+                    "action": function (obj) {
                         excludeItem(node);
                     },
                     "icon": "glyphicon glyphicon-remove"
                 },
                 includeItem: {
                     "label": "Include",
-                    "action": function(obj) {
+                    "action": function (obj) {
                         includeItem(node);
                     },
                     "icon": "glyphicon glyphicon-repeat"
                 }
             };
-            switch(node.type) {
+            switch (node.type) {
                 case "CustomSlideNode":
                     delete items.create_branch;
                     delete items.insert_slide;
@@ -368,7 +368,7 @@ angular.module('sdlctoolApp')
                 case "RootNode":
                     delete items.renameItem;
                     delete items.deleteItem;
-                    // fallthrough!
+                // fallthrough!
                 case "BranchNode":
                     delete items.includeItem;
                     delete items.excludeItem;
@@ -378,7 +378,7 @@ angular.module('sdlctoolApp')
                     delete items.insert_slide;
                     delete items.renameItem;
                     delete items.deleteItem;
-                    if(node.data.active == null || node.data.active) {
+                    if (node.data.active == null || node.data.active) {
                         delete items.includeItem;
                     } else {
                         delete items.excludeItem;
@@ -389,7 +389,7 @@ angular.module('sdlctoolApp')
                 case "CategoryNode":
                     delete items.renameItem;
                     delete items.deleteItem;
-                    if(node.data.active == null || node.data.active) {
+                    if (node.data.active == null || node.data.active) {
                         delete items.includeItem;
                     } else {
                         delete items.excludeItem;
@@ -399,8 +399,8 @@ angular.module('sdlctoolApp')
             return items;
         };
 
-        $rootScope.createSlideTemplateSubMenu = function() {
-            return new Promise(function(resolve, reject) {
+        $rootScope.createSlideTemplateSubMenu = function () {
+            return new Promise(function (resolve, reject) {
                 var result = {};
                 SlideTemplate.query().$promise.then(function (slideTemplates) {
                     slideTemplates.forEach(function (slideTemplate) {
@@ -418,7 +418,7 @@ angular.module('sdlctoolApp')
                                         "data": {
                                             "content": slideTemplate.content,
                                             "name": slideTemplate.name,
-                                            "parent_id": {name: parent.text}
+                                            "parent_id": { name: parent.text }
                                         }
                                     }
                                 );
@@ -461,13 +461,13 @@ angular.module('sdlctoolApp')
                 "icon": "glyphicon glyphicon-file",
                 "create_node": false,
                 "valid_children": "none",
-                "li_attr": {"class": "slide"}
+                "li_attr": { "class": "slide" }
             },
             "CustomSlideNode": {
                 "icon": "jstree-file",
                 "create_node": false,
                 "valid_children": "none",
-                "li_attr": {"class": "slide"}
+                "li_attr": { "class": "slide" }
             },
             "RequirementNode": {
                 "icon": "glyphicon glyphicon-book",
@@ -477,7 +477,7 @@ angular.module('sdlctoolApp')
                     "CustomSlideNode",
                     "BranchNode"
                 ],
-                "li_attr": {"class": "slide"}
+                "li_attr": { "class": "slide" }
             },
             "CategoryNode": {
                 "icon": "glyphicon glyphicon-folder-open",
@@ -494,26 +494,26 @@ angular.module('sdlctoolApp')
                     "CategoryNode"
                 ]
             },
-            "#" : {
-                "max_children" : 1, // avoid dragging of elements on root level (next to the trainings root node)
+            "#": {
+                "max_children": 1, // avoid dragging of elements on root level (next to the trainings root node)
                 "valid_children:": [
                     "RootNode"
                 ]
             }
         };
 
-        $rootScope.displayTree = function() {
-            $rootScope.createSlideTemplateSubMenu().then(function() {
+        $rootScope.displayTree = function () {
+            $rootScope.createSlideTemplateSubMenu().then(function () {
                 var tree = $('#tree');
-                if($scope.firstTimeDrawingTree) {
+                if ($scope.firstTimeDrawingTree) {
                     $('#tree').jstree({
                         'core': {
                             'force_text': true,
-                            'check_callback': function(operation, node, node_parent, node_position, more) {
+                            'check_callback': function (operation, node, node_parent, node_position, more) {
                                 var operation_allowed = true;
-                                if(operation == "move_node") {
+                                if (operation == "move_node") {
                                     // workaround to prevent moving of GeneratedSlideNodes into CategoryNodes
-                                    if(node.type === "GeneratedSlideNode" && node_parent.type === "CategoryNode")
+                                    if (node.type === "GeneratedSlideNode" && node_parent.type === "CategoryNode")
                                         operation_allowed = false;
 
 
@@ -538,7 +538,7 @@ angular.module('sdlctoolApp')
                             check_while_dragging: true
                         },
                         "plugins": ["contextmenu", "dnd", "types"],
-                        "contextmenu": {items: customMenu},
+                        "contextmenu": { items: customMenu },
                         "types": $scope.treeNodeTypes
                     });
                 } else {
@@ -548,12 +548,12 @@ angular.module('sdlctoolApp')
                 }
                 $scope.showPreview = true;
                 // overwrite icon for inactive nodes when tree is ready
-                tree.bind('ready.jstree', function(event, data) {
+                tree.bind('ready.jstree', function (event, data) {
                     $("#previewBlock").hide();
                     $(tree.jstree().get_json(tree, {
                         flat: true
-                    })).each(function(index, node) {
-                        if(node.data.active == false)
+                    })).each(function (index, node) {
+                        if (node.data.active == false)
                             tree.jstree(true).set_icon(node, $scope.disabledIcon);
                     });
                 });
@@ -561,7 +561,7 @@ angular.module('sdlctoolApp')
             });
         };
 
-        $rootScope.getTreeJSON = function() {
-            return $('#tree').jstree(true).get_json('#', {flat:false})[0];
+        $rootScope.getTreeJSON = function () {
+            return $('#tree').jstree(true).get_json('#', { flat: false })[0];
         };
     });
