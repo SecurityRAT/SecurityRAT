@@ -1382,6 +1382,8 @@ angular.module('sdlctoolApp')
                         // $scope.requirements[i].category = newRequirement.category;
                         // adds the taginstance ids
                         $scope.requirements[i].tagInstances = newRequirement.tagInstances;
+                        // automatically updates shortName.
+                        $scope.requirements[i].shortName = newRequirement.shortName;
 
                         var oldRequirement = $scope.requirements[i];
                         var atLeastOneDescriptionIsNotNull = !(newRequirement.description && oldRequirement.description)

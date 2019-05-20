@@ -20,7 +20,7 @@ angular.module('sdlctoolApp')
                         localStorageService.clearAll();
                         if (!$rootScope.AUTHENTICATIONTYPE) {
                             // to get a new csrf token call the api                    
-                            $http.get('api/account').then(function () { });
+                            $http.get('api/account').then(function () { }).catch(function() {});
                             return response;
                         } else {
                             location.href = $rootScope.CASLOGOUTURL;
