@@ -30,17 +30,18 @@
   },
   "devDependencies": {
     "angular-mocks": ">= 1.3.0",
-    "angular-animate": "~1.4.3"
+    "angular-animate": ">=1.3.0"
   },
   "homepage": "https://github.com/Hypercubed/angular-marked",
-  "version": "1.0.1",
-  "_release": "1.0.1",
+  "version": "1.2.2",
+  "_release": "1.2.2",
   "_resolution": {
     "type": "version",
-    "tag": "v1.0.1",
-    "commit": "f16e65befe4592c914218d5a5313299d673dd610"
+    "tag": "v1.2.2",
+    "commit": "c2e24ace21effa32d663d8c99266fca02e94a735"
   },
-  "_source": "git://github.com/Hypercubed/angular-marked.git",
-  "_target": "*",
-  "_originalSource": "angular-marked"
+  "_source": "https://github.com/Hypercubed/angular-marked.git",
+  "_target": "^1.2.2",
+  "_originalSource": "angular-marked",
+  "_direct": true
 }

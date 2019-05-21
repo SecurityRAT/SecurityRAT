@@ -1865,7 +1865,6 @@ angular.module('sdlctoolApp')
                     name: 'alignment'
                 }]
             };
-            $scope.tableArray[counter] = [];
             $scope.tableArray[counter] = [{
                 value: $scope.systemSettings.name,
                 format: {

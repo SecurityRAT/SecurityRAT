@@ -47,22 +47,6 @@ angular.module('sdlctoolApp')
         };
         $scope.attachmentProperties = {};
 
-        // adds the authenticator moddal to the promise object
-        function addCheckAuthenticationModal(promise) {
-            angular.extend(promise, {
-                runningModalPromise: function () {
-                    var modalInstance = $uibModal.open({
-                        template: '<div class="modal-body"><div id="UsSpinner1" class=" text-center col-sm-1" id="UsSpinner" spinner-on="true" us-spinner=' +
-                            '"{radius:6, width:4, length:6, lines:9}"></div><br/><h4 class="text-center"> JIRA Authentication running...</h4></div>',
-                        controller: function () { },
-                        size: 'sm',
-                        backdrop: false
-                    });
-                    return modalInstance;
-                }
-            });
-        }
-
         //builds the URL object.
         $scope.buildUrlObject = function (list) {
             $scope.apiUrl = {};
@@ -159,7 +143,7 @@ angular.module('sdlctoolApp')
                                 var urlSplit = fileUrl.split('/');
                                 $scope.buildUrlObject(urlSplit);
                                 $scope.importProperty.promise.derefer = $q.defer();
-                                addCheckAuthenticationModal($scope.importProperty.promise);
+                                Helper.addCheckAuthenticationModal($scope.importProperty.promise);
                                 var authenticatorProperty = {
                                     url: $scope.apiUrl.http + '//' + $scope.apiUrl.host,
                                     message: 'Attachment could not be imported because you are not authenticated.' +

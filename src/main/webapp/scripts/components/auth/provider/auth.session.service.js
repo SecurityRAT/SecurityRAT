@@ -25,7 +25,7 @@ angular.module('sdlctoolApp')
                         } else {
                             location.href = $rootScope.CASLOGOUTURL;
                         }
-                    }).catch(function() {});
+                    }, function() {});
             },
             getToken: function () {
                 var token = localStorageService.get('token');

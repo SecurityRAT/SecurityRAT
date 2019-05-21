@@ -325,7 +325,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('serve', [
         'clean:server',
-        'wiredep',
+        'wiredep:test',
         'ngconstant:dev',
         'browserSync',
         'watch'
@@ -338,14 +338,14 @@ module.exports = function (grunt) {
 
     grunt.registerTask('test', [
         'clean:server',
-        //'wiredep:test',
+        'wiredep:test',
         //'ngconstant:dev'
         'karma'
     ]);
 
     grunt.registerTask('build', [
         'clean:dist',
-        'wiredep:app',
+        // 'wiredep:app',
         'ngconstant:prod',
         'useminPrepare',
         'ngtemplates',
