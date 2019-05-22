@@ -3,7 +3,7 @@
 /* globals describe, browser, element, by, expect, document, beforeEach, it */
 'use strict';
 
-describe('Protractor Security RAT editor and export testsuites', function() {
+describe('Protractor Security RAT editor and export testsuites', function () {
 	var defineArtifact = element(by.id('defineArtifact'));
 	var requirementRepeater = 'reqs in (filteredReqs = (requirements | orderBy:[\'categoryOrder\',\'order\'] | filterUpdates : updatedReqs | filterByTags : filteredRequirementsByTags | filter: {category: category.label, description: textFilters.description, shortName: textFilters.shortName} | filterByStatus : selectedStatusColumn: statusColumns | filterTicketStatus : jiraStatus.selectedStatus | filter:search | filterOptColumnByText: textFilters.optColumns : optColumns | filterStatusColumnByText: textFilters.statusColumns : statusColumns))';
 	var moreInfo = 'More Information';
@@ -11,33 +11,33 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 	var closeButton = 'Close';
 	var exportButton = 'Export';
 	var SaveButton = 'Save';
-	
-	var deleteCookie = function() {
-		browser.getAllWindowHandles().then(function(handles) {
-			expect(handles.length).toBeGreaterThan(1);
-			browser.switchTo().window(handles[1]).then(function() {
-				browser.manage().getCookie('JSESSIONID').then(function() {
-					browser.manage().deleteCookie('JSESSIONID');
-					browser.switchTo().window(handles[0]).then();
-				});				
-			});
-		});
-	};
 
-	var deleteCookie1 = function() {
-		browser.getAllWindowHandles().then(function(handles) {
+	var deleteCookie = function () {
+		browser.getAllWindowHandles().then(function (handles) {
 			expect(handles.length).toBeGreaterThan(1);
-			browser.switchTo().window(handles[2]).then(function() {
-				browser.manage().getCookie('JSESSIONID').then(function() {
+			browser.switchTo().window(handles[1]).then(function () {
+				browser.manage().getCookie('JSESSIONID').then(function () {
 					browser.manage().deleteCookie('JSESSIONID');
 					browser.switchTo().window(handles[0]).then();
 				});
 			});
 		});
 	};
-	
-	var removeRibbon = function() {
-		browser.executeScript(function() {
+
+	var deleteCookie1 = function () {
+		browser.getAllWindowHandles().then(function (handles) {
+			expect(handles.length).toBeGreaterThan(1);
+			browser.switchTo().window(handles[2]).then(function () {
+				browser.manage().getCookie('JSESSIONID').then(function () {
+					browser.manage().deleteCookie('JSESSIONID');
+					browser.switchTo().window(handles[0]).then();
+				});
+			});
+		});
+	};
+
+	var removeRibbon = function () {
+		browser.executeScript(function () {
 			var div = document.getElementsByClassName('development');
 			div.ribbon.style['z-index'] = 0;
 		});
@@ -47,9 +47,9 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 	// 		browser.switchTo().window(handles[0]).then();
 	// 	});
 	// };
-		
-	beforeEach(function() {
-		browser.get(browser.params.testHost).then(function() {}, function(){
+
+	beforeEach(function () {
+		browser.get(browser.params.testHost).then(function () { }, function () {
 			browser.switchTo().alert().accept();
 		});
 		browser.sleep(1500);
@@ -57,25 +57,25 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 		var artifactName = element(by.model('starterForm.name'));
 		artifactName.sendKeys('-+.:()[],!#$%\'*=?`{}~;@&some artifact');
 
-		element.all(by.buttonText('Select')).each(function(elem) {
-			elem.click().then(function() {
-				element(by.linkText('High')).isPresent().then(function(present){
-					if(present) {
+		element.all(by.buttonText('Select')).each(function (elem) {
+			elem.click().then(function () {
+				element(by.linkText('High')).isPresent().then(function (present) {
+					if (present) {
 						element(by.linkText('High')).click();
-					}else {
+					} else {
 						elem.click();
 					}
-					
-				}, function() {
-//					elem.click().then(next);
+
+				}, function () {
+					//					elem.click().then(next);
 				});
 			});
 		});
-		
+
 		(element(by.buttonText('Generate'))).click();
 		browser.sleep(3000);
 	});
-	
+
 	it('Test requirements generation, apply alternative instances and change settings', function() {
 
 		expect(element(by.binding('requirements.length')).getText()).toBeGreaterThan('50');
@@ -269,7 +269,10 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 
 	it('exports to JIRA by creating a ticket in the queue, check spreadsheet creation, create a ticket in bash mode and checks if when selected after creation the confirms modal pops up', function() {
 		(element(by.buttonText(SaveButton))).click();
-		element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraQueue + '-100000');
+		element(by.model('jiraUrl.url')).clear().then(function(){
+			element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraQueue + '-100000');
+		});
+
 		(element(by.buttonText(exportButton))).click();
 		browser.sleep(3000);
 		(element(by.buttonText(closeButton))).click();
@@ -332,7 +335,7 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 		element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraQueue + '-700');
 		(element(by.buttonText('Create tickets'))).click();
 		browser.sleep(3000);
-		expect(element(by.binding('exportProperty.failed')).getText()).toBe('You have entered a ticket. Please provide a queue.');
+		expect(element(by.className('alert-danger')).getText()).toBe('You have entered a ticket. Please provide a queue.');
 
 		element(by.model('jiraUrl.url')).clear().then(function(){
 			element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraQueue);
@@ -365,339 +368,336 @@ describe('Protractor Security RAT editor and export testsuites', function() {
 		element(by.buttonText('Cancel')).click();
 	});
 
-	it('try to export with wrong URL and then enters a non existing project', function() {
+	it('try to export with wrong URL and then enters a non existing project', function () {
 		//non valid URL
 		(element(by.buttonText(SaveButton))).click();
-		element(by.model('jiraUrl.url')).sendKeys('gsfdgsdfgsfgsfdgsdfg');
+		element(by.model('jiraUrl.url')).clear().then(function () {
+			element(by.model('jiraUrl.url')).sendKeys('gsfdgsdfgsfgsfdgsdfg');
+		});
 		(element(by.buttonText(exportButton))).click();
 		browser.sleep(2000);
-		expect(element(by.id('failUrlMessage')).getText()).toBe('Invalid url. Please specify URL like https://www.example-jira.com/browse/DUMBQ');
+		expect('Invalid URL. Please specify URL like https://www.example-jira.com/browse/DUMBQ').toBe(element(by.id('failUrlMessage')).getText());
 
 		//wrong project
-		element(by.model('jiraUrl.url')).clear().then(function(){
+		element(by.model('jiraUrl.url')).clear().then(function () {
 			element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraHost + 'SSDi');
 		});
 
 		(element(by.buttonText(exportButton))).click();
-		browser.sleep(6000);
+		browser.sleep(3000);
 		expect(element(by.binding('exportProperty.failed')).getText()).toBe('You have entered a wrong queue. Please select a valid queue and click on Export again.');
 
 		element(by.model('fields.project.key')).sendKeys(browser.params.jiraQueue.split('/').pop());
-		browser.sleep(8000);
+		browser.sleep(2000);
 		(element(by.buttonText(exportButton))).click();
 
 		element(by.model('fields.issuetype.name')).sendKeys(browser.params.issuetypes[1]);
-		browser.sleep(3000);
+		browser.sleep(1000);
 		element(by.model('fields.issuetype.name')).sendKeys(browser.params.issuetypes[0]);
 
 		element(by.model('fields.summary')).sendKeys('<script>alert(1)</script>');
 		element(by.model('fields.description')).sendKeys('<script>alert(1)</script>');
 		(element(by.buttonText(exportButton))).click();
-		browser.sleep(3000);
+		browser.sleep(1000);
 		var list = element.all(by.partialLinkText(browser.params.jiraQueue));
 		expect(list.count()).toBe(1);
 
-		if(list.count() === 1) {
+		if (list.count() === 1) {
 			list.first().click();
 		}
 
 		(element(by.buttonText(closeButton))).click();
 	});
 
-	it('Export a requirement set which has already be exported into a new ticket (by giving the ticket URL or queue). Check if a warning modal pops up', function() {
+		it('Export a requirement set which has already be exported into a new ticket (by giving the ticket URL or queue). Check if a warning modal pops up', function() {
 
-		(element(by.buttonText(SaveButton))).click();
-		browser.sleep(2000);
+			(element(by.buttonText(SaveButton))).click();
+			browser.sleep(2000);
 
-		element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraQueue);
-		(element(by.buttonText(exportButton))).click();
-		element(by.model('fields.issuetype.name')).sendKeys(browser.params.issuetypes[0]);
-		element(by.model('fields.summary')).sendKeys('<script>alert(1)</script>');
-		element(by.model('fields.description')).sendKeys('<script>alert(1)</script>');
-		(element(by.buttonText(exportButton))).click();
-		browser.sleep(3000);
-
-		var list = element.all(by.partialLinkText(browser.params.jiraQueue));
-		expect(list.count()).toBe(1);
-		browser.sleep(5000);
-		(element(by.buttonText(closeButton))).click();
-		browser.sleep(3000);
-		var requirements = element.all(by.model('reqs.selected'));
-
-		requirements.first().click();
-		requirements.get(1).click();
-		requirements.get(2).click();
-
-		element(by.buttonText('Action with selected')).click();
-		element(by.linkText('Create JIRA tickets')).click();
-
-		element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraQueue + '-700');
-		(element(by.buttonText('Create tickets'))).click();
-		browser.sleep(3000);
-		expect(element(by.binding('exportProperty.failed')).getText()).toBe('You have entered a ticket. Please provide a queue.');
-
-		element(by.model('jiraUrl.url')).clear().then(function(){
-			element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraRemoteLinkQueue);
-		});
-		(element(by.buttonText('Create tickets'))).click();
-		browser.sleep(1000);
-		element(by.model('fields.issuetype.name')).sendKeys(browser.params.issuetypes[2]);
-		element(by.model('label.labelValue')).sendKeys('myNew Label');
-		element(by.id('addLabel')).click();
-
-		element(by.model('label.labelValue')).sendKeys('<script>alert(1)</script>');
-		element(by.id('addLabel')).click();
-
-		(element(by.buttonText('Create tickets'))).click();
-		browser.sleep(3000);
-		element(by.buttonText(closeButton)).click();
-		browser.sleep(3000);
-
-
-		(element(by.buttonText(SaveButton))).click();
-		element(by.model('jiraUrl.url')).clear().then(function(){
 			element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraQueue);
-		});
+			(element(by.buttonText(exportButton))).click();
+			element(by.model('fields.issuetype.name')).sendKeys(browser.params.issuetypes[0]);
+			element(by.model('fields.summary')).sendKeys('<script>alert(1)</script>');
+			element(by.model('fields.description')).sendKeys('<script>alert(1)</script>');
+			(element(by.buttonText(exportButton))).click();
+			browser.sleep(3000);
 
-		(element(by.buttonText(exportButton))).click();
-		element(by.model('fields.issuetype.name')).sendKeys(browser.params.issuetypes[0]);
-		element(by.model('fields.summary')).sendKeys('<script>alert(1)</script>');
-		element(by.model('fields.description')).sendKeys('<script>alert(1)</script>');
-		(element(by.buttonText(exportButton))).click();
-		browser.sleep(3000);
-		element(by.buttonText('OK')).click();
-		browser.sleep(3000);
-		element(by.buttonText('Yes')).click();
-		browser.sleep(3000);
-		expect(element.all(by.partialLinkText(browser.params.jiraQueue)).count()).toBe(1);
-		(element(by.buttonText(closeButton))).click();
-		browser.sleep(1000);
-		(element(by.buttonText(SaveButton))).click();
-		browser.sleep(1000);
-		element(by.model('jiraUrl.url')).clear().then(function(){
-			element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraQueue + '-' + browser.params.issueNumbers[0]);
-		});
-		(element(by.buttonText(exportButton))).click();
-		browser.sleep(3000);
-		element(by.buttonText('OK')).click();
-		browser.sleep(2000);
-		element(by.buttonText('No')).click();
-		browser.sleep(2000);
-	});
+			var list = element.all(by.partialLinkText(browser.params.jiraQueue));
+			expect(list.count()).toBe(1);
+			browser.sleep(5000);
+			(element(by.buttonText(closeButton))).click();
+			browser.sleep(3000);
+			var requirements = element.all(by.model('reqs.selected'));
 
-	it('Export to ticket and create a ticket without being authenticated', function() {
-		deleteCookie1();
-		deleteCookie();
-		browser.sleep(3000);
-		element.all(by.buttonText('Task')).first().click();
-		(element(by.linkText('Refused'))).click();
-		(element(by.buttonText(SaveButton))).click();
-//		browser.sleep(3000);
-		
-		element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraQueue);
-		(element(by.buttonText(exportButton))).click();
-		browser.sleep(3000);
-		element(by.binding('jira.url')).click();
-		browser.getAllWindowHandles().then(function(handles) {
-			browser.switchTo().window(handles[0]).then();
-		});
-		browser.sleep(65000);
-		expect(element.all(by.css('div[marked]')).last().getText()).toBe('You could not authenticate yourself within the time interval! Please try later.');
-		element(by.buttonText(closeButton)).click();
-		browser.sleep(3000);
-		(element(by.buttonText(exportButton))).click();
-		browser.sleep(1000);
-		element(by.binding('jira.url')).click();
-		browser.sleep(15000);
-		element(by.model('fields.issuetype.name')).sendKeys(browser.params.issuetypes[0]);
-		element(by.model('fields.summary')).sendKeys('<script>alert(1)</script>');
-		element(by.model('fields.description')).sendKeys('<script>alert(1)</script>');
-		(element(by.buttonText(exportButton))).click();
-		browser.sleep(3000);
-		
-		expect(element.all(by.partialLinkText(browser.params.jiraQueue)).count()).toBe(1);
-		browser.sleep(3000);
-		element(by.buttonText(closeButton)).click();
-		browser.sleep(3000);
-		element.all(by.model('reqs.selected')).get(1).click();
-		deleteCookie1();
-		deleteCookie();
-		browser.sleep(3000);
-		element(by.buttonText('Action with selected')).click();
-		element(by.linkText('Create JIRA tickets')).click();
-		
-		element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraQueue);
-		(element(by.buttonText('Create tickets'))).click();
-		browser.sleep(3000);
-		element(by.binding('jira.url')).click();
-		browser.getAllWindowHandles().then(function(handles) {
-			browser.switchTo().window(handles[0]).then();
-		});
-		browser.sleep(65000);
-		expect(element.all(by.css('div[marked]')).last().getText()).toBe('You could not authenticate yourself within the time interval! Please try later.');
-		element(by.buttonText(closeButton)).click();
-		browser.sleep(3000);
-		(element(by.buttonText('Create tickets'))).click();
-		browser.sleep(1000);
-		element(by.binding('jira.url')).click();
-		browser.sleep(20000);
-		element(by.id('issueType')).sendKeys(browser.params.issuetypes[0]);
-		element(by.model('label.labelValue')).sendKeys('myNew Label');
-		element(by.id('addLabel')).click();
-		(element(by.buttonText('Create tickets'))).click();
-		expect(element.all(by.partialLinkText(browser.params.jiraQueue)).count()).toBe(1);
-		browser.sleep(3000);
-		element(by.buttonText(closeButton)).click();
-	});	
+			requirements.first().click();
+			requirements.get(1).click();
+			requirements.get(2).click();
 
-	it('Test constraints in export form', function() {
-		browser.sleep(1000);
-		(element(by.buttonText(SaveButton))).click();
-		browser.sleep(1000);
-		expect(element(by.buttonText(exportButton)).isEnabled()).toBe(false);
-		(element(by.linkText('Export into File'))).click();
-		expect(element(by.buttonText(exportButton)).isEnabled()).toBe(true);
-		(element(by.linkText('Export to JIRA'))).click();
-		browser.sleep(1000);
-		element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraQueue);
-		browser.sleep(1000);
-		expect(element(by.buttonText(exportButton)).isEnabled()).toBe(true);
-		(element(by.buttonText(exportButton))).click();
-		browser.sleep(4000);
-		browser.refresh().then(function() {}, function(){
+			element(by.buttonText('Action with selected')).click();
+			element(by.linkText('Create JIRA tickets')).click();
+
+			element(by.model('jiraUrl.url')).clear().then(function(){
+				element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraRemoteLinkQueue);
+			});
+			(element(by.buttonText('Create tickets'))).click();
+			browser.sleep(1000);
+			element(by.model('fields.issuetype.name')).sendKeys(browser.params.issuetypes[2]);
+			element(by.model('label.labelValue')).sendKeys('myNew Label');
+			element(by.id('addLabel')).click();
+
+			element(by.model('label.labelValue')).sendKeys('<script>alert(1)</script>');
+			element(by.id('addLabel')).click();
+
+			(element(by.buttonText('Create tickets'))).click();
+			browser.sleep(3000);
+			element(by.buttonText(closeButton)).click();
+			browser.sleep(3000);
+
+
+			(element(by.buttonText(SaveButton))).click();
+			element(by.model('jiraUrl.url')).clear().then(function(){
+				element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraQueue);
+			});
+
+			(element(by.buttonText(exportButton))).click();
+			element(by.model('fields.issuetype.name')).sendKeys(browser.params.issuetypes[0]);
+			element(by.model('fields.summary')).sendKeys('<script>alert(1)</script>');
+			element(by.model('fields.description')).sendKeys('<script>alert(1)</script>');
+			(element(by.buttonText(exportButton))).click();
+			browser.sleep(3000);
+			element(by.buttonText('OK')).click();
+			browser.sleep(3000);
+			element(by.buttonText('Yes')).click();
+			browser.sleep(3000);
+			expect(element.all(by.partialLinkText(browser.params.jiraQueue)).count()).toBe(1);
+			(element(by.buttonText(closeButton))).click();
+			browser.sleep(1000);
+			(element(by.buttonText(SaveButton))).click();
+			browser.sleep(1000);
+			element(by.model('jiraUrl.url')).clear().then(function(){
+				element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraQueue + '-' + browser.params.issueNumbers[0]);
+			});
+			(element(by.buttonText(exportButton))).click();
+			browser.sleep(3000);
+			element(by.buttonText('OK')).click();
 			browser.sleep(2000);
-			browser.switchTo().alert().accept();
+			element(by.buttonText('No')).click();
+			browser.sleep(2000);
 		});
-	});
 
-	it('Test manual linking with and without being authenticated', function() {
-		browser.sleep(3000);
-		(element(by.buttonText(SaveButton))).click();
-		browser.sleep(2000);
-		element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraQueue);
-		(element(by.buttonText(exportButton))).click();
-		browser.sleep(2000);
-		element(by.model('fields.issuetype.name')).sendKeys(browser.params.issuetypes[0]);
-		element(by.model('fields.summary')).sendKeys('<script>alert(1)</script>');
-		element(by.model('fields.description')).sendKeys('<script>alert(1)</script>');
-		(element(by.buttonText(exportButton))).click();
-		browser.sleep(3000);
-		element(by.buttonText(closeButton)).click();
-		browser.sleep(2000);
+		it('Export to ticket and create a ticket without being authenticated', function() {
+			// deleteCookie1();
+			deleteCookie();
+			browser.sleep(3000);
+			element.all(by.buttonText('Task')).first().click();
+			(element(by.linkText('Refused'))).click();
+			(element(by.buttonText(SaveButton))).click();
+	//		browser.sleep(3000);
 
-		deleteCookie1();
-		deleteCookie();
-		// browser.sleep(3000);
-		// element(by.id('toggleManualLink')).click();
-		browser.sleep(3000);
-		var list = element.all(by.id('addManualTicket'));
-		var removeList = element.all(by.id('removeManualTicket')); 
-		list.first().click();
-		element(by.id('ticket_field')).sendKeys(browser.params.jiraQueue);
-		element(by.id('addTicket')).click();
-		browser.sleep(2000);
-		element(by.id('ticket_field')).clear().then(function() {
+			element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraQueue);
+			(element(by.buttonText(exportButton))).click();
+			browser.sleep(3000);
+			element(by.binding('jira.url')).click();
+			browser.getAllWindowHandles().then(function(handles) {
+				browser.switchTo().window(handles[0]).then();
+			});
+			browser.sleep(65000);
+			expect(element.all(by.css('div[marked]')).last().getText()).toBe('You could not authenticate yourself within the time interval! Please try later.');
+			element(by.buttonText(closeButton)).click();
+			browser.sleep(3000);
+			(element(by.buttonText(exportButton))).click();
+			browser.sleep(1000);
+			element(by.binding('jira.url')).click();
+			browser.sleep(15000);
+			element(by.model('fields.issuetype.name')).sendKeys(browser.params.issuetypes[0]);
+			element(by.model('fields.summary')).sendKeys('<script>alert(1)</script>');
+			element(by.model('fields.description')).sendKeys('<script>alert(1)</script>');
+			(element(by.buttonText(exportButton))).click();
+			browser.sleep(3000);
+
+			expect(element.all(by.partialLinkText(browser.params.jiraQueue)).count()).toBe(1);
+			browser.sleep(3000);
+			element(by.buttonText(closeButton)).click();
+			browser.sleep(3000);
+			element.all(by.model('reqs.selected')).get(1).click();
+			// deleteCookie1();
+			deleteCookie();
+			browser.sleep(3000);
+			element(by.buttonText('Action with selected')).click();
+			element(by.linkText('Create JIRA tickets')).click();
+
+			element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraQueue);
+			(element(by.buttonText('Create tickets'))).click();
+			browser.sleep(3000);
+			element(by.binding('jira.url')).click();
+			browser.getAllWindowHandles().then(function(handles) {
+				browser.switchTo().window(handles[0]).then();
+			});
+			browser.sleep(65000);
+			expect(element.all(by.css('div[marked]')).last().getText()).toBe('You could not authenticate yourself within the time interval! Please try later.');
+			element(by.buttonText(closeButton)).click();
+			browser.sleep(3000);
+			(element(by.buttonText('Create tickets'))).click();
+			browser.sleep(1000);
+			element(by.binding('jira.url')).click();
+			browser.sleep(20000);
+			element(by.id('issueType')).sendKeys(browser.params.issuetypes[0]);
+			element(by.model('label.labelValue')).sendKeys('myNew Label');
+			element(by.id('addLabel')).click();
+			(element(by.buttonText('Create tickets'))).click();
+			expect(element.all(by.partialLinkText(browser.params.jiraQueue)).count()).toBe(1);
+			browser.sleep(3000);
+			element(by.buttonText(closeButton)).click();
+		});	
+
+		it('Test constraints in export form', function() {
+			browser.sleep(1000);
+			(element(by.buttonText(SaveButton))).click();
+			browser.sleep(1000);
+			expect(element(by.buttonText(exportButton)).isEnabled()).toBe(false);
+			(element(by.linkText('Export into File'))).click();
+			expect(element(by.buttonText(exportButton)).isEnabled()).toBe(true);
+			(element(by.linkText('Export to JIRA'))).click();
+			browser.sleep(1000);
+			element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraQueue);
+			browser.sleep(1000);
+			expect(element(by.buttonText(exportButton)).isEnabled()).toBe(true);
+			(element(by.buttonText(exportButton))).click();
+			browser.sleep(4000);
+			browser.refresh().then(function() {}, function(){
+				browser.sleep(2000);
+				browser.switchTo().alert().accept();
+			});
+		});
+
+		it('Test manual linking with and without being authenticated', function() {
+			browser.sleep(3000);
+			(element(by.buttonText(SaveButton))).click();
+			browser.sleep(2000);
+			element(by.model('jiraUrl.url')).sendKeys(browser.params.jiraQueue);
+			(element(by.buttonText(exportButton))).click();
+			browser.sleep(2000);
+			element(by.model('fields.issuetype.name')).sendKeys(browser.params.issuetypes[0]);
+			element(by.model('fields.summary')).sendKeys('<script>alert(1)</script>');
+			element(by.model('fields.description')).sendKeys('<script>alert(1)</script>');
+			(element(by.buttonText(exportButton))).click();
+			browser.sleep(3000);
+			element(by.buttonText(closeButton)).click();
+			browser.sleep(2000);
+
+			// deleteCookie1();
+			deleteCookie();
+			// browser.sleep(3000);
+			// element(by.id('toggleManualLink')).click();
+			browser.sleep(3000);
+			var list = element.all(by.id('addManualTicket'));
+			var removeList = element.all(by.id('removeManualTicket')); 
+			list.first().click();
+			element(by.id('ticket_field')).sendKeys(browser.params.jiraQueue);
+			element(by.id('addTicket')).click();
+			browser.sleep(2000);
+			element(by.id('ticket_field')).clear().then(function() {
+				element(by.id('ticket_field')).sendKeys(browser.params.jiraTicket);
+			});
+			element(by.id('addTicket')).click();
+			browser.sleep(3000);
+			element(by.binding('jira.url')).click();
+			browser.getAllWindowHandles().then(function(handles) {
+				browser.switchTo().window(handles[0]).then();
+			});
+			browser.sleep(65000);
+			expect(element.all(by.css('div[marked]')).last().getText()).toBe('You could not authenticate yourself within the time interval! Please try later.');
+			element(by.buttonText(closeButton)).click();
+			browser.sleep(3000);
+			element(by.id('addTicket')).click();
+			browser.sleep(3000);
+			element(by.binding('jira.url')).click();
+			// sleep for the user to authenticated.
+			browser.sleep(20000);
+			expect(removeList.count() + 1, element.all(by.id('removeManualTicket')).count());
+
+			// add a second ticket to the requirement
+			list.first().click();
+
+			// Test adding already existing ticket to requirement.
 			element(by.id('ticket_field')).sendKeys(browser.params.jiraTicket);
-		});
-		element(by.id('addTicket')).click();
-		browser.sleep(3000);
-		element(by.binding('jira.url')).click();
-		browser.getAllWindowHandles().then(function(handles) {
-			browser.switchTo().window(handles[0]).then();
-		});
-		browser.sleep(65000);
-		expect(element.all(by.css('div[marked]')).last().getText()).toBe('You could not authenticate yourself within the time interval! Please try later.');
-		element(by.buttonText(closeButton)).click();
-		browser.sleep(3000);
-		element(by.id('addTicket')).click();
-		browser.sleep(3000);
-		element(by.binding('jira.url')).click();
-		// sleep for the user to authenticated.
-		browser.sleep(20000);
-		expect(removeList.count() + 1, element.all(by.id('removeManualTicket')).count());
+			element(by.id('addTicket')).click();
+			expect(element(by.binding('manageTicketProperty.jhError.msg')).getText(9)).toBe('This ticket is already linked to this requirement. Please provide another one.');
+			element(by.id('ticket_field')).clear().then(function() {
+				element(by.id('ticket_field')).sendKeys(browser.params.jiraRemoteLinkTicket);
+			});
+			element(by.id('addTicket')).click();
+			browser.sleep(3000);
 
-		// add a second ticket to the requirement
-		list.first().click();
+			list.get(1).click();
 
-		// Test adding already existing ticket to requirement.
-		element(by.id('ticket_field')).sendKeys(browser.params.jiraTicket);
-		element(by.id('addTicket')).click();
-		expect(element(by.binding('manageTicketProperty.jhError.msg')).getText(9)).toBe('This ticket is already linked to this requirement. Please provide another one.');
-		element(by.id('ticket_field')).clear().then(function() {
+			// Test that queue are not allowed
+			element(by.id('ticket_field')).sendKeys(browser.params.jiraQueue);
+			element(by.id('addTicket')).click();
+			browser.sleep(5000);
+
+			// test invalid ticket
+			element(by.id('ticket_field')).clear().then(function() {
+				element(by.id('ticket_field')).sendKeys(browser.params.jiraTicket + '-');
+			});
+			element(by.id('addTicket')).click();
+			browser.sleep(5000);
+			element(by.buttonText(closeButton)).click();
+			expect(element(by.binding('manageTicketProperty.authenticationFailureMessage')).getText())
+				.toBe('The request to the issue tracker responded with 404 Not found. Please make sure that the given ticket exist.');
+
+			// Add an existing remote ticket.
+			element(by.id('ticket_field')).clear().then(function() {
+				element(by.id('ticket_field')).sendKeys(browser.params.jiraRemoteLinkTicket);
+			});
+
+			element(by.id('addTicket')).click();
+			browser.sleep(5000);
+
+			var removeList1 = element.all(by.id('removeManualTicket')); 
+			list.get(2).click();
+
+			// Test add existing ticket without linking the tickets.
 			element(by.id('ticket_field')).sendKeys(browser.params.jiraRemoteLinkTicket);
+			element(by.model('reqs.linkStatus.link')).click();
+			element(by.id('addTicket')).click();
+			browser.sleep(8000);
+			var removeList2 = element.all(by.id('removeManualTicket'));
+			expect(removeList1.count(), removeList2.count() - 1);
+
+			removeList.first().click();
+			browser.sleep(1000);
+			element(by.id('removeTicket')).click();
+			browser.sleep(5000);
+
 		});
-		element(by.id('addTicket')).click();
-		browser.sleep(3000);
 
-		list.get(1).click();
-
-		// Test that queue are not allowed
-		element(by.id('ticket_field')).sendKeys(browser.params.jiraQueue);
-		element(by.id('addTicket')).click();
-		browser.sleep(5000);
-
-		// test invalid ticket
-		element(by.id('ticket_field')).clear().then(function() {
-			element(by.id('ticket_field')).sendKeys(browser.params.jiraTicket + '-');
-		});
-		element(by.id('addTicket')).click();
-		browser.sleep(5000);
-		element(by.buttonText(closeButton)).click();
-		expect(element(by.binding('manageTicketProperty.authenticationFailureMessage')).getText())
-			.toBe('The request to the issue tracker responded with 404 Not found. Please make sure that the given ticket exist.');
-		
-		// Add an existing remote ticket.
-		element(by.id('ticket_field')).clear().then(function() {
-			element(by.id('ticket_field')).sendKeys(browser.params.jiraRemoteLinkTicket);
-		});
-		
-		element(by.id('addTicket')).click();
-		browser.sleep(5000);
-
-		var removeList1 = element.all(by.id('removeManualTicket')); 
-		list.get(2).click();
-
-		// Test add existing ticket without linking the tickets.
-		element(by.id('ticket_field')).sendKeys(browser.params.jiraRemoteLinkTicket);
-		element(by.model('reqs.linkStatus.link')).click();
-		element(by.id('addTicket')).click();
-		browser.sleep(8000);
-		var removeList2 = element.all(by.id('removeManualTicket'));
-		expect(removeList1.count(), removeList2.count() - 1);
-
-		removeList.first().click();
-		browser.sleep(1000);
-		element(by.id('removeTicket')).click();
-		browser.sleep(5000);
-
-	});
-	
-	it('Test for the feedback feature', function() {
-		deleteCookie1();
-		deleteCookie();
-		browser.sleep(3000);
-		element.all(by.id('feedbackIcon')).get(1).click();
-		element(by.model('comment')).sendKeys('Feedback test submitted by automatic test. <script>alert(1)</script>');
-		element(by.buttonText('Submit')).click();
-		browser.sleep(2000);
-		element(by.binding('jira.url')).click();
-		browser.getAllWindowHandles().then(function(handles) {
-			browser.switchTo().window(handles[0]).then();
-		});
-		browser.sleep(65000);
-		expect(element.all(by.css('div[marked]')).last().getText()).toBe('You could not authenticate yourself within the time interval! Please try later.');
-		element(by.buttonText(closeButton)).click();
-		browser.sleep(3000);
-		element(by.buttonText('Submit')).click();
-		browser.sleep(2000);
-		element(by.binding('jira.url')).click();
-		browser.wait(function(){
-			return element(by.partialLinkText(browser.params.jiraHost)).isPresent();
-		});
-		browser.sleep(2000);
-		browser.refresh().then(function() {}, function(){
+		it('Test for the feedback feature', function() {
+			// deleteCookie1();
+			deleteCookie();
+			browser.sleep(3000);
+			element.all(by.id('feedbackIcon')).get(1).click();
+			element(by.model('comment')).sendKeys('Feedback test submitted by automatic test. <script>alert(1)</script>');
+			element(by.buttonText('Submit')).click();
 			browser.sleep(2000);
-			browser.switchTo().alert().accept();
+			element(by.binding('jira.url')).click();
+			browser.getAllWindowHandles().then(function(handles) {
+				browser.switchTo().window(handles[0]).then();
+			});
+			browser.sleep(65000);
+			expect(element.all(by.css('div[marked]')).last().getText()).toBe('You could not authenticate yourself within the time interval! Please try later.');
+			element(by.buttonText(closeButton)).click();
+			browser.sleep(3000);
+			element(by.buttonText('Submit')).click();
+			browser.sleep(2000);
+			element(by.binding('jira.url')).click();
+			browser.wait(function(){
+				return element(by.partialLinkText(browser.params.jiraHost)).isPresent();
+			});
+			browser.sleep(2000);
+			browser.refresh().then(function() {}, function(){
+				browser.sleep(2000);
+				browser.switchTo().alert().accept();
+			});
 		});
-	});
 });

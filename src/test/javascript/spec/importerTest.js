@@ -154,7 +154,7 @@ describe('Protractor Security RAT importer testsuite', function() {
 		browser.get(browser.params.testHost + '?ticket=ww.asdasfd').then(function() {}, function(){
 			browser.switchTo().alert().accept();
 		});
-		expect(element(by.id('failUrlMessage')).getText()).toBe('The entered URL is invalid. Please provide a valid URL');
+		expect(element(by.className('alert-danger')).getText()).toBe('The entered URL is invalid. Please provide a valid URL');
 	});
 	it('Update available test', function() {
 		browser.get(browser.params.impTestAttachmentUrl + browser.params.attachmentUrls[2]).then(function() {}, function(){
@@ -206,7 +206,7 @@ describe('Protractor Security RAT importer testsuite', function() {
 		expect(element.all(by.css('div[marked]')).last().getText()).toBe('No attachment with this id was found.');
 	});
 
-	it('import with link to attachment content in file query parameter', function() {
+	it('Test import with invalid link in file query parameter', function() {
 		browser.get(browser.params.impTestFileUrl).then(function() {}, function(){
 			browser.switchTo().alert().accept();
 		});
@@ -215,7 +215,7 @@ describe('Protractor Security RAT importer testsuite', function() {
 
 	// The first time you should not authenticate.
 	it('Imports by giving the ticket url without being authenticated', function() {
-		deleteCookie1();
+		// deleteCookie1();
 		deleteCookie();
 		browser.get(browser.params.testHost);
 		browser.sleep(5000);
@@ -244,7 +244,7 @@ describe('Protractor Security RAT importer testsuite', function() {
 	});
 
 	it('imports by clicking on the link without being authenticated', function() {
-		deleteCookie1();
+		// deleteCookie1();
 		deleteCookie();
 		browser.get(browser.params.impTestAttachmentUrl + browser.params.attachmentUrls[0]).then(function() {}, function(){
 			browser.switchTo().alert().accept();

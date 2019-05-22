@@ -45,7 +45,7 @@ describe('Protractor Security RAT browse requirements view testsuite', function(
 	});
 	it('Test for the feedback feature', function() {
 		deleteCookie();
-		deleteCookie1();
+		// deleteCookie1();
 		browser.sleep(5000);
 		browseLink.click();
 		element(by.partialLinkText('Requirements')).click();

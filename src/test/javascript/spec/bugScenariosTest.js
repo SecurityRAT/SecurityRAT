@@ -41,7 +41,7 @@ describe('Protractor Security RAT bug Scenarios Testsuite', function () {
     var generateRequirementSet = function (artifactName, impType) {
         defineArtifact.click();
         element(by.model('starterForm.name')).sendKeys(artifactName);
-        element.all(by.buttonText('Select')).last().click();
+        element.all(by.className('btn-default')).last().click();
         browser.sleep(500);
         (element(by.linkText(impType))).click();
 
