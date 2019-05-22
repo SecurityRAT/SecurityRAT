@@ -119,10 +119,9 @@ angular.module('sdlctoolApp')
                 angular.extend($scope.importProperty.spinner, {
                     showSpinner: false
                 });
-                // if (!isImportFromLink(fileParam)) {
-                //     $('#jiraLink').focus();
-                //     $scope.status.jira = true;
-                // }
+                if(isImportFromLink(fileParam)) {
+                    $scope.status.jira = false;
+                }
                 apiFactory.getAll('collections').then(function (collections) {
                     $scope.collections = collections;
                 }, function() {});
