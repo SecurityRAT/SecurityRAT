@@ -42,7 +42,7 @@ jobs:
     deploy:
       provider: releases
       api_key:
-        secure: T2Blmetw45MKwt9nmERqfjw9XwKeZVRXXg/JeW1mHOwr9UDn7L93MAItGEmMq0UdGB+mj49JyNys2Gz2PO5D8fnFVAqcXolbjJ7DprGW8Ha7ghUSHPYuHaJRZC+87f08+tRoNP4bYVpFG/HOr2km7lfuTxnpK+fnEdY+tkTBvMYsNMwyKUzHezXXpeiY8nULfsj2Mxgpuj6J0e7Wv/tYgXaGME6jn3czko5Zpu/7fVTFz5xuXc7C+ULx8WTEBm3XKBYOT4bM3j4qV2VyNXeTdcLi2tj1XOLswch2U73NBGaBnAlLkch/Hp2uSkY25+ajQzyBid5bM5bCI8xISta7cUNdxQQ83ER1xele1y3m5PlC9rGxgz1VEjBkn3rgf0797l11z6xohre54MpZYsCtjKXFy1qs8bURmmxyufMXmBamJMWYH+Ven6gAqIZudo8nF0iSATzvffvTEZ2/7Gm3kQ2RFYUsqpXgxxi7LikuDnyvsOBb4mU/HTzYyDKmnxYU/cazDJw9pPryUZerFJg48IpP4dKtievafFxPVJbf/KE3MZCwp6oqB8E1g7BJg72IdmWWGP3XINkTb72l5vL70aR7YvxfRDwRb6tnu0V6xyCkNXxy/6RHNuCwKrHFdXamK/U3Q9hjfDRE6W9GRp/8kagh6TKGx0Spu5rOJU7NQ5U=
+        secure: h5VXEniWJq45I5/YAWBdJXR1rSxvIf0coME3UlOVgykpgFyzqgRD/ToM8m/Kh9I4I8L/Is+YrkAM+goTf+YOj/6d6/sUnNXGrm1DUykL8C4xJkRdKA2Ukyo3r20buPtQszMJ2R0yEcWPqsIw2yqCF8oo33T7Q2BXrmj5d3lNRJMFED2znaW1xuNUTQKDjQwszsNOh72djPklRdrAlkhA3pal1SEnfyeV/qKZXbTEPPbmPpX94X/k+z6k4LPww1Ssi3a49eSuJY3Y2urIrVg9MN8DFIcY0eGqMSG4R2sPu3Up47sSsIRCQBewDcEcR8uZSZ0A93Op1gKnADg6X11ynrFlggChqkRKVmcNVlICV2Lg2Z4/05Iu/It1ZQNarCGJB6FuCANMZCCVYpXmtrZ2Q6xBqTX/qHwHl/MssofUgx1RglUhixiSoufSWWobC5p5GJlyyzBRb/eObjvnoOxgYMlIsLh32dKj5SXkk/NVUFvcsPLnNRH/vdPTvnBlOeV+R2019+0QK/o7LKh10b6x4o2yHOSXIovDdLJe/rfoezvEJpzXxUeBT8ZTAGCoZ9jlUG1z6tqTQB5pOyqAUtdTSHP1ybhigA2381HE+ETp/FAJR4YOsJ8kROHR3NLdF0d3iMsGtSWK0S65PIsg7vA673GWf0pEP+0mK7X0O9SKXy4=
       skip_cleanup: true
       file_glob: true
       file:
@@ -55,4 +55,3 @@ jobs:
     after_deploy:
     - chmod +x afterDeploy.sh
     - "./afterDeploy.sh"
-
