@@ -15,7 +15,7 @@ env:
   - SECRATDOCKERREPO=securityrat/securityrat
 before_install:
 - sudo apt-get update
-- sudo curl -sL https://deb.nodesource.com/setup_12.x | sudo bash
+- sudo curl -sL https://deb.nodesource.com/setup_8.x | sudo bash
 - sudo apt-get install nodejs
 - sudo apt-get install build-essential
 - sudo npm install -g bower grunt-cli
@@ -30,7 +30,7 @@ jobs:
     - mvn test
   - stage: deploy
     script:
-    - mvn -Pprod package
+    - mvn -Pprod -DskipTests package
     - export WAR_FILE="$(ls target/ | egrep .*\.war$)"
     - export NAME="$(echo $WAR_FILE | egrep -oh '(.*)[^\.war]')"
     - export TAG_NAME=$(git describe --exact-match)
