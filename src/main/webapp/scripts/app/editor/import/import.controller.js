@@ -338,7 +338,7 @@ angular.module('sdlctoolApp')
                         $scope.buildSystemSettings(doc);
                         $scope.buildRequirement(doc.requirementCategories);
                     } catch (e) {
-                        // console.log(e);
+//                        console.log(e);
                         $scope.importProperty.importing = false;
                         SDLCToolExceptionService.showWarning('Import unsuccessful', 'Yaml file could not be read please contact the developers.', SDLCToolExceptionService.DANGER);
                     }

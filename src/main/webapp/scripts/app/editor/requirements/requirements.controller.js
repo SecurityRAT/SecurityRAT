@@ -521,7 +521,7 @@ angular.module('sdlctoolApp')
                                     absentStatusColumnNames.push(absentStatusColumns[i].name);
 
                                 }
-                                newColumnAlertMessage += '**' + absentStatusColumnNames.toString() + '** was/were added. Please make you save this set of requirements.';
+                                newColumnAlertMessage += '**' + absentStatusColumnNames.toString() + '** was/were added. Please save the current state.';
                                 $scope.requirementProperties.newColumn.alertMessages.push(newColumnAlertMessage);
 
                             }
@@ -1654,7 +1654,7 @@ angular.module('sdlctoolApp')
                     }
                     decisionMade = true;
                     //remove green background from new one
-                } else if ((requirement.id === reqId) && (keepNewOne) && (requirement.isNew || requirement.toBeRemoved)) {
+                } else if (requirement.id === reqId && keepNewOne && (requirement.isNew || requirement.toBeRemoved)) {
                     requirement.isNew = false;
                     requirement.updateTooltip = '';
 
@@ -1695,6 +1695,8 @@ angular.module('sdlctoolApp')
                 // deletes the temporary saved requirement set from the $scope object.
                 $scope.backUpForUpdateCancelation = {};
             }
+//            console.log($scope.requirements)
+//            console.log($scope.optToHide)
         };
         // removes space and invalid file name characters from file name.
         $scope.removeUnwantedChars = function (str, invalidChars) {

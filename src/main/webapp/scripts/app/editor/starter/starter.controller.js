@@ -56,7 +56,9 @@ angular.module('sdlctoolApp')
 		apiFactory.getAll('projectTypes').then(
 			function (projectTypes) {
 				$scope.projectType = $filter('orderBy')(projectTypes, 'showOrder');
-				$scope.selectProject($scope.projectType[0])
+				if ($scope.oldSettings === undefined) {
+                	$scope.selectProject($scope.projectType[0])
+                }
 				if ($scope.projectType.length == 1) {
 				    $scope.disabled = true;
 				}
