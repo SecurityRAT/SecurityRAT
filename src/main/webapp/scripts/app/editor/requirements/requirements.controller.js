@@ -1486,7 +1486,7 @@ angular.module('sdlctoolApp')
                 }
             });
             if (newOptColumns.length > 0) {
-                newOptColumnMessage += '**' + newOptColumns.toString() + '** was/were added. Please make you save this set of requirements.';
+                newOptColumnMessage += '**' + newOptColumns.toString() + '** was/were added. Please save the current state.';
                 $scope.requirementProperties.newColumn.alertMessages.push(newOptColumnMessage);
             }
 
