@@ -23,7 +23,7 @@ exports.config = {
         jiraRemoteLinkQueue: 'https://second-test-jira.local/browse/ABC', // second jira to test the remote linking. Please this Queue should just have issuetype as mandatory field.
         jiraRemoteLinkTicket: 'https://second-test-jira.local/browse/ABC-524', // an existing ticket from the second jira instance to test manual linking
         jiraHost: 'https://test-jira.local/browse/', //path to test JIRA
-        impTestAttachmentUrl: 'https://securityrat.test.local/?file=https%3A%2F%2Ftest-jira.local%2Frest%2Fapi%2F2%2Fattachment%2F',
+        impTestAttachmentUrl: 'https://securityrat.test.local/?file=',
         impTestUrl2: 'https://securityrat.test.local/?ticket=https://test-jira.local/browse/XYZ-123', // the specied ticket in the "ticket" parameter should preferably have different attachment types. For e.g .yml, .xlsx.
         impTestFileUrl: 'https://securityrat.test.local/?file=https:%2F%2Ftest-jira.local%2Fsecure%2Fattachment%2F685933%2FSSDLC_sfgsfgsfg_17-2-2016_134738.yml', // set the file parameter with a copied the link address to an attached file in a JIRA ticket
         attachmentUrls: ['#{id1}', //Any attachment id. See file query parameter of exported attachments in JIRA Queue

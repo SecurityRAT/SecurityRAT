@@ -56,11 +56,11 @@ angular.module('sdlctoolApp')
 		apiFactory.getAll('projectTypes').then(
 			function (projectTypes) {
 				$scope.projectType = $filter('orderBy')(projectTypes, 'showOrder');
-				if ($scope.oldSettings === undefined) {
-                	$scope.selectProject($scope.projectType[0])
-                }
+				if (!angular.equals(system, 'old')) {
+					$scope.selectProject($scope.projectType[0])
+				}
 				if ($scope.projectType.length == 1) {
-				    $scope.disabled = true;
+					$scope.disabled = true;
 				}
 				if ($scope.selectedProjectType.length > 0) {
 					$scope.selectOldProjectTypeSettings();
@@ -71,7 +71,7 @@ angular.module('sdlctoolApp')
 			});
 
 		$scope.init = function () {
-//			$scope.projectTypeModel.name = 'Select';
+			//			$scope.projectTypeModel.name = 'Select';
 			$scope.oldSettings = sharedProperties.getProperty();
 			if ($scope.oldSettings !== undefined && angular.equals(system, 'old')) {
 				$scope.disabled = true;
