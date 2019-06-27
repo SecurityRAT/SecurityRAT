@@ -11,8 +11,8 @@
  * Controller of the sdlcFrontendApp
  */
 angular.module('sdlctoolApp')
-    .controller('RequirementsController', function ($scope, apiFactory, sharedProperties, $httpParamSerializer, $interval, $timeout, $uibModal, $filter,
-        getRequirementsFromImport, $confirm, $location, localStorageService, appConfig, $sce, SDLCToolExceptionService, $rootScope, marked, Helper, $state,
+    .controller('RequirementsController', function ($scope, apiFactory, sharedProperties, $interval, $uibModal, $filter,
+        getRequirementsFromImport, $confirm, $location, localStorageService, appConfig, $sce, SDLCToolExceptionService, Helper,
         checkAuthentication, JiraService, $q, $uibModalStack, ProgressBar, $window, authenticatorService) {
         $scope.failed = '';
         $scope.fail = false;
@@ -305,7 +305,6 @@ angular.module('sdlctoolApp')
         };
 
         $scope.openFeedback = function (requirement) {
-            //console.log(requirement);
             sharedProperties.setProperty(requirement);
             var modalInstance = $uibModal.open({
                 size: 'lg',
@@ -1611,7 +1610,6 @@ angular.module('sdlctoolApp')
                     'to keep the obsolete requirement.';
                 SDLCToolExceptionService.showWarning('Update requirements successful', message, SDLCToolExceptionService.INFO);
             }
-            // console.log("updates available clicked");
             // console.log($scope.updateProperties.updatesCounter);
         };
 
@@ -1632,7 +1630,6 @@ angular.module('sdlctoolApp')
             var decisionMade = false;
             for (var i = $scope.requirements.length - 1; i >= 0; i--) {
                 var requirement = $scope.requirements[i];
-
                 //keep new one
                 if (requirement.id === reqId && keepNewOne && !requirement.isNew && angular.isUndefined(requirement.toBeRemoved)) {
                     // console.log('keep new one', requirement);
@@ -1695,8 +1692,6 @@ angular.module('sdlctoolApp')
                 // deletes the temporary saved requirement set from the $scope object.
                 $scope.backUpForUpdateCancelation = {};
             }
-//            console.log($scope.requirements)
-//            console.log($scope.optToHide)
         };
         // removes space and invalid file name characters from file name.
         $scope.removeUnwantedChars = function (str, invalidChars) {
@@ -2212,12 +2207,9 @@ angular.module('sdlctoolApp')
             });
         };
 
-        // $scope.hideTicketStatusColumn = function(value) {
-        //     $scope.requirementProperties.hasIssueLinks = value;
-        // }
-
         $scope.onTimeout = function () {
-            if (localStorageService.isSupported && $scope.requirementProperties.requirementsEdited) {
+            if (localStorageService.isSupported && $scope.requirementProperties.requirementsEdited
+                && !$scope.updateProperties.updatedReqs) {
                 var exportRequirements = $scope.buildYAMLFile();
                 var doc = jsyaml.safeDump(exportRequirements);
                 localStorageService.set(appConfig.localStorageKey, doc);
@@ -2233,7 +2225,7 @@ angular.module('sdlctoolApp')
                 collections: $scope.systemSettings.colls,
                 generatedOn: $scope.generatedOn,
                 lastChanged: Helper.getCurrentDate(),
-                requirements: $scope.requirements
+                requirements: angular.copy($scope.requirements)
 
             };
             return Helper.buildYAMLFile(objectToExport);
