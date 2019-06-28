@@ -215,7 +215,7 @@ describe('Protractor Security RAT importer testsuite', function() {
 
 	// The first time you should not authenticate.
 	it('Imports by giving the ticket url without being authenticated', function() {
-		// deleteCookie1();
+		deleteCookie1();
 		deleteCookie();
 		browser.get(browser.params.testHost);
 		browser.sleep(5000);
@@ -244,7 +244,7 @@ describe('Protractor Security RAT importer testsuite', function() {
 	});
 
 	it('imports by clicking on the link without being authenticated', function() {
-		// deleteCookie1();
+		deleteCookie1();
 		deleteCookie();
 		browser.get(browser.params.impTestAttachmentUrl + browser.params.attachmentUrls[0]).then(function() {}, function(){
 			browser.switchTo().alert().accept();

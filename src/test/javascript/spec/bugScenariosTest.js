@@ -273,7 +273,7 @@ describe('Protractor Security RAT bug Scenarios Testsuite', function () {
         element(by.partialLinkText('Editor')).click();
         defineArtifact.click();
         element(by.id('inputName')).sendKeys('Test excel export bug with inactive enum status columns');
-        element.all(by.buttonText('Select')).last().click();
+        element.all(by.className('dropdown-toggle')).last().click();
         browser.sleep(500);
         (element(by.linkText('TestInactiveOptAndStatusColumns'))).click();
         element(by.partialButtonText('Generate')).click();
