@@ -34,8 +34,8 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <javax.inject.version>1</javax.inject.version>
         <joda-time-hibernate.version>1.4</joda-time-hibernate.version>
-        <liquibase.version>3.4.1</liquibase.version>
-        <liquibase-slf4j.version>1.2.1</liquibase-slf4j.version>
+        <liquibase.version>3.7.0</liquibase.version>
+        <liquibase-slf4j.version>2.0.0</liquibase-slf4j.version>
         <liquibase-hibernate4.version>3.5</liquibase-hibernate4.version>
         <mapstruct.version>1.0.0.CR1</mapstruct.version>
         <maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
@@ -563,7 +563,7 @@
                     <url>jdbc:mysql://localhost:3306/sdlctool</url>
                     <defaultSchemaName>sdlctool</defaultSchemaName>
                     <username>root</username>
-                    <password></password>
+                    <password/>
                     <referenceUrl>hibernate:spring:org.appsec.securityRAT.domain?dialect=org.hibernate.dialect.MySQLInnoDBDialect</referenceUrl>
                     <verbose>true</verbose>
                     <logging>debug</logging>
@@ -621,7 +621,7 @@
         								</goals>
         							</pluginExecutionFilter>
         							<action>
-        								<ignore></ignore>
+        								<ignore/>
         							</action>
         						</pluginExecution>
         					</pluginExecutions>
