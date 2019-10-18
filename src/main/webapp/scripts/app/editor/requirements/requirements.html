@@ -152,25 +152,26 @@
                 </button>
             </div>
             <div class="pull-right" data-ng-hide="!updateProperties.updatesAvailable">
-
                 <span>
-                    <span>
-                        <button class="btn btn-danger" data-ng-click="revertUpdates()"
-                            data-ng-if="updateProperties.updatedReqs"
-                            uib-tooltip="This will discard all the updates already made.">
+                    <button class="btn btn-success" data-ng-if="updateProperties.updatedReqs" data-ng-click="acceptAllUpdates()">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        Accept all changes
+                    </button>
+                </span>
+                <span>
+                    <button class="btn btn-danger" data-ng-click="revertUpdates()"
+                        data-ng-if="updateProperties.updatedReqs"
+                        uib-tooltip="This will discard all the updates already made.">
 
-                            <span class="glyphicon glyphicon-remove-circle" />
-                            <span> Cancel the updates</span>
-                        </button>
-                        <button id="updateReq"
-                            data-ng-if="!(systemSettings.name == null || updateProperties.updatedReqs)"
-                            class="btn btn-danger" uib-tooltip="Updates for your current requirement set are available."
-                            tooltip-enable="!{{updateProperties.updatedReqs}}"
-                            data-ng-click="updatesAvailableClicked()">
+                        <span class="glyphicon glyphicon-remove-circle" />
+                        <span> Cancel the updates</span>
+                    </button>
+                    <button id="updateReq" data-ng-if="!(systemSettings.name == null || updateProperties.updatedReqs)"
+                        class="btn btn-danger" uib-tooltip="Updates for your current requirement set are available."
+                        tooltip-enable="!{{updateProperties.updatedReqs}}" data-ng-click="updatesAvailableClicked()">
 
-                            <span class="glyphicon glyphicon-refresh"></span> Updates available
-                        </button>
-                    </span>
+                        <span class="glyphicon glyphicon-refresh"></span> Updates available
+                    </button>
                 </span>
             </div>
         </div>

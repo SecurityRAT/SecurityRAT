@@ -1643,6 +1643,18 @@ angular.module('sdlctoolApp')
             // delete $scope.tempSavedRequirements;
         };
 
+        $scope.acceptAllUpdates = function() {
+            var requirements = angular.copy($scope.requirements);
+            for (var i = 0; i < requirements.length; i++) {
+                var requirement = requirements[i];
+                if (requirement.isNew !== undefined && requirement.isNew) {
+                    $scope.applyChanges(requirement.id, true);
+                } else if (requirement.isNew !== undefined && requirement.toBeRemoved) {
+                    $scope.applyChanges(requirement.id, false);
+                }
+            }
+        }
+
         /* jshint loopfunc: true */
         $scope.applyChanges = function (reqId, keepNewOne) {
             // defined whether the user's choice has been finally applied in the object.
