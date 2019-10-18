@@ -1300,8 +1300,16 @@ angular.module('sdlctoolApp')
                 needsUpdate: true
             });
             angular.extend(oldRequirement, {
-                needsUpdate: true
+                needsUpdate: true,
+                oldCategoryId: oldRequirement.categoryId,
+                oldCategoryName: oldRequirement.category,
+                oldCategoryOrder: oldRequirement.categoryOrder,
+                oldOrder: oldRequirement.order
             });
+            oldRequirement.categoryId = requirementToInsert.categoryId;
+            oldRequirement.category = requirementToInsert.category;
+            oldRequirement.categoryOrder = requirementToInsert.categoryOrder;
+            oldRequirement.order = requirementToInsert.order;
             requirementToInsert.statusColumns = oldRequirement.statusColumns;
             requirementToInsert.tickets = oldRequirement.tickets;
             requirementToInsert.linkStatus = oldRequirement.linkStatus;
@@ -1313,6 +1321,7 @@ angular.module('sdlctoolApp')
 
         function setDefaultDiff(reqs) {
             angular.forEach(reqs, function (oldRequirement) {
+                oldRequirement.diffShortName = oldRequirement.shortName;
                 oldRequirement.diffDescription = oldRequirement.description;
                 angular.forEach(oldRequirement.optionColumns, function (optColumn) {
                     angular.forEach(optColumn.content, function (content) {
@@ -1339,7 +1348,7 @@ angular.module('sdlctoolApp')
             var newOptColumnMessage = 'The optional column(s) ';
             var newOptColumns = [];
             setDefaultDiff($scope.requirements);
-
+            // Adds new categories to the category filter array
             angular.forEach(updatedRequirements, function (newRequirement) {
                 if (($filter('filter')($scope.filterCategory, {
                     id: newRequirement.categoryId
@@ -1355,6 +1364,7 @@ angular.module('sdlctoolApp')
                 var foundOne = false;
 
                 // initial the diffs properties in the new requirement
+                newRequirement.diffShortName = newRequirement.shortName;
                 newRequirement.diffDescription = newRequirement.description;
                 angular.forEach(newRequirement.optionColumns, function (optColumn) {
                     angular.forEach(optColumn.content, function (content) {
@@ -1381,10 +1391,19 @@ angular.module('sdlctoolApp')
                         // $scope.requirements[i].category = newRequirement.category;
                         // adds the taginstance ids
                         $scope.requirements[i].tagInstances = newRequirement.tagInstances;
-                        // automatically updates shortName.
-                        $scope.requirements[i].shortName = newRequirement.shortName;
-
                         var oldRequirement = $scope.requirements[i];
+
+                        // search for new changes in shortname
+                        if (oldRequirement.shortName !== newRequirement.shortName) {
+                            var highlightedChangesInShortName = diffString2(oldRequirement.shortName, newRequirement.shortName);
+                            oldRequirement.diffShortName = highlightedChangesInShortName.o;
+                            newRequirement.diffShortName = highlightedChangesInShortName.n;
+                            requirementToInsert = newRequirement;
+                            markChangeInRequirement(requirementToInsert, oldRequirement, changedSettings, afterImport);
+                            $scope.requirements[i].markAsOld = true;
+                            foundOne = true;
+                        }
+                        
                         var atLeastOneDescriptionIsNotNull = !(newRequirement.description && oldRequirement.description)
 
                         // search for new changes in description
@@ -1641,8 +1660,8 @@ angular.module('sdlctoolApp')
                     }
                     $scope.requirementProperties.requirementsEdited = true;
                     decisionMade = true;
-                    //keep old one
                 } else if (requirement.id === reqId && !keepNewOne && (requirement.isNew || requirement.toBeRemoved)) {
+                    // new changes declined -> remove requirement element from array
                     requirement.updateTooltip = '';
 
                     $scope.requirements.splice(i, 1);
@@ -1650,8 +1669,8 @@ angular.module('sdlctoolApp')
                         $scope.updateProperties.updatesCounter--;
                     }
                     decisionMade = true;
-                    //remove green background from new one
                 } else if (requirement.id === reqId && keepNewOne && (requirement.isNew || requirement.toBeRemoved)) {
+                    // new changes accepted -> remove green background from new one
                     requirement.isNew = false;
                     requirement.updateTooltip = '';
 
@@ -1665,12 +1684,25 @@ angular.module('sdlctoolApp')
                     }
                     // makes sure the updatesCounter is not decremented more than once for a requirement
                     decisionMade = true;
-                    //remove red background from old one
                 } else if (requirement.id === reqId && !keepNewOne && !requirement.isNew) {
+                    // new changes declined -> keep obsolete by removing red background from old one
                     requirement.updateTooltip = '';
                     requirement.isOld = false;
                     requirement.toBeRemoved = false; // for requirement with toBeRemoved == true
                     requirement.needsUpdate = false;
+                    if (requirement.oldOrder) {
+                        requirement.order = requirement.oldOrder;
+                        delete requirement.oldOrder;
+                    }
+                    if (requirement.oldCategoryId) {
+                        // revert category update
+                        requirement.categoryId = requirement.oldCategoryId;
+                        requirement.category = requirement.oldCategoryName;
+                        requirement.categoryOrder = requirement.oldCategoryOrder;
+                        delete requirement.oldCategoryName;
+                        delete requirement.oldCategoryId;
+                        delete requirement.oldCategoryOrder;
+                    }
                 }
             }
             //Dirty hack for the weird case if ticket column is available, the green color is not removed by the code above
