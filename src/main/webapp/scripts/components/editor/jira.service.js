@@ -24,7 +24,8 @@ angular.module('sdlctoolApp')
         }
 
         function buildUrlCall(selector, apiUrlInfo) {
-            var baseJiraCall = apiUrlInfo.http + '//' + apiUrlInfo.host + appConfig.jiraApiPrefix + '/';
+            var baseJiraCall = apiUrlInfo.jiraUrl + appConfig.jiraApiPrefix + '/';
+            console.log(baseJiraCall);
             var origin = apiUrlInfo.http + '//' + apiUrlInfo.host;
             var returnValue = '';
             switch (selector) {

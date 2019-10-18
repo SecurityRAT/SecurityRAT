@@ -2,7 +2,7 @@
 /** jshint undef: true */
 /* globals urlpattern, Date */
 angular.module('sdlctoolApp')
-    .service('Helper', ['$uibModal', function Auth($uibModal) {
+    .service('Helper', ['$uibModal', 'appConfig', function ($uibModal, appConfig) {
         return {
             /* jshint unused: false */
             searchArrayByValue: function (search, object) {
@@ -17,30 +17,26 @@ angular.module('sdlctoolApp')
                 return bool;
             },
             removeMarkdown: function (changedContent, controller) {
-                // console.log(changedContent);
-                switch (controller) {
-                    case 'export':
-                        changedContent = changedContent.replace(/(\*)/g, '');
-                        changedContent = changedContent.replace(/(\s+-\s)/g, '\n');
-                        changedContent = changedContent.replace(/(-\s)/g, '');
-                        changedContent = changedContent.replace(/(\s+1\.\s)/g, '\n');
-                        changedContent = changedContent.replace(/(1\.\s)/g, '');
-                        changedContent = changedContent.replace(/#/g, '');
-                        changedContent = changedContent.replace(/`/g, '');
-                        changedContent = changedContent.replace(/([\[]\S+[\]])/g, '');
-                        changedContent = changedContent.replace(/(mailto:)/g, '');
-                        changedContent = changedContent.replace(/([\n])+/g, '\n');
-                        break;
-                    default:
-                        changedContent = changedContent.replace(/(\*\s)/g, '- ');
-                        changedContent = changedContent.replace(/(\*)/g, '');
-                        changedContent = changedContent.replace(/(1\.\s)/g, '- ');
-                        changedContent = changedContent.replace(/#/g, '');
-                        changedContent = changedContent.replace(/`/g, '');
-                        changedContent = changedContent.replace(/(\s{3,})/g, '\n');
-                        changedContent = changedContent.replace(/([\[]\S+[\]])/g, '');
-                        changedContent = changedContent.replace(/(mailto:)/g, '');
-                        break;
+                if (controller === 'export') {
+                    changedContent = changedContent.replace(/(\*)/g, '');
+                    changedContent = changedContent.replace(/(\s+-\s)/g, '\n');
+                    changedContent = changedContent.replace(/(-\s)/g, '');
+                    changedContent = changedContent.replace(/(\s+1\.\s)/g, '\n');
+                    changedContent = changedContent.replace(/(1\.\s)/g, '');
+                    changedContent = changedContent.replace(/#/g, '');
+                    changedContent = changedContent.replace(/`/g, '');
+                    changedContent = changedContent.replace(/([\[]\S+[\]])/g, '');
+                    changedContent = changedContent.replace(/(mailto:)/g, '');
+                    changedContent = changedContent.replace(/([\n])+/g, '\n');
+                } else {
+                    changedContent = changedContent.replace(/(\*\s)/g, '- ');
+                    changedContent = changedContent.replace(/(\*)/g, '');
+                    changedContent = changedContent.replace(/(1\.\s)/g, '- ');
+                    changedContent = changedContent.replace(/#/g, '');
+                    changedContent = changedContent.replace(/`/g, '');
+                    changedContent = changedContent.replace(/(\s{3,})/g, '\n');
+                    changedContent = changedContent.replace(/([\[]\S+[\]])/g, '');
+                    changedContent = changedContent.replace(/(mailto:)/g, '');
                 }
                 return changedContent;
             },
@@ -72,19 +68,16 @@ angular.module('sdlctoolApp')
                         list.splice(i, 1);
                         i--;
                     } else if (urlpattern.http.test(list[i])) {
-                        //else if((list[i].indexOf("https:") > -1) || (list[i].indexOf("http:") > -1)) {
                         angular.extend(apiUrl, {
                             http: list[i]
                         });
                     } else if (urlpattern.host.test(list[i]) && !hostSet) {
-                        //else if(list[i].indexOf(".") > -1) 
                         hostSet = true;
                         angular.extend(apiUrl, {
                             host: list[i]
                         });
                     } else if (list[i].indexOf('-') > -1) {
                         apiUrl.ticketKey.push(list[i]);
-                        //						angular.extend($scope.apiUrl, {ticketKey: list[i]});
                     } else if (i < (list.length - 1)) {
                         apiUrl.path.push(list[i]);
                     }
@@ -103,10 +96,22 @@ angular.module('sdlctoolApp')
                         });
                     }
                 }
-                apiUrl.cachedUrl = apiUrl.http + '//' + apiUrl.host + '/';
-                for (var j = 0; j < apiUrl.path.length; j++) {
-                    apiUrl.cachedUrl += apiUrl.path[j] + '/';
+                // required for Jira URL with path
+                apiUrl.jiraUrl = apiUrl.http + '//' + apiUrl.host;
+                var pathCounter = 0;
+
+                for (; pathCounter < apiUrl.path.length; pathCounter++) {
+                    var pathValue = apiUrl.path[pathCounter];
+                    if (pathValue === appConfig.jiraBrowseUrlPathName) {
+                        break;
+                    }
+                    apiUrl.jiraUrl += '/' + pathValue;
                 }
+                apiUrl.cachedUrl = apiUrl.jiraUrl;
+                for (; pathCounter < apiUrl.path.length; pathCounter++) {
+                    apiUrl.cachedUrl += '/' + apiUrl.path[pathCounter];
+                }
+                apiUrl.cachedUrl += '/';
                 return apiUrl;
             },
             buildYAMLFile: function (settings) {
@@ -138,7 +143,7 @@ angular.module('sdlctoolApp')
                     lastChanged: settings.lastChanged,
                     requirementCategories: []
                 });
-                
+
                 angular.forEach(settings.requirements, function (requirement) {
                     angular.forEach(requirement.optionColumns, function (optColumn) {
                         angular.forEach(optColumn.content, function (content) {
@@ -230,7 +235,7 @@ angular.module('sdlctoolApp')
                         var modalInstance = $uibModal.open({
                             template: '<div class="modal-body"><div id="UsSpinner1" class=" text-center col-sm-1" id="UsSpinner" spinner-on="true" us-spinner=' +
                                 '"{radius:6, width:4, length:6, lines:9}"></div><br/><h4 class="text-center"> JIRA Authentication running...</h4></div>',
-                            controller: function () {},
+                            controller: function () { },
                             size: 'sm'
                         });
                         return modalInstance;
