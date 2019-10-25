@@ -1,7 +1,8 @@
 package org.appsec.securityRAT.service.util;
 
+import org.apache.commons.lang3.RandomStringUtils;
 
-import org.apache.commons.lang.RandomStringUtils;
+import java.security.SecureRandom;
 
 /**
  * Utility class for generating random Strings.
@@ -9,41 +10,42 @@ import org.apache.commons.lang.RandomStringUtils;
 public final class RandomUtil {
 
     private static final int DEF_COUNT = 20;
-//    private static final SecureRandom rand = new SecureRandom();
 
-    private RandomUtil() {
+    private static final SecureRandom SECURE_RANDOM;
+
+    static {
+        SECURE_RANDOM = new SecureRandom();
+        SECURE_RANDOM.nextBytes(new byte[64]);
+    }
+
+    private static String generateRandomAlphanumericString() {
+        return RandomStringUtils.random(DEF_COUNT, 0, 0, true, true, null, SECURE_RANDOM);
     }
 
     /**
-     * Generates a password.
+     * Generate a password.
      *
-     * @return the generated password
+     * @return the generated password.
      */
     public static String generatePassword() {
-        return RandomStringUtils.randomAlphanumeric(DEF_COUNT);
+        return generateRandomAlphanumericString();
     }
 
     /**
-     * Generates an activation key.
+     * Generate an activation key.
      *
-     * @return the generated activation key
+     * @return the generated activation key.
      */
     public static String generateActivationKey() {
-//    	String result = "";
-//    	for (Integer elem : rand.ints(DEF_COUNT).boxed().collect(Collectors.toList())) {
-//			result += elem.toString();
-//		};
-//		return result;
-        return RandomStringUtils.randomNumeric(DEF_COUNT);
+        return generateRandomAlphanumericString();
     }
 
     /**
-    * Generates a reset key.
-    *
-    * @return the generated reset key
-    */
-   public static String generateResetKey() {
-//	   return rand.ints(DEF_COUNT).toString();
-       return RandomStringUtils.randomNumeric(DEF_COUNT);
-   }
+     * Generate a reset key.
+     *
+     * @return the generated reset key.
+     */
+    public static String generateResetKey() {
+        return generateRandomAlphanumericString();
+    }
 }
