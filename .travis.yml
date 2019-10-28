@@ -27,9 +27,10 @@ jobs:
   include:
   - stage: test
     script:
-    - mvn test
+    - mvn clean test
   - stage: deploy
     script:
+    - mvn clean
     - mvn -Pprod -DskipTests package
     - export WAR_FILE="$(ls target/ | egrep .*\.war$)"
     - export NAME="$(echo $WAR_FILE | egrep -oh '(.*)[^\.war]')"
