@@ -52,6 +52,9 @@ public class OptColumnResourceTest {
     private static final Boolean DEFAULT_ACTIVE = false;
     private static final Boolean UPDATED_ACTIVE = true;
 
+    private static final Boolean DEFAULT_ISVISIBLEBYDEFAULT = true;
+    private static final Boolean UPDATED_ISVISIBLEBYDEFAULT = false;
+
     @Inject
     private OptColumnRepository optColumnRepository;
 
@@ -81,6 +84,7 @@ public class OptColumnResourceTest {
         optColumn.setDescription(DEFAULT_DESCRIPTION);
         optColumn.setShowOrder(DEFAULT_SHOW_ORDER);
         optColumn.setActive(DEFAULT_ACTIVE);
+        optColumn.setIsVisibleByDefault(DEFAULT_ISVISIBLEBYDEFAULT);
     }
 
     @Test
@@ -103,6 +107,7 @@ public class OptColumnResourceTest {
         assertThat(testOptColumn.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testOptColumn.getShowOrder()).isEqualTo(DEFAULT_SHOW_ORDER);
         assertThat(testOptColumn.getActive()).isEqualTo(DEFAULT_ACTIVE);
+        assertThat(testOptColumn.getIsVisibleByDefault()).isEqualTo(DEFAULT_ISVISIBLEBYDEFAULT);
     }
 
     @Test
@@ -119,7 +124,8 @@ public class OptColumnResourceTest {
                 .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
                 .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
                 .andExpect(jsonPath("$.[*].showOrder").value(hasItem(DEFAULT_SHOW_ORDER)))
-                .andExpect(jsonPath("$.[*].active").value(hasItem(DEFAULT_ACTIVE.booleanValue())));
+                .andExpect(jsonPath("$.[*].active").value(hasItem(DEFAULT_ACTIVE.booleanValue())))
+                .andExpect(jsonPath("$.[*].isVisibleByDefault").value(hasItem(DEFAULT_ISVISIBLEBYDEFAULT.booleanValue())));
     }
 
     @Test
@@ -136,7 +142,8 @@ public class OptColumnResourceTest {
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
             .andExpect(jsonPath("$.showOrder").value(DEFAULT_SHOW_ORDER))
-            .andExpect(jsonPath("$.active").value(DEFAULT_ACTIVE.booleanValue()));
+            .andExpect(jsonPath("$.active").value(DEFAULT_ACTIVE.booleanValue()))
+            .andExpect(jsonPath("$.[*].isVisibleByDefault").value(DEFAULT_ISVISIBLEBYDEFAULT.booleanValue()));
     }
 
     @Test
@@ -160,6 +167,7 @@ public class OptColumnResourceTest {
         optColumn.setDescription(UPDATED_DESCRIPTION);
         optColumn.setShowOrder(UPDATED_SHOW_ORDER);
         optColumn.setActive(UPDATED_ACTIVE);
+        optColumn.setIsVisibleByDefault(UPDATED_ISVISIBLEBYDEFAULT);
 
 
         restOptColumnMockMvc.perform(put("/api/optColumns")
@@ -175,6 +183,7 @@ public class OptColumnResourceTest {
         assertThat(testOptColumn.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testOptColumn.getShowOrder()).isEqualTo(UPDATED_SHOW_ORDER);
         assertThat(testOptColumn.getActive()).isEqualTo(UPDATED_ACTIVE);
+        assertThat(testOptColumn.getIsVisibleByDefault()).isEqualTo(UPDATED_ISVISIBLEBYDEFAULT);
     }
 
     @Test
