@@ -13,6 +13,8 @@ public class FEOptionColumnDTO {
 
 	private String type;
 
+	private boolean isVisibleByDefault;
+
 	public FEOptionColumnDTO() {
 	}
 
@@ -22,6 +24,7 @@ public class FEOptionColumnDTO {
 		this.description = optionColumn.getDescription();
 		this.showOrder = optionColumn.getShowOrder();
 		this.type = optionColumn.getOptColumnType().getName();
+		this.isVisibleByDefault = optionColumn.getIsVisibleByDefault();
 	}
 
 	public Long getId() {
@@ -42,6 +45,10 @@ public class FEOptionColumnDTO {
 
 	public String getType() {
 		return type;
+	}
+
+	public boolean getIsVisibleByDefault() {
+		return isVisibleByDefault;
 	}
 
 

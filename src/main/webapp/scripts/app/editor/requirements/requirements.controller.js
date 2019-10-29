@@ -459,6 +459,9 @@ angular.module('sdlctoolApp')
                         if (key === 'optsColumn') {
                             $scope.optColumns = value;
                             angular.forEach($scope.optColumns, function (column) {
+                                if (!column.isVisibleByDefault) {
+                                    $scope.optToHide.push(column.id);
+                                }
                                 // column.description = '<p class=\'myTooltip\'><span style=\'color:yellow;\'>Description:</span> ' + column.description + '</p>';
                                 column.description = '<strong> ' + column.description + '</strong>';
                                 angular.extend(column, {
@@ -2627,4 +2630,24 @@ angular.module('sdlctoolApp')
                 });
             });
         };
+        // Move to top functionality
+        var moveToTopButton = document.getElementById('backToTop');
+
+        $scope.moveToTop = function () {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 1000 || document.documentElement.scrollTop > 1000) {
+                moveToTopButton.style.display = "block";
+            } else {
+                moveToTopButton.style.display = "none";
+            }
+        }
+        window.onscroll = function () {
+            scrollFunction();
+        }
+
+
     });

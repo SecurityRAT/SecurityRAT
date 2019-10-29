@@ -752,3 +752,19 @@ Template animation
 .btn-primary:disabled {
     background-color: rgb(51, 122, 183);
 }
+
+/* ===================================
+Back to Top button style
+====================================== */
+#backToTop {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 30px;
+    z-index: 99;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 20px;
+}

@@ -208,7 +208,7 @@ angular.module('sdlctoolApp')
 			if ($scope.starterForm.name === undefined) {
 				$scope.fail = true;
 				$scope.failed = 'Please specify the name of the System';
-			} else if (!$scope.selectedCollection.length === 0) {
+			} else if ($scope.selectedCollection.length === 0) {
 				$scope.fail = true;
 				$scope.failed = 'Please select at least one Collection of the System';
 			} else if ($scope.selectedProjectType.length === 0) {

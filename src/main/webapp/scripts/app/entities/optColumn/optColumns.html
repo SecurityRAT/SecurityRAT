@@ -8,17 +8,6 @@
                     <span class="glyphicon glyphicon-flash"></span> <span>Create a new Optional Column</span>
                 </button>
             </div>
-            <!--<div class="col-md-5">
-                <form name="searchForm" class="form-inline">
-                    <div class="input-group">
-                        <input type="text" class="form-control" data-ng-model="searchQuery" id="searchQuery" placeholder="Search a Option Column">
-                        <span class="input-group-btn">
-                            <button class="btn btn-info" data-ng-click="search()" id="searchButton"><span class="glyphicon glyphicon-search"></span>
-                            </button>
-                        </span>
-                    </div>
-                </form>
-            </div>-->
             <div class="col-md-5">
                 <form>
                     <button type="button" class="btn btn-info pull-left" data-toggle="collapse" data-target="#searchStringID">Search
@@ -65,11 +54,11 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <!--<th>ID</th>-->
                     <th>Name</th>
                     <th>Description</th>
                     <th class="text-center">ShowOrder</th>
                     <th class="text-center">Active</th>
+                    <th class="text-center">isVisibleByDefault</th>
                     <th>Type</th>
                     <th></th>
                     <th class="text-center">
@@ -79,11 +68,11 @@
             </thead>
             <tbody>
                 <tr class="animate-repeat" data-ng-repeat="optColumn in optColumns | orderBy: 'showOrder' | filter:searchString">
-                    <!--<td><a ui-sref="optColumn.detail({id:optColumn.id})">{{optColumn.id}}</a></td>-->
                     <td><strong>{{optColumn.name}}</strong></td>
                     <td>{{optColumn.description}}</td>
                     <td class="text-center">{{optColumn.showOrder}}</td>
                     <td class="text-center">{{optColumn.active}}</td>
+                    <td class="text-center">{{optColumn.isVisibleByDefault}}</td>
                     <td>
                         <a ui-sref="optColumnType.detail({id:optColumn.optColumnType.id})">{{optColumn.optColumnType.name}}</a>
                     </td>

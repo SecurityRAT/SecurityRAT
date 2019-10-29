@@ -51,7 +51,7 @@ angular.module('sdlctoolApp')
                         size: 'lg',
                         resolve: {
                             entity: function () {
-                                return {name: null, description: null, showOrder: null, active: false, id: null};
+                                return {name: null, description: null, showOrder: null, active: false, id: null, isVisibleByDefault: true};
                             }
                         }
                     }).result.then(function(result) {
@@ -97,7 +97,7 @@ angular.module('sdlctoolApp')
                         size: 'lg',
                         resolve: {
                             entity: function () {
-                                return {name: null, description: null, showOrder: null, active: null, id: null};
+                                return {name: null, description: null, showOrder: null, active: null, id: null, isVisibleByDefault: null};
                             }
                         }
                     }).result.then(function(result) {

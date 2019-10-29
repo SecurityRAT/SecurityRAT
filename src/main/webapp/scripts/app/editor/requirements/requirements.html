@@ -1,4 +1,7 @@
 <div data-ng-controller="RequirementsController" data-ng-init="init()" data-ng-cloak="">
+    <button id="backToTop" data-ng-click="moveToTop()" class="btn btn-primary" uib-tooltip="Back to top" tooltip-placement="top" tooltip-append-to-body="true">
+        <span class="glyphicon glyphicon-chevron-up"></span>
+    </button>
     <div class="container-fluid">
         <div class="col-lg-8" data-ng-if="systemSettings">
             <h2>{{systemSettings.name}}
@@ -153,7 +156,8 @@
             </div>
             <div class="pull-right" data-ng-hide="!updateProperties.updatesAvailable">
                 <span>
-                    <button class="btn btn-success" data-ng-if="updateProperties.updatedReqs" data-ng-click="acceptAllUpdates()">
+                    <button class="btn btn-success" data-ng-if="updateProperties.updatedReqs"
+                        data-ng-click="acceptAllUpdates()">
                         <span class="glyphicon glyphicon-ok"></span>
                         Accept all changes
                     </button>

@@ -12,6 +12,7 @@ angular.module('sdlctoolApp')
             OptColumn.query(function(result) {
                $scope.optColumns = result;
                angular.forEach($scope.optColumns, function(opt) {
+
             	   angular.extend(opt, {selected: false});
                });
             });
@@ -71,6 +72,6 @@ angular.module('sdlctoolApp')
         };
 
         $scope.clear = function () {
-            $scope.optColumn = {name: null, description: null, showOrder: null, active: null, id: null};
+            $scope.optColumn = {name: null, description: null, showOrder: null, active: null, isVisibleByDefault:null, id: null};
         };
     });
