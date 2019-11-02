@@ -1,4 +1,7 @@
 <div data-ng-controller="RequirementsController" data-ng-init="init()" data-ng-cloak="">
+    <button id="backToTop" data-ng-click="moveToTop()" class="btn btn-primary" uib-tooltip="Back to top" tooltip-placement="top" tooltip-append-to-body="true">
+        <span class="glyphicon glyphicon-chevron-up"></span>
+    </button>
     <div class="container-fluid">
         <div class="col-lg-8" data-ng-if="systemSettings">
             <h2>{{systemSettings.name}}
@@ -152,25 +155,27 @@
                 </button>
             </div>
             <div class="pull-right" data-ng-hide="!updateProperties.updatesAvailable">
-
                 <span>
-                    <span>
-                        <button class="btn btn-danger" data-ng-click="revertUpdates()"
-                            data-ng-if="updateProperties.updatedReqs"
-                            uib-tooltip="This will discard all the updates already made.">
+                    <button class="btn btn-success" data-ng-if="updateProperties.updatedReqs"
+                        data-ng-click="acceptAllUpdates()">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        Accept all changes
+                    </button>
+                </span>
+                <span>
+                    <button class="btn btn-danger" data-ng-click="revertUpdates()"
+                        data-ng-if="updateProperties.updatedReqs"
+                        uib-tooltip="This will discard all the updates already made.">
 
-                            <span class="glyphicon glyphicon-remove-circle" />
-                            <span> Cancel the updates</span>
-                        </button>
-                        <button id="updateReq"
-                            data-ng-if="!(systemSettings.name == null || updateProperties.updatedReqs)"
-                            class="btn btn-danger" uib-tooltip="Updates for your current requirement set are available."
-                            tooltip-enable="!{{updateProperties.updatedReqs}}"
-                            data-ng-click="updatesAvailableClicked()">
+                        <span class="glyphicon glyphicon-remove-circle" />
+                        <span> Cancel the updates</span>
+                    </button>
+                    <button id="updateReq" data-ng-if="!(systemSettings.name == null || updateProperties.updatedReqs)"
+                        class="btn btn-danger" uib-tooltip="Updates for your current requirement set are available."
+                        tooltip-enable="!{{updateProperties.updatedReqs}}" data-ng-click="updatesAvailableClicked()">
 
-                            <span class="glyphicon glyphicon-refresh"></span> Updates available
-                        </button>
-                    </span>
+                        <span class="glyphicon glyphicon-refresh"></span> Updates available
+                    </button>
                 </span>
             </div>
         </div>
@@ -254,20 +259,23 @@
                         <a href="" data-ng-click="createTicketReqs()" confirm-if="checkExistingTickets()"
                             confirm="The requirement(s) {{existingTickets}} already has/have tickets. Are you sure you want to add a new ticket to it/them?"
                             data-ng-if="(requirements | filter:{selected: true}).length && ticket.url != null">
-                            <img src="assets/images/jira-icon.png" width="16" height="16" alt="jira icon"/> Create JIRA tickets</a>
+                            <img src="assets/images/jira-icon.png" width="16" height="16" alt="jira icon" /> Create JIRA
+                            tickets</a>
                         <a href=""
                             data-ng-if="(requirements | filter:{selected: true}).length == 0 || ticket.url == null && (requirements | filter:{selected: true}).length">
                             <span uib-tooltip="Please export the requirement set to JIRA first."
                                 tooltip-trigger="mouseenter" tooltip-placement="top"
                                 data-ng-if="ticket.url == null && (requirements | filter:{selected: true}).length"
                                 class="disabledButton">
-                                <img src="assets/images/jira-icon.png" width="16" height="16" alt="jira icon"/> Create JIRA tickets
+                                <img src="assets/images/jira-icon.png" width="16" height="16" alt="jira icon" /> Create
+                                JIRA tickets
                             </span>
                             <span uib-tooltip="Please select requirements first." tooltip-trigger="mouseenter"
                                 tooltip-placement="top"
                                 data-ng-if="(requirements | filter:{selected: true}).length == 0"
                                 class="disabledButton">
-                                <img src="assets/images/jira-icon.png" width="16" height="16" alt=""/> Create JIRA tickets
+                                <img src="assets/images/jira-icon.png" width="16" height="16" alt="" /> Create JIRA
+                                tickets
                             </span>
                         </a>
                     </li>
@@ -277,11 +285,11 @@
                             tooltip-trigger="mouseenter" tooltip-placement="top" tooltip-append-to-body>
                             <span data-ng-if="(requirements | filter:{selected: true}).length == 0"
                                 data-ng-class="{'disabledButton': (requirements | filter:{selected: true}).length == 0}">
-                                <img src="assets/images/Excel-icon.png" alt="excel icon"/> Create spreadsheet
+                                <img src="assets/images/Excel-icon.png" alt="excel icon" /> Create spreadsheet
                             </span>
                             <span data-ng-if="(requirements | filter:{selected: true}).length > 0"
                                 data-ng-click="configExcel()">
-                                <img src="assets/images/Excel-icon.png" alt="excel icon"/> Create spreadsheet
+                                <img src="assets/images/Excel-icon.png" alt="excel icon" /> Create spreadsheet
                             </span>
                         </a>
                     </li>
@@ -291,11 +299,11 @@
                             tooltip-trigger="mouseenter" tooltip-placement="top" tooltip-append-to-body>
                             <span data-ng-if="(requirements | filter:{selected: true}).length == 0"
                                 data-ng-class="{'disabledButton': (requirements | filter:{selected: true}).length == 0}">
-                                <img src="assets/images/powerpoint-icon.png" alt="powerpoint icon"/> Create slides
+                                <img src="assets/images/powerpoint-icon.png" alt="powerpoint icon" /> Create slides
                             </span>
                             <span data-ng-if="(requirements | filter:{selected: true}).length > 0"
                                 data-ng-click="exportPTT()">
-                                <img src="assets/images/powerpoint-icon.png" alt="powerpoint icon"/> Create slides
+                                <img src="assets/images/powerpoint-icon.png" alt="powerpoint icon" /> Create slides
                             </span>
                         </a>
                     </li>
@@ -462,7 +470,7 @@
                     <tr class="animate-repeat"
                         data-ng-repeat="reqs in (filteredReqs = (requirements | orderBy:['categoryOrder','order'] | filterUpdates : updateProperties.updatedReqs | filterByTags : filteredRequirementsByTags | filter: {categoryId: category.id} : true | filter: { description: textFilters.description, shortName: textFilters.shortName} | filterByStatus : selectedStatusColumn: statusColumns | filterTicketStatus : jiraStatus.selectedStatus | filter:search | filterOptColumnByText: textFilters.optColumns : optColumns | filterStatusColumnByText: textFilters.statusColumns : statusColumns))"
                         uib-tooltip="{{reqs.updateTooltip}}"
-                        data-ng-style="updateProperties.updatedReqs && reqs.shortName!==filteredReqs[$index+1].shortName && {'border-bottom':'solid 3px'}">
+                        data-ng-style="updateProperties.updatedReqs && reqs.id!==filteredReqs[$index+1].id && {'border-bottom':'solid 3px'}">
                         <td data-ng-if="updateProperties.updatedReqs && (!reqs.isNew && !reqs.toBeRemoved)">
                             {{reqs.applyUpdate}}</td>
                         <td data-ng-if="updateProperties.updatedReqs && (reqs.isNew || reqs.toBeRemoved)">
@@ -473,8 +481,8 @@
                                     <span class="glyphicon glyphicon-ok"></span>
                                 </button>
                                 <button data-ng-if="reqs.toBeRemoved" id="acceptReq" class="btn btn-success"
-                                    data-ng-click="applyChanges(reqs.id, true)"
-                                    uib-tooltip="Decline the change and keep the obsolete requirement">
+                                    data-ng-click="applyChanges(reqs.id, false)"
+                                    uib-tooltip="Accept the change and remove the obsolete requirement">
                                     <span class="glyphicon glyphicon-ok"></span>
                                 </button>
                             </div>
@@ -487,25 +495,29 @@
                                     <span class="glyphicon glyphicon-remove"></span>
                                 </button>
                                 <button data-ng-if="reqs.toBeRemoved" id="removeReq" class="btn btn-danger"
-                                    data-ng-click="applyChanges(reqs.id, false)"
-                                    uib-tooltip="Accept the change and remove the obsolete requirement.">
+                                    data-ng-click="applyChanges(reqs.id, true)"
+                                    uib-tooltip="Decline the change and keep the obsolete requirement">
                                     <span class="glyphicon glyphicon-remove"></span>
                                 </button>
                             </div>
                         </td>
                         <td class="text-center"
                             data-ng-style="reqs.isNew && {'background-color':'rgb(204, 255, 204)'} || reqs.isOld && {'background-color':'rgb(255, 204, 204)'}">
-                            <strong>{{ reqs.shortName }}</strong>
+                            <strong>
+                                <div data-ng-if="!(reqs.isNew || reqs.isOld)"
+                                    data-ng-bind-html="reqs.shortName | trusted"></div>
+                                <div data-ng-if="reqs.isNew || reqs.isOld" marked="reqs.diffShortName"></div>
+                            </strong>
                             <div disable-all="updateProperties.updatedReqs" data-ng-if="reqs.id < 10000">
                                 <span data-ng-if="updateProperties.updatedReqs"
                                     uib-tooltip="Please apply updates first." style="cursor:not-allowed"
                                     tooltip-append-to-body>
-                                    <img src="assets/images/feedback.png" width="16" height="16" alt="feedback"/>
+                                    <img src="assets/images/feedback.png" width="16" height="16" alt="feedback" />
                                 </span>
                                 <span id="feedbackIcon" data-ng-if="!updateProperties.updatedReqs"
                                     uib-tooltip="Give feedback for this requirement." style="cursor:pointer;"
                                     data-ng-click="openFeedback(reqs)" tooltip-append-to-body>
-                                    <img src="assets/images/feedback.png" width="16" height="16" alt="feedback"/>
+                                    <img src="assets/images/feedback.png" width="16" height="16" alt="feedback" />
                                 </span>
                             </div>
                         </td>
@@ -575,7 +587,7 @@
                                     uib-popover-template="jiraStatus.displayStatusTemplateUrl"
                                     popover-trigger="mouseenter" popover-append-to-body="true">
                                     <img data-ng-src="{{reqTicket.iconUrl}}" data-ng-if="reqTicket.iconUrl != null"
-                                        popover-append-to-body="true" alt="ticket status"/> {{reqTicket.name}}
+                                        popover-append-to-body="true" alt="ticket status" /> {{reqTicket.name}}
                                 </a>
                                 <span>
                                     <span id="removeManualTicket" class="glyphicon glyphicon-minus"

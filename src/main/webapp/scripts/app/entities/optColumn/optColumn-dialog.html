@@ -37,11 +37,13 @@
         </div>
         <div class="form-group">
             <label for="field_active">Active</label>
-            <!-- <input type="checkbox" class="form-control" name="active" id="field_active"
-                    ng-model="optColumn.active"
-                    > -->
 			<input bs-switch type="checkbox" class="form-control" name="active" id="field_active" data-ng-model="optColumn.active"
             	switch-on-text="Active" switch-off-Text="Not Active" switch-on-color="success" switch-off-color="danger" switch-label-width="0" switch-size="large" switch-handle-width="655">
+        </div>
+        <div class="form-group">
+            <label for="field_isVisibleByDefault">isVisibleByDefault</label>
+			<input bs-switch type="checkbox" class="form-control" name="isVisible" id="field_isVisibleByDefault" data-ng-model="optColumn.isVisibleByDefault"
+            	switch-on-text="Yes" switch-off-Text="No" switch-on-color="success" switch-off-color="danger" switch-label-width="0" switch-size="large" switch-handle-width="655">
         </div>
         <div class="form-group">
             <label for="field_optColumnType">optColumnType</label>

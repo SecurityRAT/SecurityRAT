@@ -307,6 +307,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
         jiraComment: jiraComment,
         jiraApiProject: jiraApiProject,
         jiraRestApi: jiraRestApi,
+        jiraBrowseUrlPathName: jiraBrowseUrlPathName,
         localStorageKey: localStorageKey,
         securityCATTestApi: securityCATTestApi
     })

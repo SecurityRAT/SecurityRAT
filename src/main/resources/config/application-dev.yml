@@ -1,10 +1,5 @@
 server:
     port: 9000
-    ssl:
-        key-store: keystore.p12
-        key-store-password: myPassword
-        keyStoreType: PKCS12
-        keyAlias: tomcat
 
 liquibase:
     context: dev

@@ -26,7 +26,7 @@
     <include file="classpath:config/liquibase/changelog/20151207-changelengths.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20160205_remove_auditing.xml" relativeToChangelogFile="false" />
 
-    <!-- jmboldayamdjeu -->
+    <!-- rylyade1 -->
     <include file="classpath:config/liquibase/changelog/20160329_add_constant_configuration.xml" relativeToChangelogFile="false" />
     <include file="classpath:config/liquibase/changelog/20160329_update_constant_configuration.xml" relativeToChangelogFile="false" />
     <include file="classpath:config/liquibase/changelog/20160421_add_constant_value.xml" relativeToChangelogFile="false"/>
@@ -45,8 +45,9 @@
     <include file="classpath:config/liquibase/changelog/20170912130015_update_entity_SlideTemplate.xml" relativeToChangelogFile="false" />
     <include file="classpath:config/liquibase/changelog/20180124143733_update_training_length_restrictions.xml" relativeToChangelogFile="false" />
 
-    <!-- jmboldayamdjeu -->
+    <!-- rylyade1 -->
     <include file="classpath:config/liquibase/changelog/20190219_add_extra_constant.xml" relativeToChangelogFile="false" />
     <include file="classpath:config/liquibase/changelog/20190412_update_schema_and_add_values_configconstant.xml" relativeToChangelogFile="false" />
+    <include file="classpath:config/liquibase/changelog/20191028_update_schema_option_columns.xml" relativeToChangelogFile="false" />
 
 </databaseChangeLog>

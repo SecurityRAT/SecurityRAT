@@ -13,9 +13,12 @@ COPY securityRAT*.tar.gz /home/securityrat/
 
 WORKDIR /home/securityrat
 
-#Changes the keystore password and mysql root password accordingly in the security rat configuration file
+#Changes the mysql root password accordingly in the application config files
 RUN tar -xzf $COMPRESSEDFILE && \
 	sed -i "s/^\([[:blank:]]*\)type:.*/\1type: FORM/g" config/application.yml && \
+	sed -i "s/^\([[:blank:]]*\)username:.*/\1username: securityrat/g" config/application-prod.yml && \
+	sed -i "s/^\([[:blank:]]*\)password:.*/\1password: mypassword/g" config/application-prod.yml && \
+	sed -i "s/^\([[:blank:]]*\)url: jdbc:mysql:\/\/localhost:3306\/root/\1url: jdbc:mysql:\/\/mysql-server:3306\/securityrat/g" config/application-prod.yml && \
 	rm ${COMPRESSEDFILE} && \
 	rm -rf .cache/
 

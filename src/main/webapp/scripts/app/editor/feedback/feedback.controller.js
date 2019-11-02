@@ -37,7 +37,7 @@ angular.module('sdlctoolApp')
 	  $scope.close = function() {
 		  var apiCall = appConfig.reportJIRAHost + appConfig.jiraApiIssueType;
 		  var authenticatorProperty = {
-				  url: appConfig.reportJIRAHost + '/browse/' + appConfig.reportJIRAQueue,
+				  url: appConfig.reportJIRAHost + '/' + appConfig.jiraBrowseUrlPathName + '/' + appConfig.reportJIRAQueue,
 				  message : 'You are not authenticated, please click on the following link to authenticate yourself. You will have one minute after a click on the link.'
 		  };
 		  var url = appConfig.reportJIRAHost + appConfig.jiraApiPrefix;  

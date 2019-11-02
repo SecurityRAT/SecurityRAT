@@ -7,7 +7,7 @@ cache:
   - "$HOME/.m2"
   - "$TRAVIS_BUILD_DIR/node_modules"
 jdk:
-- oraclejdk8
+- openjdk8
 env:
   global:
   - secure: AgVMUXaAb/XM+NmJOaXwyd6u5OKDflvm2SY+QAyAz5VKkI4tDuaPVKOTJ+bAy5gR2Y7naOwCAot2ucLsDnx2NYCh5G6EfLtdF5sH1YD/ZBcCne+ySsSRSQZulJ+7wyNCCCSW1nXzAehq/fVZP4K86KtAGYS+C0OvrCoQx3v69AeqFJmypNBtMdrdXqrEwCb21tRbdOe8vhXMAk2VLtUIvDyj2ZYONaCxoiI70XGSdj3r3gtc3gXpCq0fBWLo3KXhYVlkr9YdLtIBgx/mwvs1CWOS+U9iDn1537/Ag/h4fIZx/wb1EUl/hXnwpX2sUBYp0b7Oy32uhxVni4pPHbAtGUSkUol878jq2chOC3OTR1YD97e27ebZiIWxThdfgC9TpHMwyplb6rjqCVZXczWxJ2qBzoHdmQBwqSqNJJhmwAUQkHGvkA7lz3CPvAubLnPRR9gqmPPY2aWSlCw9xlENcLxnkJom4lkxFTz8FwKnLskGOyJeoETPyeD/wHR/pULj7DzNTMRDhCsZID1vSuEDPi5xeCzZs3WgZvRt/EX4K5LNfo2mstuCfIf5wF77duWrbRaNLhsfQt006UbcwsyOeXLipJcLL+0sZ9yzdJ0fGN/a8ByMxq26rnZunULLZ/8zglxeUPfkQLVG6mHTCpOHiR9D1bLsYRFXFRDYa6/rDr0=
@@ -27,9 +27,10 @@ jobs:
   include:
   - stage: test
     script:
-    - mvn test
+    - mvn clean test
   - stage: deploy
     script:
+    - mvn clean
     - mvn -Pprod -DskipTests package
     - export WAR_FILE="$(ls target/ | egrep .*\.war$)"
     - export NAME="$(echo $WAR_FILE | egrep -oh '(.*)[^\.war]')"
