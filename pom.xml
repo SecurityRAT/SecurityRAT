@@ -74,7 +74,7 @@
     	<dependency>
     		<groupId>org.pac4j</groupId>
     		<artifactId>pac4j-cas</artifactId>
-    		<version>1.7.1</version>
+    		<version>1.8.0</version>
     	</dependency>
     	<dependency>
 			<groupId>org.pac4j</groupId>
@@ -616,7 +616,7 @@
         								</goals>
         							</pluginExecutionFilter>
         							<action>
-        								<ignore />
+        								<ignore/>
         							</action>
         						</pluginExecution>
         					</pluginExecutions>
