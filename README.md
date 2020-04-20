@@ -1,3 +1,7 @@
+![Build Travis CI Master](https://travis-ci.org/SecurityRAT/SecurityRAT.svg?branch=master)
+[![Join the chat at https://owasp.slack.com/archives/C76U4TNFJ](https://img.shields.io/badge/chat-on%20slack-blueviolet)](https://owasp.slack.com/archives/C76U4TNFJ)
+[![OWASP Incubator](https://img.shields.io/badge/owasp-incubator%20project-orange.svg)](https://owasp.org/www-project-securityrat/)
+
 # What is this
 
 **OWASP Security RAT** (Requirement Automation Tool) is a tool supposed to assist with the problem of addressing security requirements during application development. The typical use case is:
@@ -32,4 +36,4 @@ https://www.owasp.org/index.php/OWASP_SecurityRAT_Project
 
 ## License
 
-This project is distributed under the Apache license, Version 2.0: http://www.apache.org/licenses/LICENSE-2.0
+This project is distributed under the Apache license, Version 2.0: http://www.apache.org/licenses/LICENSE-2.
