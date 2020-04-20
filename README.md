@@ -32,7 +32,7 @@ You can play freely around with the demo version and can modify/add/delete requi
 
 ## OWASP Website
 
-https://www.owasp.org/index.php/OWASP_SecurityRAT_Project
+[OWASP SecurityRAT](https://owasp.org/www-project-securityrat/)
 
 ## License
 
