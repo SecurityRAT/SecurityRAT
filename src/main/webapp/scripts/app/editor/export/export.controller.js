@@ -143,14 +143,14 @@ angular.module('sdlctoolApp')
 
         };
         //builds the URL object
-        $scope.buildUrlObject = function (list) {
+        function buildUrlObject(list) {
             $scope.apiUrl = {};
             $scope.apiUrl.ticketKey = [];
             angular.extend($scope.apiUrl, Helper.buildJiraUrl(list));
             if ($scope.apiUrl.ticketKey.length === 1) {
                 $scope.checks.isTicket = true;
             }
-        };
+        }
 
         //build the url call need according to the distinguisher.
         $scope.buildUrlCall = function (selector) {
@@ -652,7 +652,7 @@ angular.module('sdlctoolApp')
                     message: 'You are not authenticated, please click on the following link to authenticate yourself. You will have one minute after a click on the link.'
                 };
                 var urlSplit = $scope.jiraUrl.url.split('/');
-                $scope.buildUrlObject(urlSplit);
+                buildUrlObject(urlSplit);
                 $scope.exportProperty.promise.derefer = $q.defer();
                 checkAuthentication.jiraAuth($scope.buildUrlCall('issueType'), $scope.exportProperty.authenticatorProperty, $scope.exportProperty, $scope.exportProperty.promise).then(function (data) {
                     $scope.checks.exporting = true;
@@ -819,10 +819,9 @@ angular.module('sdlctoolApp')
                         // shows the successful modal and updates the attachment.
                         if ($scope.numRequirementTicketToCreate === 0) {
                             var urlSplit = $scope.exported.ticket.url.split('/');
-                            $scope.buildUrlObject(urlSplit);
+                            buildUrlObject(urlSplit);
                             $scope.sendAttachment();
                             var tickets = '\n';
-                            var message = '';
                             for (var i = 0; i < $scope.ticketURLs.length; i++) {
                                 tickets += $scope.ticketURLs[i];
                                 tickets += '\r\n';
