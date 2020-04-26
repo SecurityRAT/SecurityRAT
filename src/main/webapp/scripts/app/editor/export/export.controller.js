@@ -16,7 +16,6 @@ angular.module('sdlctoolApp')
             urlPlaceholder: 'e.g. https://your-jira.url/browse/YOURPROJECT'
         };
         $scope.jiraStatus = {};
-        // $scope.promise = {};
         $scope.issueLinkObject = {};
         $scope.selection = {
             file: false,
@@ -48,7 +47,6 @@ angular.module('sdlctoolApp')
                 $scope.exportProperty.urlPlaceholder = 'e.g. YOURPROJECT or https://your-jira.url/browse/YOURPROJECT';
                 $scope.exportProperty.defaultJIRAHost = $scope.exported.defaultJIRAHost;
             } else {
-                //            assigns default JIRA Url
                 $scope.jiraUrl.url = $scope.exported.defaultJIRAUrl
             }
             $scope.jiraAlternatives.issueTypes = [];
@@ -154,7 +152,7 @@ angular.module('sdlctoolApp')
             }
         };
 
-        //build the url call need according to the distinguisher. 
+        //build the url call need according to the distinguisher.
         $scope.buildUrlCall = function (selector) {
             return JiraService.buildUrlCall(selector, $scope.apiUrl);
         };
@@ -224,11 +222,10 @@ angular.module('sdlctoolApp')
                             ok: 'OK',
                             cancel: 'Cancel'
                         }, {
-                                templateUrl: 'scripts/app/editor/confirm-modal.html'
-                            })
+                            templateUrl: 'scripts/app/editor/confirm-modal.html'
+                        })
                             .then(function () {
                                 $scope.checkForTicketInReqSet();
-                                //                          $scope.sendAttachment();
                             }, function () {
                                 $scope.checks.exporting = false;
                             });
@@ -243,8 +240,8 @@ angular.module('sdlctoolApp')
                             ok: 'OK',
                             cancel: 'Cancel'
                         }, {
-                                templateUrl: 'scripts/app/editor/confirm-modal.html'
-                            })
+                            templateUrl: 'scripts/app/editor/confirm-modal.html'
+                        })
                             .then(function () {
                                 $scope.sendAttachment();
                             }, function () {
@@ -310,7 +307,6 @@ angular.module('sdlctoolApp')
                 }
                 if (lastValue.length > 1) {
                     apiFactory.getJIRAInfo(field.autoCompleteUrl.replace('/null/', '/') + lastValue).then(function (response) {
-                        //                      console.log(response)
                         switch (field.type) {
                             case 'array':
                                 switch (field.itemType) {
@@ -371,7 +367,6 @@ angular.module('sdlctoolApp')
                 angular.forEach(response.projects, function (project) {
                     angular.forEach(project.issuetypes[0].fields, function (value, key) {
                         var allowedValues;
-                        // var itemType = '';
                         var sync = $q.defer();
                         if ((fatalFields.indexOf(key) === -1) && (excludedFields.indexOf(key) === -1) && !(angular.equals(value.schema.type, 'array') && (value.operations.length === 1) && value.operations.indexOf('set') !== -1) && !angular.equals(value.schema.type, 'any')) {
                             if (angular.isDefined(value.allowedValues)) {
@@ -394,8 +389,7 @@ angular.module('sdlctoolApp')
                             //sync makes sure the array is updated when the datas are available.
                             sync.promise.then(function () {
                                 var autoCompleteUrl = value.autoCompleteUrl;
-                                // console.log(autoCompleteUrl)
-                                // exclude autoComplete with issueKey=null. 
+                                // exclude autoComplete with issueKey=null.
                                 if (angular.isDefined(autoCompleteUrl) && autoCompleteUrl.indexOf('=null') !== -1) {
                                     autoCompleteUrl = undefined;
                                 }
@@ -425,7 +419,7 @@ angular.module('sdlctoolApp')
         $scope.$watch('fields.issuetype.name', function (newVal, oldVal, scope) {
             $scope.manFilterObject.projectKey = $scope.apiUrl.projectKey;
             $scope.manFilterObject.issuetypeName = newVal;
-            var excludedFields = ['summary', 'issuetype', 'project', 'reporter', 'description']; // 
+            var excludedFields = ['summary', 'issuetype', 'project', 'reporter', 'description']; //
             var fatalFields = ['attachment', 'issuelinks'];
             var tempFields = {};
             angular.extend(tempFields, $scope.fields);
@@ -440,7 +434,6 @@ angular.module('sdlctoolApp')
             if (angular.isDefined(newVal)) {
                 $scope.getMandatoryFields($scope.manFilterObject, excludedFields, fatalFields);
             }
-            // console.log($scope.jiraAlternatives.mandatoryFields)
 
         });
         /**
@@ -466,7 +459,6 @@ angular.module('sdlctoolApp')
                 angular.extend(req, fieldObject.req);
                 delete fieldObject.req;
             }
-            //          var excludedFields = ['summary', 'issuetype', 'labels', 'reporter', 'project', 'description'];
             for (var i = 0; i < $scope.jiraAlternatives.mandatoryFields.length && $scope.jiraAlternatives.mandatoryFields.length > 0; i++) {
                 if (!$scope.jiraAlternatives.mandatoryFields[i].mandatory) {
                     delete fieldObject[$scope.jiraAlternatives.mandatoryFields[i].key];
@@ -545,14 +537,13 @@ angular.module('sdlctoolApp')
         };
 
         $scope.sendAttachment = function () {
-            var file = $scope.buildYAMLFile();
+            var file = buildYAMLFile();
             var linksObject = {};
             $scope.ticketAuthentication = {};
-            //          console.log(file);
             $scope.exported.ticket.apiUrl = $scope.apiUrl;
             $scope.exported.ticket.key = $scope.apiUrl.ticketKey[0];
 
-            // links the newly created ticket to the existing tickets (created in batch mode) from the yaml file. 
+            // links the newly created ticket to the existing tickets (created in batch mode) from the yaml file.
             // This happens when the requirement set has already been saved in a ticket and the user save it into a new one.
             angular.forEach($scope.ticketsToLink, function (ticketToLink) {
                 var urlSplit = ticketToLink.split('/');
@@ -630,8 +621,8 @@ angular.module('sdlctoolApp')
                     ok: 'Yes',
                     cancel: 'No'
                 }, {
-                        templateUrl: 'scripts/app/editor/confirm-modal.html'
-                    })
+                    templateUrl: 'scripts/app/editor/confirm-modal.html'
+                })
                     .then(function () {
                         angular.extend($scope.checks, {
                             hasReqTicket: true
@@ -661,9 +652,7 @@ angular.module('sdlctoolApp')
                     message: 'You are not authenticated, please click on the following link to authenticate yourself. You will have one minute after a click on the link.'
                 };
                 var urlSplit = $scope.jiraUrl.url.split('/');
-                //console.log($scope.apiUrl);
                 $scope.buildUrlObject(urlSplit);
-                //console.log($scope.apiUrl);
                 $scope.exportProperty.promise.derefer = $q.defer();
                 checkAuthentication.jiraAuth($scope.buildUrlCall('issueType'), $scope.exportProperty.authenticatorProperty, $scope.exportProperty, $scope.exportProperty.promise).then(function (data) {
                     $scope.checks.exporting = true;
@@ -688,7 +677,7 @@ angular.module('sdlctoolApp')
                             $scope.backupUrl = $scope.jiraUrl.url.trim();
                             $scope.fields = {};
                         }
-                        //checks for the project key only once. 
+                        //checks for the project key only once.
                         if (angular.isUndefined($scope.fields.project) || $scope.checks.isNotProject) {
                             $scope.checks.isQueue = false;
                             $scope.checkQueue($scope.apiUrl.projectKey, excludedFields, fatalFields);
@@ -731,7 +720,6 @@ angular.module('sdlctoolApp')
                                     }
                                 }
                             }
-                            // }
                             // create a ticket only when the required fields have been properly set.
                             if (!fieldNotfulfilled) {
                                 if ($scope.selection.jira) {
@@ -743,8 +731,8 @@ angular.module('sdlctoolApp')
                                             ok: 'OK',
                                             cancel: 'Cancel'
                                         }, {
-                                                templateUrl: 'scripts/app/editor/confirm-modal.html'
-                                            })
+                                            templateUrl: 'scripts/app/editor/confirm-modal.html'
+                                        })
                                             .then(function (data) {
                                                 // check for the tickets in requirement set to be aber to link these ones to the newly created ticket.
                                                 $scope.checkForTicketInReqSet();
@@ -769,10 +757,9 @@ angular.module('sdlctoolApp')
                 });
             } else if ($scope.selection.file) {
                 if ($scope.extension === 'yaml') {
-                    var file = $scope.buildYAMLFile();
                     var mime = 'data:application/x-yaml;charset=utf-8,';
                     var ext = '.yml';
-                    var doc = jsyaml.safeDump(file);
+                    var doc = jsyaml.safeDump(buildYAMLFile());
                     var a = document.createElement('a');
                     if (angular.isDefined(a.download)) {
                         a.href = mime + encodeURIComponent(doc);
@@ -817,8 +804,6 @@ angular.module('sdlctoolApp')
                             summary: responseInfo.fields.summary,
                             issueKey: responseInfo.key,
                             url: remoteObject.url
-                            // enableTooltip: true,
-                            // link: true
                         };
                         requirement.linkStatus.ticketStatus.push(linkStatus);
                         if ($filter('filter')($scope.jiraStatus.allStatus, {
@@ -869,9 +854,7 @@ angular.module('sdlctoolApp')
                     }), ['categoryOrder', 'order']), function (requirement) {
                         var fieldObject = {};
                         angular.extend(fieldObject, $scope.fields);
-                        var commentBody = '';
                         var name = $scope.exported.name.replace(' ', '_');
-                        //console.log(name);
                         fieldObject.description = '';
                         // to synchronize asynchronous REST CALLS.
                         fieldObject.req = requirement;
@@ -919,14 +902,14 @@ angular.module('sdlctoolApp')
                 return [];
             } else if ($scope.checks.hasReqTicket) {
                 if (req.tickets.length > 0) {
-                    // save the ticket url from yaml, to later on link them to main Ticket. 
+                    // save the ticket url from yaml, to later on link them to main Ticket.
                     $scope.ticketsToLink = $scope.ticketsToLink.concat(req.tickets);
                 }
                 return req.tickets;
             }
         };
 
-        $scope.buildYAMLFile = function () {
+        function buildYAMLFile() {
             if (angular.isDefined($scope.exported.ticket.url) && $scope.ticketURL === '') {
                 $scope.ticketURL = $scope.exported.ticket.url;
             } else if ($scope.selection.jira && $scope.ticketURL !== '') {
@@ -939,10 +922,9 @@ angular.module('sdlctoolApp')
             // copy the exported object
             var copyOfExport = angular.copy($scope.exported);
             angular.forEach(copyOfExport.requirements, function (requirement) {
-
                 requirement.tickets = $scope.getTicketValue(requirement);
             });
 
             return Helper.buildYAMLFile(copyOfExport);
-        };
+        }
     });

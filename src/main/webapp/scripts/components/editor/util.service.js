@@ -143,7 +143,6 @@ angular.module('sdlctoolApp')
                     lastChanged: settings.lastChanged,
                     requirementCategories: []
                 });
-
                 angular.forEach(settings.requirements, function (requirement) {
                     angular.forEach(requirement.optionColumns, function (optColumn) {
                         angular.forEach(optColumn.content, function (content) {

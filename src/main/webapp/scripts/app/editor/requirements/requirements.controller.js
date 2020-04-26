@@ -104,9 +104,6 @@ angular.module('sdlctoolApp')
             updatesAvailable: false,
             tooltipText: 'Please apply the updates first.'
         };
-        // $scope.updatedReqs = false;
-        // $scope.updatesCounter = 0;
-        // $scope.updatesAvailable = false;
         $scope.infiniteScroll = {
             numberToDisplay: 15,
             length: 1000
@@ -256,9 +253,7 @@ angular.module('sdlctoolApp')
                 $scope.filterCategory = $filter('orderBy')(imports.filterCategory, 'showOrder');
                 $scope.selectedAlternativeSets = imports.selectedAlternativeSets;
                 $scope.newStyleAlternativeInstances = imports.newStyleAlternativeInstances;
-                // getRequirementsFromImport.setProperty(undefined);
                 $scope.jiraStatus.allStatus = [];
-                //                $scope.newRequirementParam.id = imports.lastId++; // gets the id of the last Custom requirements save
                 $scope.getAlternativeSets();
                 $scope.getCustomRequirements();
                 $scope.progressbar.showContent = true;
@@ -268,7 +263,7 @@ angular.module('sdlctoolApp')
                 //do a initial localBackup
                 $scope.onTimeout();
                 $scope.promiseForStorage = $interval($scope.onTimeout, 60000);
-                $scope.getOptandStatusColumns(true);
+                getOptandStatusColumns(true);
                 updateStatusColumnValuesInImportedRequirements($scope.requirements)
                 updateRequirements();
                 $uibModalStack.dismissAll();
@@ -279,11 +274,10 @@ angular.module('sdlctoolApp')
                 $scope.buildSettings();
                 $scope.getRequirements();
                 $scope.getAlternativeSets();
-                $scope.getOptandStatusColumns(false);
+                getOptandStatusColumns(false);
                 $scope.alternativeSets = $scope.systemSettings.alternativeSets;
                 $scope.requirementProperties.hasIssueLinks = $scope.systemSettings.hasIssueLinks;
             }
-            // $scope.getOptandStatusColumns();
             $scope.getTagCategories();
         };
 
@@ -469,8 +463,7 @@ angular.module('sdlctoolApp')
                 function () { });
         };
 
-        $scope.getOptandStatusColumns = function (fromImport) {
-
+        function getOptandStatusColumns(fromImport) {
             angular.forEach($scope.systemSettings, function (object) {
                 angular.forEach(object, function (obj) {
                     angular.forEach(obj, function (value, key) {
@@ -480,7 +473,6 @@ angular.module('sdlctoolApp')
                                 if (!column.isVisibleByDefault) {
                                     $scope.optToHide.push(column.id);
                                 }
-                                // column.description = '<p class=\'myTooltip\'><span style=\'color:yellow;\'>Description:</span> ' + column.description + '</p>';
                                 column.description = '<strong> ' + column.description + '</strong>';
                                 angular.extend(column, {
                                     optColumnLabelText: {
@@ -493,10 +485,9 @@ angular.module('sdlctoolApp')
                             $scope.statusColumns = value;
                             var newColumnAlertMessage = 'The status column(s) ';
                             angular.forEach($scope.statusColumns, function (status) {
-                                // status.description = '<p class=\'myTooltip\'><span style=\'color:yellow;\'>Description:</span> ' + status.description + '</p>';
                                 status.description = '<strong>' + status.description + '</strong>';
-                                var statColumnTooltip = '<p class=\'myTooltip\'><span style=\'color:yellow;\'>Possible values:</span><BR>';
                                 if (status.isEnum) {
+                                    var statColumnTooltip = '<p class=\'myTooltip\'><span style=\'color:yellow;\'>Possible values:</span><BR>';
                                     $scope.selectedStatusColumn[status.id] = [];
                                     status.values = $filter('orderBy')(status.values, 'showOrder');
                                     angular.forEach(status.values, function (value) {
@@ -528,7 +519,6 @@ angular.module('sdlctoolApp')
                                 var statusColumnsValues = buildStatusColumns(absentStatusColumns);
                                 angular.forEach($scope.requirements, function (req) {
                                     angular.copy(req.statusColumns.concat(statusColumnsValues), req.statusColumns);
-                                    // req.statusColumns = req.statusColumns.concat(statusColumnsValues);
                                 });
                                 $scope.requirementProperties.requirementsEdited = true;
                                 var absentStatusColumnNames = [];
@@ -642,7 +632,6 @@ angular.module('sdlctoolApp')
                 });
             }
 
-            //if $scope.selectedTags.length === 0 then this is a whole deselect and we can skip searching for requirements and speed this up
             if ($scope.selectedTags.length !== 0) {
                 $scope.showSpinner = true;
                 var filteredRequirements = [];
@@ -750,7 +739,6 @@ angular.module('sdlctoolApp')
                 });
                 $scope.customRequirements.push(item.requirement);
                 $scope.requirements.push(item.requirement);
-                //            $scope.exported = false;
             });
         };
         // edit custom requirement.
@@ -792,23 +780,17 @@ angular.module('sdlctoolApp')
                         break;
                     }
                 }
-
-                // $scope.requirements.push(item.requirement);
-                // $scope.customRequirements.push(item.requirement);
-
                 // sets the show order of the last requirement element to a category.
                 $scope.filterCategory[item.categoryIndex].lastElemOrder = item.requirement.order;
             });
-            //
         };
-        //removes a custom requirement
-        $scope.removeRequirement = function () {
+        $scope.removeCustomRequirement = function () {
             $scope.crdropdown = false;
             var modalInstance = $uibModal.open({
                 size: 'lg',
                 backdrop: 'static',
                 templateUrl: 'scripts/app/editor/customrequirements/remove-customRequirement.html',
-                controller: 'removeRequirementController',
+                controller: 'removeCustomRequirementController',
                 resolve: {
                     customRequirements: function () {
                         return $scope.customRequirements;
@@ -947,7 +929,6 @@ angular.module('sdlctoolApp')
                         if (statusColumnId === statusColumn.id) {
                             statusColumn.value = value.name;
                             statusColumn.valueId = value.id;
-                            //                       $scope.exported = false;
                         }
                     });
                 }
@@ -1041,7 +1022,6 @@ angular.module('sdlctoolApp')
                         tagInstances: requirement.tagInstanceIds,
                         optionColumns: values,
                         tickets: [],
-                        // linkStatus : {enableTooltip : true, link: true},
                         linkStatus: {
                             link: true,
                             ticketStatus: []
@@ -1075,7 +1055,6 @@ angular.module('sdlctoolApp')
                 var retNew = $scope.requirements;
                 $scope.requirements = retOld;
                 mergeUpdatedRequirements(retNew, true, false);
-                //$scope.mergeOldAndNewRequirements();
             }
 
             $scope.finishProgressbar();
@@ -1282,7 +1261,6 @@ angular.module('sdlctoolApp')
                         tagInstances: requirement.tagInstanceIds,
                         optionColumns: values,
                         tickets: [],
-                        // linkStatus : {enableTooltip: true, link:true},
                         linkStatus: {
                             link: true,
                             ticketStatus: []
@@ -1344,7 +1322,6 @@ angular.module('sdlctoolApp')
             requirementToInsert.statusColumns = oldRequirement.statusColumns;
             requirementToInsert.tickets = oldRequirement.tickets;
             requirementToInsert.linkStatus = oldRequirement.linkStatus;
-            // $scope.updateProperties.updatesCounter++;
             $scope.updateCounter++;
 
             $scope.updateProperties.updatesAvailable = true;
@@ -1375,7 +1352,6 @@ angular.module('sdlctoolApp')
             $scope.deletedCounter = 0;
             $scope.newRequirements = [];
             var onlyNewRequirements = [];
-            // $scope.oldRequirements = [];
             var newOptColumnMessage = 'The optional column(s) ';
             var newOptColumns = [];
             setDefaultDiff($scope.requirements);
@@ -1439,7 +1415,6 @@ angular.module('sdlctoolApp')
 
                 // push the updated requirement to the newRequirements array in order to differentiate the change settings from updates functionality.
                 if (updateInRequirementFound) {
-                    // $scope.newRequirements.push(requirementToInsert);
                     $scope.newRequirements.push(newRequirement);
                 }
 
@@ -1602,7 +1577,6 @@ angular.module('sdlctoolApp')
                 $scope.updateProperties.updatedReqs = true;
             }
 
-            // var oldRequirements = $filter('filter')($scope.requirements, {markAsOld: true});
             if ($filter('filter')($scope.requirements, {
                 markAsOld: true
             }).length > 0) {
@@ -1618,11 +1592,8 @@ angular.module('sdlctoolApp')
                 // must be done since the decision is now made by the user.
                 $scope.updateProperties.updatesCounter += $scope.deletedReqs.length;
                 angular.forEach($scope.deletedReqs, function (deleteRequirement) {
-                    // var idx = $scope.requirements.indexOf(deleteRequirement);
                     for (var k = 0; k < $scope.requirements.length; k++) {
-
                         var requirement = $scope.requirements[k];
-
                         if (requirement.id === deleteRequirement.id) {
                             requirement.isOld = true;
                             requirement.toBeRemoved = true;
@@ -1657,7 +1628,6 @@ angular.module('sdlctoolApp')
             $scope.backUpForUpdateCancelation = {};
             // updates changes reverted means not changes are to be saved.
             $scope.requirementProperties.requirementsEdited = false;
-            // delete $scope.tempSavedRequirements;
         };
 
         $scope.acceptAllUpdates = function () {
@@ -1798,7 +1768,6 @@ angular.module('sdlctoolApp')
         };
 
         $scope.configExcel = function () {
-            // if($filter('filter')($scope.statusColumns))
             var modalInstance = $uibModal.open({
                 size: 'lg',
                 backdrop: 'static',
@@ -2268,13 +2237,13 @@ angular.module('sdlctoolApp')
         $scope.onTimeout = function () {
             if (localStorageService.isSupported && $scope.requirementProperties.requirementsEdited
                 && !$scope.updateProperties.updatedReqs) {
-                var exportRequirements = $scope.buildYAMLFile();
+                var exportRequirements = buildYAMLFile();
                 var doc = jsyaml.safeDump(exportRequirements);
                 localStorageService.set(appConfig.localStorageKey, doc);
             }
         };
 
-        $scope.buildYAMLFile = function () {
+        function buildYAMLFile() {
 
             var objectToExport = {
                 name: $scope.systemSettings.name,
@@ -2378,7 +2347,6 @@ angular.module('sdlctoolApp')
         $scope.cleanUpIssueLinking = function (req) {
             req.linkStatus.enableTooltip = false;
             req.tempTicket = '';
-            // if(angular.isDefined(req.ticket) && req.ticket !== '') req.ticket = '';
             $scope.manageTicketProperty.sameTicketError = false;
             $scope.manageTicketProperty.jhError.show = false;
             authenticatorService.cancelPromises($scope.manageTicketProperty.promise);
@@ -2430,7 +2398,6 @@ angular.module('sdlctoolApp')
                                 $scope.manageTicketProperty.spinnerProperty, $scope.manageTicketProperty.promise)]);
 
                         }).then(function (responses) {
-                            // $scope.manageTicketProperty.spinnerProperty.showSpinner = false;
                             remoteObjectInfo.key = responses[1].key;
                             remoteObjectInfo.fields = responses[1].fields;
                             // This is to prevent adding the link to the yaml file before 'add ticket' confirmation. issue #62
@@ -2459,7 +2426,6 @@ angular.module('sdlctoolApp')
 
         $scope.addManualTicket = function (req, mainObjectInfo, remoteObjectInfo, ticket) {
             $scope.manageTicketProperty.spinnerProperty.showSpinner = true;
-            // var ticketUrl = remoteObjectInfo.apiUrl.http + '//' + remoteObjectInfo.apiUrl.host + '/' + remoteObjectInfo.apiUrl.path.join('/') + '/' + remoteObjectInfo.key;
 
             // first check that the requirement is not already present.
             if (req.tickets.indexOf(ticket) === -1) {
@@ -2468,8 +2434,6 @@ angular.module('sdlctoolApp')
                 req.tempTicket = '';
                 if (req.linkStatus.link) {
                     JiraService.addIssueLinks(mainObjectInfo, remoteObjectInfo).then(function () {
-                        // req.linkStatus.enableTooltip = true
-                        // req.linkStatus.summary = remoteObjectInfo.fields.summary;
                         $scope.manageTicketProperty.spinnerProperty.showSpinner = false;
 
                     }).catch(function (exception) {
@@ -2483,8 +2447,6 @@ angular.module('sdlctoolApp')
                     issueKey: remoteObjectInfo.key,
                     summary: remoteObjectInfo.fields.summary,
                     url: ticket
-                    // summary: req.linkStatus.link ? null : remoteObjectInfo.fields.summary,
-                    // enableTooltip : req.linkStatus.link ? false : true
                 };
                 req.linkStatus.ticketStatus.push(linkStatus);
                 if ($scope.jiraStatus.allStatus.length === 0) {
@@ -2500,7 +2462,7 @@ angular.module('sdlctoolApp')
                     }
                 }
                 var promise = JiraService.addAttachmentAndComment(mainObjectInfo, {
-                    content: $scope.buildYAMLFile(),
+                    content: buildYAMLFile(),
                     artifactName: $scope.systemSettings.name,
                     errorHandlingProperty: $scope.manageTicketProperty
                 });
@@ -2552,14 +2514,10 @@ angular.module('sdlctoolApp')
 
             // This returns the jiraservice.sendComment promise
             JiraService.addAttachmentAndComment(mainObjectInfo, {
-                content: $scope.buildYAMLFile(),
+                content: buildYAMLFile(),
                 artifactName: $scope.systemSettings.name,
                 errorHandlingProperty: $scope.manageTicketProperty
             });
-
-            // JiraService.removeIssueLinks(mainObjectInfo, remoteObjectInfo).then(function() {
-
-            // }).catch(function(exception) {onIssueLinkFailure(exception, mainObjectInfo.url, remoteObjectInfo.url)})
         };
 
         $scope.$on('$destroy', function () {
@@ -2618,29 +2576,30 @@ angular.module('sdlctoolApp')
                             // and the status of the ticket cannot be fetched.
                             Helper.addCheckAuthenticationModal($scope[apiUrl.ticketKey[0]]);
                         }
-                        // check if the user is authenticated to the issue tracker and starts the authentication process if this is not the case.
-                        checkAuthentication.jiraAuth(urlCall, authenticatorProperty, $scope.manageTicketProperty.spinnerProperty, $scope[apiUrl.ticketKey[0]]).then(function (response) {
-                            var ticketStatus = {
-                                iconUrl: response.fields.status.iconUrl,
-                                name: response.fields.status.name,
-                                summary: response.fields.summary,
-                                issueKey: response.key,
-                                url: jiraLink
-                            };
-                            linkStatus.ticketStatus.push(ticketStatus);
-                            angular.extend(requirement.linkStatus, linkStatus);
-                            if ($filter('filter')($scope.jiraStatus.allStatus, {
-                                name: response.fields.status.name
-                            }).length === 0) {
-                                $scope.jiraStatus.allStatus.push(ticketStatus);
-                            }
-                        }).catch(function () {
-                            if (error.status === 403) {
-                                SDLCToolExceptionService.showWarning('Issue call failed', 'You do not have the permission to view the ticket ' + jiraLink, SDLCToolExceptionService.DANGER);
-                            } else if (error.status === 500) {
-                                SDLCToolExceptionService.showWarning('Internal Server Error', 'The server encountered an unexpected condition which prevented it from fulfilling the request.', SDLCToolExceptionService.DANGER);
-                            }
-                        });
+                        checkAuthentication.jiraAuth(urlCall, authenticatorProperty,
+                            $scope.manageTicketProperty.spinnerProperty,
+                            $scope[apiUrl.ticketKey[0]]).then(function (response) {
+                                var ticketStatus = {
+                                    iconUrl: response.fields.status.iconUrl,
+                                    name: response.fields.status.name,
+                                    summary: response.fields.summary,
+                                    issueKey: response.key,
+                                    url: jiraLink
+                                };
+                                linkStatus.ticketStatus.push(ticketStatus);
+                                angular.extend(requirement.linkStatus, linkStatus);
+                                if ($filter('filter')($scope.jiraStatus.allStatus, {
+                                    name: response.fields.status.name
+                                }).length === 0) {
+                                    $scope.jiraStatus.allStatus.push(ticketStatus);
+                                }
+                            }).catch(function () {
+                                if (error.status === 403) {
+                                    SDLCToolExceptionService.showWarning('Issue call failed', 'You do not have the permission to view the ticket ' + jiraLink, SDLCToolExceptionService.DANGER);
+                                } else if (error.status === 500) {
+                                    SDLCToolExceptionService.showWarning('Internal Server Error', 'The server encountered an unexpected condition which prevented it from fulfilling the request.', SDLCToolExceptionService.DANGER);
+                                }
+                            });
                     } else if (error.status === 403) {
                         SDLCToolExceptionService.showWarning('Issue call failed', 'You do not have the permission to view the ticket ' + jiraLink, SDLCToolExceptionService.DANGER);
                     } else if (error.status === 404) {

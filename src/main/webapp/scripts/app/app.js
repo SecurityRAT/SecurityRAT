@@ -110,10 +110,6 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                             }
                         });
                     }
-                    //                      else (this.status >= 400){
-                    ////                            constants = this.statusText;
-                    //
-                    //                      }
                 }
             };
             ajax.send(null);
@@ -254,7 +250,6 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                         }
 
                         if (401 === parseInt(response.status, 10)) {
-                            //                          SDLCToolExceptionService.showPersistentWarning('Unauthorized', 'Login session has expired. Please reload the page in order to login again.', SDLCToolExceptionService.DANGER);
                             self.blockRequests = true;
                             return $q.reject(response);
                         }
@@ -264,8 +259,6 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                         }
 
                         if (403 === parseInt(response.status, 10)) {
-                            //                          $location.url("/noaccess");
-                            //                          SDLCToolExceptionService.showPersistentWarning('Forbidden', 'You do not have permission to access this resource.', SDLCToolExceptionService.DANGER);
                             self.blockRequests = true;
                             return $q.reject(response);
                         }
@@ -369,7 +362,6 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                     return $timeout(function () {
                         var header = 'Authentication timeout';
                         var message = 'You could not authenticate yourself within the time interval! Please try later.';
-                        //                        $uibModalStack.dismissAll('close authentication modal');
                         $interval.cancel(promise.interval);
                         spinnerProperty.showSpinner = false;
                         if (angular.isDefined(spinnerProperty.authenticating)) {

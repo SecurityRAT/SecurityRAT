@@ -9,67 +9,68 @@ import org.appsec.securityRAT.domain.StatusColumn;
 
 public class FEProjectTypeDTO {
 
-	private Long id;
+    private Long id;
 
-	private String name;
+    private String name;
 
-	private String description;
+    private String description;
 
-	private Integer showOrder;
+    private Integer showOrder;
 
-	private Set<FEOptionColumnDTO> optionColumns;
+    private Set<FEOptionColumnDTO> optionColumns;
 
-	private Set<FEStatusColumnDTO> statusColumns;
+    private Set<FEStatusColumnDTO> statusColumns;
 
-	public FEProjectTypeDTO() {
-	}
+    public FEProjectTypeDTO() {
+    }
 
-	public FEProjectTypeDTO(ProjectType projectType) {
+    public FEProjectTypeDTO(ProjectType projectType) {
 
-		this.id = projectType.getId();
-		this.name = projectType.getName();
-		this.description = projectType.getDescription();
-		this.showOrder = projectType.getShowOrder();
+        this.id = projectType.getId();
+        this.name = projectType.getName();
+        this.description = projectType.getDescription();
+        this.showOrder = projectType.getShowOrder();
 
-		this.optionColumns = new HashSet<FEOptionColumnDTO>();
-		Set<OptColumn> optColumnsForProjectType = projectType.getOptColumns();
-		for (OptColumn optColumn : optColumnsForProjectType) {
-			this.optionColumns.add(new FEOptionColumnDTO(optColumn));
-		}
+        this.optionColumns = new HashSet<>();
+        Set<OptColumn> optColumnsForProjectType = projectType.getOptColumns();
+        for (OptColumn optColumn : optColumnsForProjectType) {
+            this.optionColumns.add(new FEOptionColumnDTO(optColumn));
+        }
 
-		this.statusColumns = new HashSet<FEStatusColumnDTO>();
-		Set<StatusColumn> statusColumnsForProjectType = projectType.getStatusColumns();
-		for (StatusColumn statusColumn : statusColumnsForProjectType) {
-			this.statusColumns.add(new FEStatusColumnDTO(statusColumn));
-		}
-	}
+        this.statusColumns = new HashSet<>();
+        Set<StatusColumn> statusColumnsForProjectType = projectType.getStatusColumns();
+        for (StatusColumn statusColumn : statusColumnsForProjectType) {
+            boolean isStatusColumnWithValues = Boolean.TRUE.equals(statusColumn.getIsEnum())
+                && !statusColumn.getStatusColumnValues().isEmpty();
+            if (isStatusColumnWithValues || Boolean.FALSE.equals(statusColumn.getIsEnum())) {
+                this.statusColumns.add(new FEStatusColumnDTO(statusColumn));
+            }
+        }
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public Integer getShowOrder() {
-		return showOrder;
-	}
+    public Integer getShowOrder() {
+        return showOrder;
+    }
 
-	public Set<FEOptionColumnDTO> getOptionColumns() {
-		return optionColumns;
-	}
+    public Set<FEOptionColumnDTO> getOptionColumns() {
+        return optionColumns;
+    }
 
-	public Set<FEStatusColumnDTO> getStatusColumns() {
-		return statusColumns;
-	}
-
-
-
+    public Set<FEStatusColumnDTO> getStatusColumns() {
+        return statusColumns;
+    }
 
 
 }
