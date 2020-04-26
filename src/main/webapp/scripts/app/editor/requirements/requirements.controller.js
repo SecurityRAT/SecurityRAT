@@ -119,8 +119,8 @@ angular.module('sdlctoolApp')
             showCheckAll: false,
             showUncheckAll: false,
             displayProp: 'label',
-            idProp: 'label',
-            externalIdProp: 'category'
+            idProp: 'id',
+            externalIdProp: ''
         };
 
         $scope.selectedStatusSettings = {
@@ -270,7 +270,7 @@ angular.module('sdlctoolApp')
                 $scope.promiseForStorage = $interval($scope.onTimeout, 60000);
                 $scope.getOptandStatusColumns(true);
                 updateStatusColumnValuesInImportedRequirements($scope.requirements)
-                $scope.updateRequirements();
+                updateRequirements();
                 $uibModalStack.dismissAll();
                 SDLCToolExceptionService.showWarning('Import successful', 'The Secure SDLC artifact ' + $scope.systemSettings.name + ' was successfully imported.', SDLCToolExceptionService.SUCCESS);
             } else {
@@ -1246,7 +1246,7 @@ angular.module('sdlctoolApp')
             return requirements;
         };
 
-        $scope.updateRequirements = function () {
+        function updateRequirements() {
             var requestString = '';
             angular.forEach($scope.requirementsSettings, function (value, key) {
                 requestString += key + '=' + value + '&';
@@ -1255,12 +1255,13 @@ angular.module('sdlctoolApp')
             requestString = requestString.slice(0, -1);
             apiFactory.getByQuery('categoriesWithRequirements', 'filter', requestString).then(
                 function (categoriesWithRequirements) {
-                    $scope.buildUpdatedRequirements(categoriesWithRequirements);
+                    updateFilterCategoryList(categoriesWithRequirements);
+                    buildUpdatedRequirements(categoriesWithRequirements);
                 },
                 function () { });
         };
 
-        $scope.buildUpdatedRequirements = function (skeletons) {
+        function buildUpdatedRequirements(skeletons) {
             var updatedRequirements = [];
             // this is the same for every requirement. It can therefore be called once.
             var statusColumnsValues = buildStatusColumns($scope.statusColumns);
@@ -1296,7 +1297,31 @@ angular.module('sdlctoolApp')
 
             });
             mergeUpdatedRequirements(updatedRequirements, false, true);
-        };
+        }
+
+        function updateFilterCategoryList(requirementCategories) {
+            for (var i = 0; i < requirementCategories.length; i++) {
+                var category = requirementCategories[i];
+                var isNew = true;
+                for (var indexFC = 0; indexFC < $scope.filterCategory.length; indexFC++) {
+                    var filterCategory = $scope.filterCategory[indexFC];
+                    if (category.id === filterCategory.id) {
+                        $scope.filterCategory[indexFC].label = category.name;
+                        $scope.filterCategory[indexFC].showOrder = category.showOrder;
+                        isNew = false;
+                        break;
+                    }
+                }
+                if (isNew) {
+                    $scope.filterCategory.push({
+                        id: category.id,
+                        showOrder: category.showOrder,
+                        label: category.name,
+                        isNew: true
+                    });
+                }
+            }
+        }
 
         function markChangeInRequirement(requirementToInsert, oldRequirement) {
             angular.extend(requirementToInsert, {
@@ -1356,16 +1381,6 @@ angular.module('sdlctoolApp')
             setDefaultDiff($scope.requirements);
             // Adds new categories to the category filter array
             angular.forEach(updatedRequirements, function (newRequirement) {
-                if (($filter('filter')($scope.filterCategory, {
-                    id: newRequirement.categoryId
-                }, true)).length === 0) {
-                    $scope.filterCategory.push({
-                        id: newRequirement.categoryId,
-                        showOrder: newRequirement.categoryOrder,
-                        label: newRequirement.category,
-                        isNew: true
-                    });
-                }
                 var updateInRequirementFound = false;
 
                 // initial the diffs properties in the new requirement
@@ -1392,8 +1407,8 @@ angular.module('sdlctoolApp')
 
                     if ($scope.requirements[i].id === newRequirement.id) {
                         // updates category name in old requirement
-                        // $scope.requirements[i].category = newRequirement.category;
-                        // $scope.requirements[i].categoryId = newRequirement.categoryId;
+                        $scope.requirements[i].category = newRequirement.category;
+                        $scope.requirements[i].categoryId = newRequirement.categoryId;
                         // adds the taginstance ids
                         $scope.requirements[i].tagInstances = newRequirement.tagInstances;
                         var oldRequirement = $scope.requirements[i];

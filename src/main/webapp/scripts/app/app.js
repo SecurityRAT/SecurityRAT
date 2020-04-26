@@ -3,20 +3,20 @@
 /* globals document, re_weburl, XMLHttpRequest, hljs, jiraApiPrefix, jiraAttachment, jiraApiIssueType, importPrefix, jiraComment, jiraApiProject, jiraRestApi, localStorageKey, securityCATTestApi */
 
 angular.module('sdlctoolApp', ['LocalStorageModule',
-        'ui.bootstrap', // for modal dialogs
-        'ngResource', 'ui.router', 'ngCookies', 'ngCacheBuster', 'ngFileUpload', 'infinite-scroll',
-        'ngAnimate', // editor stuff from here on...
-        'ngRoute',
-        'ngSanitize',
-        'ui.sortable',
-        'angularjs-dropdown-multiselect',
-        'angular-confirm',
-        'angularSpinner',
-        'hc.marked',
-        'disableAll',
-        'frapontillo.bootstrap-switch',
-        'ui.indeterminate'
-    ])
+    'ui.bootstrap', // for modal dialogs
+    'ngResource', 'ui.router', 'ngCookies', 'ngCacheBuster', 'ngFileUpload', 'infinite-scroll',
+    'ngAnimate', // editor stuff from here on...
+    'ngRoute',
+    'ngSanitize',
+    'ui.sortable',
+    'angularjs-dropdown-multiselect',
+    'angular-confirm',
+    'angularSpinner',
+    'hc.marked',
+    'disableAll',
+    'frapontillo.bootstrap-switch',
+    'ui.indeterminate'
+])
     /* jshint unused: false*/
     .run(function ($rootScope, $location, $window, $http, $state, Auth, Principal, ENV, VERSION, Account, $confirm) {
         $rootScope.ENV = ENV;
@@ -56,14 +56,14 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
             if (angular.isDefined(fromParams.isDirty) && fromParams.isDirty) {
                 event.preventDefault();
                 $confirm({
-                        text: 'You have unsaved Changes. Are you sure you want to leave the page without saving?',
-                        title: 'Confirm',
-                        isDirty: fromParams.isDirty,
-                        ok: 'Ignore Changes',
-                        cancel: 'Cancel'
-                    }, {
-                        templateUrl: 'scripts/app/editor/confirm-modal.html'
-                    })
+                    text: 'You have unsaved Changes. Are you sure you want to leave the page without saving?',
+                    title: 'Confirm',
+                    isDirty: fromParams.isDirty,
+                    ok: 'Ignore Changes',
+                    cancel: 'Cancel'
+                }, {
+                    templateUrl: 'scripts/app/editor/confirm-modal.html'
+                })
                     .then(function () {
                         fromParams.isDirty = false;
                         $state.go(toState.name, toStateParams);
@@ -230,12 +230,12 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
         apiFactory.execute = function (method, path, data, headerConfig, withCredentials) {
 
             return $http({
-                    'method': method,
-                    'url': path,
-                    'data': data,
-                    'withCredentials': angular.isDefined(withCredentials) ? withCredentials : true,
-                    'headers': headerConfig
-                })
+                'method': method,
+                'url': path,
+                'data': data,
+                'withCredentials': angular.isDefined(withCredentials) ? withCredentials : true,
+                'headers': headerConfig
+            })
                 .then(
                     // 200 OK
                     function (response) {
@@ -509,33 +509,14 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
     })
 
     .filter('filterByCategories', function () {
-        return function (array, categories) {
-            if (categories.length === 0) {
-
+        return function (array, selectedCategories) {
+            if (selectedCategories.length === 0) {
                 return array;
             } else {
                 var newView = [];
                 angular.forEach(array, function (requirement) {
-                    angular.forEach(categories, function (cat) {
-                        if (cat.category === requirement.category) {
-                            newView.push(requirement);
-                        }
-                    });
-                });
-                return newView;
-            }
-        };
-    })
-    .filter('filterByCategoriesForReqSkeletons', function () {
-        return function (array, categories) {
-            if (categories.length === 0) {
-
-                return array;
-            } else {
-                var newView = [];
-                angular.forEach(array, function (requirement) {
-                    angular.forEach(categories, function (cat) {
-                        if (cat.id === requirement.reqCategory.id) {
+                    angular.forEach(selectedCategories, function (selectedCategory) {
+                        if (selectedCategory.id === requirement.categoryId) {
                             newView.push(requirement);
                         }
                     });
@@ -631,9 +612,9 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                     for (var j = 0; j < requirement.statusColumns.length; j++) {
                         var statColumn = requirement.statusColumns[j];
                         if (statColumn.isEnum && $filter('filter')(selectedStatus[statColumn.id], {
-                                id: statColumn.valueId,
-                                // name: statColumn.value
-                            }).length > 0) {
+                            id: statColumn.valueId,
+                            // name: statColumn.value
+                        }).length > 0) {
                             newView.push(requirement);
                             break;
                         }
@@ -653,17 +634,17 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                     for (var i = 0; i < selectedTicketStatus.length; i++) {
                         var element = selectedTicketStatus[i];
                         if (angular.equals(element.name.toLowerCase(), 'no ticket')) {
-                            if (angular.isUndefined(requirement.linkStatus) || (angular.isDefined(requirement.linkStatus) && requirement.linkStatus.ticketStatus.length === 0)) {
-
-
+                            if (angular.isUndefined(requirement.linkStatus)
+                                || (angular.isDefined(requirement.linkStatus)
+                                    && requirement.linkStatus.ticketStatus.length === 0)) {
                                 newView.push(requirement);
                                 break;
                             }
                         } else {
                             if (angular.isDefined(requirement.linkStatus)) {
                                 if ($filter('filter')(requirement.linkStatus.ticketStatus, {
-                                        name: element.name
-                                    }).length > 0) {
+                                    name: element.name
+                                }).length > 0) {
                                     newView.push(requirement);
                                     break;
                                 }
@@ -696,14 +677,14 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
     })
 
     .filter('filterCategoryByCategory', function () {
-        return function (array, categories) {
-            if (categories.length === 0) {
+        return function (array, selectCategories) {
+            if (selectCategories.length === 0) {
                 return array;
             } else {
                 var newView = [];
                 angular.forEach(array, function (category) {
-                    angular.forEach(categories, function (value) {
-                        if (angular.equals(category.label, value.category)) {
+                    angular.forEach(selectCategories, function (selectedCategory) {
+                        if (category.id === selectedCategory.id) {
                             newView.push(category);
                         }
                     });
@@ -769,8 +750,8 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                                 var optColumn = req.optionColumns[j];
                                 if (angular.isDefined(textfilterObject[optColumn.showOrder]) && textfilterObject[optColumn.id] !== '') {
                                     if ($filter('filter')(optColumn.content, {
-                                            content: textfilterObject[optColumn.showOrder]
-                                        }).length > 0) {
+                                        content: textfilterObject[optColumn.showOrder]
+                                    }).length > 0) {
                                         newArray.push(req);
                                         // break is need to prevent duplicate requirements in new array.
                                         break;
