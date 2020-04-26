@@ -67,10 +67,6 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                     .then(function () {
                         fromParams.isDirty = false;
                         $state.go(toState.name, toStateParams);
-                        // $scope.onRouteChangeOff = '';
-                        // $scope.requirementProperties.requirementsEdited = false;
-                        // window.onbeforeunload = function (e) {};
-                        // window.location.href = $location.url(newUrl).hash();
                     }, function () {
                         event.preventDefault();
                     });
@@ -116,7 +112,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                     }
                     //                      else (this.status >= 400){
                     ////                            constants = this.statusText;
-                    //                          
+                    //
                     //                      }
                 }
             };
@@ -636,7 +632,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                         var statColumn = requirement.statusColumns[j];
                         if (statColumn.isEnum && $filter('filter')(selectedStatus[statColumn.id], {
                                 id: statColumn.valueId,
-                                name: statColumn.value
+                                // name: statColumn.value
                             }).length > 0) {
                             newView.push(requirement);
                             break;

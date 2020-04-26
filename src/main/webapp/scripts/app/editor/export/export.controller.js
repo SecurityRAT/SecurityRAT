@@ -106,7 +106,7 @@ angular.module('sdlctoolApp')
             if ($scope.selection.jira) {
                 $scope.fields.labels = [appConfig.summaryPrefix];
             }
-            if ($scope.selection.createTickets) {
+            if ($scope.selection.createTickets && appConfig.summaryPrefix) {
                 $scope.fields.labels = [appConfig.summaryPrefix + '_REQUIREMENT'];
             }
         };
