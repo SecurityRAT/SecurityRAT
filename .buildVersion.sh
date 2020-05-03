@@ -12,7 +12,7 @@ BRANCH=$(git branch | grep \* | awk '{print $2}')
 
 printf '\n%-s\n' "${BLUE}Checking working branch and it's status $VERSION...${NORMAL}"
 if [ $BRANCH != "master" ] || [ -z "$(git status | grep 'nothing to commit')" ]; then
-	printf '\n%s\n\n' "${RED}Cannot push new version. Please make sure to be at the master branch and to nothing to commit.${NORMAL}"
+	printf '\n%s\n\n' "${RED}Cannot push new version. Please make sure to be at the master branch and you have nothing to commit.${NORMAL}"
 	exit 1
 else 
 	printf "[ ${GREEN}\xE2\x9C\x94${NORMAL} ] "
