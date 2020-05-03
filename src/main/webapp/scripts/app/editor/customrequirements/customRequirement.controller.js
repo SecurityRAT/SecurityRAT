@@ -21,7 +21,7 @@ angular.module('sdlctoolApp')
             add: false,
             edit: false
 		};
-		
+
         $scope.setOptionColumns = function () {
             angular.forEach($scope.crObject.optionColumns, function (optColumn) {
                 $scope.value = {
@@ -113,7 +113,7 @@ angular.module('sdlctoolApp')
         };
         $scope.selectRequirement = function (id) {
             angular.forEach($scope.crObject.requirements, function (req) {
-				
+
                 if (req.id === id) {
                     angular.extend($scope.requirement, req);
                     $scope.getStatusColumn();
@@ -148,7 +148,6 @@ angular.module('sdlctoolApp')
             var item = {};
             var index = -1;
             var categoryIndex = 0;
-            console.log($scope.requirement);
             angular.forEach($scope.categories, function (category) {
                 index++;
                 if (category.id === $scope.requirement.categoryId) {
