@@ -22,7 +22,6 @@ before_install:
 stages:
 - test
 - name: deploy
-  if: tag IS present
 jobs:
   include:
   - stage: test
@@ -51,7 +50,7 @@ jobs:
       - "${RELEASE_TAR_FILE}"
       on:
         repo: SecurityRAT/SecurityRAT
-        branch: master
+        tags: true
         condition: "-n $TAG_NAME"
     after_deploy:
     - chmod +x afterDeploy.sh
