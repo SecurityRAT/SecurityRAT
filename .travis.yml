@@ -15,7 +15,7 @@ env:
   - SECRATDOCKERREPO=securityrat/securityrat
 before_install:
 - sudo apt-get update
-- sudo curl -sL https://deb.nodesource.com/setup_8.x | sudo bash
+- sudo curl -sL https://deb.nodesource.com/setup_12.x | sudo bash
 - sudo apt-get install nodejs
 - sudo apt-get install build-essential
 - sudo npm install -g bower grunt-cli
@@ -27,6 +27,7 @@ jobs:
   - stage: test
     script:
     - mvn clean test
+    - mvn -Pprod -DskipTests package
   - stage: deploy
     script:
     - mvn clean
