@@ -40,10 +40,21 @@ describe('Protractor Security RAT bug Scenarios Testsuite', function () {
 
     var generateRequirementSet = function (artifactName, impType) {
         defineArtifact.click();
-        element(by.model('starterForm.name')).sendKeys(artifactName);
-        element.all(by.className('btn-default')).last().click();
-        browser.sleep(500);
-        (element(by.linkText(impType))).click();
+        var artifactName = element(by.model('starterForm.name'));
+        artifactName.sendKeys('-+.:()[],!#$%\'*=?`{}~;@&some artifact');
+
+        element.all(by.buttonText('Select')).each(function (elem) {
+            elem.click().then(function () {
+                element(by.linkText('High')).isPresent().then(function (present) {
+                    if (present) {
+                        element(by.linkText('High')).click();
+                    } else {
+                        elem.click();
+                    }
+                }, function () {
+                });
+            });
+        });
 
         (element(by.buttonText('Generate'))).click();
         browser.sleep(5000);
@@ -120,7 +131,9 @@ describe('Protractor Security RAT bug Scenarios Testsuite', function () {
                 element(by.id('field_description')).sendKeys('test Instance description bug issue');
                 element(by.id('field_showOrder')).sendKeys('0');
                 element(by.css('span[class="bootstrap-switch-label"]')).click();
-                element(by.cssContainingText('option', 'Requirement Owner')).click();
+                var tagCategories = element.all(by.options("tagCategory as tagCategory.name for tagCategory in tagcategorys track by tagCategory.id")).get(3).click();
+                // console.log(tagCategories.first().getText())
+                // element(by.cssContainingText('option', tagCategories.first().getText())).click();
                 element(by.buttonText('Save')).click();
                 browser.sleep(3000);
                 expect(element.all(by.repeater('tagInstance in tagInstances | filterCategoryForEntities: selectedCategory: \'tagCategory\' | orderBy: [\'tagCategory.showOrder\',\'showOrder\']'))
@@ -157,7 +170,7 @@ describe('Protractor Security RAT bug Scenarios Testsuite', function () {
     });
 
     it('Dropdown list in exported file is filled with empty values.', function () {
-        generateRequirementSet('test artifact', 'External');
+        generateRequirementSet('test artifact', 'Internal');
         element(by.id('selectAll')).click();
         element(by.partialButtonText('Action with selected')).click();
         element(by.linkText('Create spreadsheet')).click();
@@ -192,7 +205,7 @@ describe('Protractor Security RAT bug Scenarios Testsuite', function () {
             });
 
         browser.get(browser.params.testHost);
-        generateRequirementSet('test artifact', 'External');
+        generateRequirementSet('test artifact', 'Internal');
         element(by.buttonText('Search')).click();
         element(by.model('search')).sendKeys('test broken view in editor');
         browser.sleep(2000);

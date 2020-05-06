@@ -5,11 +5,11 @@
 describe('Protractor Security RAT collection sets/instances entities testsuite', function() {
 	var entities = element(by.partialLinkText('Entities'));
 	var collRepeater = 'collectionCategory in collectionCategorys | orderBy: \'showOrder\' | filter:searchString';
-	var collInsRepeater = 'collectionInstance in collectionInstances | filterCategoryForEntities: selectedCategory: \'collectionCategory\' | orderBy: [\'collectionCategory.showOrder\',\'showOrder\'] | filter:searchString'; 
-	
+	var collInsRepeater = 'collectionInstance in collectionInstances | filterCategoryForEntities: selectedCategory: \'collectionCategory\' | orderBy: [\'collectionCategory.showOrder\',\'showOrder\'] | filter:searchString';
+
 	beforeEach(function() {
 		browser.get(browser.params.testHost);
-		
+
 	});
 	var deleteCollectionInstance = function() {
 		var deletes = element.all(by.css('button[class="btn btn-danger btn-sm"]'));
@@ -28,16 +28,16 @@ describe('Protractor Security RAT collection sets/instances entities testsuite',
 			}, function(){});
 		});
 	};
-	 
+
 //	it('searching a collection category', function() {
 //		entities.click();
 //		element(by.partialLinkText('Collection Categories')).click();
 //		element(by.id('searchQuery')).sendKeys('criticality');
 //		element(by.id('searchButton')).click();
 //		expect(element.all(by.repeater(collRepeater)).count()).toBe(1);
-//		
+//
 //	});
-	
+
 	it('administering collection category', function() {
 		entities.click();
 		element(by.partialLinkText('Collection Categories')).click();
@@ -61,7 +61,7 @@ describe('Protractor Security RAT collection sets/instances entities testsuite',
 			element(by.id('field_description')).sendKeys('test Category description modification <script>alert(1)</script>');
 		});
 		element(by.css('span[class="bootstrap-switch-label"]')).click();
-		
+
 		element(by.buttonText('Save')).click();
 		browser.sleep(2000);
 		element.all(by.buttonText('Delete')).last().click();
@@ -69,7 +69,7 @@ describe('Protractor Security RAT collection sets/instances entities testsuite',
 		element.all(by.buttonText('Delete')).last().click();
 		browser.sleep(1500);
 	});
-	
+
 	it('bulk change collection category', function() {
 		entities.click();
 		element(by.partialLinkText('Collection Categories')).click();
@@ -88,7 +88,7 @@ describe('Protractor Security RAT collection sets/instances entities testsuite',
 		element(by.buttonText('Save')).click();
 		browser.sleep(1500);
 	});
-	
+
 //	it('searching a collection Instance', function() {
 //		entities.click();
 //		element(by.partialLinkText('Collection Instances')).click();
@@ -98,7 +98,7 @@ describe('Protractor Security RAT collection sets/instances entities testsuite',
 //		browser.sleep(2000);
 //		element(by.id('searchQuery')).clear().then(function(){
 //		});
-//		element(by.id('searchButton')).click();		
+//		element(by.id('searchButton')).click();
 //		element(by.buttonText('Collection Category')).click();
 //		element(by.linkText('Criticality')).click();
 //		expect(element.all(by.repeater(collInsRepeater)).count()).toBeGreaterThan(1);
@@ -106,8 +106,8 @@ describe('Protractor Security RAT collection sets/instances entities testsuite',
 //		element(by.linkText('Criticality')).click();
 //		element(by.buttonText('Collection Category')).click();
 //	});
-	
-	
+
+
 	it('adminisetring collection Instances', function() {
 		entities.click();
 		element(by.partialLinkText('Collection Instances')).click();
@@ -149,14 +149,11 @@ describe('Protractor Security RAT collection sets/instances entities testsuite',
 		deleteCollectionInstance();
 		browser.sleep(1500);
 	});
-	
+
 	it('bulk change collection instances', function() {
-		
+
 		entities.click();
 		element(by.partialLinkText('Collection Instances')).click();
-		var selectButton = element.all(by.model('collectionInstance.selected'));
-		var categories = element.all(by.repeater(collInsRepeater)
-		.column('collectionInstance.collectionCategory.name'));
 		element(by.id('selectAll')).click();
 		browser.sleep(1000);
 		expect(element(by.buttonText('Bulk change with selected')).isPresent()).toBe(true);
@@ -169,24 +166,6 @@ describe('Protractor Security RAT collection sets/instances entities testsuite',
 		expect(element(by.buttonText('Bulk change with selected')).isPresent()).toBe(true);
 		element(by.buttonText('Bulk change with selected')).click();
 		element(by.css('span[class="bootstrap-switch-label"]')).click();
-		element(by.buttonText('Save')).click();
-		selectButton.first().click();
-		selectButton.get(1).click();
-		element(by.buttonText('Bulk change with selected')).click();
-		element(by.buttonText('System Type')).click();
-		element(by.buttonText('Save')).click();
-		browser.sleep(2000);
-		element.all(by.repeater(collInsRepeater)
-				.column('collectionInstance.name')).each(function(elem, index) {
-					elem.getText().then(function(elemText) {
-						if(elemText === 'Low' || elemText === 'Medium') {
-							expect(categories.get(index).getText()).toBe('System Type');
-							selectButton.get(index).click();
-						}
-					});
-				});
-		element(by.buttonText('Bulk change with selected')).click();
-		element(by.buttonText('Criticality')).click();
 		element(by.buttonText('Save')).click();
 		browser.sleep(1500);
 	});

@@ -558,10 +558,10 @@ angular.module('sdlctoolApp')
 
         function findCollectionCategoryFromInstanceId(id) {
             if ($scope.collections) {
-                for (let i = 0; i < $scope.collections.length; i++) {
-                    const collectionCategory = $scope.collections[i];
-                    for (let j = 0; j < collectionCategory.collectionInstances.length; j++) {
-                        const colInstance = collectionCategory.collectionInstances[j];
+                for (var i = 0; i < $scope.collections.length; i++) {
+                    var collectionCategory = $scope.collections[i];
+                    for (var j = 0; j < collectionCategory.collectionInstances.length; j++) {
+                        var colInstance = collectionCategory.collectionInstances[j];
                         if (colInstance.id === id) {
                             return {
                                 categoryId: collectionCategory.id,

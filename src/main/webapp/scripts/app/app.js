@@ -604,7 +604,7 @@ angular.module('sdlctoolApp', ['LocalStorageModule',
                     for (var j = 0; j < requirement.statusColumns.length; j++) {
                         var statColumn = requirement.statusColumns[j];
                         if (statColumn.isEnum && $filter('filter')(selectedStatus[statColumn.id], {
-                            id: statColumn.valueId,
+                            id: statColumn.valueId
                             // name: statColumn.value
                         }).length > 0) {
                             newView.push(requirement);

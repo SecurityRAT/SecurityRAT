@@ -166,7 +166,7 @@ angular.module('sdlctoolApp')
                     if (angular.equals(response[i].key, projectKey)) {
                         $scope.manFilterObject.projectKey = projectKey;
                         $scope.manFilterObject.issuetypeName = undefined;
-                        $scope.getMandatoryFields($scope.manFilterObject, excludedFields, fatalFields);
+                        // getMandatoryFields($scope.manFilterObject, excludedFields, fatalFields);
                         //gets the issue types.
                         $scope.getIssueTypes(projectKey);
                         $scope.checks.isQueue = true;
@@ -354,7 +354,7 @@ angular.module('sdlctoolApp')
         /**
          * get the configurable and mandatory fields excluding excludedFields, fatalFields, array fields with now allowedValues and array fields with only the set operation.
          */
-        $scope.getMandatoryFields = function (filterObject, excludedFields, fatalFields) {
+        function getMandatoryFields(filterObject, excludedFields, fatalFields) {
             $scope.jiraAlternatives.mandatoryFields = [];
             // builds the url call.
             var url = $scope.buildUrlCall('ticket') + '/createmeta?projectKeys=' + filterObject.projectKey;
@@ -368,7 +368,9 @@ angular.module('sdlctoolApp')
                     angular.forEach(project.issuetypes[0].fields, function (value, key) {
                         var allowedValues;
                         var sync = $q.defer();
-                        if ((fatalFields.indexOf(key) === -1) && (excludedFields.indexOf(key) === -1) && !(angular.equals(value.schema.type, 'array') && (value.operations.length === 1) && value.operations.indexOf('set') !== -1) && !angular.equals(value.schema.type, 'any')) {
+                        if ((fatalFields.indexOf(key) === -1) && (excludedFields.indexOf(key) === -1) &&
+                            !(angular.equals(value.schema.type, 'array') && (value.operations.length === 1) &&
+                                value.operations.indexOf('set') !== -1) && !angular.equals(value.schema.type, 'any')) {
                             if (angular.isDefined(value.allowedValues)) {
                                 if (value.allowedValues.length > 0) {
                                     allowedValues = value.allowedValues;
@@ -405,7 +407,6 @@ angular.module('sdlctoolApp')
                                     required: value.required,
                                     autoCompleteUrl: autoCompleteUrl
                                 });
-                                // console.log($scope.jiraAlternatives.mandatoryFields);
                             });
                         }
                     });
@@ -432,7 +433,7 @@ angular.module('sdlctoolApp')
                 labels: tempFields.labels
             });
             if (angular.isDefined(newVal)) {
-                $scope.getMandatoryFields($scope.manFilterObject, excludedFields, fatalFields);
+                getMandatoryFields($scope.manFilterObject, excludedFields, fatalFields);
             }
 
         });
@@ -687,7 +688,7 @@ angular.module('sdlctoolApp')
                             $scope.manFilterObject.issuetypeName = undefined;
                             $scope.checks.isNotProject = false;
                             if ($scope.jiraAlternatives.mandatoryFields.length === 0) {
-                                $scope.getMandatoryFields($scope.manFilterObject, excludedFields, fatalFields);
+                                getMandatoryFields($scope.manFilterObject, excludedFields, fatalFields);
                             }
                             if ($scope.jiraAlternatives.issueTypes.length === 0) {
                                 $scope.getIssueTypes($scope.fields.project.key);

@@ -1404,7 +1404,7 @@ angular.module('sdlctoolApp')
                             updateInRequirementFound = true;
                         }
 
-                        const hasChangesInOptColumn = updateChangesInOptColumns(newRequirement, oldRequirement);
+                        var hasChangesInOptColumn = updateChangesInOptColumns(newRequirement, oldRequirement);
                         if (updateInRequirementFound || hasChangesInOptColumn) {
                             markChangeInRequirement(newRequirement, oldRequirement);
                             $scope.requirements[i].markAsOld = true;
@@ -1508,7 +1508,7 @@ angular.module('sdlctoolApp')
             }
 
             function updateChangesInOptColumns(newRequirement, oldRequirement) {
-                let changesFound = false;
+                var changesFound = false;
                 //search for new changes in optionColumns
                 angular.forEach(newRequirement.optionColumns, function (newRequirementOptColumns) {
                     var optColumnFound = false;
@@ -1518,7 +1518,7 @@ angular.module('sdlctoolApp')
                             var oldRequirementOptColumns = oldRequirement.optionColumns[j];
                             angular.forEach(oldRequirementOptColumns.content, function (oldRequirementContent) {
                                 var optColumnCotentFound = false
-                                for (let newReqCounter = 0; newReqCounter < newRequirementOptColumns.content.length; newReqCounter++) {
+                                for (var newReqCounter = 0; newReqCounter < newRequirementOptColumns.content.length; newReqCounter++) {
                                     var newRequirementContent = newRequirementOptColumns.content[newReqCounter];
                                     if ((newRequirementContent.id === oldRequirementContent.id) &&
                                         (newRequirementContent.content.replace(/[^\x20-\x7E]|\s+/gmi, '')
@@ -2256,7 +2256,7 @@ angular.module('sdlctoolApp')
 
             };
             return Helper.buildYAMLFile(objectToExport);
-        };
+        }
 
         // setting fixed position for ng-style
         $scope.setFixedPosition = function () {
