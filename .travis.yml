@@ -51,7 +51,7 @@ jobs:
       - "${RELEASE_TAR_FILE}"
       on:
         repo: SecurityRAT/SecurityRAT
-        tags: true
+        branch: master
         condition: "-n $TAG_NAME"
     after_deploy:
     - chmod +x afterDeploy.sh
