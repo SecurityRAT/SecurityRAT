@@ -1408,6 +1408,7 @@ angular.module('sdlctoolApp')
                         if (updateInRequirementFound || hasChangesInOptColumn) {
                             markChangeInRequirement(newRequirement, oldRequirement);
                             $scope.requirements[i].markAsOld = true;
+                            updateInRequirementFound = true;
                         }
                         break;
                     }
