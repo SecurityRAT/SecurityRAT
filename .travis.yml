@@ -1,4 +1,3 @@
-sudo: required
 language: java
 services:
 - docker
@@ -27,7 +26,6 @@ jobs:
   - stage: test
     script:
     - mvn clean test
-    - mvn -Pprod -DskipTests package
   - stage: deploy
     script:
     - mvn clean
