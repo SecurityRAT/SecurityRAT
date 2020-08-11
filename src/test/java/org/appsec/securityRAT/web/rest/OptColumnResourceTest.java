@@ -143,7 +143,7 @@ public class OptColumnResourceTest {
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
             .andExpect(jsonPath("$.showOrder").value(DEFAULT_SHOW_ORDER))
             .andExpect(jsonPath("$.active").value(DEFAULT_ACTIVE.booleanValue()))
-            .andExpect(jsonPath("$.[*].isVisibleByDefault").value(DEFAULT_ISVISIBLEBYDEFAULT.booleanValue()));
+            .andExpect(jsonPath("$.isVisibleByDefault").value(DEFAULT_ISVISIBLEBYDEFAULT.booleanValue()));
     }
 
     @Test
