@@ -61,6 +61,8 @@ exports.config = {
             '${issuetype2}', // an issue type with a mandatory fields besides project, summary name or reporter e.g Epic
             '${issuetype3}' // issue type for the {jiraRemoteLinkQueue} propperty
         ],
+        // Default optColumn value to be used in different tests
+        defaultOptColumn: '${defaultOptColumnValues}',
         // Default statusColumn value used by SecurityRAT.
         // This is the statusColumn value with the small showOrder value
         statusColumnDefaultValue: '${defaultStatusValue}',
