@@ -1,0 +1,19 @@
+<div class="col-md-12">
+    <h3 class="text-center">Option Columns</h3>
+    <table class="table table-condensed table-striped">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th><input type="checkbox" data-ng-click="toggleAll()" data-ng-model="selectAll" ></th>
+        </tr>
+        </thead>
+        <tr ng-repeat="optcolumn in optcolumns">
+            <td>{{ optcolumn.name }}</td>
+            <td>{{ optcolumn.description }}</td>
+            <td><input type="checkbox" data-ng-click="updateSelection(optcolumn.id)" data-ng-model="selected[optcolumn.id]"></td>
+        </tr>
+    </table>
+</div>
+
+

@@ -1,0 +1,106 @@
+<div>
+    <h2 class="page-header">Status Columns</h2>
+    <jh-alert></jh-alert>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <button class="btn btn-primary" ui-sref="statusColumn.new">
+                    <span class="glyphicon glyphicon-flash"></span> <span>Create a new Status Column</span>
+                </button>
+            </div>
+            <!--<div class="col-md-5">
+                <form name="searchForm" class="form-inline">
+                    <div class="input-group">
+                        <input type="text" class="form-control" data-ng-model="searchQuery" id="searchQuery" placeholder="Search a Status Column">
+                        <span class="input-group-btn">
+                            <button class="btn btn-info" data-ng-click="search()" id="searchButton"><span class="glyphicon glyphicon-search"></span>
+                            </button>
+                        </span>
+                    </div>
+                </form>
+            </div>-->
+            <div class="col-md-5">
+                <form>
+                    <button type="button" class="btn btn-info pull-left" data-toggle="collapse" data-target="#searchStringID">Search
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                    <div id="searchStringID" class="collapse">
+                        <div class="input-group">
+                            <input type="text" class="form-control col-md-5" placeholder="Search String" data-ng-model="searchString">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-3">
+                <button class="btn btn-primary" ui-sref="statusColumn.bulk" data-ng-click="bulkChange()" data-ng-if="(statusColumns | filter:{selected: true}).length != 0">
+                    <span class="glyphicon glyphicon-edit"></span> <span>Bulk change with selected</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="deleteStatusColumnConfirmation">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form name="deleteForm" data-ng-submit="confirmDelete(statusColumn.id)">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="clear()">&times;</button>
+                        <h4 class="modal-title">Confirm delete operation</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete this StatusColumn?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" data-ng-click="clear()">
+                            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span>
+                        </button>
+                        <button type="submit" data-ng-disabled="deleteForm.$invalid" class="btn btn-danger">
+                            <span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span>Delete</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <!--<th>ID</th>-->
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>IsEnum</th>
+                    <th class="text-center">ShowOrder</th>
+                    <th class="text-center">Active</th>
+                    <th></th>
+                    <th class="text-center">
+                        <select-all filter-length="{{filterEntity().length}}" on-change="performSelection(selectionValue)" selected-length="{{(filterEntity() | filter: {selected: true}).length}}"></select-all>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="animate-repeat" data-ng-repeat="statusColumn in statusColumns | orderBy: 'showOrder' | filter:searchString">
+                    <!--<td><a ui-sref="statusColumn.detail({id:statusColumn.id})">{{statusColumn.id}}</a></td>-->
+                    <td><strong>{{statusColumn.name}}</strong></td>
+                    <td>{{statusColumn.description}}</td>
+                    <td>{{statusColumn.isEnum}}</td>
+                    <td class="text-center">{{statusColumn.showOrder}}</td>
+                    <td class="text-center">{{statusColumn.active}}</td>
+                    <td>
+                        <button type="submit" ui-sref="statusColumn.detail({id:statusColumn.id})" class="btn btn-info btn-sm">
+                            <span class="glyphicon glyphicon-eye-open"></span>&nbsp;<span> View</span>
+                        </button>
+                        <button type="submit" ui-sref="statusColumn.edit({id:statusColumn.id})" class="btn btn-primary btn-sm">
+                            <span class="glyphicon glyphicon-pencil"></span>&nbsp;<span> Edit</span>
+                        </button>
+                        <button type="submit" ng-click="delete(statusColumn.id)" class="btn btn-danger btn-sm">
+                            <span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span> Delete</span>
+                        </button>
+                    </td>
+                    <td class="text-center">
+                        <input type="checkbox" data-ng-model="statusColumn.selected" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

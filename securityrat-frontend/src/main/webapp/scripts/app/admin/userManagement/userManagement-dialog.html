@@ -1,0 +1,104 @@
+
+<form name="form" role="form" data-ng-submit="save()">
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                data-ng-click="clear()">&times;</button>
+        <h4 class="modal-title" id="myUserManagementLabel">Add or Edit a User</h4> <!-- Create or edit a Constant -->
+    </div>
+    <div class="modal-body">
+        <jh-alert-error></jh-alert-error>
+        <div class="form-group">
+            <label for="id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                    data-ng-model="user.id" readonly>
+        </div>
+
+        <div class="form-group">
+            <label for="login">Username</label>
+            <input type="text" class="form-control" name="login" id="username" data-ng-pattern="/^[a-z0-9]*$/"
+                    data-ng-model="user.login" data-ng-readonly="user.id" data-ng-maxlength="50" required>
+            <div data-ng-show="form.login.$dirty && form.login.$invalid">
+                        <p class="help-block" style="color:red;"
+                               data-ng-show="form.login.$error.required">
+                            The login is required.
+                        </p>
+                        <p class="help-block" style="color:red;"
+                               data-ng-show="form.login.$error.maxlength">
+                            The login cannot be longer than 50 characters.
+                        </p>
+                        <p class="help-block" style="color:red;"
+                               data-ng-show="form.login.$error.pattern" id="falsePattern">
+                            The login can only consist of lower-case letters and digits.
+                    </p>
+            </div>
+
+        </div>
+        <div class="form-group">
+            <label for="firstName">First name</label>
+            <input type="text" class="form-control" name="firstName" id="firstName"
+                    data-ng-model="user.firstName" data-ng-maxlength="50" required>
+			<div data-ng-show="form.firstName.$dirty && form.firstName.$invalid">
+                        <p class="help-block" style="color:red;"
+                               data-ng-show="form.firstName.$error.required">
+                            The first name is required.
+                        </p>
+                        <p class="help-block" style="color:red;"
+                               data-ng-show="form.firstName.$error.maxlength">
+                            The first name cannot be longer than 50 characters.
+                        </p>
+                    </div>
+        </div>
+        <div class="form-group">
+            <label for="lastName">Last name</label>
+            <input type="text" name="description" id="lastName"
+                    data-ng-model="user.lastName" class="form-control" data-ng-maxlength="50" required></input>
+			<div data-ng-show="form.lastName.$dirty && form.lastName.$invalid">
+                        <p class="help-block" style="color:red;"
+                               data-ng-show="form.lastName.$error.required">
+                            The last name is required.
+                        </p>
+                        <p class="help-block" style="color:red;"
+                               data-ng-show="form.lastName.$error.maxlength">
+                            The last name cannot be longer than 50 characters.
+                        </p>
+                    </div>
+        </div>
+		<div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email"
+                    data-ng-model="user.email" class="form-control" data-ng-minlength="5" data-ng-maxlength="100" required></input>
+			<div data-ng-show="form.email.$dirty && form.email.$invalid">
+                        <p class="help-block" style="color:red;"
+                               data-ng-show="form.email.$error.required">
+                            Your e-mail is required.
+                        </p>
+                        <p class="help-block" style="color:red;"
+                               data-ng-show="form.email.$error.email" id="emailError">
+                            Your e-mail is invalid.
+                        </p>
+                        <p class="help-block" style="color:red;"
+                               data-ng-show="form.email.$error.minlength">
+                            Your e-mail is required to be at least 5 characters.
+                        </p>
+                        <p class="help-block" style="color:red;"
+                               data-ng-show="form.email.$error.maxlength">
+                            Your e-mail cannot be longer than 100 characters.
+                        </p>
+                    </div>
+        </div>
+        <div class="form-group">
+            <label for="field_optColumn">Roles</label>
+            <select class="form-control" id="field_optColumn" multiple name="roles" data-ng-model="user.authorities" 
+            data-ng-options="authority as authority.name for authority in authorities track by authority.name"></select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" data-ng-click="clear()">
+            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span>
+        </button>
+        <button type="submit" data-ng-disabled="form.$invalid" class="btn btn-primary">
+            <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Save</span>
+        </button>
+    </div>
+</form>

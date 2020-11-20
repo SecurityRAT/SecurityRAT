@@ -1,0 +1,31 @@
+<div>
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="navigation.closeButton.handleClick()">
+            &times;
+        </button>
+        <h4 class="modal-title">Select an existing entity</h4>
+    </div>
+    <div class="modal-body">
+        <table class="table table-striped">
+            <tr>
+                <th ng-repeat="name in attributeNames">{{ name }}</th>
+                <!-- The select button -->
+                <th></th>
+            </tr>
+            <tr ng-repeat="entity in existingEntities">
+                <td ng-repeat="name in attributeNames">{{ getAttributeValue(entity, name) }}</td>
+                <td>
+                    <button class="btn btn-primary" ng-click="navigation.selectButton.handleClick(entity)" type="button">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        Select
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="navigation.closeButton.handleClick()">
+            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Close</span>
+        </button>
+    </div>
+</div>

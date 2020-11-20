@@ -1,0 +1,36 @@
+{
+    "relationships": [
+        {
+            "relationshipId": 1,
+            "relationshipName": "tagInstance",
+            "otherEntityName": "tagInstance",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "tagCategory"
+        }
+    ],
+    "fields": [
+        {
+            "fieldId": 1,
+            "fieldName": "name",
+            "fieldType": "String"
+        },
+        {
+            "fieldId": 2,
+            "fieldName": "description",
+            "fieldType": "String"
+        },
+        {
+            "fieldId": 3,
+            "fieldName": "showOrder",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldId": 4,
+            "fieldName": "active",
+            "fieldType": "Boolean"
+        }
+    ],
+    "changelogDate": "20150902170401",
+    "dto": "no",
+    "pagination": "no"
+}

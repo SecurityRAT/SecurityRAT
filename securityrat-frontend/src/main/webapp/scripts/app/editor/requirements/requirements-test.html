@@ -1,0 +1,17 @@
+<div data-ng-init="init()">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="clear()" data-ng-if="displayProperties.showCloseButton">&times;</button>
+        <div class="row container">
+            <h3 style="position:relative">
+                {{templateInScope.title}}
+                <span data-ng-if="authenticationProperties.spinnerProperty.showSpinner" class="text-center col-sm-1" style="position: absolute;top:50%"
+                    spinner-on="authenticationProperties.spinnerProperty.showSpinner" us-spinner="{radius:5, width:3, length:3, lines:9}"
+                    uib-popover="{{authenticationProperties.spinnerProperty.text}}" popover-placement="top" popover-trigger="mouseenter"
+                    popover-append-to-body="true"></span>
+            </h3>
+        </div>
+    </div>
+    <div>
+        <div data-ng-class="animation" data-ng-include="templateInScope.url" autoscroll></div>
+    </div>
+</div>

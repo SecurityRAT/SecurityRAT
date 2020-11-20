@@ -1,0 +1,62 @@
+<div>
+    <div class="page-header">
+        <h2>Import Assistant: Data Selection</h2>
+    </div>
+    <p>
+        Welcome to the SecurityRAT Import Assistant. This assistant will guide
+        you through the steps that are required for importing data from
+        external sources.
+    </p>
+
+    <div class="ia-file-box-wrapper">
+        <div class="ia-file-box">
+            <div class="ia-file-box-content"
+                ng-on-dragover="fileBox.handleDragover($event)"
+                ng-on-drop="fileBox.handleDrop($event)"
+                ng-click="fileBox.handleClick()">
+                <!-- If no file has been selected yet. -->
+                <div ng-if="!fileBox.selectedFile">
+                    <h1 class="ia-file-box-title">
+                        Please drag and drop a source file into this area or
+                        click to open the file chooser dialog.
+                    </h1>
+                    <span class="ia-file-box-subtitle">
+                        Supported formats: Microsoft Excel Worksheets, CSV
+                    </span>
+                </div>
+
+                <!-- If a file has been selected. -->
+                <div ng-if="!!fileBox.selectedFile">
+                    <h1 class="ia-file-box-title">
+                        {{ fileBox.selectedFile.name }}
+                    </h1>
+                    <div class="form-group ia-file-box-worksheet">
+                        <label>Worksheet</label>
+                        <select class="form-control"
+                            ng-model="fileBox.selectedTableIndex">
+                            <option value="{{ $index }}"
+                                ng-repeat="table in fileBox.availableTables">
+                                {{ table.name }}
+                            </option>
+                        </select>
+                    </div>
+                    <span class="ia-file-box-subtitle">
+                        <button class="btn btn-danger"
+                            ng-click="fileBox.resetButton.handleClick($event)">
+                            Reset
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ia-navigation">
+        <button class="btn btn-primary"
+            ng-disabled="!navigation.continueButton.enabled"
+            ng-click="navigation.continueButton.handleClick()">
+            <span class="glyphicon glyphicon-ok"></span>
+            Continue
+        </button>
+    </div>
+</div>

@@ -1,0 +1,74 @@
+<div class="modal-header" data-ng-init="init()">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                data-ng-click="cancel()">&times;</button>
+	<h3 class="modal-title">Edit presentation</h3>
+</div>
+<div class="modal-body">
+	<form class="form-horizontal" role="form">
+		<div class="form-group">
+			<label for="title" class="col-sm-2 control-label">Presentation title</label>
+			<div class="col-sm-10">
+				<input data-ng-model="config.title" type="text" class="form-control">
+			</div>
+		</div>	
+		<div class="form-group">
+			<label for="title" class="col-sm-2 control-label">Presentation subtitle</label>
+			<div class="col-sm-10">
+				<input data-ng-model="config.subtitle" type="text" class="form-control">
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="title" class="col-sm-2 control-label">Presenter</label>
+			<div class="col-sm-10">
+				<input data-ng-model="config.presenter" type="text" class="form-control">
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="title" class="col-sm-2 control-label">End page</label>
+			<div class="col-sm-10">
+				<input data-ng-model="config.end" type="text" class="form-control">
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="theme" class="col-sm-2 control-label">Presentation theme</label>
+			<div class="col-sm-10">
+				<select class="form-control" data-ng-options="theme for theme in themes" data-ng-model="config.theme"></select>
+            </div>
+		</div>
+		<div class="form-group">
+			<label for="theme" class="col-sm-2 control-label">Transition style</label>
+			<div class="col-sm-10">
+				<select class="form-control" data-ng-options="transition for transition in transitions" data-ng-model="config.transition"></select>
+            </div>
+		</div>
+		<div class="form-group">
+			<label for="description" class="col-sm-2 control-label"> Requirement Description</label>
+			<div class="col-sm-10">
+				<input bs-switch type="checkbox" class="form-control" name="description" id="field_description" data-ng-model="config.description"
+	            	switch-on-text="Include" switch-off-Text="Discard" switch-on-color="success" switch-off-color="danger" switch-label-width="0" switch-handle-width="660">
+            </div>
+		</div>
+		<div class="form-group" data-ng-repeat="optColumn in optionColumns">
+			<label for="{{optColumn.name}}" class="col-sm-2 control-label">Requirement {{optColumn.name}}</label>
+			<div class="col-sm-10">
+				<input bs-switch type="checkbox" class="form-control" name="{{optColumn.name}}" id="field_{{optColumn.name}}" data-ng-model="config.optionColumns[optColumn.id]"
+	            	switch-on-text="Include" switch-off-Text="Discard" switch-on-color="success" switch-off-color="danger" switch-label-width="0" switch-handle-width="660">
+            </div>
+		</div>
+		<div class="form-group" data-ng-repeat="statColumn in statusColumns">
+			<label for="{{statColumn.name}}" class="col-sm-2 control-label">Requirement {{statColumn.name}}</label>
+			<div class="col-sm-10">
+				<input bs-switch type="checkbox" class="form-control" name="{{statColumn.name}}" id="field_{{statColumn.name}}" data-ng-model="config.statusColumns[statColumn.id]"
+	            	switch-on-text="Include" switch-off-Text="Discard" switch-on-color="success" switch-off-color="danger" switch-label-width="0" switch-handle-width="660">
+            </div>
+		</div>
+	</form>
+</div>
+<div class="modal-footer btn-group-sm">
+		<div class="col-sm-offset-2 col-sm-5">
+		    <button class="btn btn-primary form-control" data-ng-click="confirm()" data-ng-disabled="!config.title"><strong>Create</strong></button>
+		</div>
+		<div class="col-sm-5">
+		    <button class="btn btn-default form-control" data-ng-click="cancel()"><strong>Cancel</strong></button>
+	    </div>
+</div>

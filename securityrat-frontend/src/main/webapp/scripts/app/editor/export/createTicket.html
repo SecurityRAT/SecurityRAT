@@ -1,0 +1,89 @@
+<form role="form" name="createticketForm" class="form-horizontal" data-ng-init="initcreateTicket()" novalidate>
+    <div data-ng-cloak>
+        <div class="modal-header">
+            <button type="button" class="close" data-ng-click="cancel()" aria-hidden="true">×</button>
+            <h3 class="modal-title">Create ticket for each requirement</h3>
+        </div>
+        <div class="modal-body">
+            <uib-alert class="text-center" data-ng-if="exportProperty.fail" type="alert alert-danger">
+                {{exportProperty.failed}}
+            </uib-alert>
+            <uib-alert class="text-center" data-ng-if="exportProperty.defaultJIRAHost"
+                type="alert alert-warning">
+                Enter either project URL or project name to resolve URL with JIRA host
+                <strong>{{exportProperty.defaultJIRAHost}}</strong>.
+            </uib-alert>
+            <div class="form-group">
+                <div class="text-center col-sm-9">
+                    <div class="input-group">
+                        <span class="input-group-addon required-field"><span
+                                data-ng-if="exportProperty.defaultJIRAHost">Project
+                                name/</span>URL:</span>
+                        <input type="text" data-ng-attr-placeholder="{{exportProperty.urlPlaceholder}}"
+                            data-ng-model="jiraUrl.url" name="url" class="form-control" required />
+                    </div>
+                    <div data-ng-show="!validateURLQueueValue(jiraUrl.url)">
+                        <p class="help-block">
+                            {{checks.url.createTicketURLErrorMessage}}
+                        </p>
+                    </div>
+                </div>
+                <div id="UsSpinner" data-ng-if="exportProperty.showSpinner" class="text-center col-sm-1"
+                    uib-popover="Authentication running..." popover-placement="top" popover-trigger="mouseenter"
+                    popover-append-to-body>
+                    <span spinner-on="exportProperty.showSpinner"
+                        us-spinner="{radius:5, width:3, length:3, lines:9}"></span>
+                </div>
+                <div class="col-sm-offset-1" uib-dropdown auto-close="disabled"
+                    data-ng-if="((jiraAlternatives.mandatoryFields | filter : {configurable : true}).length > 0) && fields.issuetype.name">
+                    <button type="button" class="btn btn-default" uib-dropdown-toggle id="dropdown-fields"
+                        data-ng-click="getHeight('dropdown-fields')">
+                        <span class="glyphicon glyphicon-wrench"></span> Configure fields <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-right newspaper" uib-dropdown-menu role="menu"
+                        aria-labelledby="dropdown-fields" data-ng-style="{'max-height':maxHeight}">
+                        <li role="menuitem"
+                            data-ng-repeat="field in jiraAlternatives.mandatoryFields | filter : {configurable : true}">
+                            <span class="customFields"><input type="checkbox" data-ng-model="field.mandatory">
+                                {{field.name}}
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div>&nbsp;</div>
+            <div class="row" data-ng-if="checks.isNotProject">
+                <div class="form-group">
+                    <label for="ProjectKey" class="col-sm-2 control-label">Project:</label>
+                    <div class="col-sm-9">
+                        <input type="text" list="projectKey" class="form-control" name="ProjectKey"
+                            data-ng-model="fields.project.key" placeholder="search project by key" />
+                        <datalist id="projectKey">
+                            <option data-ng-repeat="project in jiraAlternatives.projects | orderBy: 'name'"
+                                value="{{project.key}}">
+                                <span data-ng-if="project.name != ''">{{project.name}} - </span>{{project.key}}
+                            </option>
+                        </datalist>
+                    </div>
+                </div>
+            </div>
+            <div>&nbsp;</div>
+            <ng-include data-ng-if="checks.isQueue" src="'scripts/app/editor/export/mandatoryFieldsTemplate.html'">
+            </ng-include>
+            <div>&nbsp;</div>
+        </div>
+        <div class="modal-footer btn-group-sm">
+            <div class="col-sm-offset-2 col-sm-5">
+                <button type="submit" class="btn btn-primary form-control" data-ng-click="confirm()"
+                    data-ng-disabled="createticketForm.$invalid || checks.exporting">
+                    <span data-ng-if="!checks.exporting"><strong>Create tickets</strong></span>
+                    <span data-ng-if="checks.exporting"><strong>Creating ticket(s)</strong> <img
+                            src="assets/images/ellipsis1.gif" height="30" width="30" /></span>
+                </button>
+            </div>
+            <div class="col-sm-5">
+                <button class="btn btn-default form-control" data-ng-click="cancel()"><strong>Cancel</strong></button>
+            </div>
+        </div>
+    </div>
+</form>

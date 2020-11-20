@@ -1,0 +1,22 @@
+<div data-ng-cloak>
+    <div class="row">
+        <div class="col-md-4">
+        </div>
+        <div class="col-md-4">
+        	<div class="alert alert-success">
+		       	<h1 class="text-center">SecurityRAT!</h1>
+		        <p class="lead text-center">Logged out successful</p>
+            </div>
+
+            <div class="alert alert-warning" >
+                     You have an account? <a ui-sref="login">Authenticate</a>
+                </div>
+                <div class="alert alert-warning" data-ng-show="REGISTRATIONTYPE && !AUTHENTICATIONTYPE">
+                    You don't have an account yet? <a ui-sref="register">Register a new account</a>
+                </div>
+            <p>
+             <span>If you like SecurityRAT, don't forget to give us a star on </span>&nbsp;<a href="https://github.com/SecurityRAT" target="_blank">Github</a>!
+            </p>
+        </div>
+    </div>
+</div>

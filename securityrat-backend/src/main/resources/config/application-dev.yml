@@ -1,0 +1,140 @@
+# ===================================================================
+# Spring Boot configuration for the "dev" profile.
+#
+# This configuration overrides the application.yml file.
+#
+# More information on profiles: https://www.jhipster.tech/profiles/
+# More information on configuration properties: https://www.jhipster.tech/common-application-properties/
+# ===================================================================
+
+# ===================================================================
+# Standard Spring Boot properties.
+# Full reference is available at:
+# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+# ===================================================================
+
+logging:
+  level:
+    ROOT: DEBUG
+    io.github.jhipster: DEBUG
+    org.appsec.securityrat: DEBUG
+
+management:
+  health:
+    elasticsearch:
+      enabled: false
+
+spring:
+  profiles:
+    active: dev
+    include:
+      - swagger
+      # Uncomment to activate TLS for the dev profile
+      #- tls
+  devtools:
+    restart:
+      enabled: true
+      additional-exclude: static/**
+    livereload:
+      enabled: false # we use Webpack dev server + BrowserSync for livereload
+  jackson:
+    serialization:
+      indent-output: true
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    # Choose one, depending on your database setup:
+    #
+    #url: jdbc:mysql://localhost:3306/SecurityRAT?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+    url: jdbc:mariadb://localhost:3306/securityrat?useSSL=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+    username: root
+    password:
+    hikari:
+      poolName: Hikari
+      auto-commit: false
+      data-source-properties:
+        cachePrepStmts: true
+        prepStmtCacheSize: 250
+        prepStmtCacheSqlLimit: 2048
+        useServerPrepStmts: true
+  jpa:
+    # The following line is only required, if MariaDB will be used:
+    #
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    
+    show-sql: true
+    properties:
+      hibernate.id.new_generator_mappings: true
+      hibernate.connection.provider_disables_autocommit: true
+      hibernate.cache.use_second_level_cache: true
+      hibernate.cache.use_query_cache: false
+      hibernate.generate_statistics: false
+  data:
+    elasticsearch:
+      properties:
+        path:
+          home: target/elasticsearch
+  liquibase:
+    # Remove 'faker' if you do not want the sample data to be loaded automatically
+    contexts: dev
+  mail:
+    host: localhost
+    port: 25
+    username:
+    password:
+  messages:
+    cache-duration: PT1S # 1 second, see the ISO 8601 standard
+  thymeleaf:
+    cache: false
+
+server:
+  port: 8080
+
+# ===================================================================
+# JHipster specific properties
+#
+# Full reference is available at: https://www.jhipster.tech/common-application-properties/
+# ===================================================================
+
+jhipster:
+  cache: # Cache configuration
+    ehcache: # Ehcache configuration
+      time-to-live-seconds: 3600 # By default objects stay 1 hour in the cache
+      max-entries: 100 # Number of objects in each cache entry
+  # CORS is only enabled by default with the "dev" profile, so BrowserSync can access the API
+  cors:
+    allowed-origins: '*'
+    allowed-methods: '*'
+    allowed-headers: '*'
+    exposed-headers: 'Link,X-Total-Count'
+    allow-credentials: true
+    max-age: 1800
+  security:
+    remember-me:
+      # security key (this key should be unique for your application, and kept secret)
+      key: 6e9b0ef045f9182fed3af8c5aeadcf5a9a1c0008f926260e7310bf6c7fa195efd7fe6178389dd3573da08c7aa1354de12a29
+  mail: # specific JHipster mail property, for standard properties see MailProperties
+    base-url: http://127.0.0.1:8080
+  metrics:
+    logs: # Reports metrics in the logs
+      enabled: false
+      report-frequency: 60 # in seconds
+  logging:
+    use-json-format: false # By default, logs are not in Json format
+    logstash: # Forward logs to logstash over a socket, used by LoggingConfiguration
+      enabled: false
+      host: localhost
+      port: 5000
+      queue-size: 512
+  audit-events:
+    retention-period: 30 # Number of days before audit events are deleted.
+
+# ===================================================================
+# Application specific properties
+# Add your own application properties here, see the ApplicationProperties class
+# to have type-safe configuration, like in the JHipsterProperties above
+#
+# More documentation is available at:
+# https://www.jhipster.tech/common-application-properties/
+# ===================================================================
+
+# application:

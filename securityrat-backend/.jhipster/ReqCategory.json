@@ -1,0 +1,41 @@
+{
+    "relationships": [
+        {
+            "relationshipId": 1,
+            "relationshipName": "requirementSkeleton",
+            "otherEntityName": "requirementSkeleton",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "reqCategory"
+        }
+    ],
+    "fields": [
+        {
+            "fieldId": 1,
+            "fieldName": "name",
+            "fieldType": "String"
+        },
+        {
+            "fieldId": 2,
+            "fieldName": "shortcut",
+            "fieldType": "String"
+        },
+        {
+            "fieldId": 3,
+            "fieldName": "description",
+            "fieldType": "String"
+        },
+        {
+            "fieldId": 4,
+            "fieldName": "showOrder",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldId": 5,
+            "fieldName": "active",
+            "fieldType": "Boolean"
+        }
+    ],
+    "changelogDate": "20150902170813",
+    "dto": "no",
+    "pagination": "no"
+}

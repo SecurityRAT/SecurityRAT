@@ -1,0 +1,54 @@
+
+<div>
+    <h2><span>User</span> {{user.login}}</h2>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Field</th>
+                <th>Value</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    <span><strong>FirstName</strong></span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{user.firstName}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span><strong>LastName</strong></span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{user.lastName}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span><strong>Email</strong></span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{user.email}}</span>
+                </td>
+            </tr>
+            <tr data-ng-repeat="authority in authorities | orderBy : 'name'">
+                <td>
+                    <span><strong>{{authority.name}}</strong></span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{userSet[authority.name]}}</span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <button type="submit"
+            onclick="window.history.back()"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span> Back</span>
+    </button>
+</div>

@@ -1,0 +1,86 @@
+<div class="container">
+    <div class="row">
+        <label for="includeAllSwitch"><strong>Include ALL Requirements </strong></label>
+        <input id="includeAllSwitch" bs-switch type="checkbox" switch-on-color="success" switch-off-color="danger"
+               switch-on-text="Yes" switch-off-text="No"
+               switch-label-width="2px" data-ng-change="allRequirementsSwitched();"
+               data-ng-model="training.allRequirementsSelected"
+               switch-handle-width="45"
+        />
+    </div>
+</div>
+
+
+<div id="filterBlock" class="container" style="display: none; padding-top: 15px;">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <h3>
+                    <label>Select specific security requirements:</label>
+                </h3>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="container">
+        <div class="row" data-ng-repeat="category in categories | orderBy:'showOrder'">
+            <div class="col-sm-3">
+                <strong>{{category.name}}</strong>
+                <div class="help-tip pull-right">
+                    <p>
+                        <strong style="color:yellow">{{category.name}}: {{category.description}}</strong><BR>
+                        <span data-ng-repeat="instances in category.collectionInstances | orderBy:'showOrder'">
+                            <span style="color:#cc6600;">{{instances.name}}:</span> {{instances.description}}<BR>
+                        </span>
+                    </p>
+                </div>
+            </div>
+            <div class="col-sm-1"></div>
+            <div class="col-sm-3">
+                <div ng-dropdown-multiselect="" options="category.collectionInstances" selected-model="category.selectedCollectionSets"
+                     extra-settings="selectedCollectionSettings" events="selectedCollectionEvents"></div><BR>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="container">
+        <div class="row" class="form-group">
+            <div class="col-sm-3">
+                <strong>Implementation Type</strong>
+                <div class="help-tip pull-right">
+                    <p>
+                        <span data-ng-repeat="type in projectType | orderBy:'showOrder'">
+                            <span style="color:#cc6600;">{{type.name}}:</span> {{type.description}}<BR>
+                        </span>
+                    </p>
+                </div>
+            </div>
+            <div class="col-sm-1"></div>
+            <div class="col-sm-3" uib-dropdown>
+                <div ng-dropdown-multiselect="" options="projectType"
+                     selected-model="selectedProjectType"
+                     extra-settings="selectedProjectTypeSettings"
+                     events="selectedProjectTypeEvents"></div><BR>
+            </div>
+        </div>
+    </div>
+
+    <!-- TODO: Insert filter by tag -->
+</div><!-- filterBlock -->
+
+
+<div style="padding-top: 15px;"></div>
+
+<div class="well" data-ng-if="!fetchNumberError">
+    <span class="glyphicon glyphicon-info-sign"></span>
+    <div style="display: inline-block;">The current selection includes <strong>{{ requirementsSelected }} </strong> Security
+        Requirements.
+    </div>
+</div>
+
+<div class="alert alert-danger" data-ng-if="fetchNumberError">
+    <span class="glyphicon glyphicon-exclamation-sign"></span>
+    <div style="display: inline-block;">
+        Sorry, there was an error while retrieving the number of selected requirements.
+    </div>
+</div>

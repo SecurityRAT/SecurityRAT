@@ -1,0 +1,181 @@
+<div>
+    <h2 class="page-header">Requirement Skeletons</h2>
+    <jh-alert></jh-alert>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <button class="btn btn-primary" ui-sref="requirementSkeleton.new">
+                    <span class="glyphicon glyphicon-flash"></span> <span>Create a new Requirement Skeleton</span>
+                </button>
+            </div>
+            <!--<div class="col-md-4">
+                <form name="searchForm" class="form-inline">
+                  <div class="input-group">
+                        <input type="text" class="form-control" data-ng-model="searchQuery" id="searchQuery" placeholder="Search a Requirement Skeleton">
+                        <span class="input-group-btn">
+                        <button class="btn btn-info" data-ng-click="search()" id="searchButton"><span class="glyphicon glyphicon-search"></span>
+                        </button>
+                      </span>
+                    </div>
+                </form>
+            </div>-->
+            <div class="col-md-5">
+                <form>
+                    <button type="button" class="btn btn-info pull-left" data-toggle="collapse" data-target="#searchStringID">Search
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                    <div id="searchStringID" class="collapse">
+                        <div class="input-group">
+                            <input type="text" class="form-control col-md-5" placeholder="Search String" data-ng-model="searchString">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="pull-right">
+                <div class="col-md-4">
+                    <button class="btn btn-primary" ui-sref="requirementSkeleton.bulk" data-ng-click="bulkChange()" data-ng-if="(requirementSkeletons | filter:{selected: true}).length != 0">
+                        <span class="glyphicon glyphicon-edit"></span> <span>Bulk change with selected</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="deleteRequirementSkeletonConfirmation">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form name="deleteForm" ng-submit="confirmDelete(requirementSkeleton.id)">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="clear()">&times;</button>
+                        <h4 class="modal-title">Confirm delete operation</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete this Requirement Skeleton?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clear()">
+                            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span>
+                        </button>
+                        <button type="submit" ng-disabled="deleteForm.$invalid" class="btn btn-danger">
+                            <span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span>Delete</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive" data-ng-show="progressbar.showContent">
+        <table class="table table-striped" infinite-scroll="loadMore()" infinite-scroll-distance="1">
+            <thead>
+                <tr>
+                    <th>
+                        <span ng-dropdown-multiselect="" options="filterCategory" selected-model="selectedCategory" translation-texts="categoryLabelText" extra-settings="selectedCategorySettings">
+                        </span>
+                    </th>
+                    <!-- <th>ID</th>
+                    <th>Universal Id</th> -->
+                    <th>Short Name</th>
+                    <th>Description</th>
+                    <!-- <th>ShowOrder</th> -->
+                    <th class="text-center">Active</th>
+                    <th>
+                        <div class="btn-group" id="multiselect-parent">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-ng-click="toggleDropdown('tag', $event)">
+                                {{dropdowns.tag.buttonText}} <span class="caret">
+                        </button>
+                        <ul class="dropdown-menu" role="menu" data-ng-style="{display: dropdowns.tag.open ? 'block': 'none', height: auto}">
+                          <li data-ng-repeat="category in tagCategories" class="dropdown-submenu" id="list{{category.id}}">
+                            <a href="#" tabindex="-1" role="presentation">{{category.name}}</a>
+                            <ul class="dropdown-menu" aria-labelledby="list{{category.id}}">
+                                <li data-ng-repeat="instance in tagInstances | filterCategoryForEntitiesObject : category : 'tagCategory'">
+                                    <a href="#" data-ng-click="selectTagInstance(instance, 'selectedTags', 'tag')" tabindex="-1">
+                                        <span data-ng-class="{'glyphicon glyphicon-ok':isTagSelected(instance, 'selectedTags')}"></span> {{instance.name}}
+                                    </a>
+                                </li>
+                            </ul>
+                            </li>
+                        </ul>
+                        </div>
+                    </th>
+                    <!-- <th><span ng-dropdown-multiselect="" options="tagInstances" selected-model="selectedTags" translation-texts="tagLabelText" 
+                    extra-settings="selectedTagSettings" group-by="tagCategory">
+            </span>
+          </th> -->
+                    <th>
+                        <div class="btn-group" id="multiselect-parent">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-ng-click="toggleDropdown('coll', $event)">
+                                {{dropdowns.coll.buttonText}} <span class="caret"></button>
+                            <ul class="dropdown-menu" role="menu" data-ng-style="{display: dropdowns.coll.open ? 'block': 'none', height: auto}">
+                                <li data-ng-repeat="category in collCategories" class="dropdown-submenu" id="list{{category.id}}">
+                                <a href="#" tabindex="-1" role="presentation">{{category.name}}</a>
+                                <ul class="dropdown-menu" aria-labelledby="list{{category.id}}">
+                                    <li data-ng-repeat="instance in collectionsInstances | filterCategoryForEntitiesObject : category : 'collectionCategory'">
+                                        <a href="#" data-ng-click="selectTagInstance(instance, 'selectedColls', 'coll')" tabindex="-1">
+                                            <span data-ng-class="{'glyphicon glyphicon-ok':isTagSelected(instance, 'selectedColls')}"></span> {{instance.name}}
+                                        </a>
+                                    </li>
+                                </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </th>
+                    <!-- <th><span ng-dropdown-multiselect="" options="collectionsInstances" selected-model="selectedColls" translation-texts="collectionLabelText" extra-settings="selectedCategorySettings">
+            </span>
+          </th> -->
+                    <!-- <th>Project Types</th> -->
+                    <th>
+                        <span ng-dropdown-multiselect="" options="projectTypes" selected-model="selectedTypes" translation-texts="typeLabelText" extra-settings="selectedCategorySettings" />
+                    </th>
+                    <th></th>
+                    <th class="text-center">
+                        <select-all filter-length="{{filterEntity().length}}" on-change="performSelection(selectionValue)" selected-length="{{(filterEntity() | filter: {selected: true}).length}}"></select-all>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="animate-repeat" data-ng-repeat="requirementSkeleton in requirementSkeletons | filterCategoryForEntities : selectedCategory:'reqCategory'| filterByTagForReqSkeletons : selectedTags | filterByCollsForReqSkeletons : selectedColls| filterByTypesForReqSkeletons : selectedTypes | filter:searchString | orderBy : ['reqCategory.showOrder','showOrder'] | limitTo:numberToDisplay">
+                    <td>
+                        <a ui-sref="reqCategory.detail({id:requirementSkeleton.reqCategory.id})">{{requirementSkeleton.reqCategory.name}}</a>
+                    </td>
+                    <!-- <td><a ui-sref="requirementSkeleton.detail({id:requirementSkeleton.id})">{{requirementSkeleton.id}}</a></td>
+                    <td>{{requirementSkeleton.universalId}}</td> -->
+                    <td><strong>{{requirementSkeleton.shortName}}</strong></td>
+                    <td>{{requirementSkeleton.description}}</td>
+                    <!-- <td class="text-center">{{requirementSkeleton.showOrder}}</td>-->
+                    <td class="text-center">{{requirementSkeleton.active}}</td>
+                    <td>
+                        <span data-ng-repeat="tagInstance in requirementSkeleton.tagInstances">
+                            <a class="form-control-static" ui-sref="tagInstance.detail({id: {{tagInstance.id}}})">{{tagInstance.name}}</a>{{$last ? '' : ', '}}
+                        </span>
+                    </td>
+                    <td>
+                        <span data-ng-repeat="collectionInstance in requirementSkeleton.collectionInstances">
+                            <a class="form-control-static" ui-sref="collectionInstance.detail({id: {{collectionInstance.id}}})">{{collectionInstance.name}}</a>{{$last ? '' : ', '}}
+                        </span>
+                    </td>
+                    <td>
+                        <span data-ng-repeat="projectType in requirementSkeleton.projectTypes">
+                            <a class="form-control-static" ui-sref="projectType.detail({id: {{projectType.id}}})">{{projectType.name}}</a>{{$last ? '' : ', '}}
+                        </span>
+                    </td>
+                    <td>
+                        <button type="submit" ui-sref="requirementSkeleton.detail({id:requirementSkeleton.id})" class="btn btn-info btn-sm">
+                            <span class="glyphicon glyphicon-eye-open"></span>&nbsp;<span> View</span>
+                        </button>
+                        <button type="submit" ui-sref="requirementSkeleton.edit({id:requirementSkeleton.id})" class="btn btn-primary btn-sm">
+                            <span class="glyphicon glyphicon-pencil"></span>&nbsp;<span> Edit</span>
+                        </button>
+                        <button type="submit" ng-click="delete(requirementSkeleton.id)" class="btn btn-danger btn-sm">
+                            <span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span> Delete</span>
+                        </button>
+                    </td>
+                    <td class="text-center">
+                        <input type="checkbox" data-ng-model="requirementSkeleton.selected" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div data-ng-hide="progrebar.hide">
+        <uib-progressbar class="progress-striped active" value="progressbar.barValue" type="success" data-ng-hide="progressbar.hide">{{progressbar.barValue}}%</uib-progressbar>
+    </div>
+</div>

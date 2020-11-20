@@ -1,0 +1,78 @@
+<div class="modal-header">
+    <button type="button" class="close" data-ng-click="cancel()" aria-hidden="true">×</button>
+    <h3 class="modal-title" data-ng-if="status.add">Add custom requirement</h3>
+    <h3 class="modal-title" data-ng-if="status.edit">Edit custom requirement</h3>
+</div>
+<div class="modal-body" data-ng-init="init()">
+    <form class="form-horizontal" role="form">
+        <div class="form-group" data-ng-if="status.edit">
+            <label for="EditCategory" class="col-sm-2 control-label required-field">Requirement</label>
+            <div class="col-sm-10">
+                <select id="categoryInput" data-ng-model="req.id" data-ng-change="selectRequirement(req.id)"
+                    data-ng-options="requirement.id as requirement.description for requirement in crObject.requirements"
+                    class="form-control">
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="categoryInput" class="col-sm-2 control-label required-field">Category</label>
+            <div class="col-sm-10">
+                <select id="categoryInput" data-ng-model="requirement.categoryId"
+                    data-ng-options="category.id as category.label for category in categories" class="form-control">
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="descriptionInput" class="col-sm-2 control-label required-field">Description</label>
+            <div class="col-sm-10">
+                <input type="text" id="descriptionInput" data-ng-model="requirement.description" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group" data-ng-repeat-start="optColumn in requirement.optionColumns | orderBy:'showOrder'">
+            <label class="col-sm-2 control-label">{{optColumn.name}}</label>
+            <div class="col-sm-10">
+                <span data-ng-repeat="con in optColumn.content">
+                    <textarea id="content{{optColumn.showOrder}}" rows="3" data-ng-model="con.content"
+                        class="form-control"></textarea>
+                </span>
+            </div>
+
+        </div>
+        <div data-ng-repeat-end class="form-group" data-ng-if="optColumn.content[0].content">
+            <label class="col-sm-2 control-label">Markdown Preview</label>
+            <div class="col-sm-10" data-ng-repeat="con in optColumn.content" data-ng-bind-html="con.content | trusted">
+            </div>
+        </div>
+
+        <div data-ng-repeat="statusColumn in crObject.statusColumns | orderBy:'showOrder'" class="form-group">
+            <label data-ng-if="statusColumn.isEnum" for="statusColumn{{$index}}"
+                class="col-sm-2 control-label">{{statusColumn.name}}</label>
+            <div class="col-sm-10" data-ng-if="statusColumn.isEnum">
+                <select class="form-control" data-ng-model="statValue.value"
+                    data-ng-change="selectStatusValue(statusColumn.id, statValue.value)"
+                    data-ng-options="value as value.name for value in statusColumn.values | orderBy: 'showOrder'">
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="Comment" class="col-sm-2 control-label">Comment</label>
+            <div class="col-sm-10" data-ng-repeat="reqStat in requirement.statusColumns">
+                <span data-ng-if="!reqStat.isEnum">
+                    <textarea id="Comment" rows="3" data-ng-model="reqStat.value" class="form-control"></textarea>
+                </span>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <div class="col-sm-offset-2 col-sm-5">
+        <button class="btn form-control" data-ng-class="{true:'btn-primary', false:'btn-warning'}[status.add]"
+            data-ng-click="close()" data-ng-disabled="requirement.description == null">
+            <span data-ng-if="status.add"><strong>Add requirement</strong></span>
+            <span data-ng-if="status.edit"><strong>Edit requirement</strong></span>
+        </button>
+    </div>
+    <div class="col-sm-5">
+        <button class="btn btn-default form-control" data-ng-click="cancel()"><strong>Cancel</strong></button>
+    </div>
+</div>

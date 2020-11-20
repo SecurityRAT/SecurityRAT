@@ -1,0 +1,74 @@
+
+<div>
+    <h2><span>ProjectType</span> {{projectType.id}}</h2>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Field</th>
+                <th>Value</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    <span>Name</span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{projectType.name}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>Description</span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{projectType.description}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>ShowOrder</span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{projectType.showOrder}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>Active</span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{projectType.active}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>statusColumn</span>
+                </td>
+                <td>
+                    <span ng-repeat="statusColumn in projectType.statusColumns">
+                        <a class="form-control-static" ui-sref="statusColumn.detail({id: {{statusColumn.id}}})">{{statusColumn.name}}</a>{{$last ? '' : ', '}}
+                    <span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>optColumn</span>
+                </td>
+                <td>
+                    <span ng-repeat="optColumn in projectType.optColumns">
+                        <a class="form-control-static" ui-sref="optColumn.detail({id: {{optColumn.id}}})">{{optColumn.name}}</a>{{$last ? '' : ', '}}
+                    <span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <button type="submit"
+            onclick="window.history.back()"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span> Back</span>
+    </button>
+</div>

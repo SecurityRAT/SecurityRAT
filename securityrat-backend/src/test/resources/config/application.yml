@@ -1,0 +1,119 @@
+# ===================================================================
+# Spring Boot configuration.
+#
+# This configuration is used for unit/integration tests.
+#
+# More information on profiles: https://www.jhipster.tech/profiles/
+# More information on configuration properties: https://www.jhipster.tech/common-application-properties/
+# ===================================================================
+
+# ===================================================================
+# Standard Spring Boot properties.
+# Full reference is available at:
+# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+# ===================================================================
+
+spring:
+  application:
+    name: SecurityRAT
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:h2:mem:SecurityRAT;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    name:
+    username:
+    password:
+    hikari:
+      auto-commit: false
+  jackson:
+    serialization:
+      write-durations-as-timestamps: false
+  jpa:
+    database-platform: io.github.jhipster.domain.util.FixedH2Dialect
+    open-in-view: false
+    show-sql: false
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+    properties:
+      hibernate.id.new_generator_mappings: true
+      hibernate.connection.provider_disables_autocommit: true
+      hibernate.cache.use_second_level_cache: false
+      hibernate.cache.use_query_cache: false
+      hibernate.generate_statistics: false
+      hibernate.hbm2ddl.auto: validate
+      hibernate.jdbc.time_zone: UTC
+  data:
+    elasticsearch:
+      properties:
+        path:
+          home: target/elasticsearch
+  liquibase:
+    contexts: test
+  mail:
+    host: localhost
+  main:
+    allow-bean-definition-overriding: true
+  messages:
+    basename: i18n/messages
+  mvc:
+    favicon:
+      enabled: false
+  task:
+    execution:
+      thread-name-prefix: security-rat-task-
+      pool:
+        core-size: 1
+        max-size: 50
+        queue-capacity: 10000
+    scheduling:
+      thread-name-prefix: security-rat-scheduling-
+      pool:
+        size: 1
+  thymeleaf:
+    mode: HTML
+
+server:
+  port: 10344
+  address: localhost
+
+# ===================================================================
+# JHipster specific properties
+#
+# Full reference is available at: https://www.jhipster.tech/common-application-properties/
+# ===================================================================
+
+jhipster:
+  clientApp:
+    name: 'securityRatApp'
+  logging:
+    # To test json console appender
+    use-json-format: true # By default, logs are in Json format
+    logstash:
+      enabled: false
+      host: localhost
+      port: 5000
+      queue-size: 512
+  mail:
+    from: test@localhost
+    base-url: http://127.0.0.1:8080
+  security:
+    remember-me:
+      # security key (this key should be unique for your application, and kept secret)
+      key: 6e9b0ef045f9182fed3af8c5aeadcf5a9a1c0008f926260e7310bf6c7fa195efd7fe6178389dd3573da08c7aa1354de12a29
+  metrics:
+    logs: # Reports metrics in the logs
+      enabled: true
+      report-frequency: 60 # in seconds
+
+# ===================================================================
+# Application specific properties
+# Add your own application properties here, see the ApplicationProperties class
+# to have type-safe configuration, like in the JHipsterProperties above
+#
+# More documentation is available at:
+# https://www.jhipster.tech/common-application-properties/
+# ===================================================================
+
+# application:

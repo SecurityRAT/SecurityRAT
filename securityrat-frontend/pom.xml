@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>org.appsec.securityrat</groupId>
+        <artifactId>securityrat-parent</artifactId>
+        <version>1.7.10</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>securityrat-frontend</artifactId>
+    <version>1.7.10</version> <!-- Required for Grunt -->
+    <packaging>jar</packaging>
+
+    <name>SecurityRAT / Frontend</name>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>1.9.1</version>
+
+                <!-- Instructions: https://github.com/eirslett/frontend-maven-plugin#frontend-maven-plugin -->
+
+                <executions>
+                    <!--
+                        NOTE: These tasks defined here will take place in the
+                              "generate-resources" phase.
+                    -->
+
+                    <!-- Task: Installing NodeJS and NPM -->
+                    <execution>
+                        <id>install node and npm</id>
+                        <goals>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
+                    </execution>
+
+                    <!-- Task: Installing Bower, Grunt, etc. -->
+                    <execution>
+                        <id>npm install</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                    </execution>
+                    
+                    <!-- Task: Installing dependencies via Bower -->
+                    <execution>
+                        <id>bower install</id>
+                        <goals>
+                            <goal>bower</goal>
+                        </goals>
+                    </execution>
+
+                    <!-- Task: Running Grunt -->
+                    <execution>
+                        <id>grunt build</id>
+                        <goals>
+                            <goal>grunt</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+                <configuration>
+                    <!-- Current LTS version of NodeJS -->
+                    <nodeVersion>v12.16.1</nodeVersion>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

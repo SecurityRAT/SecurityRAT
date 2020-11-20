@@ -1,0 +1,289 @@
+<div>
+    <div class="page-header">
+        <h2>Import Assistant: Mapping Builder</h2>
+    </div>
+    <p>
+        The selected source file was analyzed and the assistant attempted to
+        derive some settings automatically. Please adjusted them as needed and
+        finish the mapping between the table cells and the SecurityRAT
+        entities.
+    </p>
+
+    <div class="ia-section">
+        <h3>General Settings</h3>
+        <p>
+            Please specify whether your table provides its data row-wise or
+            column-wise. Also, you may want to ignore specific entries (e.g.
+            the title).
+        </p>
+        <form style="margin-top: 30px;">
+            <div class="form-group">
+                <label>Table Entry Type</label>
+                <select class="form-control" ng-model="generalSettings.selectedEntryType">
+                    <option value="column-wise">Column-wise</option>
+                    <option value="row-wise">Row-wise</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>
+                    Ignored
+                    <span ng-if="generalSettings.selectedEntryType === 'column-wise'">columns</span>
+                    <span ng-if="generalSettings.selectedEntryType === 'row-wise'">rows</span>
+                </label>
+                <input type="text"
+                    class="form-control"
+                    placeholder="e.g. 1, 7, 9 (row-wise) or A, G, I (column-wise)"
+                    ng-model="generalSettings.ignoredTableEntries"
+                    ng-model-options="{ updateOn: 'change' }">
+            </div>
+        </form>
+    </div>
+
+    <div class="ia-section">
+        <h3>Mapping</h3>
+        <p>
+            Please create the mapping between the cells of one table entry and
+            the corresponding SecurityRAT entities. Note that relations between
+            the different entities are only possible within the same table
+            entry.
+        </p>
+        <div class="ia-push-down">
+            <table id="grid-view" class="table table-striped table-bordered ia-table">
+                <thead>
+                    <tr>
+                        <!-- The first column is the column of the row labels -->
+                        <th style="width: 30px;"></th>
+                        <!-- Adding the column labels -->
+                        <th ng-repeat="label in gridView.columnHeaders">
+                            {{ label }}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="label in gridView.rowHeaders" ng-init="rowIndex = $index">
+                        <!-- Row label -->
+                        <th>{{ label }}</th>
+                        <!-- Cell data -->
+                        <td ng-repeat="x in gridView.columnHeaders" ng-init="columnIndex = $index">
+                            {{ gridView.getCellValue(rowIndex, columnIndex) }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="ia-push-down ia-mapping-wrapper">
+            <!-- Mapping Box -->
+            <div class="panel panel-primary ia-mapping-editor">
+                <div class="panel-heading ia-bold">
+                    New entity mapping
+                </div>
+                <div class="panel-body">
+                    <form>
+                        <!-- Type selection -->
+                        <div class="form-group">
+                            <label>
+                                Entity Type
+                                <span class="glyphicon glyphicon-info-sign"
+                                    title="The target SecurityRAT entity type."
+                                    data-toggle="tooltip"
+                                    data-placement="right"></span>
+                            </label>
+                            <select class="form-control" ng-model="mappingBox.editor.mapping.typeIdentifier">
+                                <option value="{{ type.identifier }}" ng-repeat="type in mappingBox.editor.availableTypes">
+                                    {{ type.displayName }}
+                                </option>
+                            </select>
+                        </div>
+                        <!-- Replace Rule -->
+                        <div class="form-group">
+                            <label>
+                                Replace Rule
+                                <span class="glyphicon glyphicon-info-sign"
+                                    title="Whether an entity with existing keys shall replace the existing entity, the new one shall be ignored or duplicates are allowed."
+                                    data-toggle="tooltip"
+                                    data-placement="right"></span>
+                            </label>
+                            <select class="form-control" ng-model="mappingBox.editor.mapping.replaceRule">
+                                <option value="{{ rule }}" ng-repeat="rule in mappingBox.editor.replaceRules">
+                                    {{ rule }}
+                                </option>
+                            </select>
+                        </div>
+                        <!-- Attribute mappings -->
+                        <hr ng-if="mappingBox.editor.mapping.attributes.length > 0">
+                        <table class="table ia-table" ng-if="mappingBox.editor.mapping.attributes.length > 0">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Attribute</th>
+                                    <th>Mapping</th>
+                                    <th>Target/Value</th>
+                                    <th>Key</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="attrMapping in mappingBox.editor.mapping.attributes">
+                                    <!-- Remove attribute mapping -->
+                                    <td style="vertical-align: middle;">
+                                        <a href="#" ng-click="mappingBox.editor.attributes.removeButton.handleClick(attrMapping)">
+                                            <span class="glyphicon glyphicon-trash"></span>
+                                        </a>
+                                    </td>
+                                    <!-- Attribute mapping name -->
+                                    <td>
+                                        <select class="form-control" ng-model="attrMapping.attributeIdentifier">
+                                            <option value="{{ attr.identifier }}" ng-repeat="attr in mappingBox.editor.selectedEntityType.attributes">
+                                                {{ attr.displayName }}
+                                            </option>
+                                        </select>
+                                    </td>
+                                    <!-- Attribute mapping types -->
+                                    <td>
+                                        <select class="form-control" ng-model="attrMapping.type">
+                                            <option value="TableEntry" ng-if="!mappingBox.editor.attributes.getType(attrMapping).type.reference">
+                                                Entry
+                                            </option>
+                                            <option value="ExistingEntity" ng-if="mappingBox.editor.attributes.getType(attrMapping).type.reference">
+                                                Existing Entity
+                                            </option>
+                                            <option value="JavaScript" ng-if="!mappingBox.editor.attributes.getType(attrMapping).type.reference">
+                                                JavaScript
+                                            </option>
+                                            <option value="MappedEntity" ng-if="mappingBox.editor.attributes.getType(attrMapping).type.reference">
+                                                Mapped Entity
+                                            </option>
+                                            <option value="Value" ng-if="!mappingBox.editor.attributes.getType(attrMapping).type.reference">
+                                                Value
+                                            </option>
+                                        </select>
+                                    </td>
+                                    <!-- Attribute mapping value -->
+                                    <td>
+                                        <!-- ExistingEntity -->
+                                        <div ng-if="attrMapping.type === 'ExistingEntity'" class="input-group">
+                                            <input type="text" class="form-control" value="{{ attrMapping.existingEntityIdentifier }}" disabled>
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-primary" type="button" ng-click="mappingBox.editor.attributes.chooseEntityButton.handleClick(attrMapping)">
+                                                    Select...
+                                                </button>
+                                            </span>
+                                        </div>
+                                        <!-- JavaScript -->
+                                        <label ng-if="attrMapping.type === 'JavaScript'" style="white-space: nowrap; margin-right: 8px;">
+                                            <input class="form-control" type="text" ng-model="attrMapping.jsExpr" style="display: inline-block; font-weight: normal;">
+                                            <span class="glyphicon glyphicon-info-sign"
+                                                title="Specify a JavaScript expression that calculates the attribute's value. (e is an array of the current entry's columns/rows, i is the zero-based index of the entry)"
+                                                data-toggle="tooltip"
+                                                data-placement="right"></span>
+                                        </label>
+                                        <!-- MappedEntity -->
+                                        <select class="form-control" ng-if="attrMapping.type === 'MappedEntity'" ng-model="attrMapping.entityMappingIdentifier">
+                                            <option value="{{ entityMapping.identifier }}"
+                                                ng-repeat="entityMapping in mappingBox.editor.attributes.getEntityMappings(mappingBox.editor.attributes.getType(attrMapping).type.referenceIdentifier)">
+                                                {{ mappingBox.getEntityMappingTitle(entityMapping) }}
+                                            </option>
+                                        </select>
+                                        <!-- Table Entry -->
+                                        <select class="form-control" ng-if="attrMapping.type === 'TableEntry'" ng-model="attrMapping.tableEntryIndex">
+                                            <option value="{{ $index }}" ng-repeat="value in mappingBox.editor.attributes.tableEntries">
+                                                {{ value }}
+                                            </option>
+                                        </select>
+                                        <!-- Value -->
+                                        <input class="form-control" type="text" ng-if="attrMapping.type === 'Value'" ng-model="attrMapping.value">
+                                    </td>
+                                    <!-- Key Component -->
+                                    <td>
+                                        <input type="checkbox" class="form-control" ng-model="attrMapping.keyComponent" style="margin: auto;">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <hr>
+                        <a class="ia-add-attr-mapping" href="#" ng-click="mappingBox.editor.attributes.addButton.handleClick()">
+                            Add attribute mapping
+                        </a>
+                    </form>
+                </div>
+                <div class="panel-footer ia-navigation">
+                    <button class="btn btn-primary"
+                        ng-disabled="!mappingBox.editor.addButton.enabled"
+                        ng-click="mappingBox.editor.addButton.handleClick()">
+                        <span class="glyphicon glyphicon-plus"></span>
+                        Add
+                    </button>
+                </div>
+            </div>
+            <!-- Created mappings -->
+            <div class="panel panel-default ia-mapping-box" ng-repeat="entityMapping in mappingBox.mappings">
+                <div class="panel-heading ia-bold">
+                    {{ mappingBox.getEntityMappingTitle(entityMapping) }}
+                </div>
+                <div class="panel-body">
+                    <table class="table table-striped ia-table">
+                        <thead>
+                            <tr>
+                                <th>Attribute</th>
+                                <th>Mapping</th>
+                                <th>Target/Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="attrMapping in entityMapping.attributes">
+                                <td>
+                                    {{ mappingBox.getEntityTypeAttribute(entityMapping.typeIdentifier, attrMapping.attributeIdentifier).displayName }}
+                                    <span ng-if="attrMapping.keyComponent"
+                                        class="glyphicon glyphicon-lock"
+                                        title="Key component"
+                                        data-toggle="tooltip"
+                                        data-placement="right"></span>
+                                </td>
+                                <td>
+                                    <span ng-if="attrMapping.type === 'ExistingEntity'">Existing Entity</span>
+                                    <span ng-if="attrMapping.type === 'JavaScript'">JavaScript</span>
+                                    <span ng-if="attrMapping.type === 'MappedEntity'">Mapped Entity</span>
+                                    <span ng-if="attrMapping.type === 'TableEntry'">Entry</span>
+                                    <span ng-if="attrMapping.type === 'Value'">Value</span>
+                                </td>
+                                <td>
+                                    <span ng-if="attrMapping.type === 'ExistingEntity'">
+                                        {{ attrMapping.existingEntityIdentifier }}
+                                    </span>
+                                    <span ng-if="attrMapping.type === 'JavaScript'">
+                                        {{ attrMapping.jsExpr }}
+                                    </span>
+                                    <span ng-if="attrMapping.type === 'MappedEntity'">
+                                        {{ mappingBox.getEntityMappingTitle(mappingBox.getEntityMapping(attrMapping.entityMappingIdentifier)) }}
+                                    </span>
+                                    <span ng-if="attrMapping.type === 'TableEntry'">
+                                        {{ mappingBox.getTableEntryName(attrMapping.tableEntryIndex) }}
+                                    </span>
+                                    <span ng-if="attrMapping.type === 'Value'">
+                                        {{ attrMapping.value }}
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer ia-navigation">
+                    <button class="btn btn-danger" ng-click="mappingBox.removeButton.handleClick(entityMapping)">
+                        <span class="glyphicon glyphicon-trash"></span>
+                        Remove
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ia-navigation">
+        <button class="btn btn-danger" ng-click="navigation.cancelButton.handleClick()">
+            <span class="glyphicon glyphicon-ban-circle"></span>
+            Cancel
+        </button>
+        <button class="btn btn-primary" ng-click="navigation.continueButton.handleClick()">
+            <span class="glyphicon glyphicon-ok"></span>
+            Continue
+        </button>
+    </div>
+</div>

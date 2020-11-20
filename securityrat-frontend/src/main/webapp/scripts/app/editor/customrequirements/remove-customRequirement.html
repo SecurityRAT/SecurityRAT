@@ -1,0 +1,30 @@
+<div class="modal-header" data-ng-init="init()">
+	<button type="button" class="close" data-ng-click="cancel()" aria-hidden="true">×</button>
+    <h3 class="modal-title">Remove custom requirement</h3>
+</div>
+<div class="modal-body">
+	<div class="row form-Group">
+		<label for="customRequirements" class="control-label col-sm-3">Requirement to remove:</label>
+		<div class="col-sm-6" uib-dropdown>
+			<button id="customRequirements" class="btn btn-default" type="button" uib-dropdown-toggle>{{itemToRemove.shortName}} <span class="caret"></span></button>
+			<ul class="uib-dropdown-menu" aria-labelledby="typeDropdown">
+				<li  data-ng-repeat="customRequirement in customRequirements"><a href="" data-ng-click="selectRequirement(customRequirement)">{{customRequirement.shortName}}</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="row form-Group">
+		<label for="description" class="control-label col-sm-3">Description:</label>
+		<div class="col-sm-6">
+			<p id="description" >{{itemToRemove.description}}</p>
+		</div>
+	</div>
+</div>
+<div>&nbsp;</div>
+<div class="modal-footer">
+	<div class="col-sm-offset-2 col-sm-5">
+      	<button class="btn btn-danger form-control" data-ng-click="close()" data-ng-disabled="itemToRemove == null"><strong>Delete requirement</strong></button>
+    </div>
+    <div class="col-sm-5">
+       	<button class="btn btn-default form-control" data-ng-click="cancel()" ><strong>Cancel</strong></button>
+   	</div>
+</div>

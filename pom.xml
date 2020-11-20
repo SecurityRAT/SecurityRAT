@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.appsec.securityrat</groupId>
+    <artifactId>securityrat-parent</artifactId>
+    <version>1.7.10</version>
+    <packaging>pom</packaging>
+    
+    <name>SecurityRAT</name>
+    
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>11</java.version>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+    </properties>
+
+    <modules>
+        <module>securityrat-backend</module>
+        <module>securityrat-frontend</module>
+        <module>securityrat-api</module>
+    </modules>
+    
+    <licenses>
+        <license>
+            <name>Apache-2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+    
+    <scm>
+        <connection>scm:git:https://github.com/SecurityRAT/SecurityRAT.git</connection>
+        <tag>HEAD</tag>
+        <url>https://github.com/SecurityRAT/SecurityRAT</url>
+    </scm>
+</project>

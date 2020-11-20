@@ -1,0 +1,26 @@
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <property name="now" value="now()" dbms="mysql,h2,mariadb"/>
+    <property name="now" value="current_timestamp" dbms="postgresql"/>
+    <property name="now" value="sysdate" dbms="oracle"/>
+
+    <property name="autoIncrement" value="true" dbms="mysql,h2,postgresql,mariadb"/>
+    <property name="autoIncrement" value="false" dbms="oracle"/>
+
+    <property name="floatType" value="real" dbms="postgresql, h2"/>
+    <property name="floatType" value="float" dbms="mysql, oracle,mariadb"/>
+
+    <!--
+        Adding the constant values.
+    -->
+	<changeSet author="jmboldayamdjeu" id="add_extra_constant">
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/extra_constants.csv"
+                  separator=";"
+                  tableName="CONFIGCONSTANT">
+        </loadData>
+	</changeSet>
+</databaseChangeLog>

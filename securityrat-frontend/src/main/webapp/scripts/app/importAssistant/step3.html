@@ -1,0 +1,39 @@
+<div>
+    <div class="page-header">
+        <h2>Import Assistant: Overview</h2>
+    </div>
+    <p>
+        The specified mapping was applied on all entries of the source table.
+        The resulting entities are listed bellow and may be adjusted before
+        confirming the import.
+    </p>
+    <div class="ia-section" ng-repeat="v in tableViews">
+        <h3>{{ v.typeIdentifier }} ({{ v.entities.length }})</h3>
+        <table class="table table-striped ia-table">
+            <thead>
+                <tr>
+                    <th>Instance Identifier</th>
+                    <th ng-repeat="a in v.attributes">{{ a }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="e in v.entities">
+                    <td>{{ e.identifier }}</td>
+                    <td ng-repeat="a in v.attributes">
+                        {{ getAttribute(e, a).value }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="ia-navigation">
+        <button class="btn btn-danger" ng-click="navigation.cancelButton.handleClick()">
+            <span class="glyphicon glyphicon-ban-circle"></span>
+            Cancel
+        </button>
+        <button class="btn btn-primary" ng-click="navigation.applyButton.handleClick()">
+            <span class="glyphicon glyphicon-ok"></span>
+            Apply changes
+        </button>
+    </div>
+</div>

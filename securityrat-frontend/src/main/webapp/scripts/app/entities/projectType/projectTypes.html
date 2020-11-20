@@ -1,0 +1,116 @@
+<div>
+    <h2 class="page-header">Implementation Types</h2>
+    <jh-alert></jh-alert>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <button class="btn btn-primary" ui-sref="projectType.new">
+                    <span class="glyphicon glyphicon-flash"></span> <span>Create a new Implementation Type</span>
+                </button>
+            </div>
+            <!--<div class="col-md-5">
+                <form name="searchForm" class="form-inline">
+                    <div class="input-group">
+                        <input type="text" class="form-control" data-ng-model="searchQuery" id="searchQuery" placeholder="Search an Implementation Type">
+                        <span class="input-group-btn">
+                            <button class="btn btn-info" data-ng-click="search()" id="searchButton"><span class="glyphicon glyphicon-search"></span>
+                            </button>
+                        </span>
+                    </div>
+                </form>
+            </div>-->
+            <div class="col-md-5">
+                <form>
+                    <button type="button" class="btn btn-info pull-left" data-toggle="collapse" data-target="#searchStringID">Search
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                    <div id="searchStringID" class="collapse">
+                        <div class="input-group">
+                            <input type="text" class="form-control col-md-5" placeholder="Search String" data-ng-model="searchString">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-3">
+                <button class="btn btn-primary" ui-sref="projectType.bulk" data-ng-click="bulkChange()" data-ng-if="(projectTypes| filter:{selected: true}).length != 0">
+                    <span class="glyphicon glyphicon-edit"></span> <span>Bulk change with selected</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="deleteProjectTypeConfirmation">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form name="deleteForm" data-ng-submit="confirmDelete(projectType.id)">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" data-ng-click="clear()">&times;</button>
+                        <h4 class="modal-title">Confirm delete operation</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete this Implementation Type?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" data-ng-click="clear()">
+                            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span>
+                        </button>
+                        <button type="submit" data-ng-disabled="deleteForm.$invalid" class="btn btn-danger">
+                            <span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span>Delete</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <!--<th>ID</th>-->
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Option Columns</th>
+                    <th>Status Columns</th>
+                    <th class="text-center">ShowOrder</th>
+                    <th class="text-center">Active</th>
+                    <th></th>
+                    <th class="text-center">
+                        <select-all filter-length="{{filterEntity().length}}" on-change="performSelection(selectionValue)" selected-length="{{(filterEntity() | filter: {selected: true}).length}}"></select-all>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="animate-repeat" data-ng-repeat="projectType in projectTypes | filter:searchString | orderBy:'showOrder'">
+                    <!--<td><a ui-sref="projectType.detail({id:projectType.id})">{{projectType.id}}</a></td>-->
+                    <td><strong>{{projectType.name}}</strong></td>
+                    <td>{{projectType.description}}</td>
+                    <td>
+                        <span data-ng-repeat="optColumn in projectType.optColumns">
+                            <a class="form-control-static" ui-sref="optColumn.detail({id: {{optColumn.id}}})">{{optColumn.name}}</a>{{$last ? '' : ', '}}
+                        </span>
+                    </td>
+                    <td>
+                        <span data-ng-repeat="statusColumn in projectType.statusColumns">
+                            <a class="form-control-static" ui-sref="statusColumn.detail({id: {{statusColumn.id}}})">{{statusColumn.name}}</a>{{$last ? '' : ', '}}
+                        </span>
+                    </td>
+                    <td class="text-center">{{projectType.showOrder}}</td>
+                    <td class="text-center">{{projectType.active}}</td>
+                    <td>
+                        <button type="submit" ui-sref="projectType.detail({id:projectType.id})" class="btn btn-info btn-sm">
+                            <span class="glyphicon glyphicon-eye-open"></span>&nbsp;<span> View</span>
+                        </button>
+                        <button type="submit" ui-sref="projectType.edit({id:projectType.id})" class="btn btn-primary btn-sm">
+                            <span class="glyphicon glyphicon-pencil"></span>&nbsp;<span> Edit</span>
+                        </button>
+                        <button type="submit" ng-click="delete(projectType.id)" class="btn btn-danger btn-sm">
+                            <span class="glyphicon glyphicon-remove-circle"></span>&nbsp;<span> Delete</span>
+                        </button>
+                    </td>
+                    <td class="text-center">
+                        <input type="checkbox" data-ng-model="projectType.selected" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

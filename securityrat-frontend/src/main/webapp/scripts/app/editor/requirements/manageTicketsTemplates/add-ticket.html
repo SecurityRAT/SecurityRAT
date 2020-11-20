@@ -1,0 +1,58 @@
+<form class="form-inline" name="formAddTicket" role="form" show-validation>
+    <div uib-alert class="alert alert-danger" data-ng-show="manageTicketProperty.jhError.show">
+        {{manageTicketProperty.jhError.msg}}
+    </div>
+    <div uib-alert class="alert alert-danger" data-ng-show="manageTicketProperty.authenticationFailure">
+        {{manageTicketProperty.authenticationFailureMessage}}
+    </div>
+    <jh-alert></jh-alert>
+    <div uib-alert class="alert alert-warning" data-ng-show="manageTicketProperty.defaultJIRAHost">
+        Enter either ticket URL or ticket key (e.g. TEST-01) to resolve URL with JIRA host
+        <strong>{{manageTicketProperty.defaultJIRAHost}}</strong>.
+    </div>
+    <div class="input-group input-group-sm">
+        <span class="input-group-addon">
+            <input type="checkbox" data-ng-model="reqs.linkStatus.link" uib-tooltip="Link the tickets in JIRA"
+                   tooltip-append-to-body
+            />
+        </span>
+        <input id="ticket_field" type="text" name="ticket" placeholder="Enter existing ticket URL" class="form-control"
+               data-ng-model="reqs.tempTicket"
+               data-ng-class="{wrongInput:manageTicketProperty.error}" uib-tooltip="Please enter a valid ticket url."
+               tooltip-enable="{{manageTicketProperty.error}}"
+               tooltip-append-to-body tooltip-class="wrongPasswordTooltip" required>
+    </div>
+    <div class="form-group">
+        <div data-ng-show="formAddTicket.ticket.$dirty && formAddTicket.ticket.$invalid">
+            <p class="help-block" data-ng-show="formAddTicket.ticket.$error.required">
+                Please specify a value.
+            </p>
+            <p class="help-block" data-ng-show="formAddTicket.ticket.$error.pattern">
+                Please specify a conform URL.
+            </p>
+        </div>
+        <div data-ng-show="!validateURLTicketValue(reqs.tempTicket)">
+            <p class="help-block">
+                Please specify a valid <span data-ng-if="manageTicketProperty.defaultJIRAHost">Ticket key or</span>
+                URL
+            </p>
+        </div>
+    </div>
+    <div class="btn-group-sm">
+        <label id="addTicket" data-ng-if="!manageTicketProperty.spinnerProperty.showSpinner" type="submit"
+               data-ng-disabled="formAddTicket.$invalid"
+               uib-tooltip="Confirm" tooltip-placement="right-bottom"
+               data-ng-click="doIssueLinking(reqs, addManualTicket, reqs.tempTicket)"
+               class="btn btn-default">
+            <i class="glyphicon glyphicon-ok"></i>
+        </label>
+        <label class="btn btn-default" data-ng-if="manageTicketProperty.spinnerProperty.showSpinner">
+            <img src="assets/images/ellipsis.gif"/>
+        </label>
+        <label id="cancelAddTicket" uib-tooltip="Cancel" tooltip-placement="right-bottom"
+               data-ng-click="cleanUpIssueLinking(reqs)"
+               class="btn btn-default">
+            <i class="glyphicon glyphicon-remove"></i>
+        </label>
+    </div>
+</form>

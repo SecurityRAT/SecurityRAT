@@ -1,0 +1,100 @@
+
+<div>
+    <h2><span>Requirement Skeleton</span> {{requirementSkeleton.shortName}} -</h2>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Field</th>
+                <th>Value</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    <span>Universal Id</span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{requirementSkeleton.universalId}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>Short Name</span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{requirementSkeleton.shortName}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>Description</span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{requirementSkeleton.description}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>ShowOrder</span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{requirementSkeleton.showOrder}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>Active</span>
+                </td>
+                <td>
+                    <span class="form-control-static">{{requirementSkeleton.active}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>Requirement Category</span>
+                </td>
+                <td>
+                    <a class="form-control-static" ui-sref="reqCategory.detail({id:requirementSkeleton.reqCategory.id})">{{requirementSkeleton.reqCategory.name}}</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>Tags</span>
+                </td>
+                <td>
+                    <span ng-repeat="tagInstance in requirementSkeleton.tagInstances">
+                        <a class="form-control-static" ui-sref="tagInstance.detail({id: {{tagInstance.id}}})">{{tagInstance.name}}</a>{{$last ? '' : ', '}}
+                    <span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>Collections</span>
+                </td>
+                <td>
+                    <span ng-repeat="collectionInstance in requirementSkeleton.collectionInstances">
+                        <a class="form-control-static" ui-sref="collectionInstance.detail({id: {{collectionInstance.id}}})">{{collectionInstance.name}}</a>{{$last ? '' : ', '}}
+                    <span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>Project Types</span>
+                </td>
+                <td>
+                    <span ng-repeat="projectType in requirementSkeleton.projectTypes">
+                        <a class="form-control-static" ui-sref="projectType.detail({id: {{projectType.id}}})">{{projectType.name}}</a>{{$last ? '' : ', '}}
+                    <span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <button type="submit"
+            onclick="window.history.back()"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span> Back</span>
+    </button>
+</div>

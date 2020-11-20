@@ -1,0 +1,37 @@
+<div class="slides">
+	<section>
+		<h1>{{values.config.title}}</h1>
+		<h3 data-ng-if="values.config.subtitle">{{values.config.subtitle}}</h3>
+		<p data-ng-if="values.config.presenter">
+			<small>Presented by {{values.config.presenter}}</small>
+		</p>
+	</section>
+	<section data-ng-repeat-start="category in categories | orderBy: 'showOrder'">
+		<h2>{{category.name}}</h2>
+	</section>
+	<section data-ng-repeat="requirement in values.requirements | filter:{categoryId: category.id} : true | orderBy: 'order'">
+		<h3>
+			{{requirement.shortName}}
+		</h3>
+		<section data-ng-if="requirement.description">
+			<h6>Description</h6>
+			<p style="font-size: 55%">{{requirement.description}}</p>
+		</section>
+		<section data-ng-repeat="optColumn in requirement.optionColumns | orderBy : 'showOrder'" data-ng-if="optColumn.content.length > 0 && !regex.test(optColumn.content[0].content)">
+			<h6>{{optColumn.name}}</h6>
+			<p style="font-size: 55%" data-ng-repeat="content in optColumn.content">
+				<span  data-ng-bind-html="content.content | trusted"></span>
+			</p>
+		</section>
+		<section data-ng-repeat="statColumn in requirement.statusColumns | orderBy : 'showOrder'" data-ng-if="statColumn.value !== ''">
+			<h6>{{statColumn.name}}</h6>
+			<p style="font-size: 55%">
+				<span data-ng-bind-html="statColumn.value | trusted" ></span>
+			</p>
+		</section>
+	</section>
+	<div  data-ng-repeat-end></div>
+	<section>
+		<h1 data-ng-if="values.config.end !== '' && values.config.end">{{values.config.end}}</h1>
+	</section>
+</div>

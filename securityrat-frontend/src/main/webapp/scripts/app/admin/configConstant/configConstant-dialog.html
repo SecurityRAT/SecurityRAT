@@ -1,0 +1,55 @@
+
+<form name="editForm" role="form" novalidate data-ng-submit="save()">
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                data-ng-click="clear()">&times;</button>
+        <h4 class="modal-title" id="myConfigConstantLabel">Edit a Constant</h4> <!-- Create or edit a Constant -->
+    </div>
+    <div class="modal-body">
+        <jh-alert-error></jh-alert-error>
+        <div class="form-group">
+            <label for="id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                    data-ng-model="constant.id" readonly>
+        </div>
+
+        <div class="form-group">
+            <label for="field_name">Name</label>
+            <input type="text" class="form-control" name="name" id="field_name"
+                    data-ng-model="constant.name"
+                    readonly>
+
+        </div>
+        <div class="form-group">
+            <label for="field_name">Value</label>
+            <textarea class="form-control" name="value" id="field_value"
+                    data-ng-model="constant.value" rows="3" cols="128"></textarea>
+
+        </div>
+        <div class="form-group" data-ng-if="constant.value">
+            <label for="field_value_preview">Value preview</label>
+            <div id="field_value_preview" data-ng-bind-html="constant.value | trusted"></div>
+
+        </div>
+        <div class="form-group">
+            <label for="field_description">Description</label>
+            <textarea name="description" id="field_description"
+                    data-ng-model="constant.description" class="form-control" rows="5" cols="128" required></textarea>
+
+        </div>
+        <div class="form-group" data-ng-if="constant.description">
+            <label for="field_description_preview">Description preview</label>
+            <div id="field_description_preview" data-ng-bind-html="constant.description | trusted"></div>
+
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" data-ng-click="clear()">
+            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span>
+        </button>
+        <button type="submit" data-ng-disabled="editForm.$invalid || editForm.$submitted" class="btn btn-primary">
+            <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Save</span>
+        </button>
+    </div>
+</form>

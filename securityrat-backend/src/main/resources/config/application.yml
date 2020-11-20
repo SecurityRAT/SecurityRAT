@@ -1,0 +1,170 @@
+# ===================================================================
+# Spring Boot configuration.
+#
+# This configuration will be overridden by the Spring profile you use,
+# for example application-dev.yml if you use the "dev" profile.
+#
+# More information on profiles: https://www.jhipster.tech/profiles/
+# More information on configuration properties: https://www.jhipster.tech/common-application-properties/
+# ===================================================================
+
+# ===================================================================
+# Standard Spring Boot properties.
+# Full reference is available at:
+# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+# ===================================================================
+
+management:
+  endpoints:
+    web:
+      base-path: /management
+      exposure:
+        include: ['configprops', 'env', 'health', 'info', 'jhimetrics', 'logfile', 'loggers', 'prometheus', 'threaddump']
+  endpoint:
+    health:
+      show-details: when_authorized
+      roles: 'ROLE_ADMIN'
+    jhimetrics:
+      enabled: true
+  info:
+    git:
+      mode: full
+  health:
+    mail:
+      enabled: false # When using the MailService, configure an SMTP server and set this to true
+  metrics:
+    export:
+      # Prometheus is the default metrics backend
+      prometheus:
+        enabled: true
+        step: 60
+    enable:
+      http: true
+      jvm: true
+      logback: true
+      process: true
+      system: true
+    distribution:
+      percentiles-histogram:
+        all: true
+      percentiles:
+        all: 0, 0.5, 0.75, 0.95, 0.99, 1.0
+    tags:
+      application: ${spring.application.name}
+    web:
+      server:
+        auto-time-requests: true
+
+spring:
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchAutoConfiguration,org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchDataAutoConfiguration
+  application:
+    name: SecurityRAT
+  profiles:
+    # The commented value for `active` can be replaced with valid Spring profiles to load.
+    # Otherwise, it will be filled in by maven when building the JAR file
+    # Either way, it can be overridden by `--spring.profiles.active` value passed in the commandline or `-Dspring.profiles.active` set in `JAVA_OPTS`
+    active: #spring.profiles.active#
+  jmx:
+    enabled: false
+  data:
+    jpa:
+      repositories:
+        bootstrap-mode: deferred
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate.jdbc.time_zone: UTC
+    hibernate:
+      ddl-auto: none
+      naming:
+        #physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+        #implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+        #
+        # NOTE: We need to replace the original values to fix this issue:
+        #       https://github.com/spring-projects/spring-boot/issues/2129
+        
+        physical-strategy: "org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl"
+        implicit-strategy: "org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl"
+  messages:
+    basename: i18n/messages
+  main:
+    allow-bean-definition-overriding: true
+  mvc:
+    favicon:
+      enabled: false
+  task:
+    execution:
+      thread-name-prefix: security-rat-task-
+      pool:
+        core-size: 2
+        max-size: 50
+        queue-capacity: 10000
+    scheduling:
+      thread-name-prefix: security-rat-scheduling-
+      pool:
+        size: 2
+  thymeleaf:
+    mode: HTML
+  output:
+    ansi:
+      console-available: true
+
+server:
+  servlet:
+    session:
+      cookie:
+        http-only: true
+
+# Properties to be exposed on the /info management endpoint
+info:
+  # Comma separated list of profiles that will trigger the ribbon to show
+  display-ribbon-on-profiles: 'dev'
+
+# ===================================================================
+# JHipster specific properties
+#
+# Full reference is available at: https://www.jhipster.tech/common-application-properties/
+# ===================================================================
+
+jhipster:
+  clientApp:
+    name: 'securityRatApp'
+  # By default CORS is disabled. Uncomment to enable.
+  # cors:
+  #     allowed-origins: "*"
+  #     allowed-methods: "*"
+  #     allowed-headers: "*"
+  #     exposed-headers: "Link,X-Total-Count"
+  #     allow-credentials: true
+  #     max-age: 1800
+  mail:
+    from: SecurityRAT@localhost
+  swagger:
+    default-include-pattern: /api/.*
+    title: SecurityRAT API
+    description: SecurityRAT API documentation
+    version: 0.0.1
+    terms-of-service-url:
+    contact-name:
+    contact-url:
+    contact-email:
+    license:
+    license-url:
+# ===================================================================
+# Application specific properties
+# Add your own application properties here, see the ApplicationProperties class
+# to have type-safe configuration, like in the JHipsterProperties above
+#
+# More documentation is available at:
+# https://www.jhipster.tech/common-application-properties/
+# ===================================================================
+
+application:
+  authentication:
+    type: FORM # possible values are CAS or FORM
+    registration: true # restrict the registration only to the administrators by setting the value to 'false'
+  cas:
+    loginUrl: https://localhost:8443/cas # Change to the URL your CAS server listens on
+    logoutUrl: https://localhost:8443/cas/logout # Change to your CAS server logout URL
+    callbackUrl: https://localhost:9000/callback # Change to the correct URL (https) of SecurityRAT

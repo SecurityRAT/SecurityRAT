@@ -1,0 +1,37 @@
+<div>
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <h1>Authentication</h1>
+
+      		<div class="alert alert-danger" data-ng-show="authenticationError" id="loginError">
+                <strong>Authentication failed!</strong> Please check your credentials and try again.
+            </div>
+            <form class="form" role="form" data-ng-submit="login($event)">
+                <div class="form-group">
+                    <label for="username">Login</label>
+                    <input type="text" class="form-control" id="username" placeholder="Your login" data-ng-model="username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    
+                    <input type="password" class="form-control"  id="password" placeholder="Your password"
+                           data-ng-model="password"/>
+                </div>
+                <div class="form-group">
+                    <label for="rememberMe">
+                        <input type="checkbox" id="rememberMe" data-ng-model="rememberMe" checked>
+                        <span>Automatic Login</span>
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-primary">Authenticate</button>
+            </form>
+            <p></p>
+            <div class="alert alert-warning">
+                <a ui-sref="requestReset">Did you forget your password?</a>
+            </div>
+            <div class="alert alert-warning" data-ng-class="{hidden: !REGISTRATIONTYPE}">
+                You don't have an account yet? <a ui-sref="register">Register a new account</a>
+            </div>
+        </div>
+    </div>
+</div>
