@@ -119,3 +119,5 @@ node
 dist
 node_modules
 target
+/securityrat-frontend.iml
+/src/main/webapp/bower_components/

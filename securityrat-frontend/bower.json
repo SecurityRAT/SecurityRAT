@@ -4,6 +4,8 @@
   "appPath": "src/main/webapp",
   "testPath": "src/test/javascript/spec",
   "dependencies": {
+    "modernizr": "2.8.3",
+    "jquery": "^3.4.1",
     "angular": "1.7.8",
     "angular-animate": "1.7.8",
     "angular-bootstrap": "~0.14.3",
@@ -17,11 +19,9 @@
     "angular-ui-sortable": "^0.19.0",
     "angularjs-dropdown-multiselect": "^1.11.8",
     "bootstrap": "3.4.1",
-    "jquery": "^3.4.1",
     "jquery-ui": "^1.12.1",
     "js-yaml": "^3.7.0",
     "json3": "3.3.2",
-    "modernizr": "2.8.3",
     "ng-file-upload": "5.0.9",
     "ngInfiniteScroll": "1.2.0",
     "swagger-ui": "2.1.1",
@@ -38,7 +38,8 @@
     "angular-bootstrap-switch": "^0.5.2",
     "datatables.net": "^1.10.20",
     "datatables.net-bs": "^2.1.1",
-    "js-xlsx": "^0.16.3"
+    "js-xlsx": "^0.16.3",
+    "reveal.js": "^4.1.0"
   },
   "devDependencies": {
     "angular-mocks": "^1.7.8",

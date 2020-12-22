@@ -25,15 +25,6 @@ describe('Protractor Security RAT tag category/instances entities testsuite', fu
         });
     };
 
-    //	it('searching a tag category', function() {
-    //		entities.click();
-    //		element(by.partialLinkText('Tag Categories')).click();
-    //		element(by.id('searchQuery')).sendKeys('QA');
-    //		element(by.id('searchButton')).click();
-    //		expect(element.all(by.repeater('tagCategory in tagCategorys | orderBy : 'showOrder'')).count()).toBe(1);
-    //		
-    //	});
-
     it('administring a tag category', function () {
         entities.click();
         element(by.partialLinkText('Tag Categories')).click();
@@ -94,7 +85,7 @@ describe('Protractor Security RAT tag category/instances entities testsuite', fu
     //		expect(element.all(by.repeater('tagInstance in tagInstances | filterCategoryForEntities: selectedCategory: 'tagCategory' | orderBy: ['tagCategory.showOrder','showOrder']')).count()).toBeGreaterThan(3);
     //		browser.sleep(2000);
     //		element(by.id('searchQuery')).clear().then(function(){});
-    //		element(by.id('searchButton')).click();		
+    //		element(by.id('searchButton')).click();
     //		element(by.buttonText('Tag Category')).click();
     //		element.all(by.linkText('Requirement Owner')).first().click();
     //		expect(element.all(by.repeater('tagInstance in tagInstances | filterCategoryForEntities: selectedCategory: 'tagCategory' | orderBy: ['tagCategory.showOrder','showOrder']')).count()).toBeGreaterThan(3);
@@ -119,7 +110,7 @@ describe('Protractor Security RAT tag category/instances entities testsuite', fu
                 element(by.id('field_name')).sendKeys('test Instance name <script>alert(1)</script>');
                 element(by.id('field_description')).sendKeys('test Instance description <script>alert(1)</script>');
                 element(by.id('field_showOrder')).sendKeys('1000');
-                element(by.cssContainingText('option', 'Requirement Owner')).click();
+                element.all(by.options("tagCategory as tagCategory.name for tagCategory in tagcategorys track by tagCategory.id")).get(2).click();
                 element(by.buttonText('Save')).click();
                 browser.sleep(3000);
                 expect(element.all(by.repeater('tagInstance in tagInstances | filterCategoryForEntities: selectedCategory: \'tagCategory\' | orderBy: [\'tagCategory.showOrder\',\'showOrder\']'))
@@ -165,25 +156,6 @@ describe('Protractor Security RAT tag category/instances entities testsuite', fu
         element(by.buttonText('Save')).click();
         selectButton.first().click();
         selectButton.get(1).click();
-        element(by.buttonText('Bulk change with selected')).click();
-        element(by.buttonText('Documentation')).click();
-        element(by.buttonText('Save')).click();
-        browser.sleep(5000);
-        element.all(by.repeater('tagInstance in tagInstances | filterCategoryForEntities: selectedCategory: \'tagCategory\' | orderBy: [\'tagCategory.showOrder\',\'showOrder\']')
-            .column('tagInstance.name')).each(function (elem, index) {
-            elem.getText().then(function (elemText) {
-                if (elemText === 'Product Manager' || elemText === 'Security Mentor') {
-                    var categories = element.all(by.repeater('tagInstance in tagInstances | filterCategoryForEntities: selectedCategory: \'tagCategory\' | orderBy: [\'tagCategory.showOrder\',\'showOrder\']')
-                        .column('tagInstance.tagCategory.name'));
-                    expect(categories.get(index).getText()).toBe('Documentation');
-                    selectButton.get(index).click();
-                }
-            });
-        });
-		browser.sleep(3000);
-        element(by.buttonText('Bulk change with selected')).click();
-        element(by.buttonText('Requirement Owner')).click();
-        element(by.buttonText('Save')).click();
         browser.sleep(1500);
     });
 

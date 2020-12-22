@@ -8,7 +8,7 @@ describe('Protractor Security RAT statuscolumn values entities testsuite', funct
 	var statusColumRepeater = 'statusColumn in statusColumns | orderBy: \'showOrder\' | filter:searchString';
 	beforeEach(function() {
 		browser.get(browser.params.testHost);
-		
+
 	});
 	var deleteCollectionInstance = function(repeaterValue, elem) {
 		var deletes = element.all(by.css('button[class="btn btn-danger btn-sm"]'));
@@ -25,19 +25,7 @@ describe('Protractor Security RAT statuscolumn values entities testsuite', funct
 			}, function(){});
 		});
 	};
-	 
-//	it('searching a status column', function() {
-//		entities.click();
-//		element(by.partialLinkText('Status Columns')).click();
-//		element(by.id('searchQuery')).sendKeys('Strategy');
-//		element(by.id('searchButton')).click();
-//		expect(element.all(by.repeater(statusColumRepeater)).count()).toBe(1);
-//		browser.sleep(2000);
-//		element(by.id('searchQuery')).clear().then(function(){
-//		});
-//		element(by.id('searchButton')).click();		
-//	});
-	
+
 	it('administering a status column', function() {
 		entities.click();
 		element(by.partialLinkText('Status Columns')).click();
@@ -79,7 +67,7 @@ describe('Protractor Security RAT statuscolumn values entities testsuite', funct
 		browser.sleep(2000);
 		deleteCollectionInstance(statusColumRepeater, 'statusColumn.showOrder');
 	});
-	
+
 	it('bulk change for status column', function() {
 		entities.click();
 		element(by.partialLinkText('Status Columns')).click();
@@ -98,28 +86,7 @@ describe('Protractor Security RAT statuscolumn values entities testsuite', funct
 		element(by.buttonText('Save')).click();
 		browser.sleep(1500);
 	});
-	
-//	it('searching a status column value', function() {
-//		entities.click();
-//		element(by.partialLinkText('Status Column Values')).click();
-//		element(by.id('searchQuery')).sendKeys('Task');
-//		element(by.id('searchButton')).click();
-//		expect(element.all(by.repeater(statValueRepeater))
-//				.count()).toBe(1);
-//		browser.sleep(2000);
-//		element(by.id('searchQuery')).clear().then(function(){
-//		});
-//		element(by.id('searchButton')).click();		
-//		element(by.buttonText('Status Column')).click();
-//		element(by.linkText('Strategy')).click();
-//		expect(element.all(by.repeater(statValueRepeater))
-//				.count()).toBeGreaterThan(1);
-//		browser.sleep(2000);
-//		element(by.linkText('Strategy')).click();
-//		element(by.buttonText('Status Column')).click();
-//	});
-	
-	
+
 	it('adminisetring status column value', function() {
 		entities.click();
 		element(by.partialLinkText('Status Column Values')).click();
@@ -135,7 +102,7 @@ describe('Protractor Security RAT statuscolumn values entities testsuite', funct
 			element(by.id('field_name')).sendKeys('test Value name <script>alert(1)</script>');
 			element(by.id('field_description')).sendKeys('test Value description <script>alert(1)</script>');
 			element(by.id('field_showOrder')).sendKeys('1000');
-			element(by.cssContainingText('option', 'Strategy')).click();
+			element(by.cssContainingText('option', browser.params.defaultStatColumn)).click();
 			element(by.buttonText('Save')).click();
 			browser.sleep(3000);
 			expect(element.all(by.repeater(statValueRepeater))
@@ -160,9 +127,9 @@ describe('Protractor Security RAT statuscolumn values entities testsuite', funct
 		browser.sleep(2000);
 		deleteCollectionInstance(statValueRepeater, 'statusColumnValue.showOrder');
 	});
-	
+
 	it('bulk change for status columns values', function() {
-		
+
 		entities.click();
 		element(by.partialLinkText('Status Column Values')).click();
 		var selectButton = element.all(by.model('statusColumnValue.selected'));
@@ -184,22 +151,7 @@ describe('Protractor Security RAT statuscolumn values entities testsuite', funct
 		selectButton.first().click();
 		selectButton.get(1).click();
 		element(by.buttonText('Bulk change with selected')).click();
-		element(by.buttonText('Strategy')).click();
-		element(by.buttonText('Save')).click();
-		browser.sleep(2000);
-		element.all(by.repeater(statValueRepeater)
-				.column('statusColumnValue.name')).each(function(elem, index) {
-					elem.getText().then(function(elemText) {
-						if(elemText === 'Task' || elemText === 'Yes') {
-							expect(statusColumn.get(index).getText()).toBe('Strategy');
-							if(elemText === 'Yes') {
-								selectButton.get(index).click();
-							}
-						}
-					});
-				});
-		element(by.buttonText('Bulk change with selected')).click();
-		element(by.buttonText('Fulfilled')).click();
+		element(by.buttonText(browser.params.defaultStatColumn)).click();
 		element(by.buttonText('Save')).click();
 		browser.sleep(1500);
 	});

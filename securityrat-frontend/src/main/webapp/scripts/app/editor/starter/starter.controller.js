@@ -22,7 +22,7 @@ angular.module('sdlctoolApp')
 		$scope.oldAlternativeSets = [];
 		$scope.oldHasIssueLinks = false;
 		$scope.disabled = false;
-		$scope.regex = new XRegExp('^[\\p{Latin}\\pN+\\s\\-\\.\\:\\+\\(\\)\\[\\]\\,\\!\\#\\$\\%\\\'\\*\\=\\?\\^\\`\\{\\}\\|\\~\\;\\@\\&]+$');
+		$scope.regex = new XRegExp('^[\\p{Latin}\\pN+\\s\\-\\_\\.\\:\\+\\(\\)\\[\\]\\,\\!\\#\\$\\%\\\'\\*\\=\\?\\^\\`\\{\\}\\|\\~\\;\\@\\&]+$');
 		getRequirementsFromImport.setProperty({});
 		$scope.selectedCollectionSettings = {
 			smartButtonMaxItems: 3, styleActive: true,

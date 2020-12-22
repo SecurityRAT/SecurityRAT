@@ -12,6 +12,8 @@ module.exports = function (config) {
         // list of files / patterns to load in the browser
         files: [
             // bower:js
+            'main/webapp/bower_components/modernizr/modernizr.js',
+            'main/webapp/bower_components/jquery/dist/jquery.js',
             'main/webapp/bower_components/angular/angular.js',
             'main/webapp/bower_components/angular-animate/angular-animate.js',
             'main/webapp/bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
@@ -22,14 +24,12 @@ module.exports = function (config) {
             'main/webapp/bower_components/angular-route/angular-route.js',
             'main/webapp/bower_components/angular-sanitize/angular-sanitize.js',
             'main/webapp/bower_components/angular-ui-router/release/angular-ui-router.js',
-            'main/webapp/bower_components/jquery/dist/jquery.js',
             'main/webapp/bower_components/jquery-ui/jquery-ui.js',
             'main/webapp/bower_components/angular-ui-sortable/sortable.js',
             'main/webapp/bower_components/angularjs-dropdown-multiselect/src/angularjs-dropdown-multiselect.js',
             'main/webapp/bower_components/bootstrap/dist/js/bootstrap.js',
             'main/webapp/bower_components/js-yaml/dist/js-yaml.js',
             'main/webapp/bower_components/json3/lib/json3.js',
-            'main/webapp/bower_components/modernizr/modernizr.js',
             'main/webapp/bower_components/ng-file-upload/ng-file-upload.js',
             'main/webapp/bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js',
             'main/webapp/bower_components/marked/lib/marked.js',
@@ -38,7 +38,7 @@ module.exports = function (config) {
             'main/webapp/bower_components/spin.js/spin.js',
             'main/webapp/bower_components/angular-spinner/angular-spinner.js',
             'main/webapp/bower_components/jszip/dist/jszip.js',
-            'main/webapp/bower_components/js-xlsx/dist/xlsx.core.min.js',
+            'main/webapp/bower_components/xregexp/xregexp-all.js',
             'main/webapp/bower_components/angular-disable-all/dist/angular-disable-all.js',
             'main/webapp/bower_components/angular-ui-indeterminate/dist/indeterminate.js',
             'main/webapp/bower_components/angular-confirm-modal/angular-confirm.js',
@@ -48,6 +48,7 @@ module.exports = function (config) {
             'main/webapp/bower_components/angular-bootstrap-switch/dist/angular-bootstrap-switch.js',
             'main/webapp/bower_components/datatables.net/js/jquery.dataTables.js',
             'main/webapp/bower_components/datatables.net-bs/js/dataTables.bootstrap.js',
+            'main/webapp/bower_components/js-xlsx/dist/xlsx.full.min.js',
             'main/webapp/bower_components/angular-mocks/angular-mocks.js',
             // endbower
 	    'main/webapp/scripts/app/editor/config.js',

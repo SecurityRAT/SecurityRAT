@@ -18,8 +18,8 @@
         <!-- endbower -->
         <!-- endbuild -->
         <!-- build:css /assets/styles/main.css -->
-        <link rel="stylesheet" href="/bower_components/highlightjs/styles/github.css" />
-      	<link id="maincss" rel="stylesheet" href="/assets/styles/main.css" />
+          <link id="maincss" rel="stylesheet" href="/assets/styles/main.css" />
+          <link rel="stylesheet" href="/assets/styles/securityrat.css" />
         <!-- endbuild -->
 		<base href="/">
     </head>
@@ -40,6 +40,8 @@
 
         <!-- build:js scripts/vendor.js -->
         <!-- bower:js -->
+        <script src="/bower_components/modernizr/modernizr.js"></script>
+        <script src="/bower_components/jquery/dist/jquery.js"></script>
         <script src="/bower_components/angular/angular.js"></script>
         <script src="/bower_components/angular-animate/angular-animate.js"></script>
         <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
@@ -50,14 +52,12 @@
         <script src="/bower_components/angular-route/angular-route.js"></script>
         <script src="/bower_components/angular-sanitize/angular-sanitize.js"></script>
         <script src="/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-        <script src="/bower_components/jquery/dist/jquery.js"></script>
         <script src="/bower_components/jquery-ui/jquery-ui.js"></script>
         <script src="/bower_components/angular-ui-sortable/sortable.js"></script>
         <script src="/bower_components/angularjs-dropdown-multiselect/src/angularjs-dropdown-multiselect.js"></script>
         <script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
         <script src="/bower_components/js-yaml/dist/js-yaml.js"></script>
         <script src="/bower_components/json3/lib/json3.js"></script>
-        <script src="/bower_components/modernizr/modernizr.js"></script>
         <script src="/bower_components/ng-file-upload/ng-file-upload.js"></script>
         <script src="/bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js"></script>
         <script src="/bower_components/marked/lib/marked.js"></script>
@@ -79,7 +79,7 @@
         <script src="/bower_components/js-xlsx/dist/xlsx.full.min.js"></script>
         <!-- endbower -->
         <!-- endbuild -->
-    <!--
+	<!--
         NOTE: If you've installed your dependencies via bower, they should
               included automatically after running 'npx grunt wiredep:app'.
 
@@ -87,12 +87,14 @@
               by bower) are still required.
 
         Include all of your other dependencies here
-	    <script src="bower_components/Blobjs/Blob.js"></script>
-	    <script src="bower_components/revealjs/lib/js/head.min.js"></script>
-        <script src="bower_components/revealjs/js/reveal.js"></script>
+	    <script src="/bower_components/Blobjs/Blob.js"></script>
+	    <script src="/bower_components/revealjs/lib/js/head.min.js"></script>
+        <script src="/bower_components/revealjs/js/reveal.js"></script>
     -->
 
+    
     <!-- build:js({.tmp,src/main/webapp}) scripts/app.js -->
+    <script src="/bower_components/reveal.js/dist/reveal.js"></script>
 	<script src="/scripts/app/editor/regex-weburl.js"></script>
     <script src="/scripts/app/config.js"></script>
     <script src="/scripts/app/app.js"></script>

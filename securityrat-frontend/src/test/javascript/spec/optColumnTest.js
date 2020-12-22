@@ -6,10 +6,10 @@ describe('Protractor Security RAT option column contents/types entities testsuit
 	var entities = element(by.partialLinkText('Entities'));
 	var optColumnRepeater = 'optColumn in optColumns | orderBy: \'showOrder\' | filter:searchString';
 	var optColumnContentRepeater = 'optColumnContent in optColumnContents | filterCategoryForEntities : selectedOptColumns : \'optColumn\'| filter:searchString | orderBy: [\'requirementSkeleton.reqCategory.showOrder\', \'requirementSkeleton.showOrder\', \'optColumn.showOrder\'] | limitTo:numberToDisplay';
-	
+
 	beforeEach(function() {
 		browser.get(browser.params.testHost);
-		
+
 	});
 	var deleteCollectionInstance = function() {
 		var deletes = element.all(by.css('button[class="btn btn-danger btn-sm"]'));
@@ -40,16 +40,7 @@ describe('Protractor Security RAT option column contents/types entities testsuit
 			}, function(){});
 		});
 	};
-	 
-//	it('searching an option column type', function() {
-//		entities.click();
-//		element(by.partialLinkText('Option Column Types')).click();
-//		element(by.id('searchQuery')).sendKeys('ShortText');
-//		element(by.id('searchButton')).click();
-//		expect(element.all(by.repeater('optColumnType in optColumnTypes')).count()).toBe(0);
-//		
-//	});
-	
+
 	it('administering an option column type', function() {
 		entities.click();
 		element(by.partialLinkText('Optional Column Types')).click();
@@ -71,7 +62,7 @@ describe('Protractor Security RAT option column contents/types entities testsuit
 		element(by.id('field_description')).clear().then(function(){
 			element(by.id('field_description')).sendKeys('test option column type  description modification <script>alert(1)</script>');
 		});
-		
+
 		element(by.buttonText('Save')).click();
 		browser.sleep(2000);
 		element.all(by.buttonText('Delete')).last().click();
@@ -79,7 +70,7 @@ describe('Protractor Security RAT option column contents/types entities testsuit
 		element.all(by.buttonText('Delete')).last().click();
 		browser.sleep(1500);
 	});
-	
+
 //	it('searching a option column', function() {
 //		entities.click();
 //		element(by.partialLinkText('Option Columns')).click();
@@ -89,9 +80,9 @@ describe('Protractor Security RAT option column contents/types entities testsuit
 //		browser.sleep(2000);
 //		element(by.id('searchQuery')).clear().then(function(){
 //		});
-//		element(by.id('searchButton')).click();		
+//		element(by.id('searchButton')).click();
 //	});
-	
+
 	it('administering a opticon column', function() {
 		entities.click();
 		element(by.partialLinkText('Optional Columns')).click();
@@ -105,8 +96,8 @@ describe('Protractor Security RAT option column contents/types entities testsuit
 			expect(element(by.buttonText('Save')).isEnabled()).toBe(false);
 			element(by.id('field_name')).sendKeys('test optColumn name <script>alert(1)</script>');
 			element(by.id('field_description')).sendKeys('test optColumn description <script>alert(1)</script>');
-			element(by.id('field_showOrder')).sendKeys('1000');
-			element(by.cssContainingText('option', 'ShortText')).click();
+            element(by.id('field_showOrder')).sendKeys('1000');
+            element.all(by.options("optColumnType as optColumnType.name for optColumnType in optcolumntypes track by optColumnType.id")).get(1).click();
 			element(by.buttonText('Save')).click();
 			browser.sleep(3000);
 			expect(element.all(by.repeater(optColumnRepeater))
@@ -131,34 +122,10 @@ describe('Protractor Security RAT option column contents/types entities testsuit
 		browser.sleep(2000);
 		deleteCollectionInstance();
 	});
-	
+
 	it('bulk change option column', function() {
 		entities.click();
 		element(by.partialLinkText('Optional Columns')).click();
-		var selectButton = element.all(by.model('optColumn.selected'));
-		var categories = element.all(by.repeater(optColumnRepeater)
-		.column('optColumn.optColumnType.name'));
-		var category = '';
-		selectButton.first().click();
-		selectButton.get(2).click();
-		element(by.buttonText('Bulk change with selected')).click();
-		element(by.buttonText('ShortText')).click();
-		category = categories.first().getText();
-		element(by.buttonText('Save')).click();
-		browser.sleep(2000);
-		element.all(by.repeater(optColumnRepeater)
-				.column('optColumn.name')).each(function(elem, index) {
-					elem.getText().then(function(elemText) {
-						if(elemText ===  'More Information' || elemText === 'Test Case') {
-							expect(categories.get(index).getText()).toBe('ShortText');
-//							selectButton.get(index).click();
-						}
-					});
-				});
-		element.all(by.buttonText('Edit')).get(2).click();
-		element(by.cssContainingText('option', 'OnDemandText')).click();
-		element(by.buttonText('Save')).click();
-		browser.sleep(1500);
 		element(by.id('selectAll')).click();
 		browser.sleep(1000);
 		expect(element(by.buttonText('Bulk change with selected')).isPresent()).toBe(true);
@@ -174,20 +141,7 @@ describe('Protractor Security RAT option column contents/types entities testsuit
 		element(by.buttonText('Save')).click();
 		browser.sleep(1500);
 	});
-	
-//	it('searching a option column contents', function() {
-//		entities.click();
-//		element(by.partialLinkText('Option Column Contents')).click();
-//		element(by.id('searchQuery')).sendKeys('More Information');
-//		element(by.id('searchButton')).click();
-//		expect(element.all(by.repeater(optColumnContentRepeater))
-//				.count()).toBeGreaterThan(3);
-//		browser.sleep(2000);
-//		element(by.id('searchQuery')).clear().then(function(){
-//		});
-//		element(by.id('searchButton')).click();		
-//	});
-	
+
 	it('administering a opticon column content', function() {
 		entities.click();
 		element(by.partialLinkText('Optional Column Contents')).click();
@@ -214,7 +168,7 @@ describe('Protractor Security RAT option column contents/types entities testsuit
 			expect(element.all(by.repeater(optColumnContentRepeater))
 					.count()).toBe(count);
 		});
-		
+
 		var contents = element.all(by.id('content'));
 		var edits = element.all(by.buttonText('Edit'));
 		contents.each(function(element, index) {
@@ -239,50 +193,6 @@ describe('Protractor Security RAT option column contents/types entities testsuit
 		element(by.buttonText('Save')).click();
 		browser.sleep(2000);
 		deleteContent();
-	});
-		
-	it('bulk change option column content', function() {
-		entities.click();
-		element(by.partialLinkText('Optional Column Contents')).click();
-		var selectButton = element.all(by.model('optColumnContent.selected'));
-		var optColumns = element.all(by.repeater(optColumnContentRepeater)
-							.column('optColumnContent.optColumn.name'));
-		var requirements = element.all(by.repeater(optColumnContentRepeater)
-        					.column('optColumnContent.requirementSkeleton.shortName'));
-		var firstCount = 0;
-		requirements.each(function(elem, index) {
-			elem.getText().then(function(elemText) {
-				if(elemText ===  'LC-01') {
-					firstCount++;
-					selectButton.get(index).click();
-				}
-			});
-			
-		});
-		
-		element(by.buttonText('Bulk change with selected')).click();
-		element(by.buttonText('More Information')).click();
-		element(by.buttonText('Save')).click();
-		browser.sleep(2000);
-		var count = 0;
-		requirements.each(function(elem, index) {
-			elem.getText().then(function(elemText) {
-				if(elemText ===  'LC-01') {
-					expect(optColumns.get(index).getText()).toBe('More Information');
-					count++;
-					if(count === 2) {
-						selectButton.get(index).click();
-					}
-						
-				}
-			});
-			
-		});
-		expect(count).toBe(firstCount);
-		element(by.buttonText('Bulk change with selected')).click();
-		element(by.buttonText('Motivation')).click();
-		element(by.buttonText('Save')).click();
-		browser.sleep(1500);
 	});
 
 });

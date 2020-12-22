@@ -1,5 +1,6 @@
 <div data-ng-controller="RequirementsController" data-ng-init="init()" data-ng-cloak="">
-    <button id="backToTop" data-ng-click="moveToTop()" class="btn btn-primary" uib-tooltip="Back to top" tooltip-placement="top" tooltip-append-to-body="true">
+    <button id="backToTop" data-ng-click="moveToTop()" class="btn btn-primary" uib-tooltip="Back to top"
+        tooltip-placement="top" tooltip-append-to-body="true">
         <span class="glyphicon glyphicon-chevron-up"></span>
     </button>
     <div class="container-fluid">
@@ -7,7 +8,7 @@
             <h2>{{systemSettings.name}}
                 <span data-ng-if="ticket.url">:
                     <a id="ticketUrl" data-ng-href="{{ticket.url}}" target="_blank">{{ticket.key}}</a>
-                </span>
+                    </scpan>
             </h2>
         </div>
         <div class="row">
@@ -212,9 +213,9 @@
             </span>
 
             <span>&nbsp;</span>
-            <div class="btn-group" uib-dropdown is-open="crdropdown.isopen" auto-close="outsideClick">
+            <div class="btn-group" uib-dropdown is-open="crdropdown" auto-close="outsideClick">
                 <button class="btn btn-primary" uib-dropdown-toggle data-ng-disabled="systemSettings.name == null"
-                    data-ng-click="!crdropdown.isopen">Custom requirements
+                    data-ng-click="!crdropdown">Custom requirements
                     <span class="caret"></span>
                 </button>
                 <ul class="uib-dropdown-menu" role="menu" aria-labelledby="selectDropdown">
@@ -238,7 +239,7 @@
                             tooltip-placement="right" style="cursor:not-allowed">
                             <span class="disabledButton">Remove</span>
                         </a>
-                        <a href="" data-ng-click="removeRequirement()"
+                        <a href="" data-ng-click="removeCustomRequirement()"
                             data-ng-if="customRequirements.length > 0">Remove</a>
                     </li>
                 </ul>
@@ -345,8 +346,18 @@
                 <thead>
                     <tr>
                         <th data-ng-if="updateProperties.updatedReqs">Updates</th>
-			<th class="text-center">
-                               	<span tooltip-append-to-body="true">Properties</span>
+                        <th class="text-center">
+                            <span data-ng-if="patternToHide" tooltip-append-to-body="true">
+                                <span data-ng-show="patternToHide" tooltip-append-to-body="true">Properties</span>
+                                <span class="glyphicon glyphicon-eye-close positionChevron" data-ng-if="patternToHide"
+                                    uib-tooltip="Hide Properties" style="cursor:pointer;"
+                                    data-ng-click="hidePattern()"></span>
+                            </span>
+                            <p data-ng-if="!patternToHide" style="cursor:pointer;" data-ng-click="hidePattern()">
+                                ...
+                                <span class="glyphicon glyphicon-eye-open" style="display:inline"
+                                    uib-tooltip="Show Properties" tooltip-append-to-body></span>
+                            </p>
                         </th>
                         <th class="text-center">Short Name
                             <span data-ng-if="textFilters.shortName" style="color: red"
@@ -412,8 +423,9 @@
                     </tr>
                     <tr>
                         <td data-ng-if="updateProperties.updatedReqs"></td>
-			<td class="text-center" >
-				<input placeholder="Filter" type="text" class="form-control" data-ng-model="textFilters.pattern"/>
+                        <td class="text-center">
+                            <input placeholder="Filter" type="text" class="form-control"
+                                data-ng-model="textFilters.pattern" />
                         </td>
                         <td class="text-center">
                             <input placeholder="Filter" type="text" class="form-control"
@@ -507,12 +519,18 @@
                                 </button>
                             </div>
                         </td>
-                        <td class="text-center" 
+                        <td class="text-center"
                             data-ng-style="reqs.isNew && {'background-color':'rgb(204, 255, 204)'} || reqs.isOld && {'background-color':'rgb(255, 204, 204)'}">
-                             <div data-ng-repeat="col in reqs.collectionInstances | orderBy:'showOrder' "><span class="label label-primary">{{col.name}}</span></div>
-                        </td>	
-                        <td class="text-center" data-ng-style="reqs.isNew && {'background-color':'rgb(204, 255, 204)'} || reqs.isOld && {'background-color':'rgb(255, 204, 204)'}">
-                            <strong>{{ reqs.shortName }}</strong>
+                            <div data-ng-repeat="col in reqs.collectionInstances | orderBy:'showOrder' "><span
+                                    class="label label-primary">{{col.name}}</span></div>
+                        </td>
+                        <td class="text-center"
+                            data-ng-style="reqs.isNew && {'background-color':'rgb(204, 255, 204)'} || reqs.isOld && {'background-color':'rgb(255, 204, 204)'}">
+                            <strong>
+                                <div data-ng-if="!(reqs.isNew || reqs.isOld)"
+                                    data-ng-bind-html="reqs.shortName | trusted"></div>
+                                <div data-ng-if="reqs.isNew || reqs.isOld" marked="reqs.diffShortName"></div>
+                            </strong>
                             <div disable-all="updateProperties.updatedReqs" data-ng-if="reqs.id < 10000">
                                 <span data-ng-if="updateProperties.updatedReqs"
                                     uib-tooltip="Please apply updates first." style="cursor:not-allowed"

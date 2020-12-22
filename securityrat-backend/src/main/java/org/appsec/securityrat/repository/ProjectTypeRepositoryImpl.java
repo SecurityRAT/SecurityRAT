@@ -6,7 +6,6 @@ import javax.inject.Inject;
 
 import org.appsec.securityrat.domain.ProjectType;
 import org.appsec.securityrat.domain.StatusColumn;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class ProjectTypeRepositoryImpl implements ProjectTypeRepositoryCustom {
 
@@ -30,7 +29,7 @@ public class ProjectTypeRepositoryImpl implements ProjectTypeRepositoryCustom {
 		List<ProjectType> allProjectTypes = projectTypeRepository.findAllActiveProjectTypes();
 		for (ProjectType projectType : allProjectTypes) {
 			projectType.setOptColumns(optColumnRepository.getActiveRelevantOptcolumnsForProjectType(projectType.getId()));
-			projectType.setStatusColumns(statusColumnRepository.getActiveStatusColumnsForProjectType(projectType));
+			projectType.setStatusColumns(statusColumnRepository.getActiveStatusColumnsForProjectTypeWithNoneEmptyStatusValues(projectType));
 			for (StatusColumn statusColumn : projectType.getStatusColumns()) {
 				if (statusColumn.getIsEnum()) {
 					statusColumn.setStatusColumnValues(statusColumnValueRepository.getActiveValuesForStatusColumn(statusColumn));

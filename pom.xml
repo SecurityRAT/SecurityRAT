@@ -6,7 +6,7 @@
 
     <groupId>org.appsec.securityrat</groupId>
     <artifactId>securityrat-parent</artifactId>
-    <version>1.7.10</version>
+    <version>1.7.13</version>
     <packaging>pom</packaging>
     
     <name>SecurityRAT</name>
@@ -14,9 +14,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>11</java.version>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <java.version>1.8</java.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
     <modules>
