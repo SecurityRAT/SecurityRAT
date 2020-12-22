@@ -8,11 +8,11 @@ angular.module('sdlctoolApp')
 		$scope.optionColumns = [];
 		params.requirements = [];
 		$scope.config = {};
-		$scope.config.theme = 'securityrat';
+		$scope.config.theme = 'black';
 		$scope.config.transition = 'concave';
 		$scope.config.end = 'Thank you.';
 		$scope.init = function() {
-			$scope.themes = ['beige', 'black', 'blood', 'league', 'moon', 'night', 'securityrat', 'serif', 'simple', 'sky', 'solarized', 'white'];
+			$scope.themes = ['beige', 'black', 'blood', 'league', 'moon', 'night', 'serif', 'simple', 'sky', 'solarized', 'white'];
 			$scope.transitions = ['none', 'fade', 'slide', 'convex', 'concave', 'zoom'];
 			params.requirements = entity.requirements;
 			$scope.optionColumns = entity.optionColumns;
