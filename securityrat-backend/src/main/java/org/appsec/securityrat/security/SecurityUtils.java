@@ -1,5 +1,8 @@
 package org.appsec.securityrat.security;
 
+import org.pac4j.springframework.security.authentication.Pac4jAuthentication;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -13,6 +16,7 @@ import java.util.stream.Stream;
  * Utility class for Spring Security.
  */
 public final class SecurityUtils {
+    private static final Logger log = LoggerFactory.getLogger(SecurityUtils.class);
 
     private SecurityUtils() {
     }
@@ -25,6 +29,15 @@ public final class SecurityUtils {
     public static Optional<String> getCurrentUserLogin() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         return Optional.ofNullable(extractPrincipal(securityContext.getAuthentication()));
+    }
+
+    public static boolean isCasAuthentication() {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        if (securityContext.getAuthentication() instanceof Pac4jAuthentication) {
+            log.debug("PAC4J Authentication");
+            return true;
+        }
+        return false;
     }
 
     private static String extractPrincipal(Authentication authentication) {

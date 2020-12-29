@@ -17,20 +17,20 @@ public class ApplicationProperties {
         CAS,
         FORM
     }
-    
+
     @Data
     public static class Authentication {
         private AuthenticationType type;
         private boolean registration;
     }
-    
+
     @Data
     public static class Cas {
         private URL loginUrl;
         private URL logoutUrl;
         private URL callbackUrl;
     }
-    
+
     private Authentication authentication;
     private Cas cas;
 }
