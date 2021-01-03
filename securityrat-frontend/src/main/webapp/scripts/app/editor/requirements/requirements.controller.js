@@ -54,7 +54,7 @@ angular.module('sdlctoolApp')
             id: 20000
         };
         $scope.optToHide = [];
-        $scope.patternToHide = false;
+        $scope.patternToHide = JSON.parse(appConfig.showProperties.toLowerCase());
         $scope.showSpinner = false;
         $scope.systemSettings = sharedProperties.getProperty();
 

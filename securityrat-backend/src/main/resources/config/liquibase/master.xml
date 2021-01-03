@@ -50,4 +50,7 @@
     <include file="classpath:config/liquibase/changelog/20190412_update_schema_and_add_values_configconstant.xml" relativeToChangelogFile="false" />
     <include file="classpath:config/liquibase/changelog/20191028_update_schema_option_columns.xml" relativeToChangelogFile="false" />
 
+    <!-- rreuter -->
+    <include file="classpath:config/liquibase/changelog/20210301_update_schema_and_add_values_configconstant_showProperties_and_assistant.xml" relativeToChangelogFile="false" />
+
 </databaseChangeLog>

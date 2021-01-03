@@ -21,7 +21,7 @@
                         <span>Editor</span>
                     </a>
                 </li>
-                <li ui-sref-active="{active: $state.includes('importAssistant')}" data-ng-switch-when="true" has-role="ROLE_ADMIN">
+                <li ui-sref-active="{active: $state.includes('importAssistant')}" data-ng-switch-when="true" has-role="ROLE_ADMIN" data-ng-if="showAssistant">
                     <a ui-sref="importAssistantStep1" href="/import/step1">
                         <span class="glyphicon glyphicon-import"></span>
                         <span>Import Assistant</span>

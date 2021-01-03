@@ -425,7 +425,7 @@
                         <td data-ng-if="updateProperties.updatedReqs"></td>
                         <td class="text-center">
                             <input placeholder="Filter" type="text" class="form-control"
-                                data-ng-model="textFilters.pattern" />
+                                data-ng-model="textFilters.pattern" data-ng-if="patternToHide"/>
                         </td>
                         <td class="text-center">
                             <input placeholder="Filter" type="text" class="form-control"
@@ -521,7 +521,7 @@
                         </td>
                         <td class="text-center"
                             data-ng-style="reqs.isNew && {'background-color':'rgb(204, 255, 204)'} || reqs.isOld && {'background-color':'rgb(255, 204, 204)'}">
-                            <div data-ng-repeat="col in reqs.collectionInstances | orderBy:'showOrder' "><span
+                            <div data-ng-repeat="col in reqs.collectionInstances | orderBy:'showOrder' " data-ng-if="patternToHide"><span
                                     class="label label-primary">{{col.name}}</span></div>
                         </td>
                         <td class="text-center"
