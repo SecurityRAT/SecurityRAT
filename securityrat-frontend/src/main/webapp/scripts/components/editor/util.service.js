@@ -131,18 +131,33 @@ angular.module('sdlctoolApp')
                     projectTypeIdValue = projectType.projectTypeId;
                     projectTypeNameValue = projectType.name;
                 });
-                angular.extend(yamlExport, {
-                    name: settings.name,
-                    ticket: ticket,
-                    projectType: [{
-                        projectTypeId: projectTypeIdValue,
-                        projectTypeName: projectTypeNameValue
-                    }],
-                    collections: settings.collections,
-                    generatedOn: settings.generatedOn,
-                    lastChanged: settings.lastChanged,
-                    requirementCategories: []
-                });
+                if (JSON.parse(appConfig.showProperties.toLowerCase())) {
+                    angular.extend(yamlExport, {
+                        name: settings.name,
+                        ticket: ticket,
+                        projectType: [{
+                            projectTypeId: projectTypeIdValue,
+                            projectTypeName: projectTypeNameValue
+                        }],
+                        collections: settings.collections,
+                        generatedOn: settings.generatedOn,
+                        lastChanged: settings.lastChanged,
+                        requirementCategories: []
+                    });
+                } else {
+                    angular.extend(yamlExport, {
+                        name: settings.name,
+                        ticket: ticket,
+                        projectType: [{
+                            projectTypeId: projectTypeIdValue,
+                            projectTypeName: projectTypeNameValue
+                        }],
+                        generatedOn: settings.generatedOn,
+                        lastChanged: settings.lastChanged,
+                        requirementCategories: []
+                    });
+                }
+                
 
                 angular.forEach(settings.requirements, function (requirement) {
                     angular.forEach(requirement.optionColumns, function (optColumn) {
@@ -151,23 +166,37 @@ angular.module('sdlctoolApp')
                                 delete content.diffContent;
                             }
                         });
-                    });
+                    }); 
                     //check if category is already inside
                     if (self.searchArrayByValue(requirement.category, yamlExport.requirementCategories)) {
                         angular.forEach(yamlExport.requirementCategories, function (requirementCategoryObject) {
                             if (requirementCategoryObject.category === requirement.category) {
-                                requirementCategoryObject.requirements.push({
-                                    id: requirement.id,
-                                    shortName: requirement.shortName,
-                                    showOrder: requirement.order,
-                                    universalId: requirement.universalId,
-                                    description: requirement.description,
-                                    tickets: requirement.tickets,
-                                    tagInstances: requirement.tagInstances,
-                                    optColumns: requirement.optionColumns,
-                                    collectionInstances: requirement.collectionInstances,
-                                    statusColumns: requirement.statusColumns
-                                });
+                                if (JSON.parse(appConfig.showProperties.toLowerCase())) {
+                                    requirementCategoryObject.requirements.push({
+                                        id: requirement.id,
+                                        shortName: requirement.shortName,
+                                        showOrder: requirement.order,
+                                        universalId: requirement.universalId,
+                                        description: requirement.description,
+                                        tickets: requirement.tickets,
+                                        tagInstances: requirement.tagInstances,
+                                        optColumns: requirement.optionColumns,
+                                        collectionInstances: requirement.collectionInstances,
+                                        statusColumns: requirement.statusColumns
+                                    });
+                                } else {
+                                    requirementCategoryObject.requirements.push({
+                                        id: requirement.id,
+                                        shortName: requirement.shortName,
+                                        showOrder: requirement.order,
+                                        universalId: requirement.universalId,
+                                        description: requirement.description,
+                                        tickets: requirement.tickets,
+                                        tagInstances: requirement.tagInstances,
+                                        optColumns: requirement.optionColumns,
+                                        statusColumns: requirement.statusColumns
+                                    });
+                                }
                             }
 
                         });
@@ -175,18 +204,32 @@ angular.module('sdlctoolApp')
                     } else {
                         //new category
                         var requirementElement = [];
-                        requirementElement.push({
-                            id: requirement.id,
-                            shortName: requirement.shortName,
-                            showOrder: requirement.order,
-                            universalId: requirement.universalId,
-                            description: requirement.description,
-                            tickets: requirement.tickets,
-                            tagInstances: requirement.tagInstances,
-                            optColumns: requirement.optionColumns,
-                            collectionInstances: requirement.collectionInstances,
-                            statusColumns: requirement.statusColumns
-                        });
+                        if (JSON.parse(appConfig.showProperties.toLowerCase())) {
+                            requirementElement.push({
+                                id: requirement.id,
+                                shortName: requirement.shortName,
+                                showOrder: requirement.order,
+                                universalId: requirement.universalId,
+                                description: requirement.description,
+                                tickets: requirement.tickets,
+                                tagInstances: requirement.tagInstances,
+                                optColumns: requirement.optionColumns,
+                                collectionInstances: requirement.collectionInstances,
+                                statusColumns: requirement.statusColumns
+                            });
+                        } else {
+                            requirementElement.push({
+                                id: requirement.id,
+                                shortName: requirement.shortName,
+                                showOrder: requirement.order,
+                                universalId: requirement.universalId,
+                                description: requirement.description,
+                                tickets: requirement.tickets,
+                                tagInstances: requirement.tagInstances,
+                                optColumns: requirement.optionColumns,
+                                statusColumns: requirement.statusColumns
+                            });
+                        }
                         yamlExport.requirementCategories.push({
                             categoryId: requirement.categoryId,
                             category: requirement.category,

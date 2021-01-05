@@ -38,7 +38,7 @@
     "angular-bootstrap-switch": "^0.5.2",
     "datatables.net": "^1.10.20",
     "datatables.net-bs": "^2.1.1",
-    "js-xlsx": "^0.16.3",
+    "js-xlsx": "~0.8.0",
     "reveal.js": "^4.1.0"
   },
   "devDependencies": {
