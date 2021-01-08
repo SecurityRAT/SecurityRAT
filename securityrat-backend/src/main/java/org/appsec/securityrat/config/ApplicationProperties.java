@@ -5,7 +5,7 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * Properties specific to Security RAT.
+ * Properties specific to SecurityRAT.
  * <p>
  * Properties are configured in the {@code application.yml} file.
  * See {@link io.github.jhipster.config.JHipsterProperties} for a good example.
@@ -15,7 +15,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class ApplicationProperties {
     public enum AuthenticationType {
         CAS,
-        FORM
+        FORM,
+	AZURE
     }
 
     @Data

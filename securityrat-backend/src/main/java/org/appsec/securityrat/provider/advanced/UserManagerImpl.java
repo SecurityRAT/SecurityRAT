@@ -345,7 +345,11 @@ public class UserManagerImpl implements UserManager {
                 
                 emailActivation = true;
                 break;
-                
+	    case AZURE:
+	    	user.setActivated(true);
+                user.setActivationKey(null);
+                break;
+	
             default:
                 throw new UnsupportedOperationException(
                         "Unknown authentication type!");

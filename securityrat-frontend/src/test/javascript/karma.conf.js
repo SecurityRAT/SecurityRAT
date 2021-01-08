@@ -48,7 +48,7 @@ module.exports = function (config) {
             'main/webapp/bower_components/angular-bootstrap-switch/dist/angular-bootstrap-switch.js',
             'main/webapp/bower_components/datatables.net/js/jquery.dataTables.js',
             'main/webapp/bower_components/datatables.net-bs/js/dataTables.bootstrap.js',
-            'main/webapp/bower_components/js-xlsx/dist/xlsx.full.min.js',
+            'main/webapp/bower_components/js-xlsx/dist/xlsx.core.min.js',
             'main/webapp/bower_components/angular-mocks/angular-mocks.js',
             // endbower
 	    'main/webapp/scripts/app/editor/config.js',
