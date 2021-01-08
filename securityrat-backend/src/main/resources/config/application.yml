@@ -109,6 +109,19 @@ spring:
   output:
     ansi:
       console-available: true
+  security:
+    oauth2:
+      client:
+        registration:
+          azure:
+            client-id: $CLIENT_ID
+            client-secret: $CLIENT_SECRET
+
+azure:
+    activedirectory:
+      tenant-id: $TENANT_ID 
+      user-group: 
+        allowed-groups: group1, group2
 
 server:
   servlet:
@@ -162,7 +175,7 @@ jhipster:
 
 application:
   authentication:
-    type: FORM # possible values are CAS or FORM
+    type: FORM # possible values are CAS, FORM or AZURE
     registration: true # restrict the registration only to the administrators by setting the value to 'false'
   cas:
     loginUrl: https://localhost:8443/cas # Change to the URL your CAS server listens on
