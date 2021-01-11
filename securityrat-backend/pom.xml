@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>securityrat-backend</artifactId>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <name>SecurityRAT / Backend</name>
 
     <repositories>
