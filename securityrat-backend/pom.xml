@@ -4,13 +4,13 @@
     <parent>
         <groupId>org.appsec.securityrat</groupId>
         <artifactId>securityrat-parent</artifactId>
-        <version>1.7.13</version>
+        <version>1.8.0</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>securityrat-backend</artifactId>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
     <name>SecurityRAT / Backend</name>
 
     <repositories>
@@ -39,6 +39,7 @@
         <profile.no-liquibase />
         <profile.swagger />
         <profile.tls />
+        <start-class>org.appsec.securityrat.SecurityRatApp</start-class>
 
         <!-- Dependency versions -->
         <jhipster-dependencies.version>3.4.0</jhipster-dependencies.version>
@@ -94,6 +95,8 @@
         <junit.utReportFolder>${project.testresult.directory}/test</junit.utReportFolder>
         <junit.itReportFolder>${project.testresult.directory}/integrationTest</junit.itReportFolder>
         <!-- jhipster-needle-maven-property -->
+        <azure-active-directory-spring-boot-starter.version>2.3.5</azure-active-directory-spring-boot-starter.version>
+        <spring-security-oauth2.version>2.4.0.RELEASE</spring-security-oauth2.version>
     </properties>
 
     <dependencyManagement>
@@ -121,12 +124,12 @@
     	<dependency>
     		<groupId>com.microsoft.azure</groupId>
     		<artifactId>azure-active-directory-spring-boot-starter</artifactId>
-    		<version>2.3.5</version>
+    		<version>${azure-active-directory-spring-boot-starter.version}</version>
 	</dependency>
 	<dependency>
         	<groupId>org.springframework.security.oauth</groupId>
         	<artifactId>spring-security-oauth2</artifactId>
-        	<version>2.4.0.RELEASE</version>
+        	<version>${spring-security-oauth2.version}</version>
     	</dependency>
 	<dependency> 
                 <groupId>org.springframework.security</groupId>
@@ -553,6 +556,11 @@
                     <configuration>
                         <warSourceIncludes>WEB-INF/**,META-INF/**</warSourceIncludes>
                         <failOnMissingWebXml>false</failOnMissingWebXml>
+                        <!--<archive>
+                            <manifest>
+                                <mainClass>org.springframework.boot.loader.JarLauncher</mainClass>
+                            </manifest>
+                        </archive>-->
                     </configuration>
                 </plugin>
                 <plugin>
