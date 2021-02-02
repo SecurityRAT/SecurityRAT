@@ -25,12 +25,10 @@ angular.module('sdlctoolApp')
 
         function buildUrlCall(selector, apiUrlInfo) {
             var baseJiraCall = apiUrlInfo.jiraUrl + appConfig.jiraApiPrefix + '/';
-            console.log(baseJiraCall);
-            var origin = apiUrlInfo.http + '//' + apiUrlInfo.host;
             var returnValue = '';
             switch (selector) {
                 case 'ticket':
-                    returnValue = origin + appConfig.jiraApiPrefix;
+                    returnValue = apiUrlInfo.jiraUrl + appConfig.jiraApiPrefix;
                     break;
                 case 'attachment':
                     returnValue = baseJiraCall + apiUrlInfo.ticketKey[0] + appConfig.jiraAttachment;
@@ -39,25 +37,25 @@ angular.module('sdlctoolApp')
                     returnValue = baseJiraCall + apiUrlInfo.ticketKey[0] + appConfig.jiraComment;
                     break;
                 case 'issueType':
-                    returnValue = origin + appConfig.jiraApiIssueType;
+                    returnValue = apiUrlInfo.jiraUrl + appConfig.jiraApiIssueType;
                     break;
                 case 'project':
-                    returnValue = origin + appConfig.jiraApiProject;
+                    returnValue = apiUrlInfo.jiraUrl + appConfig.jiraApiProject;
                     break;
                 case 'issueKey':
                     returnValue = baseJiraCall + apiUrlInfo.ticketKey[0];
                     break;
                 case 'search':
-                    returnValue = origin + appConfig.jiraRestApi + '/search';
+                    returnValue = apiUrlInfo.jiraUrl + appConfig.jiraRestApi + '/search';
                     break;
                 case 'issueLink':
-                    returnValue = origin + appConfig.jiraRestApi + '/issueLink';
+                    returnValue = apiUrlInfo.jiraUrl + appConfig.jiraRestApi + '/issueLink';
                     break;
                 case 'remotelink':
                     returnValue = baseJiraCall + apiUrlInfo.ticketKey[0] + '/remotelink';
                     break;
                 case 'field':
-                    returnValue = origin + appConfig.jiraRestApi + '/field';
+                    returnValue = apiUrlInfo.jiraUrl + appConfig.jiraRestApi + '/field';
                     break;
             }
             return returnValue;
