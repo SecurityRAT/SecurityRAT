@@ -193,6 +193,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
             .antMatchers("/robots.txt").permitAll()
+            .antMatchers("/api/authentication_config").permitAll()
             .antMatchers("/api/account").authenticated()
             .antMatchers("/api/account/**").authenticated()
             // Import Assistant API
