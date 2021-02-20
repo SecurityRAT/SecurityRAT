@@ -17,7 +17,7 @@ jobs:
       - name:  Build with maven
         run: mvn --batch-mode --update-snapshots verify
 
-  test docker packaging:
+  test_docker_packaging:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
