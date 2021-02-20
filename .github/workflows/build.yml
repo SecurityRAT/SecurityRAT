@@ -1,4 +1,4 @@
-name: Testing CI
+name: Testing app and packaging
 
 on: [push]
 
@@ -16,3 +16,9 @@ jobs:
         run: npm install bower grunt
       - name:  Build with maven
         run: mvn --batch-mode --update-snapshots verify
+
+  test docker packaging:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        run: docker build -f .docker/app
