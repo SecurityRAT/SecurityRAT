@@ -21,4 +21,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: docker build -f .docker/app
+      - run: cd .docker/app
+      - run: docker build .
