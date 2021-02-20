@@ -3,7 +3,7 @@ name: Testing app and packaging
 on: [push, pull_request]
 
 jobs:
-  setup:
+  build:
     runs-on: ubuntu-latest
 
     strategy:
@@ -17,13 +17,24 @@ jobs:
           java-version: ${{matrix.java}}
       - name: Install tools
         run: |
+          export DOCKLE_VERSION=$(curl --silent "https://api.github.com/repos/goodwithtech/dockle/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
+          wget -O ~/dockle.tar.gz https://github.com/goodwithtech/dockle/releases/download/v${DOCKLE_VERSION}/dockle_${DOCKLE_VERSION}_Linux-64bit.tar.gz
+          tar zxvf ~/dockle.tar.gz -C ~/
+          export TRIVY_VERSION=$(curl --silent "https://api.github.com/repos/aquasecurity/trivy/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
+          wget -O ~/trivy.tar.gz https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz
+          tar zxvf ~/trivy.tar.gz -C ~/
           npm install bower grunt
-  build:
-    runs-on: ubuntu-latest
-    needs: setup
-    steps:
-      - run: bower -v
       - name:  Build with Maven
         run: |
           mvn clean
           mvn -Pprod package
+      - name: Create and copy application archive
+        run: |
+          export JAR_FILE="$(ls target/ | egrep .*\.jar$)"
+          export NAME="$(echo $JAR_FILE | egrep -oh '(.*)[^\.jar]')"
+          chmod +x .ci_scripts/create_archive.sh
+          ./.ci_scripts/create_archive.sh
+          cp security-backend/target/$JAR_FILE .docker/app
+      - name: Test docker packaging
+      - working-directory: .docker/app
+        run: docker build .
