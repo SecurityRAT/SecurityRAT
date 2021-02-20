@@ -136,7 +136,7 @@ angular.module('sdlctoolApp')
                                 $scope.importProperty.promise.derefer = $q.defer();
                                 Helper.addCheckAuthenticationModal($scope.importProperty.promise);
                                 var authenticatorProperty = {
-                                    url: $scope.apiUrl.http + '//' + $scope.apiUrl.host,
+                                    url: $scope.apiUrl.jiraUrl,
                                     message: 'Attachment could not be imported because you are not authenticated.' +
                                         'Please click on the following link to authenticate yourself. You will have one minute after a click on the link.'
                                 };

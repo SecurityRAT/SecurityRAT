@@ -213,7 +213,7 @@ angular.module('sdlctoolApp')
             apiFactory.getJIRAInfo($scope.buildUrlCall('issueKey')).then(function (response) {
                 $scope.checks.isTicket = true;
                 $scope.checks.exporting = true;
-                $scope.ticketURL = $scope.apiUrl.http + '//' + $scope.apiUrl.host + '/browse/' + $scope.apiUrl.ticketKey[0];
+                $scope.ticketURL = $scope.apiUrl.jiraUrl + '/browse/' + $scope.apiUrl.ticketKey[0];
                 if (angular.isDefined($scope.exported.ticket.url)) {
                     if (!angular.equals($scope.exported.ticket.url, $scope.ticketURL)) {
                         $confirm({
@@ -448,7 +448,7 @@ angular.module('sdlctoolApp')
         $scope.$watch('fields.project.key', function (newVal, oldVal, scope) {
             if ($scope.apiUrl.http !== undefined && newVal !== undefined) {
                 $scope.apiUrl.projectkey = newVal;
-                $scope.jiraUrl.url = $scope.apiUrl.http + '//' + $scope.apiUrl.host + '/browse/' + newVal;
+                $scope.jiraUrl.url = $scope.apiUrl.jiraUrl + '/browse/' + newVal;
                 $scope.backupUrl = $scope.jiraUrl.url;
             }
         });
@@ -484,7 +484,8 @@ angular.module('sdlctoolApp')
                         $scope.apiUrl.ticketKey = [];
                         $scope.apiUrl.ticketKey.push(response.key);
                         derefer.resolve(response);
-                        $scope.ticketURL = $scope.apiUrl.http + '//' + $scope.apiUrl.host + '/browse/' + response.key;
+                        console.log($scope.apiUrl)
+                        $scope.ticketURL = $scope.apiUrl.jiraUrl + '/browse/' + response.key;
                         $scope.ticketURLs.push($scope.ticketURL);
                         if (withAttachment) {
                             $scope.commentForTicketImport();
