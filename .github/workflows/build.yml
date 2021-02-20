@@ -36,5 +36,5 @@ jobs:
           ./.ci_scripts/create_archive.sh
           cp security-backend/target/$JAR_FILE .docker/app
       - name: Test docker packaging
-      - working-directory: .docker/app
+        working-directory: .docker/app
         run: docker build .
