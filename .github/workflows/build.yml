@@ -34,7 +34,7 @@ jobs:
           export NAME="$(echo $JAR_FILE | egrep -oh '(.*)[^\.jar]')"
           chmod +x .ci_scripts/create_archive.sh
           ./.ci_scripts/create_archive.sh
-          cp securityrat-backend/target/$(echo $JAR_FILE) .docker/app
+          cp securityrat-backend/target/*.tar.gz .docker/app
       - name: Test docker packaging
         working-directory: .docker/app
         run: docker build .
