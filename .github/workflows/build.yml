@@ -13,6 +13,6 @@ jobs:
         with:
           java-version: 11
       - name: Install NPM modules
-        run: npm install -g bower grunt
+        run: npm install bower grunt
       - name:  Build with maven
         run: mvn --batch-mode --update-snapshots verify
