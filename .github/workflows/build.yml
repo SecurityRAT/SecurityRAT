@@ -30,11 +30,11 @@ jobs:
           mvn -Pprod package
       - name: Create and copy application archive
         run: |
-          export JAR_FILE="$(ls target/ | egrep .*\.jar$)"
+          export JAR_FILE="$(ls securityrat-backend/target/ | egrep .*\.jar$)"
           export NAME="$(echo $JAR_FILE | egrep -oh '(.*)[^\.jar]')"
           chmod +x .ci_scripts/create_archive.sh
           ./.ci_scripts/create_archive.sh
-          cp securityrat-backend/target/$JAR_FILE .docker/app
+          cp securityrat-backend/target/$(echo $JAR_FILE) .docker/app
       - name: Test docker packaging
         working-directory: .docker/app
         run: docker build .
