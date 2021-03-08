@@ -104,8 +104,12 @@ angular.module('sdlctoolApp')
             if ($scope.selection.jira) {
                 $scope.fields.labels = [appConfig.summaryPrefix];
             }
-            if ($scope.selection.createTickets && appConfig.summaryPrefix) {
-                $scope.fields.labels = [appConfig.summaryPrefix + '_REQUIREMENT'];
+            if ($scope.selection.createTickets) {
+                if (appConfig.summaryPrefix) {
+                    $scope.fields.labels = [appConfig.summaryPrefix + '_REQUIREMENT'];
+                } else {
+                    $scope.fields.labels = []
+                }
             }
         };
 
@@ -194,8 +198,11 @@ angular.module('sdlctoolApp')
 
         //get the issue type of the given project Key.
         $scope.getIssueTypes = function (projectKey) {
+
             $scope.jiraAlternatives.issueTypes = [];
             var url = $scope.buildUrlCall('project') + '/' + projectKey;
+            console.log(url)
+            console.log($scope.apiUrl)
             apiFactory.getJIRAInfo(url).then(function (projectData) {
                 angular.forEach(projectData.issueTypes, function (issueType) {
                     if (!issueType.subtask) {
@@ -484,7 +491,6 @@ angular.module('sdlctoolApp')
                         $scope.apiUrl.ticketKey = [];
                         $scope.apiUrl.ticketKey.push(response.key);
                         derefer.resolve(response);
-                        console.log($scope.apiUrl)
                         $scope.ticketURL = $scope.apiUrl.jiraUrl + '/browse/' + response.key;
                         $scope.ticketURLs.push($scope.ticketURL);
                         if (withAttachment) {
@@ -699,9 +705,9 @@ angular.module('sdlctoolApp')
                                 if (!$scope.jiraAlternatives.mandatoryFields[i].mandatory) {
                                     delete $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key];
                                 } else {
-                                    if ($scope.jiraAlternatives.mandatoryFields[i].required 
-                                        && (angular.isUndefined($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key]) 
-                                            || (angular.isDefined($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key]) 
+                                    if ($scope.jiraAlternatives.mandatoryFields[i].required
+                                        && (angular.isUndefined($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key])
+                                            || (angular.isDefined($scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key])
                                                 && $scope.fields[$scope.jiraAlternatives.mandatoryFields[i].key].length <= 0))) {
                                         fieldNotfulfilled = true;
                                         SDLCToolExceptionService.showWarning('Ticket creation failed',
