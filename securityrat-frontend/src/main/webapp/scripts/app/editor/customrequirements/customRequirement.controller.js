@@ -148,7 +148,6 @@ angular.module('sdlctoolApp')
             var item = {};
             var index = -1;
             var categoryIndex = 0;
-            console.log($scope.requirement);
             angular.forEach($scope.categories, function (category) {
                 index++;
                 if (category.id === $scope.requirement.categoryId) {

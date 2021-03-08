@@ -16,7 +16,6 @@ angular.module('sdlctoolApp').controller('UserManagementDialogController',
         };
 
         var onSaveFinished = function (result) {
-            console.log(result);
             $scope.$emit('sdlctoolApp:UserManagementUpdate', result);
             $uibModalInstance.close(result);
         };

@@ -201,8 +201,6 @@ angular.module('sdlctoolApp')
 
             $scope.jiraAlternatives.issueTypes = [];
             var url = $scope.buildUrlCall('project') + '/' + projectKey;
-            console.log(url)
-            console.log($scope.apiUrl)
             apiFactory.getJIRAInfo(url).then(function (projectData) {
                 angular.forEach(projectData.issueTypes, function (issueType) {
                     if (!issueType.subtask) {
