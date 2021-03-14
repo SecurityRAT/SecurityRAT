@@ -101,15 +101,13 @@ angular.module('sdlctoolApp')
 
         // initialises the labels according to the use case.
         $scope.initLabels = function () {
-            if ($scope.selection.jira) {
-                $scope.fields.labels = [appConfig.summaryPrefix];
+            $scope.fields.labels = []
+            if ($scope.selection.jira && appConfig.summaryPrefix) {
+                $scope.fields.labels = [appConfig.summaryPrefix.trim().replace(/\s/g, '_')];
             }
-            if ($scope.selection.createTickets) {
-                if (appConfig.summaryPrefix) {
-                    $scope.fields.labels = [appConfig.summaryPrefix + '_REQUIREMENT'];
-                } else {
-                    $scope.fields.labels = []
-                }
+            if ($scope.selection.createTickets && appConfig.summaryPrefix) {
+                var prefix = appConfig.summaryPrefix.trim().replace(/\s/g, '_')
+                $scope.fields.labels = ['§prefix§_REQUIREMENT'.replace('§prefix§', prefix)];
             }
         };
 
