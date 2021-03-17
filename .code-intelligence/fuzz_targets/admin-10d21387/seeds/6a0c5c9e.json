@@ -1,0 +1,19 @@
+{
+  "name": "6a0c5c9e",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/collection*/**",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "-1618226345"
+      }
+    ]
+  }
+}

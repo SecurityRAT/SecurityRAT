@@ -1,0 +1,39 @@
+{
+  "name": "admin1-bf8bdc2c",
+  "displayName": "admin1",
+  "maxRunTime": "1800s",
+  "fuzzTargets": [
+    "admin1-f10d469b"
+  ],
+  "fuzzerRunConfigurations": [
+    {
+      "engine": "JAVA_LIBFUZZER",
+      "numberOfJobs": 1,
+      "engineArguments": [
+        "-rss_limit_mb=4000"
+      ]
+    },
+    {
+      "engine": "ZAP",
+      "numberOfJobs": 1
+    }
+  ],
+  "configuredTargets": [
+    {
+      "fuzzTarget": "admin1-f10d469b",
+      "fuzzerRunConfigurations": [
+        {
+          "engine": "JAVA_LIBFUZZER",
+          "numberOfJobs": 1,
+          "engineArguments": [
+            "-rss_limit_mb=4000"
+          ]
+        },
+        {
+          "engine": "ZAP",
+          "numberOfJobs": 1
+        }
+      ]
+    }
+  ]
+}

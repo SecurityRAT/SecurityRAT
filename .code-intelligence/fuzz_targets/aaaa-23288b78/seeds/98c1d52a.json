@@ -1,0 +1,19 @@
+{
+  "name": "98c1d52a",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "POST",
+        "uri": "/api/account/confirm_password",
+        "headers": {
+        },
+        "contentType": "APPLICATION_JSON",
+        "body": "{}",
+        "isFixed": false,
+        "webControllerId": "1668864725"
+      }
+    ]
+  }
+}

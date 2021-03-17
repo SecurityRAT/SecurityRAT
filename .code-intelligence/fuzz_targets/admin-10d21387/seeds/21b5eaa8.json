@@ -1,0 +1,19 @@
+{
+  "name": "21b5eaa8",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "PUT",
+        "uri": "/api/trainingBranchNodes",
+        "headers": {
+        },
+        "contentType": "APPLICATION_JSON",
+        "body": "{}",
+        "isFixed": false,
+        "webControllerId": "1013227768"
+      }
+    ]
+  }
+}

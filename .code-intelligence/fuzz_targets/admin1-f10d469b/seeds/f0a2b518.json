@@ -1,0 +1,19 @@
+{
+  "name": "f0a2b518",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/api/slideTemplates/%FUZZ%1",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "1463110348"
+      }
+    ]
+  }
+}

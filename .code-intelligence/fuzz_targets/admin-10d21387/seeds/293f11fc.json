@@ -1,0 +1,19 @@
+{
+  "name": "293f11fc",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/admin-api/users/%FUZZ%",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "-406251043"
+      }
+    ]
+  }
+}

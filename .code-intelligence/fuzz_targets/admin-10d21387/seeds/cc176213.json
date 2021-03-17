@@ -1,0 +1,19 @@
+{
+  "name": "cc176213",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/api/trainings",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "-951658942"
+      }
+    ]
+  }
+}

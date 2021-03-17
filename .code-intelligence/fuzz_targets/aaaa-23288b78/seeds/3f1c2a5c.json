@@ -1,0 +1,19 @@
+{
+  "name": "3f1c2a5c",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/api/collectionCategorys/%FUZZ%1",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "1810923021"
+      }
+    ]
+  }
+}

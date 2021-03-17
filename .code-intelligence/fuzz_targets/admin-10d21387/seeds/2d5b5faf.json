@@ -1,0 +1,19 @@
+{
+  "name": "2d5b5faf",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "POST",
+        "uri": "/api/requirementSkeletons",
+        "headers": {
+        },
+        "contentType": "APPLICATION_JSON",
+        "body": "{}",
+        "isFixed": false,
+        "webControllerId": "610804108"
+      }
+    ]
+  }
+}

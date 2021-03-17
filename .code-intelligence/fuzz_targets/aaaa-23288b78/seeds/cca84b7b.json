@@ -1,0 +1,19 @@
+{
+  "name": "cca84b7b",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "PUT",
+        "uri": "/api/statusColumnValues",
+        "headers": {
+        },
+        "contentType": "APPLICATION_JSON",
+        "body": "{}",
+        "isFixed": false,
+        "webControllerId": "1964813154"
+      }
+    ]
+  }
+}

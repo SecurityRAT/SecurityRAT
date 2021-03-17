@@ -1,0 +1,19 @@
+{
+  "name": "35251eea",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "DELETE",
+        "uri": "/api/optColumns/%FUZZ%1",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "-589869890"
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "4c2a4add",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "POST",
+        "uri": "/api/account/reset_password/finish",
+        "headers": {
+        },
+        "contentType": "APPLICATION_JSON",
+        "body": "{}",
+        "isFixed": false,
+        "webControllerId": "-1598323708"
+      }
+    ]
+  }
+}

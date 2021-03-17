@@ -1,0 +1,19 @@
+{
+  "name": "c5461115",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/api/optColumnContents/getRequirement/%FUZZ%1",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "114173302"
+      }
+    ]
+  }
+}

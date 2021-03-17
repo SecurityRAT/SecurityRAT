@@ -1,0 +1,19 @@
+{
+  "name": "dd834648",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/api/audits/byDates?fromDate=%FUZZ%\u0026toDate=%FUZZ%",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "-508630630"
+      }
+    ]
+  }
+}

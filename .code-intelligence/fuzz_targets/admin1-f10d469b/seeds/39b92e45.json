@@ -1,0 +1,19 @@
+{
+  "name": "39b92e45",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "DELETE",
+        "uri": "/api/collectionCategorys/%FUZZ%1",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "417904998"
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "1032718d",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/frontend-api/projectTypes",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "2031343335"
+      }
+    ]
+  }
+}

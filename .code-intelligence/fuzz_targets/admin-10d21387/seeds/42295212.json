@@ -1,0 +1,19 @@
+{
+  "name": "42295212",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/status*/**",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "2133384579"
+      }
+    ]
+  }
+}

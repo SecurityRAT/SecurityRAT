@@ -1,0 +1,19 @@
+{
+  "name": "13cdc258",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "DELETE",
+        "uri": "/api/optColumnTypes/%FUZZ%1",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "415976574"
+      }
+    ]
+  }
+}

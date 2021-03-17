@@ -1,0 +1,19 @@
+{
+  "name": "28bd84a3",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "POST",
+        "uri": "/api/alternativeInstances",
+        "headers": {
+        },
+        "contentType": "APPLICATION_JSON",
+        "body": "{}",
+        "isFixed": false,
+        "webControllerId": "-1472714264"
+      }
+    ]
+  }
+}

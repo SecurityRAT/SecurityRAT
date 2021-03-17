@@ -1,0 +1,19 @@
+{
+  "name": "aee46232",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/frontend-api/importer/instances/%FUZZ%",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "1981822006"
+      }
+    ]
+  }
+}

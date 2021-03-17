@@ -1,0 +1,19 @@
+{
+  "name": "5c809832",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "PUT",
+        "uri": "/api/projectTypes",
+        "headers": {
+        },
+        "contentType": "APPLICATION_JSON",
+        "body": "{}",
+        "isFixed": false,
+        "webControllerId": "-721953546"
+      }
+    ]
+  }
+}

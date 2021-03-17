@@ -1,0 +1,19 @@
+{
+  "name": "cf3268aa",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/api/trainingTreeNodeUpdate/%FUZZ%1",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "66956384"
+      }
+    ]
+  }
+}

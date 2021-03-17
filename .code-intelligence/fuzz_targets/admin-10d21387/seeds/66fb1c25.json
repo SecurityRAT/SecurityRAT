@@ -1,0 +1,19 @@
+{
+  "name": "66fb1c25",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/configuration*",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "-712884058"
+      }
+    ]
+  }
+}

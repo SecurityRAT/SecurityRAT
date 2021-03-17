@@ -1,0 +1,19 @@
+{
+  "name": "1fa86807",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/api/_search/trainingRequirementNodes/{query}",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "-2087556644"
+      }
+    ]
+  }
+}

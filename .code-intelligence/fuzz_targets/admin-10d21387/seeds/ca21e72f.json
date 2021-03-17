@@ -1,0 +1,19 @@
+{
+  "name": "ca21e72f",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/apphealth*",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "1804091885"
+      }
+    ]
+  }
+}

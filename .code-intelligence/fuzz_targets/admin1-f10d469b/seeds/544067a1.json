@@ -1,0 +1,19 @@
+{
+  "name": "544067a1",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "PUT",
+        "uri": "/api/tagInstances",
+        "headers": {
+        },
+        "contentType": "APPLICATION_JSON",
+        "body": "{}",
+        "isFixed": false,
+        "webControllerId": "1207600174"
+      }
+    ]
+  }
+}

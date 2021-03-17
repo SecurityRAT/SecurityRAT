@@ -1,0 +1,19 @@
+{
+  "name": "55cc8ab2",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "POST",
+        "uri": "/api/account/reset_password/init",
+        "headers": {
+        },
+        "contentType": "APPLICATION_JSON",
+        "body": "{}",
+        "isFixed": false,
+        "webControllerId": "-1207880799"
+      }
+    ]
+  }
+}

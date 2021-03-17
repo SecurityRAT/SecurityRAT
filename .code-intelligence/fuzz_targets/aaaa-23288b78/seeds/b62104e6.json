@@ -1,0 +1,19 @@
+{
+  "name": "b62104e6",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/api/alternativeInstances",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "865329566"
+      }
+    ]
+  }
+}

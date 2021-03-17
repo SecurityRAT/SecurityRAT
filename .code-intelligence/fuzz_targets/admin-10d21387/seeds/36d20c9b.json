@@ -1,0 +1,19 @@
+{
+  "name": "36d20c9b",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "PUT",
+        "uri": "/api/trainingRequirementNodes",
+        "headers": {
+        },
+        "contentType": "APPLICATION_JSON",
+        "body": "{}",
+        "isFixed": false,
+        "webControllerId": "2048999724"
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "44c9c1ff",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/api/trainingCategoryNodes",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "-40912702"
+      }
+    ]
+  }
+}

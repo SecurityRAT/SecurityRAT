@@ -1,0 +1,19 @@
+{
+  "name": "1dda98db",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "DELETE",
+        "uri": "/api/trainingBranchNodes/%FUZZ%1",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "1904460964"
+      }
+    ]
+  }
+}

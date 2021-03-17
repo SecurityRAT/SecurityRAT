@@ -1,0 +1,19 @@
+{
+  "name": "5029e616",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/api/trainingTreeNodes",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "1142731070"
+      }
+    ]
+  }
+}

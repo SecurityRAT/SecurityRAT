@@ -1,0 +1,19 @@
+{
+  "name": "aa91534d",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/api/_search/trainingCustomSlideNodes/{query}",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "-974523425"
+      }
+    ]
+  }
+}

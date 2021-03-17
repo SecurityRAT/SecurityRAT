@@ -1,0 +1,19 @@
+{
+  "name": "3d33e50c",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "DELETE",
+        "uri": "/api/requirementSkeletons/%FUZZ%1",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "537073182"
+      }
+    ]
+  }
+}

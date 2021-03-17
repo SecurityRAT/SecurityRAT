@@ -1,0 +1,19 @@
+{
+  "name": "6beada25",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/api/_search/collectionInstances/%FUZZ%",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "-1828845370"
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "c8a714e0",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/api/statusColumnValues/statusColumn/%FUZZ%1",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "-15131060"
+      }
+    ]
+  }
+}

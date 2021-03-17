@@ -1,0 +1,19 @@
+{
+  "name": "7e174fdd",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/api/optColumns",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "-1187563561"
+      }
+    ]
+  }
+}

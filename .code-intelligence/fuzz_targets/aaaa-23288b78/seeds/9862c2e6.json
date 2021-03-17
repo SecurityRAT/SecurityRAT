@@ -1,0 +1,19 @@
+{
+  "name": "9862c2e6",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "PUT",
+        "uri": "/api/optColumnTypes",
+        "headers": {
+        },
+        "contentType": "APPLICATION_JSON",
+        "body": "{}",
+        "isFixed": false,
+        "webControllerId": "-832139434"
+      }
+    ]
+  }
+}

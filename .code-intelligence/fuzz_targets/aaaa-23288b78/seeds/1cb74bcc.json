@@ -1,0 +1,19 @@
+{
+  "name": "1cb74bcc",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "DELETE",
+        "uri": "/api/trainingCategoryNodes/%FUZZ%1",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "958171100"
+      }
+    ]
+  }
+}

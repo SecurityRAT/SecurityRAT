@@ -33,9 +33,11 @@ spring:
       enabled: false
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:mysql://localhost:3306/SecurityRAT?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
-    username: root
-    password:
+    url: jdbc:mysql://172.17.0.4:3306/securityrat?allowPublicKeyRetrieval=true&useSSL=false&useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+    #url: jdbc:mysql://localhost:3306/securityrat?allowPublicKeyRetrieval=true&useSSL=false&useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+    
+    username: user
+    password: password
     hikari:
       poolName: Hikari
       auto-commit: false
@@ -65,7 +67,7 @@ spring:
     elasticsearch:
       properties:
         path:
-          home: target/elasticsearch
+          home: /home/roman #target/elasticsearch
 #    rest:
 #      uris: http://localhost:9200
   # Replace by 'prod, faker' to add the faker context and have sample data loaded in production
@@ -79,6 +81,7 @@ spring:
   thymeleaf:
     cache: true
 
+security.enable-csrf: false
 # ===================================================================
 # To enable TLS in production, generate a certificate using:
 # keytool -genkey -alias securityrat -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore keystore.p12 -validity 3650
@@ -138,6 +141,7 @@ jhipster:
       queue-size: 512
   audit-events:
     retention-period: 30 # Number of days before audit events are deleted.
+
 
 # ===================================================================
 # Application specific properties

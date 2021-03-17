@@ -1,0 +1,19 @@
+{
+  "name": "480fd927",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/api/tagInstances",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "1800315569"
+      }
+    ]
+  }
+}

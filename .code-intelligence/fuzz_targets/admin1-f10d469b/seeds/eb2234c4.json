@@ -1,0 +1,19 @@
+{
+  "name": "eb2234c4",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/api/authentication_config",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "-804164910"
+      }
+    ]
+  }
+}

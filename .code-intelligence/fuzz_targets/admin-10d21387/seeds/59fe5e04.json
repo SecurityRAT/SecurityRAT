@@ -1,0 +1,19 @@
+{
+  "name": "59fe5e04",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/logs*",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "2131805335"
+      }
+    ]
+  }
+}

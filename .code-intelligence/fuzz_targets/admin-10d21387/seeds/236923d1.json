@@ -1,0 +1,19 @@
+{
+  "name": "236923d1",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/api/_search/optColumnTypes/%FUZZ%",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "1596755216"
+      }
+    ]
+  }
+}

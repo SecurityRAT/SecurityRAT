@@ -1,0 +1,25 @@
+version: '3'
+services:
+  mysql-service:
+    container_name: securityrat_mysql
+    build:
+      context: ./mysql
+    image: gcr.io/code-intelligence/securityrat_mysql
+    environment: 
+      MYSQL_DATABASE: 'securityrat'
+      MYSQL_ROOT_PASSWORD: 'changeit'
+      MYSQL_USER: 'user' # This user has full priviledge over the MYSQL_DATABASE
+      MYSQL_PASSWORD: 'password' # Password of the MYSQL_USER
+    command: mysqld --skip-ssl
+#  securityrat:
+#    container_name: securityrat 
+#    image: securityrat/securityrat
+#    links: 
+#      - mysql-service
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-service:3306/securityrat?useUnicode=true&characterEncoding=utf8&useSSL=false # 
+#      - SPRING_DATASOURCE_USERNAME=user # database MYSQL_USER provided in the mysql-service above
+#      - SPRING_DATASOURCE_PASSWORD=password # database MYSQL_PASSWORD provided in the mysql-service above
+#      - JHIPSTER_SLEEP=10 # gives time for the database to boot before the application
+#    ports: 
+#      - 9002:9000

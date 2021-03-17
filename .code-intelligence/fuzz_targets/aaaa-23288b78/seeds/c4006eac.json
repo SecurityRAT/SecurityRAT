@@ -1,0 +1,19 @@
+{
+  "name": "c4006eac",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/configuration*",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "-712884058"
+      }
+    ]
+  }
+}

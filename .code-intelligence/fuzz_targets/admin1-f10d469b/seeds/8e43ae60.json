@@ -1,0 +1,19 @@
+{
+  "name": "8e43ae60",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "POST",
+        "uri": "/api/reqCategorys",
+        "headers": {
+        },
+        "contentType": "APPLICATION_JSON",
+        "body": "{}",
+        "isFixed": false,
+        "webControllerId": "575103732"
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "118b6a01",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/api/slideTemplates",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "-1608680843"
+      }
+    ]
+  }
+}

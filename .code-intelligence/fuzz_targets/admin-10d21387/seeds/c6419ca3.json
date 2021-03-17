@@ -1,0 +1,19 @@
+{
+  "name": "c6419ca3",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/api/requirementSkeletons/%FUZZ%1",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "-547456409"
+      }
+    ]
+  }
+}

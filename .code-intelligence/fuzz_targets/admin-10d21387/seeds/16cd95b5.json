@@ -1,0 +1,19 @@
+{
+  "name": "16cd95b5",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "PUT",
+        "uri": "/api/collectionCategorys",
+        "headers": {
+        },
+        "contentType": "APPLICATION_JSON",
+        "body": "{}",
+        "isFixed": false,
+        "webControllerId": "368511914"
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "1d26e60c",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/alternative*/**",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "-751747040"
+      }
+    ]
+  }
+}

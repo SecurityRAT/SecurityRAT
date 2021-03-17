@@ -1,0 +1,19 @@
+{
+  "name": "42d7fdff",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/ferequirement*/**",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "-58352951"
+      }
+    ]
+  }
+}

@@ -44,10 +44,10 @@ spring:
     type: com.zaxxer.hikari.HikariDataSource
     # Choose one, depending on your database setup:
     #
-    #url: jdbc:mysql://localhost:3306/SecurityRAT?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
-    url: jdbc:mariadb://localhost:3306/securityrat?useSSL=false&serverTimezone=UTC&createDatabaseIfNotExist=true
-    username: root
-    password:
+    url: jdbc:mysql://172.17.0.3:3306/securityrat?allowPublicKeyRetrieval=true&useSSL=false&useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+    #url: jdbc:mariadb://localhost:3306/securityrat?useSSL=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+    username: user
+    password: password
     hikari:
       poolName: Hikari
       auto-commit: false
@@ -72,7 +72,7 @@ spring:
     elasticsearch:
       properties:
         path:
-          home: target/elasticsearch
+          home: /home/roman #target/elasticsearch
   liquibase:
     # Remove 'faker' if you do not want the sample data to be loaded automatically
     contexts: dev
@@ -88,7 +88,11 @@ spring:
 
 server:
   port: 8080
-
+  ssl:
+    key-store: keystore.p12
+    key-store-password: password
+    keyStoreType: PKCS12
+    keyAlias: tomcat
 # ===================================================================
 # JHipster specific properties
 #

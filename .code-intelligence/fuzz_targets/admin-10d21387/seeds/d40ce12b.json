@@ -1,0 +1,19 @@
+{
+  "name": "d40ce12b",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "POST",
+        "uri": "/api/statusColumnValues",
+        "headers": {
+        },
+        "contentType": "APPLICATION_JSON",
+        "body": "{}",
+        "isFixed": false,
+        "webControllerId": "-1738241990"
+      }
+    ]
+  }
+}

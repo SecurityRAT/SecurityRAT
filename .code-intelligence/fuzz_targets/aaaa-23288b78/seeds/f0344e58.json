@@ -1,0 +1,19 @@
+{
+  "name": "f0344e58",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "PUT",
+        "uri": "/api/requirementSkeletons",
+        "headers": {
+        },
+        "contentType": "APPLICATION_JSON",
+        "body": "{}",
+        "isFixed": false,
+        "webControllerId": "-352767664"
+      }
+    ]
+  }
+}

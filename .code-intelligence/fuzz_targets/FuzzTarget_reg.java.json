@@ -1,0 +1,62 @@
+{
+  "name": "reg-97bd1bc7",
+  "displayName": "reg",
+  "javaWebApp": {
+    "webApplication": {
+      "applicationName": "SecurityRatApp",
+      "package": "org.appsec.securityrat",
+      "artifact": "securityrat-backend/target/securityrat-backend-1.8.0.jar",
+      "controllers": [
+        "/api/register"
+      ],
+      "spiderOptions": {
+
+      },
+      "detectedFrameworks": [
+        "SPRING_BOOT",
+        "SPRING"
+      ]
+    },
+    "exceptionPolicy": {
+      "policy": [
+        {
+          "enabled": true,
+          "responsePolicy": {
+            "responseMatcher": "CODE_STARTS_WITH",
+            "code": 2
+          }
+        },
+        {
+          "enabled": true,
+          "responsePolicy": {
+            "responseMatcher": "CODE_STARTS_WITH",
+            "code": 4
+          }
+        },
+        {
+          "enabled": true,
+          "responsePolicy": {
+            "code": 302
+          }
+        },
+        {
+          "enabled": true,
+          "exceptionPolicy": {
+            "Exception": "java.lang.IllegalArgumentException",
+            "exceptionStrategy": "STACKTRACE_CONTAINS",
+            "content": "org.springframework.web.util.UriComponentsBuilder"
+          }
+        }
+      ]
+    },
+    "jars": [
+      "securityrat-backend/target/securityrat-backend-1.8.0.jar"
+    ],
+    "instrumentationFilters": [
+      "org.appsec.securityrat"
+    ],
+    "api": {
+      "relativePath": ".code-intelligence/fuzz_targets/FuzzTarget_reg.java"
+    }
+  }
+}

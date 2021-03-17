@@ -1,0 +1,19 @@
+{
+  "name": "ff7fdfcc",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "POST",
+        "uri": "/api/tagInstances",
+        "headers": {
+        },
+        "contentType": "APPLICATION_JSON",
+        "body": "{}",
+        "isFixed": false,
+        "webControllerId": "1766270062"
+      }
+    ]
+  }
+}

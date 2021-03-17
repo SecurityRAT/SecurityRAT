@@ -1,0 +1,19 @@
+{
+  "name": "004f555b",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/api/statusColumns",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "-1214857840"
+      }
+    ]
+  }
+}

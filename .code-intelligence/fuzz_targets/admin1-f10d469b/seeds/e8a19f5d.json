@@ -1,0 +1,19 @@
+{
+  "name": "e8a19f5d",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/password*",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "-2021116541"
+      }
+    ]
+  }
+}

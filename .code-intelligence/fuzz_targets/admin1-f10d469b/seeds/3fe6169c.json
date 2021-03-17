@@ -1,0 +1,19 @@
+{
+  "name": "3fe6169c",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/api/optColumnContents/filter?projectTypeId=%FUZZ%1\u0026requirementId=%FUZZ%1",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "1157191969"
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "d838b4f6",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/api/optColumnContents",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "387805176"
+      }
+    ]
+  }
+}

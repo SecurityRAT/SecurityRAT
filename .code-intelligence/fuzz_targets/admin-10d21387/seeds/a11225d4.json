@@ -1,0 +1,19 @@
+{
+  "name": "a11225d4",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/api/statusColumnValues",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "-1028446121"
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "d4807c20",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "PUT",
+        "uri": "/api/trainingGeneratedSlideNodes",
+        "headers": {
+        },
+        "contentType": "APPLICATION_JSON",
+        "body": "{}",
+        "isFixed": false,
+        "webControllerId": "-1099542920"
+      }
+    ]
+  }
+}

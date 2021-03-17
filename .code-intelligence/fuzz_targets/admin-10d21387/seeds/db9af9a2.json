@@ -1,0 +1,19 @@
+{
+  "name": "db9af9a2",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "PUT",
+        "uri": "/api/trainingCustomSlideNodes",
+        "headers": {
+        },
+        "contentType": "APPLICATION_JSON",
+        "body": "{}",
+        "isFixed": false,
+        "webControllerId": "1047356294"
+      }
+    ]
+  }
+}

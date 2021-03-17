@@ -1,0 +1,19 @@
+{
+  "name": "df6dfab8",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/admin-api/_search/configConstants/%FUZZ%",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "-321916521"
+      }
+    ]
+  }
+}

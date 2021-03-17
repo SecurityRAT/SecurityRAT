@@ -1,0 +1,19 @@
+{
+  "name": "8d856a0e",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/api/trainingGeneratedSlideNodes",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "-818190170"
+      }
+    ]
+  }
+}

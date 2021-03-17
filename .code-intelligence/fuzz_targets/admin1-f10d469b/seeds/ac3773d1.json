@@ -1,0 +1,19 @@
+{
+  "name": "ac3773d1",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "POST",
+        "uri": "/admin-api/configConstants",
+        "headers": {
+        },
+        "contentType": "APPLICATION_JSON",
+        "body": "{}",
+        "isFixed": false,
+        "webControllerId": "765921544"
+      }
+    ]
+  }
+}

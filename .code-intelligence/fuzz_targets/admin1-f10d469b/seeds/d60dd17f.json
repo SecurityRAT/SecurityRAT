@@ -1,0 +1,19 @@
+{
+  "name": "d60dd17f",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/api/tagCategorys",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "1118262856"
+      }
+    ]
+  }
+}

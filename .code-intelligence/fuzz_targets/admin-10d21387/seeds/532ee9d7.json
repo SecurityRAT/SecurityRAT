@@ -1,0 +1,19 @@
+{
+  "name": "532ee9d7",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/accessdenied*",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "197169383"
+      }
+    ]
+  }
+}

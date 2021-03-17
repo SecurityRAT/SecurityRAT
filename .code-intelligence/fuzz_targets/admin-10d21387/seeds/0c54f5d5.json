@@ -1,0 +1,19 @@
+{
+  "name": "0c54f5d5",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/api/account/sessions",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "-977289435"
+      }
+    ]
+  }
+}

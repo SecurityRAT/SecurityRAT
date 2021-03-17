@@ -1,0 +1,19 @@
+{
+  "name": "a4b3570b",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "POST",
+        "uri": "/api/trainingCustomSlideNodes",
+        "headers": {
+        },
+        "contentType": "APPLICATION_JSON",
+        "body": "{}",
+        "isFixed": false,
+        "webControllerId": "-358884714"
+      }
+    ]
+  }
+}

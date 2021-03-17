@@ -1,0 +1,19 @@
+{
+  "name": "1b3ce676",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "POST",
+        "uri": "/api/slideTemplates",
+        "headers": {
+        },
+        "contentType": "APPLICATION_JSON",
+        "body": "{}",
+        "isFixed": false,
+        "webControllerId": "881628598"
+      }
+    ]
+  }
+}

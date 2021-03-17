@@ -1,0 +1,19 @@
+{
+  "name": "de2cac48",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "PUT",
+        "uri": "/api/optColumnContents",
+        "headers": {
+        },
+        "contentType": "APPLICATION_JSON",
+        "body": "{}",
+        "isFixed": false,
+        "webControllerId": "84367938"
+      }
+    ]
+  }
+}

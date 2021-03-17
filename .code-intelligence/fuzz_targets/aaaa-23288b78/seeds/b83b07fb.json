@@ -1,0 +1,19 @@
+{
+  "name": "b83b07fb",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/authorities*",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "-1227457967"
+      }
+    ]
+  }
+}

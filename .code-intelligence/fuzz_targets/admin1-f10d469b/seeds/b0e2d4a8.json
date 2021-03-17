@@ -1,0 +1,19 @@
+{
+  "name": "b0e2d4a8",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "POST",
+        "uri": "/frontend-api/importer/apply",
+        "headers": {
+        },
+        "contentType": "APPLICATION_JSON",
+        "body": "{}",
+        "isFixed": false,
+        "webControllerId": "-1209088364"
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "1942c3eb",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/frontend-api/requirementCategories",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "-806186183"
+      }
+    ]
+  }
+}

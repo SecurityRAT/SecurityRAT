@@ -1,0 +1,19 @@
+{
+  "name": "d19fbc0d",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/api/logs",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "100163314"
+      }
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "name": "reg-63935aee",
+  "displayName": "reg",
+  "maxRunTime": "1800s",
+  "fuzzTargets": [
+    "reg-97bd1bc7"
+  ],
+  "fuzzerRunConfigurations": [
+    {
+      "engine": "JAVA_LIBFUZZER",
+      "numberOfJobs": 1
+    },
+    {
+      "engine": "ZAP",
+      "numberOfJobs": 1
+    }
+  ],
+  "configuredTargets": [
+    {
+      "fuzzTarget": "reg-97bd1bc7",
+      "fuzzerRunConfigurations": [
+        {
+          "engine": "JAVA_LIBFUZZER",
+          "numberOfJobs": 1
+        },
+        {
+          "engine": "ZAP",
+          "numberOfJobs": 1
+        }
+      ]
+    }
+  ]
+}

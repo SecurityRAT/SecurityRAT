@@ -1,0 +1,19 @@
+{
+  "name": "e5a916c2",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/ferequirement*/**",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "-58352951"
+      }
+    ]
+  }
+}

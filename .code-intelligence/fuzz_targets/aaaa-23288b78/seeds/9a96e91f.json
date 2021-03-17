@@ -1,0 +1,19 @@
+{
+  "name": "9a96e91f",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/frontend-api/requirementSkeletons/%FUZZ%1",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "-2056768979"
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "5af81fae",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/appmetrics*",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "333285354"
+      }
+    ]
+  }
+}

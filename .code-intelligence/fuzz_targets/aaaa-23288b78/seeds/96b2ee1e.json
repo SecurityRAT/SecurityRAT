@@ -1,0 +1,19 @@
+{
+  "name": "96b2ee1e",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/frontend-api/optionColumnsWithAlternativeSets",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "527815989"
+      }
+    ]
+  }
+}

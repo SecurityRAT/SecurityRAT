@@ -1,0 +1,19 @@
+{
+  "name": "8633c244",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/api/authenticate",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "-670054735"
+      }
+    ]
+  }
+}

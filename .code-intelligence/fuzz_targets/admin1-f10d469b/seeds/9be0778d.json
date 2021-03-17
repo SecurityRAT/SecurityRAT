@@ -1,0 +1,19 @@
+{
+  "name": "9be0778d",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/api/TrainingTreeNode/childrenOf/%FUZZ%1",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "985821709"
+      }
+    ]
+  }
+}

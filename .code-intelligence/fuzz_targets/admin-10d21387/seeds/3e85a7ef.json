@@ -1,0 +1,19 @@
+{
+  "name": "3e85a7ef",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/api/_search/tagCategorys/%FUZZ%",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "1691930203"
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "05e2a98a",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/api/TrainingCustomSlideNodeByTrainingTreeNode/%FUZZ%1",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "181032710"
+      }
+    ]
+  }
+}

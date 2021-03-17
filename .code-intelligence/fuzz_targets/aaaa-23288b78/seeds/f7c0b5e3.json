@@ -1,0 +1,19 @@
+{
+  "name": "f7c0b5e3",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "POST",
+        "uri": "/admin-api/configConstants",
+        "headers": {
+        },
+        "contentType": "APPLICATION_JSON",
+        "body": "{}",
+        "isFixed": false,
+        "webControllerId": "765921544"
+      }
+    ]
+  }
+}

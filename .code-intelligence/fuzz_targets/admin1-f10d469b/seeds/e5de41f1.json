@@ -1,0 +1,19 @@
+{
+  "name": "e5de41f1",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/admin-api/authorities",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "-1588618764"
+      }
+    ]
+  }
+}

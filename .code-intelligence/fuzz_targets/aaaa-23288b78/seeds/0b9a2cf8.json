@@ -1,0 +1,19 @@
+{
+  "name": "0b9a2cf8",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "POST",
+        "uri": "/api/collectionInstances",
+        "headers": {
+        },
+        "contentType": "APPLICATION_JSON",
+        "body": "{}",
+        "isFixed": false,
+        "webControllerId": "212973760"
+      }
+    ]
+  }
+}

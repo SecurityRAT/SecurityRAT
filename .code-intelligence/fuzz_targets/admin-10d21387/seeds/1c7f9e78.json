@@ -1,0 +1,19 @@
+{
+  "name": "1c7f9e78",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/frontend-api/importer/types",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "1595682666"
+      }
+    ]
+  }
+}

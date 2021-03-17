@@ -1,0 +1,19 @@
+{
+  "name": "3e684c8a",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/requirements",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "-1083960950"
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "37ef22c3",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/admin-api/userAuthorities",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "909730026"
+      }
+    ]
+  }
+}

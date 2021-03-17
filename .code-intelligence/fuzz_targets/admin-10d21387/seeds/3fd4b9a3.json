@@ -1,0 +1,19 @@
+{
+  "name": "3fd4b9a3",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/api/alternativeSets",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "-533678019"
+      }
+    ]
+  }
+}

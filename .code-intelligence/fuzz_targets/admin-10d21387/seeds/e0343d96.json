@@ -1,0 +1,19 @@
+{
+  "name": "e0343d96",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/api/trainingBranchNodes",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "-1690144538"
+      }
+    ]
+  }
+}

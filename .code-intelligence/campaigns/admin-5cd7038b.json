@@ -1,0 +1,33 @@
+{
+  "name": "admin-5cd7038b",
+  "displayName": "user",
+  "maxRunTime": "1800s",
+  "fuzzTargets": [
+    "admin-10d21387"
+  ],
+  "fuzzerRunConfigurations": [
+    {
+      "engine": "JAVA_LIBFUZZER",
+      "numberOfJobs": 1
+    },
+    {
+      "engine": "ZAP",
+      "numberOfJobs": 1
+    }
+  ],
+  "configuredTargets": [
+    {
+      "fuzzTarget": "admin-10d21387",
+      "fuzzerRunConfigurations": [
+        {
+          "engine": "JAVA_LIBFUZZER",
+          "numberOfJobs": 1
+        },
+        {
+          "engine": "ZAP",
+          "numberOfJobs": 1
+        }
+      ]
+    }
+  ]
+}

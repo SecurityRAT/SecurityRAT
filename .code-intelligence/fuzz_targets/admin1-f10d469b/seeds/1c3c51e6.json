@@ -1,0 +1,19 @@
+{
+  "name": "1c3c51e6",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/activate*",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "512058331"
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "7be849bf",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/api/audits/all",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "790968370"
+      }
+    ]
+  }
+}

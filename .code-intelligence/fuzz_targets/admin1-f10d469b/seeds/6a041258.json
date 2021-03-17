@@ -1,0 +1,19 @@
+{
+  "name": "6a041258",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/frontend-api/categoriesWithRequirements/filter?collections=%FUZZ%\u0026projectTypes=%FUZZ%",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "-1746513763"
+      }
+    ]
+  }
+}

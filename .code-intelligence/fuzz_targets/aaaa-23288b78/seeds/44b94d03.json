@@ -1,0 +1,19 @@
+{
+  "name": "44b94d03",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "POST",
+        "uri": "/api/trainingTreeNodeUpdate",
+        "headers": {
+        },
+        "contentType": "APPLICATION_JSON",
+        "body": "{}",
+        "isFixed": false,
+        "webControllerId": "1632614523"
+      }
+    ]
+  }
+}

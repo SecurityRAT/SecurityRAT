@@ -1,0 +1,19 @@
+{
+  "name": "936810df",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "GET",
+        "uri": "/api/requirementSkeletons/getSelected?collections=%FUZZ%\u0026projecttypes=%FUZZ%",
+        "headers": {
+        },
+        "contentType": "TEXT_HTML",
+        "body": "",
+        "isFixed": false,
+        "webControllerId": "-1533450639"
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "6850733a",
+  "fileName": ".",
+  "fileContent": null,
+  "requestChain": {
+    "requests": [
+      {
+        "method": "POST",
+        "uri": "/admin-api/users",
+        "headers": {
+        },
+        "contentType": "APPLICATION_JSON",
+        "body": "{}",
+        "isFixed": false,
+        "webControllerId": "152277320"
+      }
+    ]
+  }
+}
