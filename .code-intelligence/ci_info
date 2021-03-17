@@ -9078,10 +9078,10 @@
   },
   "projectEnvironment": {
     "dockerBuild": {
-      "name": "maven-test"
+      "name": "gcr.io/code-intelligence/securityrat_build"
     },
     "dockerRun": {
-      "name": "maven-test"
+      "name": "gcr.io/code-intelligence/securityrat_build"
     }
   }
 }
