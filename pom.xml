@@ -6,7 +6,7 @@
 
     <groupId>org.appsec.securityrat</groupId>
     <artifactId>securityrat-parent</artifactId>
-    <version>1.8.0</version>
+    <version>1.8.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     
     <name>SecurityRAT</name>
