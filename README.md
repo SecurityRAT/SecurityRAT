@@ -2,9 +2,10 @@
 [![License][license-image]][Apache License 2.0]
 [![Join the chat at https://owasp.slack.com/archives/C76U4TNFJ](https://img.shields.io/badge/chat-on%20slack-blueviolet)](https://owasp.slack.com/archives/C76U4TNFJ)
 [![OWASP Incubator](https://img.shields.io/badge/owasp-incubator%20project-orange.svg)](https://owasp.org/www-project-securityrat/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/securityrat/securityrat.svg)](https://hub.docker.com/r/securityrat/securityrat)
 
 
-**OWASP Security RAT** (Requirement Automation Tool) is a tool supposed to assist with the problem of addressing security requirements during application development. The typical use case is:
+[**OWASP Security RAT**](https://owasp.org/www-project-securityrat/) (Requirement Automation Tool) is a tool supposed to assist with the problem of addressing security requirements during application development. The typical use case is:
 
 - specify parameters of the software artifact you're developing
 - based on this information, list of common security requirements is generated
@@ -28,11 +29,6 @@ Check out our brand-new online demo:
 **password**: SecurityRATdemo10!
 
 You can try it out with the demo version and can modify/add/delete requirements. The demo version will be resetted every 24 hours (CEST).
-
-
-## OWASP Website
-
-[OWASP SecurityRAT](https://owasp.org/www-project-securityrat/)
 
 ## License
 
