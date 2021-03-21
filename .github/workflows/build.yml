@@ -32,18 +32,26 @@ jobs:
           mvn clean
           mvn -Pprod verify
       - name: Create and copy application archive
+        env:
+          APP_NAME: securityrat
         run: |
-          export JAR_FILE="$(ls securityrat-backend/target/ | egrep .*\.jar$)"
-          export NAME="$(echo $JAR_FILE | egrep -oh '(.*)[^\.jar]')"
+          mv securityrat-backend/target/*.jar securityrat-backend/target/securityrat.jar
           chmod +x .ci_scripts/create_archive.sh
           ./.ci_scripts/create_archive.sh
-          cp securityrat-backend/target/*.tar.gz .docker/app
+          cp securityrat-backend/target/$APP_NAME.tar.gz .docker/app
       - name: Building Docker Image
         working-directory: .docker/app
         run: docker build -t $DOCKER_REPO:$DOCKER_TAG .
       - name: Set release version
         id: vars
+        if: startsWith(github.ref, 'refs/tags/v1.')
         run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+      - name: Create release
+        if: startsWith(github.ref, 'refs/tags/v1.')
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "securityrat-backend/target/*.tar.gz"
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Publishing docker image
         if: startsWith(github.ref, 'refs/tags/v1.')
         env:
@@ -52,4 +60,7 @@ jobs:
           RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
         run: |
           docker login -u "$HUB_USERNAME" -p "$HUB_ACCESS_TOKEN"
+          docker tag $DOCKER_REPO:$DOCKER_TAG $DOCKER_REPO:latest
+          docker tag $DOCKER_REPO:$DOCKER_TAG $DOCKER_REPO:$RELEASE_VERSION
           docker push $DOCKER_REPO:$RELEASE_VERSION
+          docker push $DOCKER_REPO:latest

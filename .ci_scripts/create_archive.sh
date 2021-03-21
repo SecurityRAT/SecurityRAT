@@ -11,5 +11,4 @@ cp securityrat-backend/src/main/resources/config/application-dev.yml $DIR
 
 cd securityrat-backend/target/
 
-zip $(echo $NAME).zip $(echo $JAR_FILE) config/*
-tar -czf $(echo $NAME).tar.gz $(echo $JAR_FILE) config/*
+tar -czf $APP_NAME.tar.gz $APP_NAME.jar config/*
