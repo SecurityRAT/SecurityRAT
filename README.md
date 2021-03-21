@@ -1,4 +1,5 @@
-![Build Workflow](https://github.com/github/docs/actions/workflows/build.yml/badge.svg)
+![CI Build](https://github.com/github/docs/actions/workflows/build.yml/badge.svg)
+[![License][license-image]][Apache License 2.0]
 [![Join the chat at https://owasp.slack.com/archives/C76U4TNFJ](https://img.shields.io/badge/chat-on%20slack-blueviolet)](https://owasp.slack.com/archives/C76U4TNFJ)
 [![OWASP Incubator](https://img.shields.io/badge/owasp-incubator%20project-orange.svg)](https://owasp.org/www-project-securityrat/)
 
