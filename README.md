@@ -38,3 +38,6 @@ You can play freely around with the demo version and can modify/add/delete requi
 ## License
 
 This project is distributed under the Apache license, Version 2.0: http://www.apache.org/licenses/LICENSE-2.
+
+[license-image]: https://img.shields.io/badge/license-apache%20v2-brightgreen.svg
+[Apache License 2.0]: https://github.com/SecurityRAT/SecurityRAT/blob/master/LICENSE
