@@ -1,4 +1,4 @@
-name: Testing app and packaging
+name: CI Build
 
 on: [push, pull_request]
 
