@@ -1,0 +1,1 @@
+mvn release:prepare -DautoVersionSubmodules=true -Dresume=false
