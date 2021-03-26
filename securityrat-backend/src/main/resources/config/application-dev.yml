@@ -60,7 +60,7 @@ spring:
     # The following line is only required, if MariaDB will be used:
     #
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-    
+
     show-sql: true
     properties:
       hibernate.id.new_generator_mappings: true
@@ -87,7 +87,7 @@ spring:
     cache: false
 
 server:
-  port: 8080
+  port: 9000
 
 # ===================================================================
 # JHipster specific properties
