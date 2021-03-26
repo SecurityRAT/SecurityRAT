@@ -1,4 +1,4 @@
-FROM openjdk:11-jre-alpine
+FROM openjdk:11-jre-slim
 
 ENV COMPRESSEDFILE="securityrat*.tar.gz"
 
