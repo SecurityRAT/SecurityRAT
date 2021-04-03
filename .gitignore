@@ -345,4 +345,6 @@ temp/
 !.vscode/extensions.json
 *.code-workspace
 
+*.classpath
+*.project
 # End of https://www.toptal.com/developers/gitignore/api/maven,java,eclipse,intellij+all,vscode,node,bower,grunt

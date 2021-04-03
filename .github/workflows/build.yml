@@ -59,6 +59,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: "securityrat-backend/target/*.tar.gz"
+          bodyFile: "release.md"
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Publishing docker image
         if: startsWith(github.ref, 'refs/tags/v1.')
