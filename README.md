@@ -4,8 +4,7 @@
 [![OWASP Incubator](https://img.shields.io/badge/owasp-incubator%20project-orange.svg)](https://owasp.org/www-project-securityrat/)
 [![Docker Pulls](https://img.shields.io/docker/pulls/securityrat/securityrat.svg)](https://hub.docker.com/r/securityrat/securityrat)
 
-
-[**OWASP Security RAT**](https://owasp.org/www-project-securityrat/) (Requirement Automation Tool) is a tool supposed to assist with the problem of addressing security requirements during application development. The typical use case is:
+[**OWASP Security RAT**](https://owasp.org/www-project-securityrat/) (Requirement Automation Tool) is a tool helping you manage security requirements in your agile development projects. The typical use case is:
 
 - specify parameters of the software artifact you're developing
 - based on this information, list of common security requirements is generated
