@@ -119,8 +119,9 @@ spring:
 
 azure:
     activedirectory:
-      tenant-id: $TENANT_ID 
-      user-group: 
+      allow-telemetry: false
+      tenant-id: $TENANT_ID
+      user-group:
         allowed-groups: group1, group2
 
 server:

@@ -26,7 +26,6 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.ExceptionHandlingConfigurer;
-import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer.AuthorizedUrl;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -94,7 +93,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        final String registerApiUri = "/api/register";
+        final var registerApiUri = "/api/register";
         ExceptionHandlingConfigurer<HttpSecurity> base =
             http.headers()
                 .frameOptions()
@@ -110,7 +109,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         switch (this.appConfig.getAuthentication().getType()) {
             case CAS:
-                CallbackFilter callbackFilter = new CallbackFilter(this.pac4jConfig);
+                var callbackFilter = new CallbackFilter(this.pac4jConfig);
                 callbackFilter.setMultiProfile(true);
                 AuthenticationEntryPoint authEntryPoint = new Pac4jEntryPoint(this.pac4jConfig, "CasClient");
 
@@ -162,13 +161,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .deleteCookies("JSESSIONID")
                     .permitAll();
 
-                AuthorizedUrl registerMatcher = http.authorizeRequests()
-                    .antMatchers(registerApiUri);
-
                 if (registrationEnabled) {
-                    registerMatcher.permitAll();
+                    http.authorizeRequests()
+                        .antMatchers(registerApiUri).permitAll();
                 } else {
-                    registerMatcher.denyAll();
+                    http.authorizeRequests()
+                        .antMatchers(registerApiUri).denyAll();
                 }
 
                 http.authorizeRequests()
@@ -179,14 +177,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .antMatchers("/api/account/reset_password/finish").permitAll();
 
                 break;
-	    case AZURE:
-		http
-                .authorizeRequests()
-                .anyRequest().authenticated()
-                .and()
-                .oauth2Login()
-                .userInfoEndpoint()
-                .oidcUserService(oidcUserService);
+            case AZURE:
+                http
+                    .authorizeRequests()
+                    .anyRequest().authenticated()
+                    .and()
+                    .oauth2Login()
+                    .userInfoEndpoint()
+                    .oidcUserService(oidcUserService);
+                break;
             default:
                 throw new UnsupportedOperationException();
         }
@@ -234,8 +233,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .passwordEncoder(this.passwordEncoder());
 
                 break;
-	    case AZURE:
-		auth.userDetailsService(this.userDetailsService);
+            case AZURE:
+                auth.userDetailsService(this.userDetailsService);
                 break;
 
             default:

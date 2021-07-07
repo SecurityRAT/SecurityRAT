@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -27,12 +26,12 @@ public final class SecurityUtils {
      * @return the login of the current user.
      */
     public static Optional<String> getCurrentUserLogin() {
-        SecurityContext securityContext = SecurityContextHolder.getContext();
+        var securityContext = SecurityContextHolder.getContext();
         return Optional.ofNullable(extractPrincipal(securityContext.getAuthentication()));
     }
 
     public static boolean isCasAuthentication() {
-        SecurityContext securityContext = SecurityContextHolder.getContext();
+        var securityContext = SecurityContextHolder.getContext();
         if (securityContext.getAuthentication() instanceof Pac4jAuthentication) {
             log.debug("PAC4J Authentication");
             return true;
@@ -46,6 +45,10 @@ public final class SecurityUtils {
         } else if (authentication.getPrincipal() instanceof UserDetails) {
             UserDetails springSecurityUser = (UserDetails) authentication.getPrincipal();
             return springSecurityUser.getUsername();
+        } else if (authentication instanceof Pac4jAuthentication) {
+            Pac4jAuthentication auth = (Pac4jAuthentication) authentication;
+            var userProfile = auth.getProfile();
+            return userProfile.getUsername();
         } else if (authentication.getPrincipal() instanceof String) {
             return (String) authentication.getPrincipal();
         }
@@ -59,7 +62,7 @@ public final class SecurityUtils {
      * @return true if the user is authenticated, false otherwise.
      */
     public static boolean isAuthenticated() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication != null &&
             getAuthorities(authentication).noneMatch(AuthoritiesConstants.ANONYMOUS::equals);
     }
@@ -73,7 +76,7 @@ public final class SecurityUtils {
      * @return true if the current user has the authority, false otherwise.
      */
     public static boolean isCurrentUserInRole(String authority) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication != null &&
             getAuthorities(authentication).anyMatch(authority::equals);
     }

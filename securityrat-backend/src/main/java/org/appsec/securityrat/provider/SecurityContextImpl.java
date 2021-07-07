@@ -8,7 +8,7 @@ import org.appsec.securityrat.api.provider.SecurityContext;
 import org.appsec.securityrat.api.provider.advanced.UserManager;
 import org.appsec.securityrat.security.AuthoritiesConstants;
 import org.appsec.securityrat.security.SecurityUtils;
-import org.pac4j.core.profile.UserProfile;
+import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.springframework.security.authentication.Pac4jAuthentication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +27,6 @@ public class SecurityContextImpl implements SecurityContext {
 
     @Override
     public InternalUserDto getCurrentUser() {
-
         return SecurityUtils.getCurrentUserLogin()
             .map(this.userManager::findByLogin)
             .orElse(getCurrentCasUser());
@@ -40,14 +39,9 @@ public class SecurityContextImpl implements SecurityContext {
 
         try {
             Pac4jAuthentication token = (Pac4jAuthentication) SecurityContextHolder.getContext().getAuthentication();
-            UserProfile userProfile = token.getProfile();
-            InternalUserDto userDto = new InternalUserDto();
-            String username = null;
-            if (userProfile.getClientName() != null && !userProfile.getClientName().isEmpty())
-                username = userProfile.getClientName();
-            else if (userProfile.getId() != null && !userProfile.getId().isEmpty())
-                username = userProfile.getId();
-            userDto.setLogin(username);
+            CommonProfile userProfile = token.getProfile();
+            var userDto = new InternalUserDto();
+            userDto.setLogin(userProfile.getUsername());
             userDto.setFirstName(userProfile.getAttribute("email") != null ?
                 userProfile.getAttribute("email").toString() : "");
             userDto.setFirstName(userProfile.getAttribute("firstName") != null ?
@@ -66,7 +60,7 @@ public class SecurityContextImpl implements SecurityContext {
 
     public Set<AuthorityDto> getGeneralAuthorities() {
         Set<AuthorityDto> authorities = new HashSet<>();
-        AuthorityDto authority = new AuthorityDto();
+        var authority = new AuthorityDto();
         authority.setName(AuthoritiesConstants.FRONTEND_USER);
         authorities.add(authority);
         return authorities;
