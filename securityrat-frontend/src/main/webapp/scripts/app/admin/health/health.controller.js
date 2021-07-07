@@ -11,7 +11,7 @@ angular.module('sdlctoolApp')
                 $scope.healthData = $scope.transformHealthData(response);
                 $scope.updatingHealth = false;
             }, function (response) {
-                $scope.healthData =  $scope.transformHealthData(response.data);
+                $scope.healthData = $scope.transformHealthData(response.data);
                 $scope.updatingHealth = false;
             });
         };
@@ -33,11 +33,16 @@ angular.module('sdlctoolApp')
         };
 
         $scope.flattenHealthData = function (result, path, data) {
-            angular.forEach(data, function (value, key) {
+            var responseData = data
+            if (data.hasOwnProperty('components')) {
+                responseData = data.components
+            }
+            angular.forEach(responseData, function (value, key) {
                 if ($scope.isHealthObject(value)) {
                     if ($scope.hasSubSystem(value)) {
-                        $scope.addHealthObject(result, false, value, $scope.getModuleName(path, key));
-                        $scope.flattenHealthData(result, $scope.getModuleName(path, key), value);
+                        
+                        $scope.addHealthObject(result, false, value.details, $scope.getModuleName(path, key));
+                        $scope.flattenHealthData(result, $scope.getModuleName(path, key), value.details);
                     } else {
                         $scope.addHealthObject(result, true, value, $scope.getModuleName(path, key));
                     }
@@ -50,7 +55,7 @@ angular.module('sdlctoolApp')
             var result;
             if (path && name) {
                 result = path + $scope.separator + name;
-            }  else if (path) {
+            } else if (path) {
                 result = path;
             } else if (name) {
                 result = name;
@@ -61,19 +66,19 @@ angular.module('sdlctoolApp')
         };
 
 
-        $scope.showHealth = function(health) {
+        $scope.showHealth = function (health) {
             $uibModal.open({
                 templateUrl: 'scripts/app/admin/health/health.modal.html',
                 controller: 'HealthModalController',
                 size: 'lg',
                 resolve: {
-                    currentHealth: function() {
+                    currentHealth: function () {
                         return health;
                     },
-                    baseName: function() {
+                    baseName: function () {
                         return $scope.baseName;
                     },
-                    subSystemName: function() {
+                    subSystemName: function () {
                         return $scope.subSystemName;
                     }
 
@@ -102,7 +107,7 @@ angular.module('sdlctoolApp')
 
             // Add the of the details
             if (hasDetails) {
-                angular.extend(healthData, { 'details': details});
+                angular.extend(healthData, { 'details': details });
             }
 
             // Only add nodes if they provide additional information
@@ -114,6 +119,7 @@ angular.module('sdlctoolApp')
 
         $scope.hasSubSystem = function (healthObject) {
             var result = false;
+            
             angular.forEach(healthObject, function (value) {
                 if (value && value.status) {
                     result = true;
@@ -134,17 +140,17 @@ angular.module('sdlctoolApp')
 
         $scope.baseName = function (name) {
             if (name) {
-              var split = name.split('.');
-              return split[0];
+                var split = name.split('.');
+                return split[0];
             }
         };
 
         $scope.subSystemName = function (name) {
             if (name) {
-              var split = name.split('.');
-              split.splice(0, 1);
-              var remainder = split.join('.');
-              return remainder ? ' - ' + remainder : '';
+                var split = name.split('.');
+                split.splice(0, 1);
+                var remainder = split.join('.');
+                return remainder ? ' - ' + remainder : '';
             }
         };
     });

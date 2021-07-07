@@ -107,6 +107,10 @@ module.exports = function (grunt) {
                             handle: httpProxyMiddleware.createProxyMiddleware({ target: 'http://localhost:8080', changeOrigin: true })
                         },
                         {
+                            route: '/management',
+                            handle: httpProxyMiddleware.createProxyMiddleware({ target: 'http://localhost:8080', changeOrigin: true })
+                        },
+                        {
                             route: '/frontend-api',
                             handle: httpProxyMiddleware.createProxyMiddleware({ target: 'http://localhost:8080', changeOrigin: true })
                         },
