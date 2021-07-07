@@ -3,13 +3,13 @@
     <parent>
         <groupId>org.appsec.securityrat</groupId>
         <artifactId>securityrat-parent</artifactId>
-        <version>1.8.1-SNAPSHOT</version>
+        <version>1.8.1</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>securityrat-frontend</artifactId>
-    <version>1.8.1-SNAPSHOT</version> <!-- Required for Grunt -->
+    <version>1.8.1</version> <!-- Required for Grunt -->
     <packaging>jar</packaging>
 
     <name>SecurityRAT / Frontend</name>
