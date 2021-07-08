@@ -29,7 +29,7 @@ public class ProjectTypeRepositoryImpl implements ProjectTypeRepositoryCustom {
 		List<ProjectType> allProjectTypes = projectTypeRepository.findAllActiveProjectTypes();
 		for (ProjectType projectType : allProjectTypes) {
 			projectType.setOptColumns(optColumnRepository.getActiveRelevantOptcolumnsForProjectType(projectType.getId()));
-			projectType.setStatusColumns(statusColumnRepository.getActiveStatusColumnsForProjectTypeWithNoneEmptyStatusValues(projectType));
+			projectType.setStatusColumns(statusColumnRepository.getActiveStatusColumnsForProjectType(projectType));
 			for (StatusColumn statusColumn : projectType.getStatusColumns()) {
 				if (statusColumn.getIsEnum()) {
 					statusColumn.setStatusColumnValues(statusColumnValueRepository.getActiveValuesForStatusColumn(statusColumn));

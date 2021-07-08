@@ -15,8 +15,7 @@ public interface StatusColumnRepository extends JpaRepository<StatusColumn,Long>
 	@Query("select distinct statusColumn from StatusColumn statusColumn "
 			+ "left join fetch statusColumn.projectTypes pt "
 			+ "where statusColumn.active=true "
-			+ "and pt=:projectType "
-            + "and statusColumn.statusColumnValues IS NOT EMPTY")
-	Set<StatusColumn> getActiveStatusColumnsForProjectTypeWithNoneEmptyStatusValues(@Param("projectType") ProjectType projectType);
+			+ "and pt=:projectType")
+	Set<StatusColumn> getActiveStatusColumnsForProjectType(@Param("projectType") ProjectType projectType);
 
 }
