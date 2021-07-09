@@ -1831,18 +1831,19 @@ angular.module('sdlctoolApp')
             var wsName1 = 'dropdown';
             var dropdownList = [];
             var statusCounter = 0;
-            for (var statusColumn of $scope.statusColumns) {
-                if (statusColumn.isEnum) {
+            for (var i = 0; i < $scope.statusColumns.length; i++) {
+                if ($scope.statusColumns[i].isEnum) {
                     dropdownList[statusCounter] = {};
                     dropdownList[statusCounter].values = [];
-                    dropdownList[statusCounter].values = statusColumn.values;
-                    dropdownList[statusCounter].statusname = statusColumn.name;
+                    dropdownList[statusCounter].values = $scope.statusColumns[i].values;
+                    dropdownList[statusCounter].statusname = $scope.statusColumns[i].name;
                     statusCounter++;
                 }
             }
             var colspan = $scope.optColumns.length + $scope.statusColumns.length + 3;
-            if (JSON.parse(appConfig.showProperties.toLowerCase()))
+            if (JSON.parse(appConfig.showProperties.toLowerCase())) {
                 colspan = $scope.optColumns.length + $scope.statusColumns.length + 4;
+            }
 
             var ws = buildExcelFile(colspan, withStatusColumns);
             var wscols = [{
