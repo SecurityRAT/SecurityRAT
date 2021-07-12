@@ -1074,8 +1074,6 @@ angular.module('sdlctoolApp')
             $scope.promiseForStorage = $interval($scope.onTimeout, 60000);
             $scope.length = $scope.requirementSkeletons.length;
 
-            // if (JSON.parse(appConfig.showProperties.toLowerCase()))
-            //     filterCollectionInstances();
         };
 
         function filterSelectedArtifactPropertyFromReqProperty(requirementProperties) {
@@ -1258,7 +1256,6 @@ angular.module('sdlctoolApp')
         };
 
         function updateRequirements() {
-            console.log($scope.requirementsSettings)
             var requestString = '';
             angular.forEach($scope.requirementsSettings, function (value, key) {
                 requestString += key + '=' + value + '&';
@@ -2256,7 +2253,6 @@ angular.module('sdlctoolApp')
                     } else {
                         cell.t = 's';
                     }
-                    console.log(cell)
                     excelFile[cellRef] = cell;
                 }
             }
