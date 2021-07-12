@@ -24,14 +24,13 @@ public class ProjectTypeRepositoryImpl implements ProjectTypeRepositoryCustom {
 
 	@Override
 	public List<ProjectType> findAllActiveWithEagerActiveRelationships() {
-		// TODO Auto-generated method stub
 
-		List<ProjectType> allProjectTypes = projectTypeRepository.findAllActiveProjectTypes();
+        List<ProjectType> allProjectTypes = projectTypeRepository.findAllActiveProjectTypes();
 		for (ProjectType projectType : allProjectTypes) {
 			projectType.setOptColumns(optColumnRepository.getActiveRelevantOptcolumnsForProjectType(projectType.getId()));
 			projectType.setStatusColumns(statusColumnRepository.getActiveStatusColumnsForProjectType(projectType));
 			for (StatusColumn statusColumn : projectType.getStatusColumns()) {
-				if (statusColumn.getIsEnum()) {
+				if (Boolean.TRUE.equals(statusColumn.getIsEnum())) {
 					statusColumn.setStatusColumnValues(statusColumnValueRepository.getActiveValuesForStatusColumn(statusColumn));
 				}
 			}

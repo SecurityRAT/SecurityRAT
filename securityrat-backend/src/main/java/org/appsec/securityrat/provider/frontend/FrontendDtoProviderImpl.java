@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
-import org.appsec.securityrat.domain.AlternativeSet;
 import org.appsec.securityrat.domain.CollectionInstance;
 import org.appsec.securityrat.domain.ProjectType;
 import org.appsec.securityrat.provider.mapper.frontend.FrontendAlternativeInstanceMapper;
@@ -30,54 +29,52 @@ import org.appsec.securityrat.web.dto.FrontendOptionColumnAlternativeDto;
 import org.appsec.securityrat.web.dto.FrontendProjectTypeDto;
 import org.appsec.securityrat.web.dto.FrontendTagCategoryDto;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class FrontendDtoProviderImpl implements FrontendDtoProvider {
     @Inject
     private CollectionCategoryRepository collectionCategoryRepo;
-    
+
     @Inject
     private ProjectTypeRepository projectTypeRepo;
-    
+
     @Inject
     private TagCategoryRepository tagCategoryRepo;
-    
+
     @Inject
     private CollectionInstanceRepository collectionInstanceRepo;
-    
+
     @Inject
     private ReqCategoryRepository reqCategoryRepo;
-    
+
     @Inject
     private OptColumnRepository optColumnRepo;
-    
+
     @Inject
     private AlternativeInstanceRepository alternativeInstanceRepo;
-    
+
     @Inject
     private AlternativeSetRepository alternativeSetRepo;
-    
+
     @Inject
     private FrontendCollectionCategoryMapper collectionCategoryMapper;
-    
+
     @Inject
     private FrontendProjectTypeMapper projectTypeMapper;
-    
+
     @Inject
     private FrontendTagCategoryMapper tagCategoryMapper;
-    
+
     @Inject
     private FrontendCategoryMapper categoryMapper;
-    
+
     @Inject
     private FrontendOptionColumnAlternativeMapper optionColumnAlternativeMapper;
-    
+
     @Inject
     private FrontendAlternativeInstanceMapper alternativeInstanceMapper;
-    
+
     @Override
-    @Transactional
     public Set<FrontendCollectionCategoryDto> getActiveFrontendCollectionCategories() {
         return this.collectionCategoryRepo.findAllActiveWithEagerActiveRelationships()
                 .stream()
@@ -86,7 +83,6 @@ public class FrontendDtoProviderImpl implements FrontendDtoProvider {
     }
 
     @Override
-    @Transactional
     public Set<FrontendProjectTypeDto> getActiveProjectTypes() {
         return this.projectTypeRepo.findAllActiveWithEagerActiveRelationships()
                 .stream()
@@ -95,7 +91,6 @@ public class FrontendDtoProviderImpl implements FrontendDtoProvider {
     }
 
     @Override
-    @Transactional
     public Set<FrontendTagCategoryDto> getActiveTagCategories() {
         return this.tagCategoryRepo.findAllActiveWithEagerActiveRelationships()
                 .stream()
@@ -104,7 +99,6 @@ public class FrontendDtoProviderImpl implements FrontendDtoProvider {
     }
 
     @Override
-    @Transactional
     public Set<FrontendOptionColumnAlternativeDto> getActiveOptionColumnAlternatives() {
         return this.optColumnRepo.getActiveOptColumnsWithActiveAlternativeSets()
                 .stream()
@@ -113,18 +107,17 @@ public class FrontendDtoProviderImpl implements FrontendDtoProvider {
     }
 
     @Override
-    @Transactional
     public Set<FrontendCategoryDto> getCategoriesByCollectionInstancesAndProjectTypes(
             Long[] collectionInstanceIds,
             Long[] projectTypeIds) {
         Preconditions.checkNotNull(collectionInstanceIds);
         Preconditions.checkNotNull(projectTypeIds);
-        
+
         // Resolution of the parameters
-        
+
         Arrays.sort(collectionInstanceIds);
         Arrays.sort(projectTypeIds);
-        
+
         List<CollectionInstance> collectionInstances =
                 this.collectionInstanceRepo.findAll()
                         .stream()
@@ -132,7 +125,7 @@ public class FrontendDtoProviderImpl implements FrontendDtoProvider {
                                 collectionInstanceIds,
                                 e.getId()) >= 0)
                         .collect(Collectors.toList());
-        
+
         List<ProjectType> projectTypes =
                 this.projectTypeRepo.findAll()
                         .stream()
@@ -140,7 +133,7 @@ public class FrontendDtoProviderImpl implements FrontendDtoProvider {
                                 projectTypeIds,
                                 e.getId()) >= 0)
                         .collect(Collectors.toList());
-        
+
         return this.reqCategoryRepo.findEagerlyCategoriesWithRequirements(
                     collectionInstances,
                     projectTypes)
@@ -150,21 +143,20 @@ public class FrontendDtoProviderImpl implements FrontendDtoProvider {
     }
 
     @Override
-    @Transactional
     public Set<FrontendAlternativeInstanceDto> getAlternativeInstancesByAlternativetSet(
             Long alternativeSetId) {
         Preconditions.checkNotNull(alternativeSetId);
-        
+
         // Resolution of the parameters
-        
-        AlternativeSet alternativeSet =
+
+        var alternativeSet =
                 this.alternativeSetRepo.findById(alternativeSetId)
                         .orElse(null);
-        
+
         if (alternativeSet == null) {
             return null;
         }
-        
+
         return this.alternativeInstanceRepo.getActiveAlternativeInstancesForAlternativeSet(
                     alternativeSet)
                 .stream()
