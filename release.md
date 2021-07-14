@@ -1,5 +1,3 @@
 ## Bug Fixes
 
-- Fixed issue where artifact settings are deleted when the "showProperties" feature is deactivated ( #164 ) .
-- Removed the @transactional Spring annotation on GET resources. This should prevent any unexpected entity update in database.
-- Minor UI tweaks
+- Fixed minor issue where displayed link to authenticate to JIRA (during import) is REST API link instead of origin.
