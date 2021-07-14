@@ -136,9 +136,9 @@ angular.module('sdlctoolApp')
                                 $scope.importProperty.promise.derefer = $q.defer();
                                 Helper.addCheckAuthenticationModal($scope.importProperty.promise);
                                 var authenticatorProperty = {
-                                    url: $scope.apiUrl.jiraUrl,
+                                    url: $scope.apiUrl.http + '//' + $scope.apiUrl.host,
                                     message: 'Attachment could not be imported because you are not authenticated.' +
-                                        'Please click on the following link to authenticate yourself. You will have one minute after a click on the link.'
+                                        ' Please click on the following link to authenticate yourself. You will have one minute after a click on the link.'
                                 };
                                 checkAuthentication.jiraAuth(fileUrl, authenticatorProperty, $scope.importProperty.spinner, $scope.importProperty.promise)
                                     .then(function (attachment) {
