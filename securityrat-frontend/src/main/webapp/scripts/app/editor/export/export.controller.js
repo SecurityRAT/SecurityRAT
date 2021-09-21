@@ -526,7 +526,7 @@ angular.module('sdlctoolApp')
         };
 
         $scope.commentForTicketImport = function () {
-            var appUrl = window.location.origin ? window.location.origin : window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+            var appUrl = window.location.origin ? window.location.origin : window.location.protocol + '//' + window.location.href + (window.location.port ? ':' + window.location.port : '');
             var commentBody = 'With the following link you can import your artifact directly into the Secure SDLC Tool and select the newest version.' +
                 ' You can also use this link to share it with others: ' + appUrl + '/?ticket=' + $scope.ticketURL;
             //get the attachment id and save in the current requirement.
