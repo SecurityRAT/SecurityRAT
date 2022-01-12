@@ -47,7 +47,7 @@
         <spring-boot.version>2.2.4.RELEASE</spring-boot.version>
         <!-- The spring framework version should match the one managed by
         https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies/${spring-boot.version} -->
-        <spring.version>5.2.3.RELEASE</spring.version>
+        <spring.version>5.3.14</spring.version>
         <!-- The hibernate version should match the one managed by
         https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies/${spring-boot.version} -->
         <hibernate.version>5.4.10.Final</hibernate.version>
