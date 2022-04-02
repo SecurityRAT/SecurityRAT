@@ -5,5 +5,8 @@ angular.module('sdlctoolApp')
     	$scope.isAuthenticated = Principal.isAuthenticated;
         $scope.$state = $state;
         $scope.inProduction = ENV === 'prod';
-        $scope.showAssistant = JSON.parse(appConfig.showImportAssistant.toLowerCase());
+        $scope.showAssistant = false;
+        if (appConfig.showImportAssistant !== undefined) {
+            $scope.showAssistant = JSON.parse(appConfig.showImportAssistant.toLowerCase());
+        }
     });

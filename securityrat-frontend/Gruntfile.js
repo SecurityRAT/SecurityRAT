@@ -104,19 +104,19 @@ module.exports = function (grunt) {
                         connectHistoryApiFallback(),
                         {
                             route: '/api',
-                            handle: httpProxyMiddleware.createProxyMiddleware({ target: 'http://localhost:8080', changeOrigin: true })
+                            handle: httpProxyMiddleware.createProxyMiddleware({ target: 'http://localhost:9000', changeOrigin: true })
                         },
                         {
                             route: '/management',
-                            handle: httpProxyMiddleware.createProxyMiddleware({ target: 'http://localhost:8080', changeOrigin: true })
+                            handle: httpProxyMiddleware.createProxyMiddleware({ target: 'http://localhost:9000', changeOrigin: true })
                         },
                         {
                             route: '/frontend-api',
-                            handle: httpProxyMiddleware.createProxyMiddleware({ target: 'http://localhost:8080', changeOrigin: true })
+                            handle: httpProxyMiddleware.createProxyMiddleware({ target: 'http://localhost:9000', changeOrigin: true })
                         },
                         {
                             route: '/admin-api',
-                            handle: httpProxyMiddleware.createProxyMiddleware({ target: 'http://localhost:8080', changeOrigin: true })
+                            handle: httpProxyMiddleware.createProxyMiddleware({ target: 'http://localhost:9000', changeOrigin: true })
                         }
                     ]
                 }
