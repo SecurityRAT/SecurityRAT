@@ -531,15 +531,9 @@
                                 <div data-ng-if="reqs.isNew || reqs.isOld" marked="reqs.diffShortName"></div>
                             </strong>
                             <div disable-all="updateProperties.updatedReqs" data-ng-if="reqs.id < 10000">
-                                <span data-ng-if="updateProperties.updatedReqs"
-                                    uib-tooltip="Please apply updates first." style="cursor:not-allowed"
-                                    tooltip-append-to-body>
-                                    <img src="assets/images/feedback.png" width="16" height="16" alt="feedback" />
-                                </span>
                                 <span id="feedbackIcon" data-ng-if="!updateProperties.updatedReqs"
                                     uib-tooltip="Give feedback for this requirement." style="cursor:pointer;"
-                                    data-ng-click="openFeedback(reqs)" tooltip-append-to-body>
-                                    <img src="assets/images/feedback.png" width="16" height="16" alt="feedback" />
+                                    data-ng-click="openFeedback(reqs)" tooltip-append-to-body class="glyphicon glyphicon-comment">
                                 </span>
                             </div>
                         </td>
