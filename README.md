@@ -29,6 +29,21 @@ Check out our brand-new online demo:
 
 You can try it out with the demo version and can modify/add/delete requirements. The demo version will be resetted every 24 hours (CEST).
 
+## Development
+
+#### Backend
+> Note that the Spring auto-restart feature has been disabled for performance reasons.
+1. Configure the configuration files (`src/main/resources/application-dev.yml` and `src/main/resources/application.yml`) appropriately.  
+2. Build all modules from the project's root folder with `mvn install`.
+3. Start the application from the _securityrat-backend_ folder with `mvn spring-boot:run`.
+
+#### Frontend
+
+> Note that the backend is required to listen on port 9000 (configured by default), if you want to use the live-reload feature of the frontend.
+> Also, always ensure that there is an up-to-date NodeJS installation inside your PATH variable.
+
+Move to the _security-frontend_ module and start the frontend module with live reload with the command `npx grunt serve`.
+
 ## License
 
 This project is distributed under the Apache license, Version 2.0: http://www.apache.org/licenses/LICENSE-2.
