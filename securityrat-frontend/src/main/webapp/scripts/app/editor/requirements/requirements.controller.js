@@ -1562,15 +1562,17 @@ angular.module('sdlctoolApp')
                                 var optColumnCotentFound = false
                                 for (var newReqCounter = 0; newReqCounter < newRequirementOptColumns.content.length; newReqCounter++) {
                                     var newRequirementContent = newRequirementOptColumns.content[newReqCounter];
-                                    if ((newRequirementContent.id === oldRequirementContent.id) &&
-                                        (newRequirementContent.content.replace(/[^\x20-\x7E]|\s+/gmi, '')
-                                            !== oldRequirementContent.content.replace(/[^\x20-\x7E]|\s+/gmi, ''))) {
+                                    if (newRequirementContent.id === oldRequirementContent.id) {
                                         optColumnCotentFound = true;
-                                        var changes = diffString2(oldRequirementContent.content, newRequirementContent.content);
-                                        oldRequirementContent.diffContent = changes.o.replace(/\x60/gmi, '');
-                                        newRequirementContent.diffContent = changes.n.replace(/\x60/gmi, '');
-                                        changesFound = true;
-                                        break;
+                                        if (newRequirementContent.content.replace(/[^\x20-\x7E]|\s+/gmi, '')
+                                            !== oldRequirementContent.content.replace(/[^\x20-\x7E]|\s+/gmi, '')) {
+
+                                            var changes = diffString2(oldRequirementContent.content, newRequirementContent.content);
+                                            oldRequirementContent.diffContent = changes.o.replace(/\x60/gmi, '');
+                                            newRequirementContent.diffContent = changes.n.replace(/\x60/gmi, '');
+                                            changesFound = true;
+                                            break;
+                                        }
                                     }
                                 }
                                 // oldContent not found in new as this might be an alternative set
