@@ -19,7 +19,7 @@ exports.config = {
         },// this is only relevant when you use FORM authentication.
         customRequirementShortName: 'CUS',
         testHost: "https://securityrat.test.local", //FQDN of test instance of Security RAT
-        jiraLogoutUrl: 'https://test-jira.local/logout', // URL to logout to your JiraInstance
+        jiraLogoutUrl: 'https://test-jira.local/logout', // URL to logout from your JiraInstance
         jiraQueue: 'https://test-jira.local/browse/XYZ', //path to a JIRA Queue where test tickets can be opened
         jiraTicket: 'https://test-jira.local/browse/XYZ-144', //path to a JIRA Ticket to test manual linking of tickets
         jiraRemoteLinkQueue: 'https://second-test-jira.local/browse/ABC', // second jira to test the remote linking. Please this Queue should just have issuetype as mandatory field.
@@ -27,22 +27,22 @@ exports.config = {
         jiraHost: 'https://test-jira.local/browse/', //path to test JIRA
         impTestAttachmentUrl: 'https://securityrat.test.local/?file=',
         // Change the value of the ticket query parameter to a
-        // Ticket that have different attachment types. For e.g SecurityRAT *.yml file and *.xlsx.
+        // Ticket that has different attachment types. For e.g SecurityRAT *.yml file and *.xlsx.
         impTestUrl2: 'https://securityrat.test.local/?ticket=https://test-jira.local/browse/XYZ-123',
         // copy a link to an attachment in JIRA and set this link in the query parameter file
         impTestFileUrl: 'https://securityrat.test.local/?file=https:%2F%2Ftest-jira.local%2Fsecure%2Fattachment%2F685933%2FSSDLC_sfgsfgsfg_17-2-2016_134738.yml',
-        // The values provided in this array are URL for the file query parameter.
-        // These values will be used to concatenate with the "impTestAttachmentUrl" property above.
-        // Copy this value the comment added by SecurityRAT to your ticket.
-        // These URLs will be use to test different scenarios.
+        // The values provided in this array are URLs for the file query parameter.
+        // These values will be concatenated with the "impTestAttachmentUrl" property above in order to test different use cases.
+        // For these values copy the values of the file query parameter in the URL posted as comment to a JIRA ticket by SecurityRAT.
         attachmentUrls: [
+            // A normal file path URL
             '${filePathUrl1}',
             // The file path URL should correspond to an SecurityRAT attachment that have been deleted from the ticket.
             '${filePathUrl2}',
-            // This file path URL should open a SecurityRAT YAML attachment that contains old contains
+            // This file path URL should open a SecurityRAT YAML attachment that contains old content
             // After importing this file the red button "update requirements" should be displayed
             '${filePathUrl3}',
-            // The SecurityRAT attachment for this attachment should contain requirements with ticket link.
+            // This SecurityRAT attachment should contain requirements with ticket link.
             '${filePathUrl4}',
             // This attachment must have custom requirements.
             '${filePathUrl5}'
