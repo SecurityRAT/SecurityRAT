@@ -9,7 +9,7 @@
     "connect-history-api-fallback": "^1.6.0",
     "event-stream": "4.0.1",
     "generator-jhipster": "6.3.1",
-    "grunt": "^1.0.4",
+    "grunt": "^1.5.3",
     "grunt-angular-templates": "1.1.0",
     "grunt-autoprefixer": "^3.0.4",
     "grunt-browser-sync": "2.2.0",
