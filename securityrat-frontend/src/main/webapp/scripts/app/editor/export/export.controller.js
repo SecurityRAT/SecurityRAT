@@ -648,7 +648,6 @@ angular.module('sdlctoolApp')
             $scope.exportProperty.fail = false;
             $scope.checks.isTicket = false;
             var fieldNotfulfilled = false;
-            //$scope.jiraUrl.url = JiraService.buildJiraUrl($scope.jiraUrl.url);
             if ($scope.selection.jira || $scope.selection.createTickets) {
                 $scope.jiraUrl.url = JiraService.buildJiraUrl($scope.jiraUrl.url);
                 //export to JIRA
