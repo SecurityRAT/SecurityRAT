@@ -2160,7 +2160,7 @@ angular.module('sdlctoolApp')
                         range.e.c = R;
                     }
                     var cell = {};
-                    //deprecated as not used anymore and value c: is defined in SheetJS now as comments which leads to an exception  
+                    //deprecated as not used anymore and value c: is defined in SheetJS now as comments which leads to an exception
 
                     if (C === 0) {
                         angular.extend(cell, {
@@ -2674,7 +2674,6 @@ angular.module('sdlctoolApp')
                 if (angular.isUndefined(linkStatus.ticketStatus)) {
                     linkStatus.ticketStatus = [];
                 }
-
                 var jiraLink = apiUrl.http + '//' + apiUrl.host + '/' + apiUrl.path.join('/') + '/' + apiUrl.ticketKey[0];
                 apiFactory.getJIRAInfo(urlCall).then(function (response) {
                     var ticketStatus = {
@@ -2693,6 +2692,21 @@ angular.module('sdlctoolApp')
                         $scope.jiraStatus.allStatus.push(ticketStatus);
                     }
                 }, function (error) {
+                    var ticketStatus = {
+                                        iconUrl: null,
+                                        name: apiUrl.ticketKey[0],
+                                        summary: 'Unable to load ticket status.',
+                                        issueKey: apiUrl.ticketKey[0],
+                                        url: jiraLink
+                                        };
+                    linkStatus.ticketStatus.push(ticketStatus);
+                    angular.extend(requirement.linkStatus, linkStatus);
+
+                    if ($filter('filter')($scope.jiraStatus.allStatus, {
+                    name: response.fields.status.name
+                    }).length === 0) {
+                    $scope.jiraStatus.allStatus.push(ticketStatus);
+                    }
                     if (error.status === 401) {
                         $scope[apiUrl.ticketKey[0]] = {};
                         $scope[apiUrl.ticketKey[0]].derefer = $q.defer();
