@@ -4,7 +4,7 @@ angular.module('sdlctoolApp')
     .config(function ($stateProvider) {
         $stateProvider
             .state('training', {
-                parent: 'entity',
+                parent: 'site',
                 url: '/trainings',
                 params: {
                     isDirty: false
