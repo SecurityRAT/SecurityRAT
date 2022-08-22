@@ -526,12 +526,13 @@ angular.module('sdlctoolApp')
         };
 
         $scope.commentForTicketImport = function () {
-            var appUrl = window.location.href.replace("/requirements","");
-            var commentBody = 'With the following link you can import your artifact directly into the Secure SDLC Tool and select the newest version.' +
-                ' You can also use this link to share it with others: ' + appUrl + '/?ticket=' + $scope.ticketURL;
+            var ticketImportUrl = "§origin§§path§/?ticket=" + $scope.ticketURL
+            ticketImportUrl = ticketImportUrl.replace("§origin§", window.location.origin)
+            ticketImportUrl = ticketImportUrl.replace("§path§", window.location.pathname.replace("/requirements", ""))
             //get the attachment id and save in the current requirement.
             var commentData = {
-                'body': commentBody
+                'body': 'With the following link you can import your artifact directly into SecurityRAT ' +
+                        'and select the newest version. You can also use this link to share it with others: ' + ticketImportUrl
             };
             //adds comment to ease import
             apiFactory.postExport($scope.buildUrlCall('comment'), commentData, {
@@ -577,11 +578,10 @@ angular.module('sdlctoolApp')
                             .catch(function (exception) {
                                 onIssueLinkFailure(exception, response.key);
                             });
-                    }).catch(function (exception) {
+                    }).catch(function () {
                         SDLCToolExceptionService.showWarning('Unsuccessful issue linking', 'The issue ' + ticketToLink + ' was not linked because the user was not authenticated.', SDLCToolExceptionService.DANGER);
                     });
             });
-
 
             var returnPromise = JiraService.addAttachmentAndComment($scope.exported.ticket, {
                 content: file,
@@ -594,9 +594,7 @@ angular.module('sdlctoolApp')
                             $scope.close();
                             SDLCToolExceptionService.showWarning('Export successful', 'The Secure SDLC artifact ' + $scope.exported.name + ' was successfully exported to:\n' + $scope.ticketURL, SDLCToolExceptionService.SUCCESS);
                         }
-                    }).catch(function () {
-
-                    });
+                    }).catch(function () { });
             }
 
         };

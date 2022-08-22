@@ -8,7 +8,7 @@ var jiraAttachment = '/attachments';
 var securityCATTestApi = '/scanapi/tests';
 var jiraComment = '/comment';
 var jiraBrowseUrlPathName = 'browse';
-var importPrefix = window.location.href
-importPrefix = importPrefix.endsWith('/') ? importPrefix.slice(0, -1) : importPrefix
-importPrefix = importPrefix.replace("/requirements","") + '/?file=';
+var importPrefix = '§origin§§path§?file='
+importPrefix = importPrefix.replace('§origin§', window.location.origin)
+importPrefix = importPrefix.replace("§path§", window.location.pathname.replace('/requirements', ''));
 var localStorageKey = 'backup';
