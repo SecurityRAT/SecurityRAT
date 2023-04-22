@@ -54,12 +54,12 @@
                     </execution>
 
                     <!-- Task: Running Grunt -->
-                    <execution>
+		    <!-- <execution>
                         <id>grunt build</id>
                         <goals>
                             <goal>grunt</goal>
                         </goals>
-                    </execution>
+		    </execution> -->
                 </executions>
 
                 <configuration>
