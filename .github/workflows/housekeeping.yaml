@@ -1,0 +1,25 @@
+name: housekeeping
+on:
+  # Run daily at 7:00
+  schedule:
+    - cron: '0 7 * * *'
+  workflow_dispatch:
+
+# pin the github actions to specific release versions
+jobs:
+  link_checker:
+    name: link checker
+    runs-on: ubuntu-22.04
+    steps:
+      - name: checkout project
+        uses: actions/checkout@v3.5.2
+
+      - name: check links
+        uses: lycheeverse/lychee-action@v1.8.0
+        with:
+        with:
+          args: --verbose --no-progress '*.md' '**/*.md'
+          fail: true
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
