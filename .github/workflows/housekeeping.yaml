@@ -17,7 +17,6 @@ jobs:
       - name: check links
         uses: lycheeverse/lychee-action@v1.8.0
         with:
-        with:
           args: --verbose --no-progress '*.md' '**/*.md'
           fail: true
         env:
