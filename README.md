@@ -46,7 +46,8 @@ Move to the _security-frontend_ module and start the frontend module with live r
 
 ## License
 
-This project is distributed under the Apache license, Version 2.0: http://www.apache.org/licenses/LICENSE-2.
+This project is distributed under the Apache license, [Version 2.0][license].
 
-[license-image]: https://img.shields.io/badge/license-apache%20v2-brightgreen.svg
 [Apache License 2.0]: https://github.com/SecurityRAT/SecurityRAT/blob/master/LICENSE
+[license]: http://www.apache.org/licenses/LICENSE-2.0
+[license-image]: https://img.shields.io/badge/license-apache%20v2-brightgreen.svg
