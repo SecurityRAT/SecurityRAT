@@ -1,4 +1,4 @@
-name: housekeeping
+name: Demo up
 on:
   # Run daily at 7:00
   schedule:
