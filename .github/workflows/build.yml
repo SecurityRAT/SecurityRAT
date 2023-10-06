@@ -1,6 +1,6 @@
 name: CI Build
 
-on: [push, pull_request]
+on: push
 
 jobs:
   build:
@@ -8,6 +8,7 @@ jobs:
     env:
       DOCKER_REPO: securityrat/securityrat
       DOCKER_TAG: snapshot
+      APP_NAME: securityrat
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v3
@@ -28,14 +29,18 @@ jobs:
           mvn --version
           mvn clean
           mvn -Pprod verify
-#      - name: Create and copy application archive
-#        env:
-#          APP_NAME: securityrat
-#        run: |
-#          mv securityrat-backend/target/*.jar securityrat-backend/target/securityrat.jar
-#          chmod +x .ci_scripts/create_archive.sh
-#          ./.ci_scripts/create_archive.sh
-#          cp securityrat-backend/target/$APP_NAME.tar.gz .docker/app
+      - name: Create and copy application archive
+        run: |
+          mv securityrat-backend/target/*.jar securityrat-backend/target/securityrat.jar
+          chmod +x .ci_scripts/create_archive.sh
+          ./.ci_scripts/create_archive.sh
+          mkdir staging && cp securityrat-backend/target/$APP_NAME.tar.gz staging
+      - uses: actions/upload-artifact@v3
+        with:
+          name: $APP_NAME
+          path: staging/$APP_NAME.tar.gz
+          if-no-files-found: error
+          retention-days: 5
 #      - name: Building Docker Image
 #        working-directory: .docker/app
 #        run: docker build -t $DOCKER_REPO:$DOCKER_TAG .
