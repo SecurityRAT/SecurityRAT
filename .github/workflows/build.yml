@@ -53,7 +53,7 @@ jobs:
         with:
           context: .docker/app
           push: true
-          tags: ${{ DOCKER_REPO }}:${{ DOCKER_TAG }}
+          tags: ${{ env.DOCKER_REPO }}:${{ env.DOCKER_TAG }}
 #      - name: Publishing SNAPSHOT docker image
 #        if: github.ref == 'refs/heads/master'
 #        env:
