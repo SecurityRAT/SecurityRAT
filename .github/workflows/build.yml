@@ -14,6 +14,7 @@ jobs:
           java-version: '11'
       - name:  Build application with maven
         run: |
+          mvn --version
           mvn clean
           mvn -Pprod verify
       - name: Create and copy application archive
