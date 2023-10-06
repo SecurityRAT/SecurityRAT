@@ -6,8 +6,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      DOCKER_REPO: securityrat/securityrat
-      DOCKER_TAG: snapshot
       APP_NAME: securityrat
     steps:
       - uses: actions/checkout@v4
@@ -41,9 +39,22 @@ jobs:
           path: staging/${{ env.APP_NAME }}.tar.gz
           if-no-files-found: error
           retention-days: 5
-#      - name: Building Docker Image
-#        working-directory: .docker/app
-#        run: docker build -t $DOCKER_REPO:$DOCKER_TAG .
+  build-and-upload-snapshot-docker-image:
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_REPO: securityrat/securityrat
+      DOCKER_TAG: snapshot
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v3
+        with:
+          name: ${{ env.APP_NAME }}
+          path: .docker/app
+      - name: Set up Docker Buildx
+        uses: actions/setup-buildx-action@v3
+      - name: Building Docker Image
+        working-directory: .docker/app
+        run: docker build -t $DOCKER_REPO:$DOCKER_TAG .
 #      - name: Publishing SNAPSHOT docker image
 #        if: github.ref == 'refs/heads/master'
 #        env:
