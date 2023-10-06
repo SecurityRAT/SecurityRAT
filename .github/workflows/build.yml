@@ -5,71 +5,68 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        java: ['11']
     env:
       DOCKER_REPO: securityrat/securityrat
       DOCKER_TAG: snapshot
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 11
-        uses: actions/setup-java@v1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v3
         with:
-          java-version: ${{matrix.java}}
-      - name: Install tools
+          distribution: 'temurin'
+          java-version: '11'
+#      - name: Install tools
+#        run: |
+#          export DOCKLE_VERSION=$(curl --silent "https://api.github.com/repos/goodwithtech/dockle/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
+#          wget -O ~/dockle.tar.gz https://github.com/goodwithtech/dockle/releases/download/v${DOCKLE_VERSION}/dockle_${DOCKLE_VERSION}_Linux-64bit.tar.gz
+#          tar zxvf ~/dockle.tar.gz -C ~/
+#          export TRIVY_VERSION=$(curl --silent "https://api.github.com/repos/aquasecurity/trivy/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
+#          wget -O ~/trivy.tar.gz https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz
+#          tar zxvf ~/trivy.tar.gz -C ~/
+#          npm install bower grunt
+      - name:  Build application with maven
         run: |
-          export DOCKLE_VERSION=$(curl --silent "https://api.github.com/repos/goodwithtech/dockle/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
-          wget -O ~/dockle.tar.gz https://github.com/goodwithtech/dockle/releases/download/v${DOCKLE_VERSION}/dockle_${DOCKLE_VERSION}_Linux-64bit.tar.gz
-          tar zxvf ~/dockle.tar.gz -C ~/
-          export TRIVY_VERSION=$(curl --silent "https://api.github.com/repos/aquasecurity/trivy/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
-          wget -O ~/trivy.tar.gz https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz
-          tar zxvf ~/trivy.tar.gz -C ~/
-          npm install bower grunt
-      - name:  Build with Maven
-        run: |
+          mvn --version
           mvn clean
           mvn -Pprod verify
-      - name: Create and copy application archive
-        env:
-          APP_NAME: securityrat
-        run: |
-          mv securityrat-backend/target/*.jar securityrat-backend/target/securityrat.jar
-          chmod +x .ci_scripts/create_archive.sh
-          ./.ci_scripts/create_archive.sh
-          cp securityrat-backend/target/$APP_NAME.tar.gz .docker/app
-      - name: Building Docker Image
-        working-directory: .docker/app
-        run: docker build -t $DOCKER_REPO:$DOCKER_TAG .
-      - name: Publishing SNAPSHOT docker image
-        if: github.ref == 'refs/heads/master' 
-        env:
-          HUB_USERNAME: ${{ secrets.HUB_USERNAME }}
-          HUB_ACCESS_TOKEN: ${{ secrets.HUB_ACCESS_TOKEN }}
-        run: |
-          docker login -u "$HUB_USERNAME" -p "$HUB_ACCESS_TOKEN"
-          docker push $DOCKER_REPO:$DOCKER_TAG
-      - name: Set release version
-        id: vars
-        if: startsWith(github.ref, 'refs/tags/v1.')
-        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
-      - name: Create release
-        if: startsWith(github.ref, 'refs/tags/v1.')
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: "securityrat-backend/target/*.tar.gz"
-          bodyFile: "release.md"
-          token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Publishing docker image
-        if: startsWith(github.ref, 'refs/tags/v1.')
-        env:
-          HUB_USERNAME: ${{ secrets.HUB_USERNAME }}
-          HUB_ACCESS_TOKEN: ${{ secrets.HUB_ACCESS_TOKEN }}
-          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
-        run: |
-          docker login -u "$HUB_USERNAME" -p "$HUB_ACCESS_TOKEN"
-          docker tag $DOCKER_REPO:$DOCKER_TAG $DOCKER_REPO:latest
-          docker tag $DOCKER_REPO:$DOCKER_TAG $DOCKER_REPO:$RELEASE_VERSION
-          docker push $DOCKER_REPO:$RELEASE_VERSION
-          docker push $DOCKER_REPO:latest
+#      - name: Create and copy application archive
+#        env:
+#          APP_NAME: securityrat
+#        run: |
+#          mv securityrat-backend/target/*.jar securityrat-backend/target/securityrat.jar
+#          chmod +x .ci_scripts/create_archive.sh
+#          ./.ci_scripts/create_archive.sh
+#          cp securityrat-backend/target/$APP_NAME.tar.gz .docker/app
+#      - name: Building Docker Image
+#        working-directory: .docker/app
+#        run: docker build -t $DOCKER_REPO:$DOCKER_TAG .
+#      - name: Publishing SNAPSHOT docker image
+#        if: github.ref == 'refs/heads/master'
+#        env:
+#          HUB_USERNAME: ${{ secrets.HUB_USERNAME }}
+#          HUB_ACCESS_TOKEN: ${{ secrets.HUB_ACCESS_TOKEN }}
+#        run: |
+#          docker login -u "$HUB_USERNAME" -p "$HUB_ACCESS_TOKEN"
+#          docker push $DOCKER_REPO:$DOCKER_TAG
+#      - name: Set release version
+#        id: vars
+#        if: startsWith(github.ref, 'refs/tags/v1.')
+#        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+#      - name: Create release
+#        if: startsWith(github.ref, 'refs/tags/v1.')
+#        uses: ncipollo/release-action@v1
+#        with:
+#          artifacts: "securityrat-backend/target/*.tar.gz"
+#          bodyFile: "release.md"
+#          token: ${{ secrets.GITHUB_TOKEN }}
+#      - name: Publishing docker image
+#        if: startsWith(github.ref, 'refs/tags/v1.')
+#        env:
+#          HUB_USERNAME: ${{ secrets.HUB_USERNAME }}
+#          HUB_ACCESS_TOKEN: ${{ secrets.HUB_ACCESS_TOKEN }}
+#          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+#        run: |
+#          docker login -u "$HUB_USERNAME" -p "$HUB_ACCESS_TOKEN"
+#          docker tag $DOCKER_REPO:$DOCKER_TAG $DOCKER_REPO:latest
+#          docker tag $DOCKER_REPO:$DOCKER_TAG $DOCKER_REPO:$RELEASE_VERSION
+#          docker push $DOCKER_REPO:$RELEASE_VERSION
+#          docker push $DOCKER_REPO:latest
