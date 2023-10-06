@@ -58,17 +58,25 @@ jobs:
           context: .docker/app
           push: true
           tags: ${{ env.DOCKER_REPO }}:${{ env.DOCKER_TAG }}
-#      - name: Set release version
-#        id: vars
-#        if: startsWith(github.ref, 'refs/tags/v1.')
-#        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
-#      - name: Create release
-#        if: startsWith(github.ref, 'refs/tags/v1.')
-#        uses: ncipollo/release-action@v1
-#        with:
-#          artifacts: "securityrat-backend/target/*.tar.gz"
-#          bodyFile: "release.md"
-#          token: ${{ secrets.GITHUB_TOKEN }}
+  create-release:
+    runs-on: ubuntu-22.04
+    if: startsWith(github.ref, 'refs/tags/v1.')
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/dopwnload-artifact@v3
+        with:
+          name: ${{ env.APP_NAME }}
+      - name: Set release version
+        run: |
+          echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+          mv $APP_NAME/$APP_NAME.tar.gz .
+      - name: Create release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: ${{ env.APP_NAME }}.tar.gz
+          bodyFile: "release.md"
+          token: ${{ secrets.GITHUB_TOKEN }}
 #      - name: Publishing docker image
 #        if: startsWith(github.ref, 'refs/tags/v1.')
 #        env:
