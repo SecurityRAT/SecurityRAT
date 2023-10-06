@@ -37,8 +37,8 @@ jobs:
           mkdir staging && cp securityrat-backend/target/$APP_NAME.tar.gz staging
       - uses: actions/upload-artifact@v3
         with:
-          name: $APP_NAME
-          path: staging/$APP_NAME.tar.gz
+          name: ${{ env.APP_NAME }}
+          path: staging/${{ env.APP_NAME }}.tar.gz
           if-no-files-found: error
           retention-days: 5
 #      - name: Building Docker Image
