@@ -1,12 +1,11 @@
 name: CI Build
 
 on: push
-
+env:
+  APP_NAME: securityrat
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      APP_NAME: securityrat
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v3
