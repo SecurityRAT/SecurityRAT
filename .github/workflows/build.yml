@@ -5,13 +5,14 @@ env:
   APP_NAME: securityrat
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '11'
+          architecture: x64
       - name:  Build application with maven
         run: |
           mvn --version
@@ -31,7 +32,7 @@ jobs:
           retention-days: 5
   build-and-upload-snapshot-docker-image:
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     env:
       DOCKER_REPO: securityrat/securityrat
       DOCKER_TAG: snapshot
