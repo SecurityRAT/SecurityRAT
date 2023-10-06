@@ -65,7 +65,7 @@
 
                 <configuration>
                     <!-- Current LTS version of NodeJS -->
-                    <nodeVersion>v18.18</nodeVersion>
+                    <nodeVersion>v18.18.0</nodeVersion>
                     <npmVersion>10.0.0</npmVersion>
                 </configuration>
             </plugin>
