@@ -36,7 +36,7 @@ jobs:
       - name: get ref name
         id: refname
         run: |
-          echo "tag=${GITHUB_REF#refs/*/}" >> GITHUB_OUTPUT
+          echo "tag=${GITHUB_REF#refs/*/}" >> "$GITHUB_OUTPUT"
   build-and-upload-snapshot-docker-image:
     needs: build
     runs-on: ubuntu-22.04
@@ -57,7 +57,7 @@ jobs:
         with:
           username: ${{ secrets.HUB_USERNAME }}
           password: ${{ secrets.HUB_ACCESS_TOKEN }}
-      - name: Building and push Docker Image
+      - name: Build and push snapshot image
         uses: docker/build-push-action@v5
         with:
           context: .docker/app
@@ -65,7 +65,7 @@ jobs:
           tags: ${{ env.DOCKER_REPO }}:${{ env.DOCKER_TAG }}
       - name: Check release version
         run: echo $RELEASE_VERSION
-      - name: Build and push docker image for releases
+      - name: Build and push image for releases
         if: startsWith(github.ref, 'refs/tags/')
         uses: docker/build-push-action@v5
         with:
