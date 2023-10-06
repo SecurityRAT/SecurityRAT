@@ -13,18 +13,8 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '11'
-#      - name: Install tools
-#        run: |
-#          export DOCKLE_VERSION=$(curl --silent "https://api.github.com/repos/goodwithtech/dockle/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
-#          wget -O ~/dockle.tar.gz https://github.com/goodwithtech/dockle/releases/download/v${DOCKLE_VERSION}/dockle_${DOCKLE_VERSION}_Linux-64bit.tar.gz
-#          tar zxvf ~/dockle.tar.gz -C ~/
-#          export TRIVY_VERSION=$(curl --silent "https://api.github.com/repos/aquasecurity/trivy/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
-#          wget -O ~/trivy.tar.gz https://github.com/aquasecurity/trivy/releases/download/v${TRIVY_VERSION}/trivy_${TRIVY_VERSION}_Linux-64bit.tar.gz
-#          tar zxvf ~/trivy.tar.gz -C ~/
-#          npm install bower grunt
       - name:  Build application with maven
         run: |
-          mvn --version
           mvn clean
           mvn -Pprod verify
       - name: Create and copy application archive
