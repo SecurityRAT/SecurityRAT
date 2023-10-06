@@ -34,7 +34,7 @@ You can try it out with the demo version and can modify/add/delete requirements.
 
 #### Backend
 > Note that the Spring auto-restart feature has been disabled for performance reasons.
-1. Configure the configuration files (`src/main/resources/application-dev.yml` and `src/main/resources/application.yml`) appropriately.  
+1. Configure the configuration files (`securityrat-backend/src/main/resources/application-dev.yml` and `securityrat-backend/src/main/resources/application.yml`) appropriately.  
 2. Build all modules from the project's root folder with `mvn install`.
 3. Start the application from the _securityrat-backend_ folder with `mvn spring-boot:run`.
 
