@@ -42,9 +42,9 @@ jobs:
           path: .docker/app
       - name: Move downloaded artifact to appropriate folder tarball artifact
         working-directory: .docker/app
-        run: |-
+        run: |
           ls -R
-          mv $APP_NAME/$APP_NAME.tar.gz $APP_NAME.tar.gz
+          mv $APP_NAME/$APP_NAME.tar.gz .
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Login to Docker Hub
@@ -58,14 +58,6 @@ jobs:
           context: .docker/app
           push: true
           tags: ${{ env.DOCKER_REPO }}:${{ env.DOCKER_TAG }}
-#      - name: Publishing SNAPSHOT docker image
-#        if: github.ref == 'refs/heads/master'
-#        env:
-#          HUB_USERNAME: ${{ secrets.HUB_USERNAME }}
-#          HUB_ACCESS_TOKEN: ${{ secrets.HUB_ACCESS_TOKEN }}
-#        run: |
-#          docker login -u "$HUB_USERNAME" -p "$HUB_ACCESS_TOKEN"
-#          docker push $DOCKER_REPO:$DOCKER_TAG
 #      - name: Set release version
 #        id: vars
 #        if: startsWith(github.ref, 'refs/tags/v1.')
