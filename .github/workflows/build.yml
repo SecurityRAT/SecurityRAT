@@ -41,6 +41,11 @@ jobs:
         with:
           name: ${{ env.APP_NAME }}
           path: .docker/app
+      - name: Extract zipped tarball artifact
+        working-directory: .docker/app
+        run: |-
+          ls -R
+#          mv $APP_NAME $APP_NAME.tar.gz
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Login to Docker Hub
