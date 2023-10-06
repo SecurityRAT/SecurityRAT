@@ -6,6 +6,8 @@ env:
 jobs:
   build:
     runs-on: ubuntu-22.04
+    outputs:
+      tag: ${{ steps.refname.outputs.tag }} # create an output variable for the release tag
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v3
@@ -13,6 +15,7 @@ jobs:
           distribution: 'temurin'
           java-version: '11'
           architecture: x64
+          cache: 'maven'
       - name:  Build application with maven
         run: |
           mvn --version
@@ -29,24 +32,24 @@ jobs:
           name: ${{ env.APP_NAME }}
           path: staging/${{ env.APP_NAME }}.tar.gz
           if-no-files-found: error
-          retention-days: 5
+          retention-days: 1
+      - name: get ref name
+        id: refname
+        run: |
+          echo "tag=${GITHUB_REF#refs/*/}" >> GITHUB_OUTPUT
   build-and-upload-snapshot-docker-image:
     needs: build
     runs-on: ubuntu-22.04
     env:
       DOCKER_REPO: securityrat/securityrat
       DOCKER_TAG: snapshot
+      RELEASE_VERSION: ${{ needs.build.outputs.tag }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v3
         with:
           name: ${{ env.APP_NAME }}
           path: .docker/app
-#      - name: Move downloaded artifact to appropriate folder tarball artifact
-#        working-directory: .docker/app
-#        run: |
-#          ls -R
-#          mv $APP_NAME/$APP_NAME.tar.gz .
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Login to Docker Hub
@@ -60,34 +63,28 @@ jobs:
           context: .docker/app
           push: true
           tags: ${{ env.DOCKER_REPO }}:${{ env.DOCKER_TAG }}
+      - name: Check release version
+        run: echo $RELEASE_VERSION
+      - name: Build and push docker image for releases
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: docker/build-push-action@v5
+        with:
+          context: .docker/app
+          push: true
+          tags: ${{ env.DOCKER_REPO }}:latest, ${{ env.DOCKER_REPO }}:${{ env.RELEASE_VERSION }}
+
   create-release:
     runs-on: ubuntu-22.04
-    if: startsWith(github.ref, 'refs/tags/v1.')
+    if: startsWith(github.ref, 'refs/tags/')
     needs: build
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/dopwnload-artifact@v3
+      - uses: actions/download-artifact@v3
         with:
           name: ${{ env.APP_NAME }}
-      - name: Set release version
-        run: |
-          echo ::set-output name=tag::${GITHUB_REF#refs/*/}
-          mv $APP_NAME/$APP_NAME.tar.gz .
       - name: Create release
         uses: ncipollo/release-action@v1
         with:
           artifacts: ${{ env.APP_NAME }}.tar.gz
           bodyFile: "release.md"
           token: ${{ secrets.GITHUB_TOKEN }}
-#      - name: Publishing docker image
-#        if: startsWith(github.ref, 'refs/tags/v1.')
-#        env:
-#          HUB_USERNAME: ${{ secrets.HUB_USERNAME }}
-#          HUB_ACCESS_TOKEN: ${{ secrets.HUB_ACCESS_TOKEN }}
-#          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
-#        run: |
-#          docker login -u "$HUB_USERNAME" -p "$HUB_ACCESS_TOKEN"
-#          docker tag $DOCKER_REPO:$DOCKER_TAG $DOCKER_REPO:latest
-#          docker tag $DOCKER_REPO:$DOCKER_TAG $DOCKER_REPO:$RELEASE_VERSION
-#          docker push $DOCKER_REPO:$RELEASE_VERSION
-#          docker push $DOCKER_REPO:latest
