@@ -1,6 +1,6 @@
 {
   "name": "securityrat",
-  "version": "1.7.8",
+  "version": "1.8.8",
   "appPath": "src/main/webapp",
   "testPath": "src/test/javascript/spec",
   "dependencies": {
