@@ -362,7 +362,10 @@ angular.module('sdlctoolApp')
             let allowedValues;
             issueFields.forEach(function (issueField) {
                 const sync = $q.defer();
-                const field_name_lowered = issueField.name.toLowerCase()
+                let field_name_lowered = issueField.name.toLowerCase()
+                if (angular.isDefined(issueField.fieldId)) {
+                   field_name_lowered = issueField.fieldId;
+                }
                 if ((fatalFields.indexOf(field_name_lowered) === -1) && (excludedFields.indexOf(field_name_lowered) === -1) &&
                     !(angular.equals(issueField.schema.type, 'array') && (issueField.operations.length === 1) &&
                         issueField.operations.indexOf('set') !== -1) && !angular.equals(issueField.schema.type, 'any')) {
