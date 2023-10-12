@@ -411,8 +411,8 @@ angular.module('sdlctoolApp')
          * get the configurable and mandatory fields excluding excludedFields, fatalFields, array fields with now allowedValues and array fields with only the set operation.
          */
         function getMandatoryFields(filterObject, excludedFields, fatalFields) {
-            apiFactory.getJIRAInfo($scope.buildUrlCall('server')).then(function (serverInfo) {
-                if (angular.isDefined(serverInfo.versionNumbers) && serverInfo.versionNumbers[0] <= 9) {
+            apiFactory.getJIRAInfo($scope.buildUrlCall('serverInfo')).then(function (serverInfo) {
+                if (angular.isDefined(serverInfo.versionNumbers) && serverInfo.versionNumbers[0] < 9) {
                     let url = $scope.buildUrlCall('issue') + '/createmeta?projectKeys=' + filterObject.projectKey;
                     if (angular.isDefined(filterObject.issueTypeId)) {
                         url += '&issuetypeIds=' + filterObject.issueTypeId;
@@ -428,7 +428,7 @@ angular.module('sdlctoolApp')
                     })
                 } else {
                     if (angular.isDefined(filterObject.issueTypeId)) {
-                        let url = $scope.buildUrlCall('issue').concat('/creatmeta/', filterObject.projectKey, '/issuetypes/', filterObject.issueTypeId)
+                        let url = $scope.buildUrlCall('issue').concat('/createmeta/', filterObject.projectKey, '/issuetypes/', filterObject.issueTypeId)
                         apiFactory.getJIRAInfo(url).then(function (response) {
                             createMandatoryFieldsObject(response.values, excludedFields, fatalFields)
                         })
