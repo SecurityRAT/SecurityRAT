@@ -400,8 +400,8 @@ angular.module('sdlctoolApp')
                             schemaCustom: issueField.schema.custom,
                             itemType: issueField.schema.items,
                             values: allowedValues,
-                            configurable: $scope.selection.createTickets && key === 'labels' ? false : !issueField.required,
-                            mandatory: $scope.selection.createTickets && key === 'labels' ? true : issueField.required,
+                            configurable: $scope.selection.createTickets && field_name_lowered === 'labels' ? false : !issueField.required,
+                            mandatory: $scope.selection.createTickets && field_name_lowered === 'labels' ? true : issueField.required,
                             required: issueField.required,
                             autoCompleteUrl: autoCompleteUrl
                         });
