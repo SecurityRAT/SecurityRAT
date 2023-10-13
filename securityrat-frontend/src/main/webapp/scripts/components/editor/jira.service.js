@@ -24,17 +24,18 @@ angular.module('sdlctoolApp')
         }
 
         function buildUrlCall(selector, apiUrlInfo) {
-            var baseJiraCall = apiUrlInfo.jiraUrl + appConfig.jiraApiPrefix + '/';
-            var returnValue = '';
+            const issueApiEndpoint = apiUrlInfo.jiraUrl + appConfig.jiraApiPrefix + '/';
+            const jiraRestApiBaseUrl = apiUrlInfo.jiraUrl + appConfig.jiraRestApiPrefix;
+            let returnValue = '';
             switch (selector) {
-                case 'ticket':
+                case 'issue':
                     returnValue = apiUrlInfo.jiraUrl + appConfig.jiraApiPrefix;
                     break;
                 case 'attachment':
-                    returnValue = baseJiraCall + apiUrlInfo.ticketKey[0] + appConfig.jiraAttachment;
+                    returnValue = issueApiEndpoint + apiUrlInfo.ticketKey[0] + appConfig.jiraAttachment;
                     break;
                 case 'comment':
-                    returnValue = baseJiraCall + apiUrlInfo.ticketKey[0] + appConfig.jiraComment;
+                    returnValue = issueApiEndpoint + apiUrlInfo.ticketKey[0] + appConfig.jiraComment;
                     break;
                 case 'issueType':
                     returnValue = apiUrlInfo.jiraUrl + appConfig.jiraApiIssueType;
@@ -43,20 +44,22 @@ angular.module('sdlctoolApp')
                     returnValue = apiUrlInfo.jiraUrl + appConfig.jiraApiProject;
                     break;
                 case 'issueKey':
-                    returnValue = baseJiraCall + apiUrlInfo.ticketKey[0];
+                    returnValue = issueApiEndpoint + apiUrlInfo.ticketKey[0];
                     break;
                 case 'search':
-                    returnValue = apiUrlInfo.jiraUrl + appConfig.jiraRestApi + '/search';
+                    returnValue = jiraRestApiBaseUrl + '/search';
                     break;
                 case 'issueLink':
-                    returnValue = apiUrlInfo.jiraUrl + appConfig.jiraRestApi + '/issueLink';
+                    returnValue = jiraRestApiBaseUrl + '/issueLink';
                     break;
                 case 'remotelink':
-                    returnValue = baseJiraCall + apiUrlInfo.ticketKey[0] + '/remotelink';
+                    returnValue = issueApiEndpoint + apiUrlInfo.ticketKey[0] + '/remotelink';
                     break;
                 case 'field':
-                    returnValue = apiUrlInfo.jiraUrl + appConfig.jiraRestApi + '/field';
+                    returnValue = jiraRestApiBaseUrl + '/field';
                     break;
+                case 'serverInfo':
+                    returnValue = apiUrlInfo.jiraUrl + appConfig.jiraApiServerInfo;
             }
             return returnValue;
         }
@@ -121,9 +124,9 @@ angular.module('sdlctoolApp')
         }
 
         function addIssueLinks(mainIssueInfo, remoteIssueInfo) {
-            var apiCall = buildUrlCall('issueLink', remoteIssueInfo.apiUrl);
+            const apiCall = buildUrlCall('issueLink', remoteIssueInfo.apiUrl);
             var promiseArray = [];
-            var postData = {
+            const postData = {
                 type: {
                     name: linkTypeName
                 },
@@ -196,13 +199,11 @@ angular.module('sdlctoolApp')
 
         }
 
-        var jiraService = {
+        return {
             buildUrlCall: buildUrlCall,
             addAttachmentAndComment: addAttachmentAndComment,
             addIssueLinks: addIssueLinks,
             removeIssueLinks: removeIssueLinks,
             buildJiraUrl: buildJiraUrl
         };
-
-        return jiraService;
     }]);

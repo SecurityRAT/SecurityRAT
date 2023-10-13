@@ -1,6 +1,6 @@
 {
   "name": "securityrat",
-  "version": "1.7.8",
+  "version": "1.8.8",
   "appPath": "src/main/webapp",
   "testPath": "src/test/javascript/spec",
   "dependencies": {
@@ -39,7 +39,7 @@
     "datatables.net": "^1.10.20",
     "datatables.net-bs": "^2.1.1",
     "js-xlsx": "~0.8.0",
-    "reveal.js": "^4.1.0"
+    "reveal.js": "4.3.1"
   },
   "devDependencies": {
     "angular-mocks": "^1.7.8",
