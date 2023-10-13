@@ -359,8 +359,8 @@ angular.module('sdlctoolApp')
 
         function createMandatoryFieldsObject(issueFields, excludedFields, fatalFields) {
             const dateType = ['date', 'datetime']; // jira date schemas.
-            let allowedValues;
             issueFields.forEach(function (issueField) {
+                let allowedValues;
                 const sync = $q.defer();
                 let field_name_lowered = issueField.name.toLowerCase()
                 if (angular.isDefined(issueField.fieldId)) {
