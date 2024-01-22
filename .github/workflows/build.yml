@@ -1,6 +1,8 @@
 name: CI Build
 
-on: push
+on:
+  push:
+  pull_request:
 env:
   APP_NAME: securityrat
 jobs:
