@@ -20,7 +20,7 @@ jobs:
           cache: 'maven'
       - name: Force use of correct dependency repo
         run: |
-          git config --global url.https://github.com/urish.insteadOf https://github.com/Attrash-Islam
+          git config --global url.https://github.com/urish/angular-spinner.insteadOf https://github.com/Attrash-Islam/bower-angular-spinner
       - name:  Build application with maven
         run: |
           mvn --version
