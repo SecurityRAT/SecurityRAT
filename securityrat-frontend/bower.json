@@ -27,7 +27,7 @@
     "swagger-ui": "2.1.1",
     "angular-marked": "^1.2.2",
     "angular-file-saver": "elquimeras/ng-file-saver#^1.1.4",
-    "angular-spinner": "~0.8.0",
+    "angular-spinner": "~0.8.1",
     "jszip": "~2.5.0",
     "xregexp": "^3.0.0",
     "angular-disable-all": "^0.0.2",
