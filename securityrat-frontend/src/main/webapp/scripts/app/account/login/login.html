@@ -17,7 +17,7 @@
                     <input type="password" class="form-control"  id="password" placeholder="Your password"
                            data-ng-model="password"/>
                 </div>
-                <div class="form-group">
+                <div class="form-group" data-ng-class="{hidden: AUTHENTICATIONTYPELDAP}">
                     <label for="rememberMe">
                         <input type="checkbox" id="rememberMe" data-ng-model="rememberMe" checked>
                         <span>Automatic Login</span>
@@ -26,10 +26,10 @@
                 <button type="submit" class="btn btn-primary">Authenticate</button>
             </form>
             <p></p>
-            <div class="alert alert-warning">
+            <div class="alert alert-warning" data-ng-class="{hidden: AUTHENTICATIONTYPELDAP}">
                 <a ui-sref="requestReset">Did you forget your password?</a>
             </div>
-            <div class="alert alert-warning" data-ng-class="{hidden: !REGISTRATIONTYPE}">
+            <div class="alert alert-warning" data-ng-class="{hidden: (!REGISTRATIONTYPE || AUTHENTICATIONTYPELDAP)}">
                 You don't have an account yet? <a ui-sref="register">Register a new account</a>
             </div>
         </div>

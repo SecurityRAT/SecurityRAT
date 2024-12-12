@@ -8,6 +8,8 @@ import io.github.jhipster.security.AjaxLogoutSuccessHandler;
 import javax.inject.Inject;
 
 import lombok.extern.slf4j.Slf4j;
+
+import org.appsec.securityrat.provider.mapper.LdapUserDetailsContextMapper;
 import org.appsec.securityrat.security.AuthoritiesConstants;
 import org.appsec.securityrat.security.Http401UnauthorizedEntryPoint;
 import org.appsec.securityrat.web.filter.CsrfCookieGeneratorFilter;
@@ -43,6 +45,7 @@ import org.springframework.security.data.repository.query.SecurityEvaluationCont
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 @Slf4j
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
     @Inject
     private JHipsterProperties jHipsterProperties;
 
@@ -60,6 +63,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Inject
     private UserDetailsService userDetailsService;
+
+    @Inject
+    private LdapUserDetailsContextMapper ldapUserDetailsContextMapper;
 
     @Inject
     private RememberMeServices rememberMeServices;
@@ -175,8 +181,39 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .antMatchers("/api/authenticate").permitAll()
                     .antMatchers("/api/account/reset_password/init").permitAll()
                     .antMatchers("/api/account/reset_password/finish").permitAll();
-
                 break;
+
+            case LDAP:
+            base.authenticationEntryPoint(this.authenticationEntryPoint)
+                .and()
+                .formLogin()
+                .loginPage("/login")
+                .loginProcessingUrl("/api/authentication")
+                .successHandler(this.ajaxAuthenticationSuccessHandler)
+                .failureHandler(this.ajaxAuthenticationFailureHandler)
+                .usernameParameter("j_username")
+                .passwordParameter("j_password")
+                .permitAll()
+                .and()
+                .logout()
+                .logoutUrl("/api/logout")
+                .logoutSuccessHandler(this.ajaxLogoutSuccessHandler)
+                .deleteCookies("JSESSIONID")
+                .permitAll()
+                .and()
+                .authorizeRequests()
+                .antMatchers(registerApiUri).denyAll()
+                .antMatchers("/api/activate").denyAll()
+                .antMatchers("/api/account/reset_password/init").denyAll()
+                .antMatchers("/api/account/reset_password/finish").denyAll()
+                .antMatchers("/api/account/sessions").denyAll()
+                .antMatchers("/api/account/confirm_password").denyAll()
+                .antMatchers("/api/account/change_password").denyAll()
+                .antMatchers("/api/authenticate").denyAll()
+                .antMatchers("/settings").denyAll()
+                .antMatchers("/password").denyAll();
+            break;
+
             case AZURE:
                 http
                     .authorizeRequests()
@@ -186,6 +223,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .userInfoEndpoint()
                     .oidcUserService(oidcUserService);
                 break;
+
             default:
                 throw new UnsupportedOperationException();
         }
@@ -231,11 +269,27 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             case FORM:
                 auth.userDetailsService(this.userDetailsService)
                     .passwordEncoder(this.passwordEncoder());
-
                 break;
+
             case AZURE:
                 auth.userDetailsService(this.userDetailsService);
                 break;
+
+            case LDAP:
+            	auth.ldapAuthentication()
+            		.contextSource()
+            		.url(this.appConfig.getLdap().getUrl())
+            		.managerDn(this.appConfig.getLdap().getManagerDN())
+            		.managerPassword(this.appConfig.getLdap().getManagerPassword())
+            		.and()
+            		.userSearchBase(this.appConfig.getLdap().getUserBaseDN())
+            		.userSearchFilter(this.appConfig.getLdap().getUserSearchFilter())
+            		.groupRoleAttribute(this.appConfig.getLdap().getGroupRoleAttribute())
+            		.groupSearchBase(this.appConfig.getLdap().getGroupBaseDN())
+            		.groupSearchFilter(this.appConfig.getLdap().getGroupSearchFilter())
+            		.rolePrefix("")
+            		.userDetailsContextMapper(this.ldapUserDetailsContextMapper);
+            	break;
 
             default:
                 throw new UnsupportedOperationException();

@@ -7,6 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.ldap.userdetails.LdapUserDetails;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -39,6 +40,15 @@ public final class SecurityUtils {
         return false;
     }
 
+    public static boolean isLdapAuthentication() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof LdapUserDetails) {
+            log.debug("LDAP Authentication");
+            return true;
+        }
+        return false;
+    }
+
     private static String extractPrincipal(Authentication authentication) {
         if (authentication == null) {
             return null;
@@ -49,6 +59,9 @@ public final class SecurityUtils {
             Pac4jAuthentication auth = (Pac4jAuthentication) authentication;
             var userProfile = auth.getProfile();
             return userProfile.getUsername();
+        } else if (authentication.getPrincipal() instanceof LdapUserDetails) {
+        	LdapUserDetails ldapUser = (LdapUserDetails) authentication.getPrincipal();
+        	return ldapUser.getUsername();
         } else if (authentication.getPrincipal() instanceof String) {
             return (String) authentication.getPrincipal();
         }
