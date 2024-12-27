@@ -57,7 +57,7 @@ management:
 
 spring:
   autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchAutoConfiguration,org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchDataAutoConfiguration
+    exclude: org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchAutoConfiguration,org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchDataAutoConfiguration,org.springframework.boot.autoconfigure.ldap.LdapAutoConfiguration
   application:
     name: SecurityRAT
   profiles:
@@ -83,7 +83,7 @@ spring:
         #
         # NOTE: We need to replace the original values to fix this issue:
         #       https://github.com/spring-projects/spring-boot/issues/2129
-        
+
         physical-strategy: "org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl"
         implicit-strategy: "org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl"
   messages:
@@ -176,9 +176,23 @@ jhipster:
 
 application:
   authentication:
-    type: FORM # possible values are CAS, FORM or AZURE
+    type: FORM # possible values are CAS, FORM, LDAP or AZURE
     registration: true # restrict the registration only to the administrators by setting the value to 'false'
   cas:
     loginUrl: https://localhost:8443/cas # Change to the URL your CAS server listens on
     logoutUrl: https://localhost:8443/cas/logout # Change to your CAS server logout URL
     callbackUrl: https://localhost:9000/callback # Change to the correct URL (https) of SecurityRAT
+  ldap:
+    url: ldap://ldaptest.example.com:389
+    managerDN: cn=technicaluser,ou=users,dc=example,dc=com # Principal or technical user that is used to connect to the LDAP
+    managerPassword: neverSaveAPasswordInAConfigFile
+    userBaseDN: ou=users,dc=example,dc=com
+    userSearchFilter: (&(uid={0})(objectClass=organizationalPerson))
+    groupBaseDN: ou=access groups,dc=example,dc=com
+    groupSearchFilter: member={0}
+    #groupRoleAttribute: # Attribute that contains the role name of an LDAP group. Default: cn
+    # Grants the corresponding roles if the user is member of a group with the mentioned groupRoleAttribute
+    # If no group is assigned, the corresponding role is automatically given to every authenticated user
+    groupOfAdmins: admin-group
+    groupOfTrainers: trainer-group
+    #groupOfUsers:

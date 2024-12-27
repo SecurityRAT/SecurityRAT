@@ -6,7 +6,8 @@ import lombok.Data;
 public class AuthenticationConfigDto implements Dto {
     public enum Type {
         FORM,
-        CAS
+        CAS,
+        LDAP
     }
     
     private Type type;

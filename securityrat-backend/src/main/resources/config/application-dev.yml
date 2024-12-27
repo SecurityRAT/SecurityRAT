@@ -18,6 +18,7 @@ logging:
     ROOT: DEBUG
     io.github.jhipster: DEBUG
     org.appsec.securityrat: DEBUG
+    org.springframework.security.ldap: DEBUG
 
 management:
   health:

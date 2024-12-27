@@ -30,29 +30,29 @@ import org.springframework.transaction.annotation.Transactional;
 public class SystemInfoImpl implements SystemInfo {
     @Inject
     private ApplicationProperties appProps;
-    
+
     @Inject
     private AuditEventConverter auditEventConverter;
-    
+
     // Repositories
-    
+
     @Inject
     private AuthorityRepository authorityRepo;
-    
+
     @Inject
     private PersistenceAuditEventRepository persistenceAuditEventRepository;
-    
+
     // Mappers
-    
+
     @Inject
     private AuthorityMapper authorityMapper;
-    
+
     @Inject
     private LoggerMapper loggerMapper;
-    
+
     @Inject
     private AuditEventMapper auditEventMapper;
-    
+
     @Override
     @Transactional
     public List<AuthorityDto> getAuthorities() {
@@ -66,34 +66,38 @@ public class SystemInfoImpl implements SystemInfo {
     public AuthenticationConfigDto getAuthenticationConfig() {
         Authentication auth = this.appProps.getAuthentication();
         Cas cas = this.appProps.getCas();
-        
+
         AuthenticationConfigDto result = new AuthenticationConfigDto();
-        
+
         switch (auth.getType()) {
             case CAS:
                 result.setType(Type.CAS);
                 break;
-                
+
             case FORM:
                 result.setType(Type.FORM);
                 break;
-                
+
+            case LDAP:
+                result.setType(Type.LDAP);
+                break;
+
             default:
                 throw new UnsupportedOperationException(
                         "Authentication type not implemented: "
                                 + auth.getType());
         }
-        
+
         result.setRegistration(auth.isRegistration());
         result.setCasLogout(cas.getLogoutUrl().toExternalForm());
-        
+
         return result;
     }
 
     @Override
     public List<LoggerDto> getLoggers() {
         LoggerContext ctx = (LoggerContext) LoggerFactory.getILoggerFactory();
-        
+
         return ctx.getLoggerList()
                 .stream()
                 .map(this.loggerMapper::toDto)
@@ -103,7 +107,7 @@ public class SystemInfoImpl implements SystemInfo {
     @Override
     public void updateLogger(LoggerDto logger) {
         LoggerContext ctx = (LoggerContext) LoggerFactory.getILoggerFactory();
-        
+
         ctx.getLogger(logger.getName())
                 .setLevel(Level.valueOf(logger.getLevel()));
     }
@@ -127,7 +131,7 @@ public class SystemInfoImpl implements SystemInfo {
                 this.persistenceAuditEventRepository.findAllByAuditEventDateBetween(
                         fromDate,
                         toDate);
-        
+
         return this.auditEventConverter.convertToAuditEvent(events)
                 .stream()
                 .map(this.auditEventMapper::toDto)
