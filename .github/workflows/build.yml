@@ -32,7 +32,7 @@ jobs:
           chmod +x .ci_scripts/create_archive.sh
           ./.ci_scripts/create_archive.sh
           mkdir staging && cp securityrat-backend/target/$APP_NAME.tar.gz staging
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: ${{ env.APP_NAME }}
           path: staging/${{ env.APP_NAME }}.tar.gz
@@ -52,7 +52,7 @@ jobs:
       RELEASE_VERSION: ${{ needs.build.outputs.tag }}
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: ${{ env.APP_NAME }}
           path: .docker/app
@@ -85,7 +85,7 @@ jobs:
     needs: build
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: ${{ env.APP_NAME }}
       - name: Create release

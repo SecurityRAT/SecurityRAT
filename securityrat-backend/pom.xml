@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.appsec.securityrat</groupId>
         <artifactId>securityrat-parent</artifactId>
-        <version>1.8.10</version>
+        <version>1.9.0</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -44,10 +44,10 @@
         <jhipster-dependencies.version>3.4.0</jhipster-dependencies.version>
         <!-- The spring-boot version should match the one managed by
         https://mvnrepository.com/artifact/io.github.jhipster/jhipster-dependencies/${jhipster-dependencies.version} -->
-        <spring-boot.version>2.5.12</spring-boot.version>
+        <spring-boot.version>2.7.18</spring-boot.version>
         <!-- The spring framework version should match the one managed by
         https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies/${spring-boot.version} -->
-        <spring.version>6.1.14</spring.version>
+        <spring.version>6.2.9</spring.version>
         <!-- The hibernate version should match the one managed by
         https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies/${spring-boot.version} -->
         <hibernate.version>5.4.10.Final</hibernate.version>
@@ -58,7 +58,7 @@
         https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies/${spring-boot.version} -->
         <!-- However due to regressions, we can't upgrade: https://liquibase.jira.com/browse/CORE-3536 and
          https://liquibase.jira.com/browse/CORE-3522 -->
-        <liquibase.version>4.8.0</liquibase.version>
+        <liquibase.version>4.33.0</liquibase.version>
         <liquibase-hibernate5.version>3.6</liquibase-hibernate5.version>
         <!-- The hibernate version to be used to override default version of liquibase maven plugin -->
         <hibernate-core.version>5.3.20.Final</hibernate-core.version>
@@ -373,7 +373,7 @@
         <dependency>
             <groupId>org.pac4j</groupId>
             <artifactId>pac4j-cas</artifactId>
-            <version>3.3.0</version>
+            <version>5.7.7</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

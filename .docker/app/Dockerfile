@@ -1,4 +1,4 @@
-FROM eclipse-temurin:11.0.23_9-jdk
+FROM eclipse-temurin:11.0.28_6-jdk
 
 ENV COMPRESSEDFILE="securityrat*.tar.gz"
 
